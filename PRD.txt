@@ -1,0 +1,3522 @@
+VEPARI AI
+## MASTER PRODUCT REQUIREMENTS DOCUMENT
+### Product + UI/UX + Frontend + Backend + API + Database + AI OS + Mobile Storage + Cloud + Security + Integrations + Implementation
+
+**Document status:** Master PRD  
+**Product:** Vepari AI  
+**Platform:** Android-first mobile application  
+**Technology direction:** React Native + TypeScript  
+**Future platform:** iOS  
+**Primary market:** India  
+**Business scope:** Micro, Small, Medium and Enterprise businesses  
+**Languages:** 23 Indian languages / multilingual AI experience  
+**Architecture status:** Specification complete; implementation follows this PRD
+
+---
+
+# 1. EXECUTIVE SUMMARY
+
+Vepari AI is an **AI Business Operating System for Indian MSMEs**.
+
+It is not merely:
+
+- an accounting application
+- an ERP
+- a CRM
+- an inventory application
+- a chatbot
+- a reporting application
+
+It combines these business capabilities with an AI operating layer that understands the business, remembers relevant context, identifies important changes, explains what is happening, recommends actions, and—within controlled permissions—executes approved business operations.
+
+The core philosophy is:
+
+> **Voice → Memory → Intelligence → Action**
+
+The platform is designed for the full MSME spectrum:
+
+```text
+MICRO
+  ↓
+SMALL
+  ↓
+MEDIUM
+  ↓
+ENTERPRISE
+```
+
+The **Micro** experience has deeper specialized capabilities because very small businesses often need a simpler, more guided operating experience. However, Vepari AI is fundamentally a **full MSME platform**, not a micro-business-only product.
+
+---
+
+# 2. PRODUCT VISION
+
+Vepari AI should become the business owner's:
+
+```text
+Business Brain
++
+Business Memory
++
+Business Assistant
++
+Business Operating System
+```
+
+The owner should be able to interact with the business naturally through:
+
+- touch
+- text
+- voice
+- AI OS
+- dashboards
+- reports
+- business operations
+
+The system should transform raw business activity into understandable intelligence.
+
+---
+
+# 3. PRODUCT MISSION
+
+Help Indian businesses:
+
+- understand their business
+- operate their business
+- remember important business information
+- detect problems early
+- identify opportunities
+- reduce repetitive administrative work
+- make better decisions
+- operate in Indian languages
+- access business intelligence without requiring technical expertise
+
+---
+
+# 4. TARGET USERS
+
+## 4.1 Micro businesses
+
+Examples include:
+
+- local shops
+- small traders
+- individual operators
+- small service businesses
+- home businesses
+- small manufacturers
+- independent entrepreneurs
+
+The experience should minimize complexity.
+
+---
+
+## 4.2 Small businesses
+
+Need:
+
+- inventory
+- customers
+- suppliers
+- sales
+- expenses
+- finance
+- employees/team
+- reporting
+- automation
+
+---
+
+## 4.3 Medium businesses
+
+Need:
+
+- multiple users
+- branches
+- locations
+- advanced finance
+- operational management
+- analytics
+- automation
+- integrations
+- advanced AI
+
+---
+
+## 4.4 Enterprise
+
+Need:
+
+- advanced permissions
+- multiple branches
+- larger teams
+- advanced analytics
+- integrations
+- automation
+- higher AI usage
+- enterprise controls
+- usage-based capabilities
+
+---
+
+# 5. PLATFORM PRINCIPLES
+
+## Principle 1 — AI-first, not AI-only
+
+Business operations must continue even if AI is unavailable.
+
+---
+
+## Principle 2 — Cloud is authoritative
+
+The cloud backend is the source of truth.
+
+---
+
+## Principle 3 — Mobile is resilient
+
+The mobile application should support offline work and synchronize safely.
+
+---
+
+## Principle 4 — AI is controlled
+
+AI never receives unrestricted database access.
+
+---
+
+## Principle 5 — Every important AI action is traceable
+
+AI actions must have:
+
+```text
+Action
+→ Permission
+→ Approval where required
+→ Execution
+→ Result
+→ Audit
+```
+
+---
+
+## Principle 6 — Multilingual from the foundation
+
+The application is not translated at the end.
+
+Localization is part of the architecture.
+
+---
+
+## Principle 7 — Android first, iOS ready
+
+React Native architecture should avoid decisions that make future iOS expansion unnecessarily difficult.
+
+---
+
+# 6. PRIMARY PRODUCT EXPERIENCE
+
+The central experience is the **Vepari AI OS**.
+
+The owner opens the application:
+
+```text
+App Launch
+     ↓
+Security
+     ↓
+Vepari AI animation
+     ↓
+AI OS awakens
+     ↓
+Business scan
+     ↓
+"While you were away..."
+     ↓
+Important operations
+     ↓
+Resources
+     ↓
+Alerts
+     ↓
+Insights
+     ↓
+Recommendations
+     ↓
+Business workspace
+```
+
+The AI OS has a cinematic, futuristic interaction inspired by the feeling of an advanced personal AI interface, while remaining uniquely branded as Vepari AI.
+
+---
+
+# 7. SECURITY-FIRST OPENING
+
+The animation should occur **after the owner completes security verification**.
+
+Flow:
+
+```text
+Launch
+ ↓
+Authentication/session validation
+ ↓
+PIN / biometric / required security
+ ↓
+AI OS activation
+```
+
+This creates both security and a distinctive product ritual.
+
+---
+
+# 8. AI OS STATES
+
+The AI OS should support:
+
+```text
+Dormant
+Initializing
+Awakening
+Analyzing
+Ready
+Listening
+Thinking
+Responding
+Action Required
+Executing
+Completed
+Error
+```
+
+---
+
+# 9. AI OS BRIEFING
+
+The AI OS should summarize meaningful activity that occurred since the owner's last relevant session.
+
+Example categories:
+
+- sales
+- expenses
+- payments
+- inventory changes
+- customer activity
+- supplier activity
+- operational events
+- alerts
+- opportunities
+- important business changes
+
+The system should prioritize information instead of dumping raw activity.
+
+---
+
+# 10. "WHILE YOU WERE AWAY"
+
+Backend determines:
+
+```text
+Last meaningful checkpoint
+        ↓
+New business events
+        ↓
+Importance
+        ↓
+Business impact
+        ↓
+AI summary
+```
+
+The owner sees the most relevant changes first.
+
+---
+
+# 11. AI OS INFORMATION STRUCTURE
+
+Every significant insight should conceptually follow:
+
+```text
+WHAT HAPPENED?
+      ↓
+WHY?
+      ↓
+EVIDENCE
+      ↓
+IMPACT
+      ↓
+RECOMMENDATION
+      ↓
+ACTION
+```
+
+---
+
+# 12. CORE BUSINESS MODULES
+
+The product includes:
+
+1. Authentication
+2. Security
+3. Onboarding
+4. Business management
+5. Customers
+6. Suppliers
+7. Products
+8. Inventory
+9. Sales
+10. Expenses
+11. Purchases
+12. Payments
+13. Returns
+14. Refunds
+15. Finance
+16. Operations
+17. Documents
+18. Invoices
+19. Quotations
+20. Reports
+21. Analytics
+22. AI OS
+23. AI insights
+24. AI actions
+25. AI memory
+26. Voice
+27. Search
+28. Notifications
+29. Alerts
+30. Team
+31. Permissions
+32. Automation
+33. Offline
+34. Sync
+35. Devices
+36. Backup
+37. Usage
+38. Entitlements
+39. Connection Portfolio
+40. Integrations
+
+---
+
+# 13. CUSTOMER MANAGEMENT
+
+Features:
+
+- customer list
+- search
+- filtering
+- customer profile
+- contacts
+- addresses
+- notes
+- tags
+- transactions
+- payments
+- credit
+- activity
+- AI insights
+
+---
+
+# 14. SUPPLIER MANAGEMENT
+
+Features:
+
+- supplier list
+- supplier profile
+- contacts
+- addresses
+- purchase history
+- payment history
+- terms
+- activity
+- AI insights
+
+---
+
+# 15. PRODUCT MANAGEMENT
+
+Features:
+
+- products
+- categories
+- variants
+- SKU
+- barcode
+- units
+- prices
+- product images
+- inventory relationship
+
+---
+
+# 16. INVENTORY
+
+Features:
+
+- inventory dashboard
+- stock levels
+- low stock
+- out of stock
+- locations
+- branches
+- stock adjustments
+- stock transfers
+- movement history
+- batches
+- serials where applicable
+
+Inventory should be based on **stock movements**, not simply an editable number.
+
+---
+
+# 17. SALES
+
+Complete lifecycle:
+
+```text
+Customer
+ ↓
+Products
+ ↓
+Quantity
+ ↓
+Pricing
+ ↓
+Discount
+ ↓
+Tax
+ ↓
+Payment
+ ↓
+Review
+ ↓
+Confirm
+ ↓
+Receipt
+```
+
+A completed sale can affect:
+
+- sales
+- inventory
+- customer balance
+- payment
+- finance
+- analytics
+- AI context
+- audit
+
+---
+
+# 18. EXPENSES
+
+Features:
+
+- expense creation
+- category
+- amount
+- vendor
+- payment
+- attachment
+- recurring expenses
+- expense history
+- reporting
+
+---
+
+# 19. PURCHASES
+
+Features:
+
+- supplier
+- products
+- quantities
+- cost
+- taxes
+- payment
+- purchase history
+- inventory effects
+- financial effects
+
+---
+
+# 20. PAYMENTS
+
+Support the business's configured payment methods.
+
+Features:
+
+- record payment
+- partial payment
+- full payment
+- payment allocation
+- payment history
+- payment detail
+- receipt
+
+---
+
+# 21. RETURNS & REFUNDS
+
+Return must reference the original transaction where appropriate.
+
+```text
+Original transaction
+ ↓
+Select items
+ ↓
+Quantity
+ ↓
+Reason
+ ↓
+Refund
+ ↓
+Confirm
+```
+
+The backend must correctly update affected business domains.
+
+---
+
+# 22. FINANCE
+
+Core capabilities:
+
+- revenue
+- expenses
+- profit
+- cash flow
+- receivables
+- payables
+- financial accounts
+- ledger
+- financial periods
+
+---
+
+# 23. FINANCIAL INTEGRITY
+
+Business modules must not independently invent financial entries.
+
+A transaction should pass through controlled business/finance services.
+
+Example:
+
+```text
+Sale
+ ↓
+Sale record
+ ↓
+Inventory effect
+ ↓
+Payment/customer effect
+ ↓
+Financial effect
+```
+
+---
+
+# 24. OPERATIONS
+
+Broader MSME operations include:
+
+- orders
+- tasks
+- assignments
+- processes
+- process stages
+- operational status
+- activity
+
+---
+
+# 25. DOCUMENT MANAGEMENT
+
+Support:
+
+- invoices
+- receipts
+- bills
+- quotations
+- purchase orders
+- attachments
+- generated PDFs
+- document versions
+
+---
+
+# 26. REPORTS
+
+Reports should include:
+
+### Financial
+
+- revenue
+- expenses
+- profit
+- cash flow
+- receivables
+- payables
+
+### Business
+
+- sales
+- customers
+- suppliers
+- products
+- inventory
+- operations
+
+### Intelligence
+
+- business health
+- trends
+- risks
+- opportunities
+- forecasts
+
+---
+
+# 27. SEARCH
+
+Global search should cover:
+
+```text
+Customers
+Suppliers
+Products
+Transactions
+Documents
+```
+
+The AI layer can provide natural-language search.
+
+---
+
+# 28. AI BUSINESS INTELLIGENCE
+
+The AI system should analyze structured business signals such as:
+
+- revenue
+- growth
+- expenses
+- profitability
+- cash
+- receivables
+- payables
+- inventory
+- customer activity
+- supplier activity
+- operations
+
+---
+
+# 29. AI INSIGHT MODEL
+
+An insight contains:
+
+```text
+Type
+Priority
+Severity
+Title
+Summary
+Evidence
+Impact
+Recommendation
+Status
+```
+
+---
+
+# 30. AI EVIDENCE
+
+AI claims should be connected to underlying business records.
+
+Example:
+
+```text
+Insight:
+Product stock is low.
+
+Evidence:
+Product X
+Stock = 4
+Minimum = 10
+```
+
+This enables an understandable **"Why?"** experience.
+
+---
+
+# 31. AI ACTIONS
+
+AI may propose structured actions.
+
+```text
+Insight
+ ↓
+Recommendation
+ ↓
+Action proposal
+ ↓
+Permission
+ ↓
+Approval
+ ↓
+Execution
+ ↓
+Result
+```
+
+---
+
+# 32. AI ACTION STATES
+
+```text
+Proposed
+Pending Approval
+Approved
+Executing
+Completed
+Rejected
+Failed
+Cancelled
+```
+
+---
+
+# 33. AI SECURITY
+
+Never:
+
+```text
+AI → unrestricted database
+```
+
+Instead:
+
+```text
+AI
+ ↓
+Structured Action
+ ↓
+Validation
+ ↓
+Permission
+ ↓
+Approval
+ ↓
+Business Service
+ ↓
+Database
+```
+
+---
+
+# 34. AI MEMORY
+
+Memory consists of:
+
+### Authoritative business facts
+
+Remain in business databases.
+
+### Derived AI memory
+
+Stores useful contextual information.
+
+### Conversation context
+
+Stores relevant AI interaction context.
+
+### Business events
+
+Provide temporal context.
+
+---
+
+# 35. MEMORY RULE
+
+AI memory is **not financial truth**.
+
+For example, if AI remembers that a customer owes money, the actual receivable remains authoritative in the finance/customer system.
+
+---
+
+# 36. VOICE
+
+Voice should be a first-class interaction method.
+
+```text
+User speaks
+ ↓
+Speech-to-text
+ ↓
+Language detection
+ ↓
+Understanding
+ ↓
+AI
+ ↓
+Response
+ ↓
+Text-to-speech
+```
+
+---
+
+# 37. INDIAN LANGUAGE SUPPORT
+
+The platform is designed for **23-language multilingual support**, not Tamil-only support.
+
+Localization must account for:
+
+- scripts
+- font rendering
+- text length
+- numbers
+- currency
+- dates
+- voice
+- AI responses
+
+---
+
+# 38. SARVAM AI ARCHITECTURE
+
+Where Sarvam AI is used, Vepari should interact through an internal provider abstraction:
+
+```text
+Vepari Voice/Language Service
+          ↓
+Provider Adapter
+          ↓
+Sarvam AI
+```
+
+This prevents the entire architecture from becoming permanently dependent on one provider.
+
+---
+
+# 39. UI/UX DESIGN SYSTEM
+
+The design system is frozen around the approved Vepari AI visual identity.
+
+It includes:
+
+- official Vepari AI color palette
+- typography
+- Lora for primary English display/brand typography
+- approved multilingual font support
+- spacing
+- grid
+- radius
+- borders
+- elevation
+- shadows
+- icons
+- animation
+- haptics
+- responsive mobile layouts
+
+No unrelated visual language should be introduced during implementation.
+
+---
+
+# 40. MOBILE-FIRST UX
+
+The primary product experience is designed for mobile.
+
+Important principles:
+
+- one-handed interaction where practical
+- large touch targets
+- bottom-sheet workflows
+- concise information hierarchy
+- progressive disclosure
+- AI-assisted shortcuts
+- voice-first opportunities
+- minimal unnecessary navigation
+
+---
+
+# 41. UNIVERSAL SCREEN SPECIFICATION
+
+Every screen must define:
+
+```text
+Purpose
+Entry
+Exit
+
+Header
+Logo
+Title
+Actions
+
+Content
+Components
+Fields
+Buttons
+Tabs
+Filters
+
+AI
+Voice
+
+Navigation
+
+Loading
+Empty
+Error
+Success
+Offline
+Sync
+Conflict
+Permission
+
+Animation
+Haptics
+Accessibility
+Localization
+
+Data
+API
+State
+
+Related screens
+```
+
+---
+
+# 42. UNIVERSAL SCREEN STATES
+
+Every applicable screen should account for:
+
+```text
+Loading
+Loaded
+Empty
+Error
+Success
+Offline
+Syncing
+Conflict
+Permission denied
+```
+
+---
+
+# 43. FRONTEND ARCHITECTURE
+
+React Native + TypeScript.
+
+Logical structure:
+
+```text
+mobile/
+├── android/
+├── ios/
+└── src/
+    ├── app/
+    ├── design/
+    ├── components/
+    ├── features/
+    │   ├── auth/
+    │   ├── security/
+    │   ├── onboarding/
+    │   ├── ai-os/
+    │   ├── home/
+    │   ├── customers/
+    │   ├── suppliers/
+    │   ├── products/
+    │   ├── inventory/
+    │   ├── sales/
+    │   ├── expenses/
+    │   ├── purchases/
+    │   ├── payments/
+    │   ├── finance/
+    │   ├── operations/
+    │   ├── documents/
+    │   ├── reports/
+    │   ├── ai/
+    │   ├── voice/
+    │   ├── search/
+    │   ├── notifications/
+    │   ├── team/
+    │   ├── automation/
+    │   ├── connections/
+    │   └── settings/
+    ├── services/
+    ├── state/
+    ├── localization/
+    ├── hooks/
+    ├── utils/
+    ├── types/
+    └── assets/
+```
+
+---
+
+# 44. BACKEND ARCHITECTURE
+
+Initial architecture:
+
+**Modular monolith.**
+
+```text
+backend/
+├── auth
+├── users
+├── businesses
+├── team
+├── customers
+├── suppliers
+├── products
+├── inventory
+├── sales
+├── expenses
+├── purchases
+├── payments
+├── finance
+├── operations
+├── documents
+├── reports
+├── analytics
+├── ai
+├── voice
+├── search
+├── notifications
+├── automation
+├── connections
+├── sync
+├── billing
+├── usage
+├── audit
+└── common
+```
+
+The architecture should permit later extraction of high-load services.
+
+---
+
+# 45. API ARCHITECTURE
+
+Versioned API:
+
+```text
+/api/v1/
+```
+
+Core groups:
+
+```text
+/auth
+/users
+/devices
+
+/businesses
+/branches
+/locations
+
+/members
+/roles
+/permissions
+/invitations
+
+/customers
+/suppliers
+/products
+
+/inventory
+/stock
+/transfers
+
+/sales
+/expenses
+/purchases
+/payments
+/returns
+/refunds
+
+/finance
+/accounts
+/ledger
+/receivables
+/payables
+
+/orders
+/tasks
+/processes
+
+/documents
+/invoices
+/quotations
+/bills
+/receipts
+/purchase-orders
+
+/reports
+/analytics
+
+/ai
+/insights
+/memory
+/ai-actions
+/conversations
+
+/voice
+/search
+
+/alerts
+/notifications
+
+/automation
+
+/connections
+/integrations
+/webhooks
+
+/sync
+/imports
+/files
+/backups
+
+/usage
+/billing
+/entitlements
+```
+
+---
+
+# 46. API CONTRACT
+
+Standard response:
+
+```text
+data
+meta
+request_id
+```
+
+List responses:
+
+```text
+items
+pagination
+meta
+request_id
+```
+
+Errors:
+
+```text
+code
+message
+details
+request_id
+```
+
+---
+
+# 47. API SECURITY PIPELINE
+
+Every request should conceptually pass:
+
+```text
+TLS
+ ↓
+WAF
+ ↓
+Rate limiting
+ ↓
+Authentication
+ ↓
+Tenant validation
+ ↓
+Authorization
+ ↓
+Input validation
+ ↓
+Business rules
+ ↓
+Database
+ ↓
+Audit
+```
+
+---
+
+# 48. DATABASE ARCHITECTURE
+
+Primary transactional store:
+
+**PostgreSQL-class relational database.**
+
+Logical domains:
+
+```text
+auth
+core
+business
+commerce
+inventory
+finance
+operations
+documents
+ai
+integrations
+automation
+notifications
+audit
+analytics
+system
+```
+
+---
+
+# 49. DATABASE PRINCIPLES
+
+Use:
+
+- UUID/UUIDv7-style identifiers where appropriate
+- foreign keys
+- unique constraints
+- check constraints
+- indexes
+- transactions
+- timestamps
+- versioning
+- migrations
+- controlled soft deletion
+
+---
+
+# 50. DATABASE CORE TABLE GROUPS
+
+```text
+users
+user_profiles
+sessions
+devices
+trusted_devices
+
+businesses
+business_profiles
+business_settings
+branches
+locations
+
+business_members
+roles
+permissions
+role_permissions
+invitations
+```
+
+---
+
+# 51. BUSINESS DATA TABLES
+
+```text
+customers
+customer_contacts
+customer_addresses
+customer_tags
+customer_notes
+customer_accounts
+
+suppliers
+supplier_contacts
+supplier_addresses
+supplier_tags
+supplier_notes
+supplier_accounts
+
+products
+product_variants
+product_categories
+product_units
+product_prices
+product_skus
+product_barcodes
+```
+
+---
+
+# 52. INVENTORY TABLES
+
+```text
+inventory_items
+stock_levels
+stock_movements
+stock_adjustments
+stock_transfers
+stock_transfer_items
+inventory_batches
+inventory_serials
+```
+
+---
+
+# 53. TRANSACTION TABLES
+
+```text
+sales
+sale_items
+sale_discounts
+sale_taxes
+sale_payments
+
+expenses
+expense_categories
+expense_items
+expense_attachments
+recurring_expenses
+
+purchases
+purchase_items
+purchase_taxes
+purchase_discounts
+purchase_payments
+
+payments
+payment_methods
+payment_accounts
+payment_allocations
+
+returns
+return_items
+refunds
+```
+
+---
+
+# 54. FINANCE TABLES
+
+```text
+financial_accounts
+account_categories
+journal_entries
+journal_entry_lines
+ledger_entries
+receivables
+payables
+cash_flows
+financial_periods
+```
+
+---
+
+# 55. AI TABLES
+
+```text
+insights
+insight_evidence
+insight_recommendations
+
+ai_actions
+ai_action_steps
+ai_action_approvals
+ai_action_results
+
+business_memory
+memory_sources
+memory_events
+memory_permissions
+
+conversations
+conversation_messages
+conversation_context
+conversation_actions
+```
+
+---
+
+# 56. INTEGRATION TABLES
+
+```text
+connection_providers
+connections
+connection_accounts
+connection_credentials
+connection_syncs
+connection_events
+```
+
+Credentials must not be stored as ordinary plaintext application data.
+
+---
+
+# 57. MOBILE STORAGE
+
+The mobile application maintains a local database for:
+
+- cached business data
+- recent records
+- drafts
+- offline-capable operations
+- sync metadata
+
+It is **not the cloud source of truth**.
+
+---
+
+# 58. MOBILE SECURE STORAGE
+
+Use platform secure mechanisms for:
+
+- session credentials
+- device identity
+- encryption keys
+- security-related configuration
+
+Sensitive credentials should not be stored in the ordinary local database.
+
+---
+
+# 59. OFFLINE ARCHITECTURE
+
+```text
+User action
+ ↓
+Local database
+ ↓
+UI updates
+ ↓
+Offline queue
+ ↓
+Network available
+ ↓
+Sync
+ ↓
+Server validation
+ ↓
+Commit
+ ↓
+Result
+```
+
+---
+
+# 60. OFFLINE OPERATION RECORD
+
+Each queued mutation should carry concepts such as:
+
+```text
+operation_id
+device_id
+business_id
+entity
+entity_id
+operation
+payload
+base_version
+created_at
+status
+retry_count
+```
+
+---
+
+# 61. IDEMPOTENCY
+
+Important mutations must be retry-safe.
+
+This prevents duplicate transactions when:
+
+- network fails
+- app retries
+- user taps repeatedly
+- device reconnects
+
+---
+
+# 62. CONFLICT RESOLUTION
+
+Backend compares versions.
+
+```text
+Client based on version 10
+Server version 12
+        ↓
+Conflict
+```
+
+Return structured conflict information.
+
+The frontend provides the appropriate resolution UX.
+
+---
+
+# 63. REALTIME
+
+Realtime events can include:
+
+- sale created
+- payment received
+- inventory changed
+- notification created
+- AI insight created
+- AI action completed
+- sync completed
+- connection changed
+
+All channels must remain business/permission scoped.
+
+---
+
+# 64. EVENT SYSTEM
+
+Internal events:
+
+```text
+business.created
+sale.created
+sale.completed
+payment.received
+inventory.changed
+customer.updated
+purchase.created
+document.created
+ai.insight.created
+ai.action.completed
+connection.updated
+```
+
+Events trigger decoupled processes.
+
+---
+
+# 65. BACKGROUND JOBS
+
+Use durable jobs for:
+
+- AI analysis
+- AI briefing
+- report generation
+- PDF generation
+- voice processing
+- notifications
+- email
+- webhook processing
+- integration sync
+- imports
+- scheduled automation
+- backup-related processes
+
+---
+
+# 66. RETRY & DEAD LETTER
+
+Jobs should distinguish:
+
+```text
+Retryable
+Non-retryable
+```
+
+Repeated failures move to controlled dead-letter handling.
+
+---
+
+# 67. CLOUD STORAGE
+
+Object storage handles:
+
+- documents
+- receipts
+- invoices
+- product images
+- attachments
+- generated reports
+- imports
+- exports
+
+Database contains metadata.
+
+---
+
+# 68. FILE ACCESS
+
+Files should normally be private.
+
+Flow:
+
+```text
+Authenticated request
+ ↓
+Permission check
+ ↓
+Short-lived signed access
+ ↓
+Object storage
+```
+
+---
+
+# 69. CLOUD NETWORK
+
+```text
+Internet
+ ↓
+DNS/CDN
+ ↓
+TLS
+ ↓
+WAF
+ ↓
+Firewall
+ ↓
+API edge
+ ↓
+Application
+ ↓
+Database / Storage / Queue
+```
+
+---
+
+# 70. FIREWALL
+
+Default principle:
+
+**Deny by default; expose only required services.**
+
+The primary database should not be directly accessible from the public internet.
+
+---
+
+# 71. NETWORK SEGMENTATION
+
+Separate logically:
+
+```text
+Public edge
+Application
+Workers
+Database
+Storage
+Management
+```
+
+---
+
+# 72. WAF & DDoS
+
+Protect public APIs against:
+
+- abusive traffic
+- common malicious request patterns
+- injection attempts
+- excessive request rates
+- automated abuse
+
+Infrastructure-level DDoS protection and application-level rate limiting complement each other.
+
+---
+
+# 73. ENCRYPTION
+
+Use encryption for:
+
+### Transit
+
+TLS.
+
+### Storage
+
+Database, backups and object storage.
+
+### Mobile
+
+Sensitive local data through appropriate platform protections.
+
+---
+
+# 74. SECRET MANAGEMENT
+
+Never commit:
+
+- database passwords
+- AI provider keys
+- OAuth secrets
+- JWT secrets
+- private keys
+- encryption keys
+
+Use managed secret/key infrastructure where available.
+
+---
+
+# 75. ENVIRONMENTS
+
+Strictly separate:
+
+```text
+Development
+Staging
+Production
+```
+
+Each has separate:
+
+- credentials
+- database
+- storage
+- provider keys
+- integrations
+
+---
+
+# 76. LOGGING
+
+Centralized structured logging for:
+
+- API
+- backend
+- workers
+- integrations
+- security
+
+Log concepts:
+
+```text
+timestamp
+level
+service
+request_id
+business_id
+actor where appropriate
+event
+duration
+error
+```
+
+---
+
+# 77. NEVER LOG
+
+Never place sensitive secrets into logs:
+
+- passwords
+- tokens
+- private keys
+- payment credentials
+- unnecessary personal data
+- unrestricted document contents
+
+---
+
+# 78. AUDIT
+
+Audit is different from ordinary logging.
+
+Audit answers:
+
+> Who did what, to which business record, and when?
+
+Important audit information:
+
+```text
+actor
+business
+action
+entity
+entity_id
+device
+timestamp
+request_id
+metadata
+```
+
+Audit history should be protected from ordinary modification.
+
+---
+
+# 79. MONITORING
+
+Monitor:
+
+### API
+
+- latency
+- throughput
+- errors
+
+### Database
+
+- connections
+- query performance
+- storage
+- locks
+
+### Queue
+
+- backlog
+- failure
+- processing time
+
+### AI
+
+- usage
+- latency
+- failure
+- cost
+
+### Integrations
+
+- sync
+- webhook failures
+- token expiry
+
+---
+
+# 80. OBSERVABILITY
+
+The system should support:
+
+```text
+Logs
+Metrics
+Traces
+Alerts
+Health checks
+```
+
+Request IDs should flow across API, workers, integrations and audit.
+
+---
+
+# 81. HEALTH ENDPOINTS
+
+Conceptually:
+
+```text
+/health
+/health/live
+/health/ready
+```
+
+---
+
+# 82. BACKUP
+
+Protect:
+
+- transactional database
+- object storage
+- important configuration
+
+Backups should be encrypted and access-controlled.
+
+---
+
+# 83. DISASTER RECOVERY
+
+Define and validate:
+
+- RPO
+- RTO
+- restore procedure
+- backup verification
+- recovery procedure
+- incident procedure
+
+A backup is not considered reliable merely because it exists; restoration must be tested.
+
+---
+
+# 84. DATA RETENTION
+
+Define retention for:
+
+- transactions
+- documents
+- audit
+- AI conversations
+- AI memory
+- integration events
+- notifications
+- deleted records
+
+Financial/legal retention requirements must be respected.
+
+---
+
+# 85. DATA CLASSIFICATION
+
+```text
+PUBLIC
+INTERNAL
+CONFIDENTIAL
+HIGHLY SENSITIVE
+```
+
+The classification determines access and storage requirements.
+
+---
+
+# 86. PRIVACY
+
+Architecture supports:
+
+- data minimization
+- controlled access
+- export
+- appropriate deletion workflows
+- provider boundaries
+- auditability
+
+---
+
+# 87. AI DATA PROTECTION
+
+AI receives only:
+
+```text
+minimum required context
++
+authorized data
++
+necessary references
+```
+
+Not the complete database.
+
+---
+
+# 88. AI MODEL ABSTRACTION
+
+```text
+Vepari AI Gateway
+        ↓
+Model Router
+        ↓
+Provider A / Provider B / Future Provider
+```
+
+This allows model/provider changes without rebuilding the entire product.
+
+---
+
+# 89. CONNECTION PORTFOLIO
+
+The Connection Portfolio is the future integration ecosystem of Vepari AI.
+
+It should support categories such as:
+
+- financial
+- payments
+- commerce
+- accounting
+- communication
+- documents
+- business tools
+- AI services
+
+It is intentionally designed as a generic platform rather than being hardcoded to individual providers.
+
+---
+
+# 90. CONNECTION LIFECYCLE
+
+```text
+Discover
+ ↓
+Connect
+ ↓
+Authorize
+ ↓
+Secure credential storage
+ ↓
+Initial sync
+ ↓
+Connected
+ ↓
+Continuous sync
+ ↓
+Monitoring
+ ↓
+Reconnect / Disconnect
+```
+
+---
+
+# 91. CONNECTION ADAPTER
+
+Each provider should implement a consistent conceptual interface:
+
+```text
+connect()
+authorize()
+disconnect()
+refresh()
+sync()
+handleWebhook()
+healthCheck()
+```
+
+---
+
+# 92. WEBHOOKS
+
+External events:
+
+```text
+Provider
+ ↓
+Webhook
+ ↓
+Signature verification
+ ↓
+Deduplication
+ ↓
+Persist
+ ↓
+Queue
+ ↓
+Process
+```
+
+External event IDs should be stored to prevent duplicate processing.
+
+---
+
+# 93. AUTOMATION
+
+```text
+Trigger
+ ↓
+Condition
+ ↓
+Action
+ ↓
+Job
+ ↓
+Execution
+ ↓
+Result
+ ↓
+Audit
+```
+
+Examples:
+
+- low stock → alert
+- overdue payment → reminder
+- scheduled briefing → AI OS briefing
+
+---
+
+# 94. TEAM & PERMISSIONS
+
+Permissions must be enforced by the backend.
+
+Hierarchy:
+
+```text
+User
+ ↓
+Business Membership
+ ↓
+Role
+ ↓
+Permission
+ ↓
+Resource
+```
+
+Possible roles:
+
+- Owner
+- Admin
+- Manager
+- Finance
+- Sales
+- Inventory
+- Staff
+- Custom
+
+---
+
+# 95. MULTI-BUSINESS
+
+A user may belong to multiple businesses.
+
+```text
+User
+ ├── Business A
+ ├── Business B
+ └── Business C
+```
+
+All business data must remain isolated.
+
+---
+
+# 96. MULTI-BRANCH
+
+Businesses can have:
+
+```text
+Business
+ ├── Branch A
+ ├── Branch B
+ └── Branch C
+```
+
+Data access can be restricted by branch where required.
+
+---
+
+# 97. DEVICE MANAGEMENT
+
+Backend tracks:
+
+- device
+- platform
+- session
+- last active
+- trust state
+- push registration
+
+Users should be able to revoke devices/sessions where supported.
+
+---
+
+# 98. NOTIFICATIONS
+
+Support:
+
+- in-app
+- push
+- email/other configured channels
+
+Notification preferences determine delivery.
+
+---
+
+# 99. NOTIFICATION PRIVACY
+
+Lock-screen notifications should avoid unnecessarily exposing sensitive financial/business information.
+
+---
+
+# 100. USAGE & ENTITLEMENTS
+
+The backend controls:
+
+```text
+Plan
+ ↓
+Entitlements
+ ↓
+Limits
+ ↓
+Usage
+```
+
+This supports:
+
+- Basic
+- higher tiers
+- Enterprise
+
+without hardcoding feature access in the mobile application.
+
+---
+
+# 101. ENTERPRISE ARCHITECTURE
+
+Enterprise can support:
+
+- higher usage
+- advanced AI
+- multi-branch
+- advanced permissions
+- advanced reporting
+- automation
+- connections
+- larger teams
+- usage-based capabilities
+
+---
+
+# 102. FEATURE FLAGS
+
+Backend-controlled feature flags allow:
+
+- beta features
+- staged releases
+- emergency disabling
+- controlled AI features
+- controlled integrations
+
+---
+
+# 103. KILL SWITCHES
+
+High-risk experimental AI actions and integrations should be remotely disableable.
+
+---
+
+# 104. DEGRADED MODE
+
+If a secondary system fails:
+
+```text
+AI unavailable
+→ Core business continues
+
+Integration unavailable
+→ Core business continues
+
+Analytics unavailable
+→ Transactions continue
+```
+
+Vepari must degrade gracefully.
+
+---
+
+# 105. BILLING ARCHITECTURE
+
+Future billing entities:
+
+```text
+plans
+subscriptions
+entitlements
+usage_records
+billing_events
+```
+
+Pricing and limits remain backend-controlled.
+
+---
+
+# 106. FRONTEND ↔ BACKEND CONTRACT
+
+```text
+React Native
+ ↓
+Typed API Client
+ ↓
+REST / Realtime / Sync
+ ↓
+Backend
+ ↓
+Business Service
+ ↓
+Database
+```
+
+The frontend should never rely on undocumented response formats.
+
+---
+
+# 107. DATA FLOW — SALE
+
+```text
+Mobile
+ ↓
+POST /sales
+ ↓
+Authentication
+ ↓
+Business authorization
+ ↓
+Validation
+ ↓
+Sales Service
+ ├── Sale
+ ├── Items
+ ├── Inventory
+ ├── Customer
+ ├── Payment
+ └── Finance
+ ↓
+Transaction
+ ↓
+Domain events
+ ├── Realtime
+ ├── Notification
+ ├── AI context
+ └── Audit
+ ↓
+Response
+ ↓
+Mobile state
+ ↓
+UI
+```
+
+---
+
+# 108. DATA FLOW — AI
+
+```text
+Mobile
+ ↓
+AI API
+ ↓
+Authentication
+ ↓
+Permissions
+ ↓
+Context Engine
+ ↓
+Relevant business data
+ ↓
+AI Gateway
+ ↓
+Structured result
+ ↓
+Evidence
+ ↓
+Recommendation
+ ↓
+Optional action
+ ↓
+Mobile
+```
+
+---
+
+# 109. DATA FLOW — AI ACTION
+
+```text
+AI
+ ↓
+Action proposal
+ ↓
+Validation
+ ↓
+Permission
+ ↓
+Approval
+ ↓
+Business service
+ ↓
+Database transaction
+ ↓
+Audit
+ ↓
+Realtime
+ ↓
+Result
+```
+
+---
+
+# 110. DATA FLOW — OFFLINE
+
+```text
+Mobile
+ ↓
+Local DB
+ ↓
+Offline queue
+ ↓
+Internet returns
+ ↓
+Sync API
+ ↓
+Idempotency
+ ↓
+Validation
+ ↓
+Conflict detection
+ ↓
+Cloud commit
+ ↓
+Pull
+ ↓
+Mobile reconciliation
+```
+
+---
+
+# 111. DATA FLOW — CONNECTION
+
+```text
+Mobile
+ ↓
+Connection Portfolio
+ ↓
+Backend
+ ↓
+Authorization
+ ↓
+Provider
+ ↓
+Callback
+ ↓
+Credential storage
+ ↓
+Initial sync
+ ↓
+Webhook / scheduled sync
+ ↓
+Connection status
+```
+
+---
+
+# 112. API TESTING
+
+Every API needs:
+
+- success tests
+- validation tests
+- authorization tests
+- tenant-isolation tests
+- error tests
+- pagination tests
+- idempotency tests
+- concurrency tests
+
+---
+
+# 113. DATABASE TESTING
+
+Test:
+
+- relationships
+- constraints
+- transactions
+- financial integrity
+- inventory integrity
+- concurrency
+- migrations
+
+---
+
+# 114. SECURITY TESTING
+
+Test:
+
+```text
+User A → Business B
+Unauthorized finance
+Expired session
+Invalid token
+Forged webhook
+Duplicate transaction
+Stale update
+Unauthorized AI action
+Privilege escalation
+```
+
+---
+
+# 115. OFFLINE TESTING
+
+Test:
+
+- no network
+- slow network
+- network interruption
+- duplicate requests
+- app termination during sync
+- restart
+- conflicts
+- server failure
+
+---
+
+# 116. MULTI-DEVICE TESTING
+
+Test simultaneous operation from multiple devices.
+
+The cloud remains authoritative and all devices eventually converge on consistent state.
+
+---
+
+# 117. PERFORMANCE TESTING
+
+Measure:
+
+- application startup
+- AI OS activation
+- navigation
+- API latency
+- database queries
+- search
+- sync
+- large lists
+- reports
+- AI response latency
+
+---
+
+# 118. LARGE BUSINESS TESTING
+
+The system should be benchmarked against realistic large datasets including:
+
+- thousands of customers
+- large product catalogs
+- large transaction histories
+- multiple branches
+- multiple users
+- substantial document collections
+
+Capacity targets should be established from actual benchmarks.
+
+---
+
+# 119. ACCESSIBILITY
+
+Every applicable screen should support:
+
+- screen readers
+- accessible labels
+- appropriate touch targets
+- dynamic text
+- contrast
+- reduced motion
+- voice alternatives
+
+---
+
+# 120. LOCALIZATION ENGINEERING
+
+All user-facing strings use translation keys.
+
+Example:
+
+```text
+sale.save
+sale.total
+customer.add
+inventory.low_stock
+payment.received
+```
+
+No hardcoded user-facing strings.
+
+---
+
+# 121. MULTILINGUAL UI ENGINEERING
+
+The UI must tolerate:
+
+- longer translated text
+- different scripts
+- different glyph dimensions
+- different line heights
+- number formatting
+- date formatting
+- currency formatting
+- voice transcripts
+
+---
+
+# 122. IMPLEMENTATION ARCHITECTURE
+
+The build should proceed in controlled phases.
+
+```text
+Specification
+ ↓
+Repository audit
+ ↓
+Foundation
+ ↓
+Infrastructure
+ ↓
+Database
+ ↓
+Backend/API
+ ↓
+Frontend foundation
+ ↓
+Core business
+ ↓
+AI
+ ↓
+Offline/sync
+ ↓
+Integrations
+ ↓
+Security
+ ↓
+Testing
+ ↓
+Release
+```
+
+---
+
+# 123. IMPLEMENTATION PHASES
+
+## Phase 1 — Repository audit
+
+Inspect existing Main App repository before modifying anything.
+
+---
+
+## Phase 2 — Development foundation
+
+Establish:
+
+- React Native
+- TypeScript
+- backend runtime
+- package management
+- linting
+- formatting
+- testing
+- shared types
+- environments
+
+---
+
+## Phase 3 — Database foundation
+
+Implement schema/migrations for:
+
+- identity
+- business
+- membership
+- customers
+- suppliers
+- products
+- inventory
+- transactions
+- finance
+
+---
+
+## Phase 4 — Backend foundation
+
+Implement:
+
+- authentication
+- authorization
+- tenant isolation
+- validation
+- API contracts
+- errors
+- rate limiting
+- request IDs
+
+---
+
+## Phase 5 — Core business APIs
+
+Build:
+
+```text
+Businesses
+Customers
+Suppliers
+Products
+Inventory
+Sales
+Expenses
+Purchases
+Payments
+Finance
+```
+
+---
+
+## Phase 6 — React Native foundation
+
+Build:
+
+- application shell
+- navigation
+- theme
+- design system
+- API client
+- state
+- localization foundation
+
+---
+
+## Phase 7 — Security & onboarding
+
+Build:
+
+- authentication
+- PIN
+- biometrics
+- device management
+- onboarding
+
+---
+
+## Phase 8 — AI OS
+
+Build:
+
+- AI OS visual system
+- awakening
+- business scan
+- briefing
+- insights
+- recommendations
+- AI actions
+
+---
+
+## Phase 9 — Business frontend
+
+Implement:
+
+- Home
+- Customers
+- Suppliers
+- Products
+- Inventory
+- Sales
+- Expenses
+- Purchases
+- Payments
+- Finance
+- Operations
+- Documents
+- Reports
+
+---
+
+## Phase 10 — Intelligence
+
+Implement:
+
+- AI Gateway
+- context
+- insights
+- evidence
+- actions
+- approvals
+- memory
+- conversations
+- voice
+
+---
+
+## Phase 11 — Platform capabilities
+
+Implement:
+
+- search
+- notifications
+- alerts
+- team
+- permissions
+- automation
+- devices
+
+---
+
+## Phase 12 — Mobile resilience
+
+Implement:
+
+- local DB
+- cache
+- offline queue
+- sync
+- conflict resolution
+- realtime
+
+---
+
+## Phase 13 — Connection Portfolio
+
+The Connection Portfolio is built **last**, after the core product is substantially stable.
+
+It should represent actual working integrations rather than placeholders.
+
+---
+
+## Phase 14 — Cloud/security hardening
+
+Finalize:
+
+- WAF
+- firewall
+- secrets
+- encryption
+- logging
+- monitoring
+- audit
+- backup
+- recovery
+
+---
+
+## Phase 15 — Testing
+
+Run:
+
+- unit
+- integration
+- API
+- E2E
+- security
+- offline
+- multi-device
+- performance
+- localization
+- accessibility
+
+---
+
+## Phase 16 — Release
+
+```text
+Development
+ ↓
+Staging
+ ↓
+Controlled testing
+ ↓
+Internal release
+ ↓
+Beta
+ ↓
+Controlled production
+ ↓
+General release
+```
+
+---
+
+# 124. MASTER REPOSITORY CONCEPT
+
+The eventual repository should logically contain:
+
+```text
+vepari-ai/
+│
+├── mobile/
+├── backend/
+├── packages/
+│   ├── types/
+│   ├── api-client/
+│   ├── design-system/
+│   ├── validation/
+│   └── config/
+│
+├── infrastructure/
+├── database/
+├── docs/
+└── tests/
+```
+
+The actual existing repository must be audited before restructuring.
+
+---
+
+# 125. GIT / TEAM CONTINUITY
+
+Because the same Vepari AI project will be worked on from different devices/team members:
+
+```text
+Developer A
+      ↓
+GitHub
+      ↓
+Developer B
+      ↓
+GitHub
+      ↓
+Developer C
+```
+
+The repository—not an individual Claude session—is the continuity layer.
+
+Every meaningful completed change should therefore be:
+
+- reproducible
+- documented
+- committed
+- synchronized
+
+Claude sessions should never be treated as the source of truth.
+
+---
+
+# 126. DOCUMENTATION REQUIREMENTS
+
+The repository should eventually contain documentation for:
+
+```text
+Architecture
+Database
+API
+Frontend
+AI
+Security
+Deployment
+Integrations
+Sync
+Localization
+Operations
+```
+
+---
+
+# 127. API DOCUMENTATION
+
+Every API endpoint should document:
+
+- purpose
+- authentication
+- permissions
+- request
+- response
+- errors
+- pagination
+- idempotency
+- realtime effects
+- audit effects
+
+OpenAPI should be used as the machine-readable API contract where appropriate.
+
+---
+
+# 128. MIGRATION RULE
+
+Every production database change must be tracked through migrations.
+
+No uncontrolled manual schema changes.
+
+---
+
+# 129. PRODUCTION COMPATIBILITY
+
+Because users may remain on older app versions, backend APIs should maintain compatibility for supported mobile versions.
+
+Breaking changes require deliberate versioning.
+
+---
+
+# 130. iOS EXPANSION
+
+The business logic should remain platform-independent.
+
+Platform-specific functionality should use interfaces/adapters:
+
+```text
+Platform interface
+ ├── Android implementation
+ └── iOS implementation
+```
+
+This preserves the React Native strategy.
+
+---
+
+# 131. DEFINITION OF FRONTEND COMPLETE
+
+Frontend is complete only when:
+
+```text
+UI
+UX
+Navigation
+Design system
+Components
+Business screens
+AI OS
+Voice
+Localization
+Offline
+Sync
+Realtime
+Accessibility
+Animations
+Haptics
+API integration
+Error states
+Loading states
+Security UX
+Testing
+Android production readiness
+```
+
+are all verified.
+
+---
+
+# 132. DEFINITION OF BACKEND COMPLETE
+
+Backend is complete only when:
+
+```text
+Database
+API
+Business logic
+Finance
+AI
+Memory
+Voice
+Realtime
+Sync
+Integrations
+Jobs
+Security
+Audit
+Logging
+Monitoring
+Backup
+Recovery
+Testing
+```
+
+are verified.
+
+---
+
+# 133. DEFINITION OF PLATFORM COMPLETE
+
+The platform is complete when:
+
+```text
+Frontend
+       ↕
+API
+       ↕
+Backend
+       ↕
+Database
+       ↕
+Events
+       ↕
+AI
+       ↕
+Integrations
+```
+
+works as one coherent system.
+
+---
+
+# 134. GOLDEN END-TO-END BUSINESS TEST
+
+```text
+Create Business
+ ↓
+Create Customer
+ ↓
+Create Product
+ ↓
+Configure Inventory
+ ↓
+Create Sale
+ ↓
+Payment
+ ↓
+Inventory updated
+ ↓
+Customer balance updated
+ ↓
+Finance updated
+ ↓
+Dashboard updated
+ ↓
+Realtime event
+ ↓
+Audit event
+ ↓
+AI context updated
+```
+
+---
+
+# 135. GOLDEN AI TEST
+
+```text
+Business activity
+ ↓
+AI detects issue
+ ↓
+Insight
+ ↓
+Evidence
+ ↓
+Recommendation
+ ↓
+Action proposal
+ ↓
+Permission
+ ↓
+Owner approval
+ ↓
+Action executes
+ ↓
+Business updates
+ ↓
+Audit
+ ↓
+AI context updates
+```
+
+---
+
+# 136. GOLDEN OFFLINE TEST
+
+```text
+Device offline
+ ↓
+Sale created
+ ↓
+Local UI updates
+ ↓
+Operation queued
+ ↓
+Network returns
+ ↓
+Sync
+ ↓
+Server validates
+ ↓
+Cloud transaction
+ ↓
+Other devices receive update
+```
+
+---
+
+# 137. GOLDEN SECURITY TEST
+
+```text
+Unauthorized user
+ ↓
+Attempt cross-business access
+ ↓
+Backend rejects
+ ↓
+Audit/security event
+```
+
+Also test:
+
+- expired sessions
+- forged webhooks
+- duplicate transactions
+- unauthorized AI actions
+- privilege escalation
+
+---
+
+# 138. FINAL PRODUCT ARCHITECTURE
+
+```text
+                         VEPARI AI
+                             │
+             ┌───────────────┴───────────────┐
+             │                               │
+          MOBILE                            CLOUD
+             │                               │
+      React Native                       API Layer
+             │                               │
+       Local DB                         Backend Core
+             │                               │
+       Secure Store              ┌────────────┼────────────┐
+             │                   │            │            │
+       Offline Queue          Business       AI      Integrations
+             │                   │            │            │
+             └──────────────► Database    AI Memory   Providers
+                               │
+                         Object Storage
+                               │
+                           Queue/Jobs
+                               │
+                 ┌─────────────┼─────────────┐
+                 │             │             │
+               Audit         Logs       Monitoring
+                 │             │             │
+                 └─────────────┼─────────────┘
+                               │
+                    Security Infrastructure
+                  WAF / Firewall / TLS / Secrets
+```
+
+---
+
+# 139. THE VEPARI AI CORE LOOP
+
+Everything ultimately connects back to:
+
+```text
+                  BUSINESS ACTIVITY
+                         ↓
+                       DATA
+                         ↓
+                      MEMORY
+                         ↓
+                   INTELLIGENCE
+                         ↓
+                      INSIGHT
+                         ↓
+                   RECOMMENDATION
+                         ↓
+                       ACTION
+                         ↓
+                  BUSINESS CHANGE
+                         ↓
+                       DATA
+```
+
+And the user can enter this loop through:
+
+```text
+Touch
+Voice
+Text
+AI OS
+Dashboard
+Automation
+Integrations
+```
+
+---
+
+# 140. MASTER REQUIREMENTS CHECKLIST
+
+### Product
+
+- [x] Full MSME scope
+- [x] Micro-specialized experience
+- [x] India-focused
+- [x] 23-language architecture
+- [x] AI Business Operating System
+
+### UI/UX
+
+- [x] Mobile-first
+- [x] Official Vepari AI visual identity
+- [x] Official colors
+- [x] Lora English typography
+- [x] Multilingual typography
+- [x] AI OS
+- [x] Motion
+- [x] Haptics
+- [x] Accessibility
+- [x] Universal states
+
+### Frontend
+
+- [x] React Native
+- [x] TypeScript
+- [x] Android-first
+- [x] iOS-ready
+- [x] Design system
+- [x] Component architecture
+- [x] Navigation
+- [x] API client
+- [x] Local persistence
+
+### Backend
+
+- [x] Modular architecture
+- [x] Business services
+- [x] Finance
+- [x] AI
+- [x] Voice
+- [x] Automation
+- [x] Integrations
+- [x] Realtime
+- [x] Jobs
+
+### API
+
+- [x] Versioning
+- [x] Authentication
+- [x] Authorization
+- [x] Validation
+- [x] Errors
+- [x] Pagination
+- [x] Idempotency
+- [x] Realtime
+- [x] Sync
+
+### Database
+
+- [x] Identity
+- [x] Business
+- [x] Customers
+- [x] Suppliers
+- [x] Products
+- [x] Inventory
+- [x] Transactions
+- [x] Finance
+- [x] Documents
+- [x] AI
+- [x] Integrations
+- [x] Audit
+
+### Mobile data
+
+- [x] Local database
+- [x] Secure storage
+- [x] Cache
+- [x] Offline queue
+- [x] Sync
+- [x] Conflict resolution
+
+### AI
+
+- [x] AI Gateway
+- [x] Context engine
+- [x] Model abstraction
+- [x] Insights
+- [x] Evidence
+- [x] Recommendations
+- [x] Actions
+- [x] Approval
+- [x] Memory
+- [x] Voice
+
+### Cloud
+
+- [x] Application layer
+- [x] Database
+- [x] Object storage
+- [x] Queue
+- [x] Workers
+- [x] Realtime
+- [x] Environment separation
+
+### Security
+
+- [x] Authentication
+- [x] Authorization
+- [x] Tenant isolation
+- [x] TLS
+- [x] Encryption
+- [x] Secrets
+- [x] WAF
+- [x] Firewall
+- [x] Rate limiting
+- [x] Device security
+- [x] Audit
+
+### Operations
+
+- [x] Logs
+- [x] Metrics
+- [x] Traces
+- [x] Alerts
+- [x] Backups
+- [x] Disaster recovery
+- [x] Incident architecture
+
+### Integrations
+
+- [x] Connection Portfolio architecture
+- [x] Provider adapters
+- [x] OAuth architecture
+- [x] Webhooks
+- [x] Sync
+- [x] Connection health
+
+### Implementation
+
+- [x] Phased implementation strategy
+- [x] Testing strategy
+- [x] Android release
+- [x] iOS readiness
+- [x] Multi-device development continuity
+
+---
+
+# 141. FINAL SOURCE-OF-TRUTH RULE
+
+From this point forward, the hierarchy should be:
+
+```text
+VEPARI AI MASTER PRD
+        ↓
+Technical Architecture
+        ↓
+Database/API Contracts
+        ↓
+UI/UX Specification
+        ↓
+Implementation
+        ↓
+Tests
+        ↓
+Production
+```
+
+If an implementation decision conflicts with this PRD, it should **not silently change the product architecture**. The specification must be consciously updated first.
+
+---
+
+# 142. FINAL STATUS
+
+## Product specification
+**COMPLETE**
+
+## UI/UX specification
+**COMPLETE**
+
+## Frontend architecture
+**COMPLETE**
+
+## Backend architecture
+**COMPLETE**
+
+## API architecture
+**COMPLETE**
+
+## Database architecture
+**COMPLETE**
+
+## Mobile storage/offline architecture
+**COMPLETE**
+
+## AI OS + memory architecture
+**COMPLETE**
+
+## Cloud infrastructure architecture
+**COMPLETE**
+
+## Security/firewall/WAF architecture
+**COMPLETE**
+
+## Logging/monitoring/audit architecture
+**COMPLETE**
+
+## Connection Portfolio architecture
+**COMPLETE**
+
+## Implementation roadmap
+**COMPLETE**
+
+## Actual software implementation
+**NOT YET STARTED/NOT VERIFIED AS COMPLETE**
+
+---
+
+# VEPARI AI — MASTER DEFINITION
+
+**Vepari AI is an Android-first, React Native-based, multilingual AI Business Operating System for India's Micro, Small, Medium and Enterprise businesses.**
+
+Its architecture combines:
+
+**Business Operations + Finance + Inventory + Documents + Team + Automation + AI + Voice + Memory + Intelligence + Offline Capability + Integrations**
+
+into one system.
+
+The defining loop is:
+
+> **Voice → Memory → Intelligence → Action**
+
+And the defining experience is:
+
+> **The business owner secures the application → Vepari AI awakens → understands what happened → explains what matters → recommends what should happen next → and executes approved actions.**
+
+**This consolidated PRD is now the master source of truth for the Vepari AI build.**

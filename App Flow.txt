@@ -1,0 +1,3257 @@
+# VEPARI AI
+# MASTER APP FLOW DOCUMENT
+
+**Document Status:** Master / Consolidated  
+**Product:** Vepari AI  
+**Platform:** Android-first mobile application  
+**Future Platform:** iOS  
+**Technology Direction:** React Native + Expo + TypeScript  
+**Business Scope:** Micro → Small → Medium → Enterprise  
+**Language Scope:** 23 Indian languages  
+**Core Experience:** AI-native, local-first, offline-first  
+**Design Identity:** Official Vepari AI design system, with Lora as the primary English display/brand font  
+**Primary Navigation Model:** Mobile-first, AI-centered business workspace
+
+---
+
+# 1. PURPOSE
+
+This document defines the **complete end-to-end application flow of Vepari AI**, from the moment the user launches the application to daily business operations, AI interaction, offline operation, synchronization, integrations, settings, security, and eventual iOS expansion.
+
+It combines the decisions already established across:
+
+- Product requirements
+- UI/UX
+- Frontend architecture
+- Backend/API architecture
+- Database architecture
+- Local mobile storage
+- AI OS
+- AI memory
+- Voice
+- Multilingual system
+- Security
+- Cloud
+- Offline/sync
+- Connection Portfolio
+- Implementation roadmap
+
+The objective is that a designer, developer, tester, product manager, or Claude Code can understand **how the entire application behaves as one system**.
+
+---
+
+# 2. THE VEPARI AI EXPERIENCE
+
+The application is not designed as a collection of disconnected screens.
+
+The primary experience is:
+
+```text
+USER
+ ↓
+SECURITY
+ ↓
+AI OS
+ ↓
+BUSINESS UNDERSTANDING
+ ↓
+BUSINESS OPERATIONS
+ ↓
+MEMORY
+ ↓
+INTELLIGENCE
+ ↓
+ACTION
+ ↓
+RESULT
+ ↓
+UPDATED BUSINESS STATE
+```
+
+The user should always feel that Vepari AI understands the current state of the business.
+
+---
+
+# 3. MASTER APP FLOW
+
+```text
+                    APP LAUNCH
+                         ↓
+                 SESSION CHECK
+                         ↓
+                SECURITY CHECK
+                         ↓
+              PIN / BIOMETRIC
+                         ↓
+                 AI OS AWAKENS
+                         ↓
+              BUSINESS ANALYSIS
+                         ↓
+              "WHILE YOU WERE AWAY"
+                         ↓
+             IMPORTANT OPERATIONS
+                         ↓
+                RESOURCES / ALERTS
+                         ↓
+                  AI INSIGHTS
+                         ↓
+                OWNER WORKSPACE
+                         ↓
+       ┌────────────────────────────────┐
+       │                                │
+     AI OS                         BUSINESS
+       │                                │
+       ├── Voice                        ├── Customers
+       ├── Chat                         ├── Suppliers
+       ├── Insights                     ├── Products
+       ├── Actions                      ├── Inventory
+       └── Memory                       ├── Sales
+                                        ├── Expenses
+                                        ├── Purchases
+                                        ├── Payments
+                                        ├── Finance
+                                        ├── Operations
+                                        ├── Documents
+                                        └── Reports
+```
+
+---
+
+# 4. FIRST INSTALLATION FLOW
+
+A new user follows:
+
+```text
+Install
+ ↓
+Open
+ ↓
+Welcome
+ ↓
+Language Selection
+ ↓
+Create Account / Login
+ ↓
+Verification
+ ↓
+Security Setup
+ ↓
+Business Setup
+ ↓
+Business Type
+ ↓
+Business Size
+ ↓
+Industry
+ ↓
+Location
+ ↓
+Business Configuration
+ ↓
+Optional Data Import
+ ↓
+AI Configuration
+ ↓
+Voice Configuration
+ ↓
+Permissions
+ ↓
+Initial Business Setup
+ ↓
+AI OS Introduction
+ ↓
+Home
+```
+
+---
+
+# 5. WELCOME SCREEN
+
+Purpose:
+
+Introduce Vepari AI without overwhelming the user.
+
+Possible actions:
+
+```text
+Get Started
+Login
+Language
+```
+
+The visual identity uses the official Vepari AI design system.
+
+---
+
+# 6. LANGUAGE SELECTION
+
+The user selects their preferred language.
+
+The application must support the planned **23 Indian-language experience**.
+
+Language affects:
+
+- UI
+- AI responses
+- voice
+- onboarding
+- notifications
+- reports where supported
+
+Language can later be changed from settings.
+
+---
+
+# 7. ACCOUNT FLOW
+
+```text
+Create Account
+       OR
+Existing Account
+       ↓
+Verification
+       ↓
+Authenticated Session
+```
+
+Authentication should remain independent from business data.
+
+---
+
+# 8. SECURITY SETUP
+
+The user establishes appropriate application security.
+
+Possible mechanisms:
+
+- PIN
+- biometric authentication
+- device trust
+
+Flow:
+
+```text
+Account
+ ↓
+Security Setup
+ ↓
+PIN
+ ↓
+Biometric Setup
+ ↓
+Device Registration
+ ↓
+Trusted Device
+```
+
+---
+
+# 9. BUSINESS CREATION
+
+After identity/security:
+
+```text
+Create Business
+ ↓
+Business Name
+ ↓
+Business Type
+ ↓
+Business Size
+ ↓
+Industry
+ ↓
+Location
+ ↓
+Currency / regional configuration
+ ↓
+Business preferences
+```
+
+---
+
+# 10. BUSINESS SIZE
+
+Vepari AI supports:
+
+```text
+Micro
+Small
+Medium
+Enterprise
+```
+
+The selection influences the initial experience and available complexity.
+
+It does **not** create four different applications.
+
+---
+
+# 11. MICRO EXPERIENCE
+
+Micro businesses receive:
+
+- simpler onboarding
+- fewer unnecessary controls
+- guided workflows
+- faster actions
+- AI assistance
+- simplified dashboards
+
+Advanced capabilities remain available as needed.
+
+---
+
+# 12. SMALL / MEDIUM EXPERIENCE
+
+As business complexity increases, the application exposes more:
+
+- team management
+- branches
+- finance
+- analytics
+- automation
+- advanced inventory
+- integrations
+
+---
+
+# 13. ENTERPRISE EXPERIENCE
+
+Enterprise configuration can include:
+
+- multiple branches
+- teams
+- granular permissions
+- advanced reporting
+- automation
+- integrations
+- high AI usage
+- advanced controls
+
+---
+
+# 14. INITIAL BUSINESS DATA
+
+The user can optionally establish:
+
+- customers
+- suppliers
+- products
+- inventory
+- opening balances
+- business configuration
+
+Data entry should be progressively guided.
+
+---
+
+# 15. IMPORT FLOW
+
+Where supported:
+
+```text
+Import
+ ↓
+Select Source
+ ↓
+Upload / Connect
+ ↓
+Map Fields
+ ↓
+Validate
+ ↓
+Preview
+ ↓
+Confirm
+ ↓
+Import
+ ↓
+Result
+```
+
+Invalid records should be reported without corrupting valid records.
+
+---
+
+# 16. AI OS INTRODUCTION
+
+After onboarding, Vepari AI introduces its central AI OS.
+
+The experience establishes:
+
+- what the AI can do
+- what it can see
+- what it can remember
+- what requires approval
+- what it can execute
+
+The AI should not imply unrestricted authority.
+
+---
+
+# 17. FIRST HOME ENTRY
+
+After onboarding:
+
+```text
+Business Setup
+ ↓
+Initial Data
+ ↓
+AI OS
+ ↓
+Home Dashboard
+```
+
+The home screen becomes the owner's business command center.
+
+---
+
+# 18. RETURNING USER FLOW
+
+Every subsequent launch follows:
+
+```text
+Launch
+ ↓
+Session Check
+ ↓
+Security
+ ↓
+AI OS Activation
+ ↓
+Business State Scan
+ ↓
+Briefing
+ ↓
+Home
+```
+
+---
+
+# 19. AI OS ACTIVATION
+
+The cinematic animation occurs **only after successful security completion**.
+
+Flow:
+
+```text
+Security Verified
+ ↓
+AI OS Activation
+ ↓
+Animation
+ ↓
+AI Presence
+ ↓
+Analysis
+```
+
+The animation should feel like a sophisticated business AI awakening rather than a generic splash screen.
+
+---
+
+# 20. AI OS "WHILE YOU WERE AWAY"
+
+The AI determines relevant events since the previous meaningful checkpoint.
+
+Possible information:
+
+```text
+Sales
+Expenses
+Payments
+Inventory
+Customers
+Suppliers
+Operations
+Alerts
+Important notifications
+```
+
+---
+
+# 21. BRIEFING PRIORITIZATION
+
+The AI should not show every event.
+
+It ranks by:
+
+```text
+Importance
+Impact
+Urgency
+Business relevance
+Novelty
+```
+
+Then produces a concise briefing.
+
+---
+
+# 22. AI OS BRIEFING STRUCTURE
+
+```text
+Good morning / Welcome back
+        ↓
+Business status
+        ↓
+Important changes
+        ↓
+Alerts
+        ↓
+Opportunities
+        ↓
+Recommended actions
+```
+
+---
+
+# 23. AI OS RESOURCE VIEW
+
+The AI can summarize the current state of major resources:
+
+- cash
+- inventory
+- receivables
+- payables
+- sales
+- expenses
+- business health
+
+---
+
+# 24. AI OS INTERACTION
+
+The owner can:
+
+```text
+Speak
+Type
+Tap
+Ask
+Approve
+Reject
+Open
+Navigate
+```
+
+---
+
+# 25. AI VOICE FLOW
+
+```text
+Tap / Voice activation
+ ↓
+Listening
+ ↓
+Speech recognition
+ ↓
+Language detection
+ ↓
+Intent/context
+ ↓
+AI
+ ↓
+Response
+ ↓
+Text-to-speech
+```
+
+---
+
+# 26. AI CHAT FLOW
+
+```text
+Ask question
+ ↓
+Identify business
+ ↓
+Identify permissions
+ ↓
+Retrieve relevant context
+ ↓
+Retrieve memory
+ ↓
+AI processing
+ ↓
+Answer
+ ↓
+Evidence where appropriate
+```
+
+---
+
+# 27. AI QUESTION EXAMPLE
+
+Conceptually:
+
+```text
+Owner:
+"How were sales yesterday?"
+
+Vepari AI:
+Sales summary
+ ↓
+Comparison
+ ↓
+Important movement
+ ↓
+Reason
+ ↓
+Recommendation
+```
+
+---
+
+# 28. AI INSIGHT FLOW
+
+```text
+Business event
+ ↓
+Detection
+ ↓
+Analysis
+ ↓
+Insight
+ ↓
+Evidence
+ ↓
+Impact
+ ↓
+Recommendation
+```
+
+---
+
+# 29. AI ACTION FLOW
+
+```text
+Recommendation
+ ↓
+Action proposal
+ ↓
+Permission check
+ ↓
+Approval if necessary
+ ↓
+Execute
+ ↓
+Result
+ ↓
+Audit
+```
+
+---
+
+# 30. AI ACTION CONFIRMATION
+
+Actions that can materially affect business records should have appropriate confirmation.
+
+The user must understand:
+
+- what will happen
+- what records are affected
+- what the result will be
+
+---
+
+# 31. AI ACTION RESULT
+
+After execution:
+
+```text
+Action completed
+ ↓
+Affected records
+ ↓
+Updated state
+ ↓
+Optional explanation
+```
+
+---
+
+# 32. AI EVIDENCE FLOW
+
+For important insights:
+
+```text
+Insight
+ ↓
+Why?
+ ↓
+Evidence
+ ↓
+Source record
+ ↓
+Business detail
+```
+
+This makes AI decisions more trustworthy.
+
+---
+
+# 33. AI MEMORY FLOW
+
+```text
+User interaction
+ ↓
+Determine relevance
+ ↓
+Memory candidate
+ ↓
+Permission/privacy rules
+ ↓
+Store appropriate memory
+ ↓
+Future context
+```
+
+---
+
+# 34. MEMORY TYPES
+
+```text
+User Preference
+Business Context
+Business Event
+Conversation Context
+Derived Insight
+Temporary Context
+```
+
+---
+
+# 35. MEMORY AUTHORITY
+
+If AI memory conflicts with authoritative business data:
+
+**authoritative business data wins.**
+
+```text
+AI Memory
+     ↓
+Context
+
+Business Database
+     ↓
+Truth
+```
+
+---
+
+# 36. MAIN HOME SCREEN
+
+The home screen provides a high-level business command center.
+
+Core areas:
+
+```text
+Header
+Business
+AI OS
+Business Health
+Revenue
+Expenses
+Profit
+Cash
+Alerts
+Insights
+Quick Actions
+Recent Activity
+```
+
+---
+
+# 37. HOME NAVIGATION
+
+The application should provide fast access to the major business domains without requiring the user to repeatedly return through deep navigation.
+
+The exact navigation layout follows the approved mobile UI/UX specification.
+
+---
+
+# 38. QUICK ACTIONS
+
+Common operations should be directly accessible.
+
+Examples:
+
+```text
+New Sale
+Add Customer
+Add Product
+Add Expense
+Record Payment
+Add Purchase
+Scan / Search
+Ask AI
+```
+
+---
+
+# 39. CUSTOMER FLOW
+
+```text
+Customers
+ ↓
+Search / Filter
+ ↓
+Customer List
+ ↓
+Customer Detail
+```
+
+From customer detail:
+
+```text
+Transactions
+Payments
+Credit
+Notes
+Activity
+AI Insights
+```
+
+---
+
+# 40. ADD CUSTOMER
+
+```text
+Add
+ ↓
+Customer information
+ ↓
+Contact details
+ ↓
+Address
+ ↓
+Additional information
+ ↓
+Save
+ ↓
+Customer profile
+```
+
+Offline-capable where applicable.
+
+---
+
+# 41. SUPPLIER FLOW
+
+```text
+Suppliers
+ ↓
+Search / Filter
+ ↓
+Supplier Detail
+```
+
+Supplier detail provides:
+
+- purchases
+- payments
+- outstanding amounts
+- activity
+- AI insights
+
+---
+
+# 42. PRODUCT FLOW
+
+```text
+Products
+ ↓
+Search / Filter
+ ↓
+Product Detail
+```
+
+Product data can include:
+
+- name
+- category
+- SKU
+- barcode
+- price
+- variants
+- unit
+- stock
+
+---
+
+# 43. INVENTORY FLOW
+
+```text
+Inventory
+ ↓
+Overview
+ ↓
+Stock
+ ↓
+Product
+ ↓
+Stock Detail
+```
+
+Actions:
+
+```text
+Adjust
+Transfer
+View Movement
+View Batch
+View Serial
+```
+
+---
+
+# 44. STOCK ADJUSTMENT
+
+```text
+Select Product
+ ↓
+Current Stock
+ ↓
+Adjustment
+ ↓
+Reason
+ ↓
+Review
+ ↓
+Confirm
+ ↓
+Stock Movement
+ ↓
+Inventory Updated
+```
+
+---
+
+# 45. STOCK TRANSFER
+
+```text
+Source Location
+ ↓
+Destination Location
+ ↓
+Products
+ ↓
+Quantities
+ ↓
+Review
+ ↓
+Confirm
+ ↓
+Transfer
+```
+
+---
+
+# 46. SALES FLOW
+
+Primary sale:
+
+```text
+New Sale
+ ↓
+Customer
+ ↓
+Products
+ ↓
+Quantity
+ ↓
+Pricing
+ ↓
+Discount
+ ↓
+Tax
+ ↓
+Payment
+ ↓
+Review
+ ↓
+Confirm
+ ↓
+Receipt
+```
+
+---
+
+# 47. SALE RESULT
+
+A successful sale can update:
+
+```text
+Sales
+Inventory
+Customer balance
+Payments
+Finance
+Analytics
+AI context
+Audit
+```
+
+---
+
+# 48. SALE OFFLINE
+
+If offline:
+
+```text
+Create Sale
+ ↓
+Validate locally
+ ↓
+Save locally
+ ↓
+Update local state
+ ↓
+Mark for sync
+```
+
+The user should not be forced to wait for cloud connectivity for supported offline operations.
+
+---
+
+# 49. EXPENSE FLOW
+
+```text
+Add Expense
+ ↓
+Category
+ ↓
+Vendor
+ ↓
+Amount
+ ↓
+Payment
+ ↓
+Attachment
+ ↓
+Review
+ ↓
+Save
+```
+
+---
+
+# 50. PURCHASE FLOW
+
+```text
+New Purchase
+ ↓
+Supplier
+ ↓
+Products
+ ↓
+Quantities
+ ↓
+Cost
+ ↓
+Tax
+ ↓
+Payment
+ ↓
+Review
+ ↓
+Confirm
+```
+
+---
+
+# 51. PURCHASE RESULT
+
+A completed purchase can update:
+
+```text
+Purchase
+Inventory
+Supplier balance
+Payment
+Finance
+Analytics
+AI context
+Audit
+```
+
+---
+
+# 52. PAYMENT FLOW
+
+```text
+Record Payment
+ ↓
+Select account/entity
+ ↓
+Amount
+ ↓
+Method
+ ↓
+Allocation
+ ↓
+Review
+ ↓
+Confirm
+```
+
+---
+
+# 53. PARTIAL PAYMENT
+
+The payment system must support:
+
+```text
+Outstanding
+ ↓
+Partial payment
+ ↓
+Remaining balance
+```
+
+---
+
+# 54. RETURNS FLOW
+
+```text
+Transaction
+ ↓
+Return
+ ↓
+Select Items
+ ↓
+Quantity
+ ↓
+Reason
+ ↓
+Refund option
+ ↓
+Review
+ ↓
+Confirm
+```
+
+---
+
+# 55. REFUND FLOW
+
+```text
+Return approved
+ ↓
+Refund calculation
+ ↓
+Refund method
+ ↓
+Confirm
+ ↓
+Refund
+ ↓
+Accounting/inventory updates
+```
+
+---
+
+# 56. FINANCE FLOW
+
+```text
+Finance
+ ↓
+Overview
+ ├── Revenue
+ ├── Expenses
+ ├── Profit
+ ├── Cash Flow
+ ├── Receivables
+ └── Payables
+```
+
+---
+
+# 57. FINANCE DETAIL
+
+The owner can progressively drill down:
+
+```text
+Summary
+ ↓
+Category
+ ↓
+Account
+ ↓
+Transaction
+ ↓
+Source record
+```
+
+---
+
+# 58. ACCOUNTING FLOW
+
+```text
+Business transaction
+ ↓
+Accounting Engine
+ ↓
+Journal Entry
+ ↓
+Ledger
+ ↓
+Financial reports
+```
+
+---
+
+# 59. OPERATIONS FLOW
+
+```text
+Operations
+ ↓
+Orders
+Tasks
+Processes
+Assignments
+Statuses
+Activity
+```
+
+The system supports increasing operational complexity as the business grows.
+
+---
+
+# 60. DOCUMENT FLOW
+
+```text
+Documents
+ ↓
+Document type
+ ↓
+List
+ ↓
+Document detail
+ ↓
+View
+ ↓
+Share / Export
+```
+
+Document types include:
+
+- invoice
+- receipt
+- bill
+- quotation
+- purchase order
+
+---
+
+# 61. DOCUMENT GENERATION
+
+```text
+Business record
+ ↓
+Document template
+ ↓
+Generate
+ ↓
+Preview
+ ↓
+Save
+ ↓
+Share / Export
+```
+
+---
+
+# 62. REPORT FLOW
+
+```text
+Reports
+ ↓
+Select report
+ ↓
+Date range
+ ↓
+Filters
+ ↓
+Generate
+ ↓
+Results
+ ↓
+Drill-down
+ ↓
+Export
+```
+
+---
+
+# 63. ANALYTICS FLOW
+
+```text
+Analytics
+ ↓
+Business metric
+ ↓
+Trend
+ ↓
+Comparison
+ ↓
+Insight
+ ↓
+AI explanation
+```
+
+---
+
+# 64. AI BUSINESS HEALTH
+
+The AI can combine multiple signals:
+
+```text
+Sales
+Expenses
+Profit
+Cash
+Inventory
+Receivables
+Payables
+Customers
+```
+
+to provide a business-health view.
+
+---
+
+# 65. ALERT FLOW
+
+Examples:
+
+```text
+Low Stock
+ ↓
+Alert
+ ↓
+Product
+ ↓
+Evidence
+ ↓
+Recommendation
+```
+
+Another:
+
+```text
+Overdue Payment
+ ↓
+Alert
+ ↓
+Customer
+ ↓
+Outstanding amount
+ ↓
+Recommendation
+```
+
+---
+
+# 66. NOTIFICATION FLOW
+
+```text
+Event
+ ↓
+Notification Engine
+ ↓
+Preference check
+ ↓
+Channel
+ ↓
+Notification
+ ↓
+Open relevant screen
+```
+
+---
+
+# 67. SEARCH FLOW
+
+```text
+Global Search
+ ↓
+Enter query
+ ↓
+Search
+ ↓
+Categories
+ ↓
+Result
+ ↓
+Open record
+```
+
+AI search can interpret natural-language queries.
+
+---
+
+# 68. TEAM FLOW
+
+```text
+Team
+ ↓
+Members
+ ↓
+Member Detail
+ ↓
+Role
+ ↓
+Permissions
+ ↓
+Activity
+```
+
+---
+
+# 69. INVITATION FLOW
+
+```text
+Invite Member
+ ↓
+Contact
+ ↓
+Role
+ ↓
+Branch/scope
+ ↓
+Send invitation
+ ↓
+Acceptance
+ ↓
+Membership activated
+```
+
+---
+
+# 70. PERMISSION FLOW
+
+Every protected operation:
+
+```text
+User
+ ↓
+Business membership
+ ↓
+Role
+ ↓
+Permission
+ ↓
+Resource
+ ↓
+Action
+```
+
+Backend authorization remains authoritative.
+
+---
+
+# 71. MULTI-BUSINESS FLOW
+
+```text
+Profile
+ ↓
+Businesses
+ ├── Business A
+ ├── Business B
+ └── Business C
+```
+
+Switching businesses must update the application context safely.
+
+No data should leak between businesses.
+
+---
+
+# 72. BRANCH FLOW
+
+```text
+Business
+ ↓
+Branches
+ ↓
+Select Branch
+ ↓
+Branch-scoped data
+```
+
+Where applicable, branch permissions constrain visibility.
+
+---
+
+# 73. AUTOMATION FLOW
+
+```text
+Automation
+ ↓
+Create
+ ↓
+Trigger
+ ↓
+Condition
+ ↓
+Action
+ ↓
+Schedule
+ ↓
+Activate
+ ↓
+Execution
+ ↓
+History
+```
+
+---
+
+# 74. EXAMPLE AUTOMATION
+
+```text
+Stock < threshold
+ ↓
+Trigger
+ ↓
+AI / automation evaluates
+ ↓
+Create alert
+ ↓
+Notify owner
+```
+
+---
+
+# 75. CONNECTION PORTFOLIO FLOW
+
+The Connection Portfolio is intentionally built after the core application is stable.
+
+```text
+Connection Portfolio
+ ↓
+Discover
+ ↓
+Provider
+ ↓
+Connect
+ ↓
+Authorize
+ ↓
+Secure credentials
+ ↓
+Initial sync
+ ↓
+Connected
+```
+
+---
+
+# 76. CONNECTION MANAGEMENT
+
+For every connection:
+
+```text
+Connection Detail
+ ├── Status
+ ├── Last sync
+ ├── Account
+ ├── Permissions
+ ├── Sync
+ ├── Reconnect
+ └── Disconnect
+```
+
+---
+
+# 77. CONNECTION FAILURE
+
+```text
+Sync Failure
+ ↓
+Connection becomes degraded/error
+ ↓
+User informed
+ ↓
+Reconnect
+ ↓
+Authorization
+ ↓
+Sync recovery
+```
+
+Core Vepari operations should continue when an external integration fails.
+
+---
+
+# 78. SETTINGS FLOW
+
+```text
+Settings
+ ├── Profile
+ ├── Business
+ ├── Language
+ ├── AI
+ ├── Voice
+ ├── Security
+ ├── Notifications
+ ├── Team
+ ├── Devices
+ ├── Connections
+ ├── Data
+ ├── Storage
+ └── About
+```
+
+---
+
+# 79. SECURITY SETTINGS
+
+```text
+Security
+ ├── PIN
+ ├── Biometrics
+ ├── Trusted Devices
+ ├── Sessions
+ └── Security Activity
+```
+
+---
+
+# 80. DEVICE MANAGEMENT
+
+```text
+Devices
+ ↓
+Device list
+ ↓
+Device detail
+ ↓
+Trust status
+ ↓
+Revoke
+```
+
+---
+
+# 81. LANGUAGE SETTINGS
+
+```text
+Language
+ ↓
+Select language
+ ↓
+Apply
+ ↓
+UI refresh
+ ↓
+AI language update
+```
+
+---
+
+# 82. AI SETTINGS
+
+Possible controls:
+
+- AI preferences
+- voice
+- response style
+- memory controls
+- AI permissions
+- action confirmation
+- provider/service settings where appropriate
+
+---
+
+# 83. MEMORY CONTROLS
+
+Users should have appropriate visibility/control over stored AI memory.
+
+Conceptually:
+
+```text
+Memory
+ ↓
+View
+ ↓
+Understand
+ ↓
+Remove / manage
+```
+
+---
+
+# 84. DATA CONTROLS
+
+```text
+Data
+ ├── Export
+ ├── Import
+ ├── Storage
+ ├── Backup where available
+ ├── Retention
+ └── Deletion
+```
+
+---
+
+# 85. LOCAL STORAGE FLOW
+
+Every supported local operation:
+
+```text
+UI
+ ↓
+Domain Service
+ ↓
+SQLite transaction
+ ↓
+UI updates immediately
+```
+
+---
+
+# 86. OFFLINE FLOW
+
+```text
+Network unavailable
+ ↓
+Application remains usable
+ ↓
+Supported operation performed
+ ↓
+Local DB updated
+ ↓
+Sync operation queued
+ ↓
+Offline status shown
+```
+
+---
+
+# 87. RECONNECT FLOW
+
+```text
+Network returns
+ ↓
+Sync engine starts
+ ↓
+Queue processed
+ ↓
+Server validation
+ ↓
+Conflict detection
+ ↓
+Commit
+ ↓
+Pull changes
+ ↓
+Local reconciliation
+ ↓
+Synced
+```
+
+---
+
+# 88. SYNC CONFLICT FLOW
+
+```text
+Local change
+ ↓
+Server detects stale version
+ ↓
+Conflict
+ ↓
+Determine domain strategy
+ ↓
+Automatic resolution
+       OR
+User resolution
+ ↓
+Final state
+```
+
+Financial conflicts require stricter resolution.
+
+---
+
+# 89. SYNC FAILURE FLOW
+
+```text
+Sync fails
+ ↓
+Retain operation
+ ↓
+Retry
+ ↓
+Backoff
+ ↓
+Retry again
+ ↓
+Failure state
+ ↓
+User-visible resolution where needed
+```
+
+The application must never silently discard a legitimate business operation.
+
+---
+
+# 90. APP RESTART FLOW
+
+If the app is terminated:
+
+```text
+Restart
+ ↓
+Security
+ ↓
+Load local database
+ ↓
+Restore application state
+ ↓
+Recover pending queue
+ ↓
+Resume sync
+```
+
+---
+
+# 91. CRASH DURING TRANSACTION
+
+Database transaction guarantees:
+
+```text
+Incomplete transaction
+ ↓
+Rollback
+```
+
+No invalid partial business transaction should remain.
+
+---
+
+# 92. CRASH DURING SYNC
+
+The sync queue is durable.
+
+```text
+Crash
+ ↓
+Restart
+ ↓
+Read queue
+ ↓
+Check operation ID
+ ↓
+Resume safely
+```
+
+---
+
+# 93. AI OFFLINE FLOW
+
+AI capabilities are divided into:
+
+### Local-capable
+
+Can operate using local data and available local functionality.
+
+### Cloud/provider-dependent
+
+Requires connectivity.
+
+If a cloud AI capability is unavailable:
+
+```text
+AI unavailable
+ ↓
+Explain
+ ↓
+Continue core business operation
+```
+
+---
+
+# 94. VOICE OFFLINE
+
+Where offline voice capability is technically available, it can continue.
+
+Otherwise:
+
+```text
+Voice unavailable
+ ↓
+Text alternative
+```
+
+---
+
+# 95. CLOUD SYNC FLOW
+
+Cloud synchronization is optional/controlled according to the architecture.
+
+```text
+User/configuration
+ ↓
+Cloud sync enabled
+ ↓
+Secure synchronization
+ ↓
+Authorized remote state
+```
+
+The system must not silently upload the complete raw business database merely because cloud functionality exists.
+
+---
+
+# 96. CLOUD LEARNING FLOW
+
+```text
+Eligible signal
+ ↓
+Consent/privacy rules
+ ↓
+Minimization
+ ↓
+Cloud service
+```
+
+Raw business information should not automatically become cloud training data.
+
+---
+
+# 97. AI PROVIDER FLOW
+
+```text
+Vepari AI
+ ↓
+AI Gateway
+ ↓
+Context filter
+ ↓
+Provider Adapter
+ ↓
+Sarvam AI / other approved provider
+ ↓
+Structured response
+ ↓
+Vepari AI
+```
+
+---
+
+# 98. SECURITY FAILURE FLOW
+
+If security fails:
+
+```text
+Invalid authentication
+ ↓
+Reject
+ ↓
+No sensitive business access
+ ↓
+Security event where appropriate
+```
+
+---
+
+# 99. UNAUTHORIZED ACCESS FLOW
+
+```text
+Request
+ ↓
+Authentication
+ ↓
+Business membership
+ ↓
+Permission
+ ↓
+Rejected if invalid
+```
+
+---
+
+# 100. SESSION EXPIRATION
+
+```text
+Session expired
+ ↓
+Sensitive operations blocked
+ ↓
+Re-authentication
+ ↓
+Session restored
+ ↓
+Continue
+```
+
+---
+
+# 101. BIOMETRIC FAILURE
+
+```text
+Biometric failure
+ ↓
+Retry
+ ↓
+Fallback authentication
+ ↓
+Security verified
+ ↓
+Continue
+```
+
+---
+
+# 102. AI UNAVAILABLE
+
+The user should see a graceful state:
+
+```text
+AI temporarily unavailable
+ ↓
+Core business remains available
+ ↓
+Retry later
+```
+
+---
+
+# 103. DATABASE ERROR
+
+The application must avoid unsafe writes.
+
+```text
+Database failure
+ ↓
+Transaction fails
+ ↓
+No partial commit
+ ↓
+Error state
+ ↓
+Recovery
+```
+
+---
+
+# 104. STORAGE FAILURE
+
+If cloud object storage fails:
+
+```text
+File upload fails
+ ↓
+Business transaction remains safe
+ ↓
+Retry upload
+```
+
+---
+
+# 105. INTEGRATION FAILURE
+
+```text
+Provider failure
+ ↓
+Connection degraded
+ ↓
+Retry / reconnect
+ ↓
+Core business continues
+```
+
+---
+
+# 106. APP UPDATE FLOW
+
+```text
+New version
+ ↓
+Install
+ ↓
+Database migration
+ ↓
+Validate
+ ↓
+Open application
+```
+
+Database migrations must preserve user data.
+
+---
+
+# 107. DATABASE MIGRATION FAILURE
+
+Migration must use safe mechanisms.
+
+```text
+Migration
+ ↓
+Validation
+ ↓
+Failure
+ ↓
+Safe recovery / rollback strategy
+```
+
+---
+
+# 108. FIRST-TIME AI BRIEFING
+
+After the business has sufficient data:
+
+```text
+Business data
+ ↓
+AI analysis
+ ↓
+Initial understanding
+ ↓
+Business overview
+ ↓
+Recommendations
+```
+
+The AI should avoid pretending to know things that the business has not provided.
+
+---
+
+# 109. DAILY USER FLOW
+
+Typical owner journey:
+
+```text
+Open App
+ ↓
+Security
+ ↓
+AI OS
+ ↓
+Morning / return briefing
+ ↓
+Review important items
+ ↓
+Ask AI
+ ↓
+Take action
+ ↓
+Sales / inventory / finance
+ ↓
+Finish
+```
+
+---
+
+# 110. MID-DAY FLOW
+
+```text
+Open
+ ↓
+AI status
+ ↓
+Quick action
+ ↓
+Sale / expense / payment
+ ↓
+Local update
+ ↓
+Continue business
+```
+
+---
+
+# 111. END-OF-DAY FLOW
+
+```text
+Business activity
+ ↓
+AI analyzes
+ ↓
+Daily summary
+ ↓
+Important unresolved items
+ ↓
+Recommendations
+ ↓
+Owner review
+```
+
+---
+
+# 112. BUSINESS GROWTH FLOW
+
+As the business expands:
+
+```text
+Micro
+ ↓
+More products
+ ↓
+More customers
+ ↓
+Team
+ ↓
+Branches
+ ↓
+Automation
+ ↓
+Analytics
+ ↓
+Integrations
+ ↓
+Enterprise capabilities
+```
+
+The application grows with the business.
+
+---
+
+# 113. AI PROGRESSIVE ASSISTANCE
+
+The AI should move from:
+
+```text
+Answer
+ ↓
+Explain
+ ↓
+Recommend
+ ↓
+Assist
+ ↓
+Execute approved action
+```
+
+rather than immediately attempting autonomous execution.
+
+---
+
+# 114. OWNER CONTROL
+
+The owner remains in control of important actions.
+
+The system should make AI assistance powerful without making the business dependent on uncontrolled autonomous decisions.
+
+---
+
+# 115. GLOBAL NAVIGATION MODEL
+
+Conceptually:
+
+```text
+                 AI OS
+                   │
+       ┌───────────┼───────────┐
+       │           │           │
+    Business     Search      Alerts
+       │
+ ┌─────┼─────┬─────┬─────┐
+ │     │     │     │     │
+CRM  Stock  Sales Finance Docs
+```
+
+The final visual arrangement follows the approved UI/UX design.
+
+---
+
+# 116. UNIVERSAL SCREEN FLOW
+
+Every screen should behave consistently:
+
+```text
+ENTER
+ ↓
+LOAD
+ ↓
+CONTENT
+ ↓
+ACTION
+ ↓
+VALIDATE
+ ↓
+SAVE
+ ↓
+SUCCESS
+```
+
+or:
+
+```text
+ENTER
+ ↓
+LOAD
+ ↓
+ERROR
+ ↓
+RECOVER / RETRY
+```
+
+---
+
+# 117. UNIVERSAL EMPTY STATE
+
+```text
+No data
+ ↓
+Explain
+ ↓
+Show useful next action
+```
+
+Example:
+
+```text
+No customers yet
+ ↓
+Add Customer
+```
+
+---
+
+# 118. UNIVERSAL LOADING STATE
+
+Loading should communicate what is happening without creating unnecessary visual disruption.
+
+---
+
+# 119. UNIVERSAL SUCCESS STATE
+
+After a successful operation:
+
+```text
+Success
+ ↓
+Updated data
+ ↓
+Relevant next action
+```
+
+---
+
+# 120. UNIVERSAL ERROR STATE
+
+Errors should explain:
+
+- what happened
+- whether data was saved
+- what the user can do next
+
+---
+
+# 121. UNIVERSAL OFFLINE STATE
+
+The application should distinguish:
+
+```text
+Offline
+Saved locally
+Waiting for sync
+```
+
+rather than simply displaying "No Internet".
+
+---
+
+# 122. UNIVERSAL SYNC INDICATOR
+
+The user can understand:
+
+```text
+Synced
+Syncing
+Waiting
+Failed
+Conflict
+```
+
+---
+
+# 123. UNIVERSAL AI STATE
+
+The AI interface should communicate:
+
+```text
+Listening
+Thinking
+Responding
+Action required
+Executing
+Completed
+```
+
+---
+
+# 124. UNIVERSAL PERMISSION STATE
+
+If a user cannot perform an action:
+
+```text
+Permission denied
+ ↓
+Explain
+ ↓
+Optional request/admin route
+```
+
+---
+
+# 125. UNIVERSAL CONFIRMATION
+
+Destructive or financially significant actions require appropriate confirmation.
+
+---
+
+# 126. UNIVERSAL AUDIT
+
+Important mutations automatically generate audit information.
+
+The user does not need to manually create an audit record.
+
+---
+
+# 127. BUSINESS DATA LIFECYCLE
+
+```text
+Create
+ ↓
+Read
+ ↓
+Update
+ ↓
+Use in operations
+ ↓
+Audit
+ ↓
+Archive/retain
+ ↓
+Delete according to policy
+```
+
+---
+
+# 128. CUSTOMER DATA LIFECYCLE
+
+```text
+Create
+ ↓
+Transactions
+ ↓
+Payments
+ ↓
+History
+ ↓
+AI context
+ ↓
+Retention
+```
+
+---
+
+# 129. PRODUCT DATA LIFECYCLE
+
+```text
+Create
+ ↓
+Pricing
+ ↓
+Inventory
+ ↓
+Sales
+ ↓
+Stock movements
+ ↓
+Analytics
+```
+
+---
+
+# 130. SALES DATA LIFECYCLE
+
+```text
+Draft
+ ↓
+Review
+ ↓
+Confirmed
+ ↓
+Payment
+ ↓
+Inventory
+ ↓
+Accounting
+ ↓
+Receipt
+ ↓
+Analytics
+ ↓
+AI context
+```
+
+---
+
+# 131. EXPENSE DATA LIFECYCLE
+
+```text
+Draft
+ ↓
+Review
+ ↓
+Saved
+ ↓
+Accounting
+ ↓
+Analytics
+ ↓
+AI context
+```
+
+---
+
+# 132. PURCHASE DATA LIFECYCLE
+
+```text
+Draft
+ ↓
+Review
+ ↓
+Confirmed
+ ↓
+Inventory
+ ↓
+Supplier
+ ↓
+Payment
+ ↓
+Accounting
+```
+
+---
+
+# 133. PAYMENT DATA LIFECYCLE
+
+```text
+Payment
+ ↓
+Allocation
+ ↓
+Balance update
+ ↓
+Accounting
+ ↓
+Receipt
+ ↓
+Audit
+```
+
+---
+
+# 134. AI INSIGHT LIFECYCLE
+
+```text
+Detect
+ ↓
+Analyze
+ ↓
+Generate
+ ↓
+Evidence
+ ↓
+Present
+ ↓
+Viewed
+ ↓
+Acted upon
+ ↓
+Resolved
+```
+
+---
+
+# 135. AI ACTION LIFECYCLE
+
+```text
+Proposed
+ ↓
+Approval
+ ↓
+Executing
+ ↓
+Completed
+```
+
+Failure:
+
+```text
+Executing
+ ↓
+Failed
+ ↓
+Retry / recover
+```
+
+---
+
+# 136. CONNECTION LIFECYCLE
+
+```text
+Available
+ ↓
+Connecting
+ ↓
+Authorization
+ ↓
+Connected
+ ↓
+Syncing
+ ↓
+Healthy
+```
+
+Failure:
+
+```text
+Healthy
+ ↓
+Degraded
+ ↓
+Reconnect
+```
+
+---
+
+# 137. NOTIFICATION LIFECYCLE
+
+```text
+Created
+ ↓
+Delivered
+ ↓
+Viewed
+ ↓
+Actioned
+```
+
+---
+
+# 138. AUTOMATION LIFECYCLE
+
+```text
+Draft
+ ↓
+Configured
+ ↓
+Active
+ ↓
+Triggered
+ ↓
+Executing
+ ↓
+Completed
+```
+
+---
+
+# 139. USER EXIT FLOW
+
+When the user leaves the app:
+
+```text
+Background
+ ↓
+Persist state
+ ↓
+Secure session handling
+ ↓
+Pending sync preserved
+ ↓
+App resumes later
+```
+
+---
+
+# 140. SECURITY ON RESUME
+
+Depending on security configuration:
+
+```text
+App resumes
+ ↓
+Security timeout check
+ ↓
+Re-authentication if required
+ ↓
+AI OS / Home
+```
+
+---
+
+# 141. LOGOUT FLOW
+
+```text
+Settings
+ ↓
+Logout
+ ↓
+Confirm
+ ↓
+Session cleared
+ ↓
+Security state
+ ↓
+Welcome/Login
+```
+
+Local business data handling must follow the defined retention/recovery model and must not be destroyed accidentally by ordinary logout.
+
+---
+
+# 142. ACCOUNT DELETION FLOW
+
+```text
+Settings
+ ↓
+Account/Data
+ ↓
+Delete
+ ↓
+Identity verification
+ ↓
+Explain consequences
+ ↓
+Confirm
+ ↓
+Controlled deletion process
+```
+
+Financial/legal records must respect applicable retention requirements.
+
+---
+
+# 143. BUSINESS DELETION FLOW
+
+Because a business may contain important financial information, deletion requires deliberate confirmation and the appropriate retention process.
+
+---
+
+# 144. APP ARCHITECTURE FLOW
+
+```text
+Screen
+ ↓
+Feature
+ ↓
+Domain Service
+ ↓
+Repository
+ ↓
+SQLite
+```
+
+Cloud-enabled:
+
+```text
+Repository
+ ↓
+Sync Adapter
+ ↓
+API
+ ↓
+Backend
+```
+
+---
+
+# 145. BACKEND FLOW
+
+```text
+API Request
+ ↓
+Authentication
+ ↓
+Authorization
+ ↓
+Validation
+ ↓
+Domain Service
+ ↓
+Database transaction
+ ↓
+Event
+ ↓
+Audit
+ ↓
+Response
+```
+
+---
+
+# 146. AI BACKEND FLOW
+
+```text
+AI Request
+ ↓
+Authentication
+ ↓
+Authorization
+ ↓
+Context filtering
+ ↓
+Memory retrieval
+ ↓
+Relevant business data
+ ↓
+AI Gateway
+ ↓
+Provider
+ ↓
+Structured output
+ ↓
+Action/answer
+```
+
+---
+
+# 147. MOBILE ↔ CLOUD FLOW
+
+```text
+Local State
+ ↓
+Sync eligibility
+ ↓
+Queue
+ ↓
+API
+ ↓
+Server
+ ↓
+Validation
+ ↓
+Remote state
+ ↓
+Response
+ ↓
+Local reconciliation
+```
+
+---
+
+# 148. MULTI-DEVICE FLOW
+
+```text
+Device A
+ ↓
+Local operation
+ ↓
+Sync
+ ↓
+Cloud
+ ↓
+Device B
+ ↓
+Updated local state
+```
+
+The same applies across multiple team members and development/test devices.
+
+---
+
+# 149. DEVELOPMENT CONTINUITY FLOW
+
+The application source itself follows:
+
+```text
+Developer
+ ↓
+Local repository
+ ↓
+Git
+ ↓
+GitHub
+ ↓
+Another device
+ ↓
+Git pull
+ ↓
+Continue development
+```
+
+Claude sessions are not the persistence layer for project code.
+
+---
+
+# 150. IMPLEMENTATION FLOW
+
+The actual development follows:
+
+```text
+Repository Audit
+ ↓
+Foundation
+ ↓
+Database
+ ↓
+Domain
+ ↓
+Backend
+ ↓
+API
+ ↓
+Frontend Foundation
+ ↓
+Business Modules
+ ↓
+AI
+ ↓
+Offline
+ ↓
+Sync
+ ↓
+Integrations
+ ↓
+Security
+ ↓
+Testing
+ ↓
+Release
+```
+
+---
+
+# 151. TEST FLOW
+
+Every feature:
+
+```text
+Implement
+ ↓
+Unit test
+ ↓
+Integration test
+ ↓
+UI test
+ ↓
+E2E test
+ ↓
+Offline test where applicable
+ ↓
+Security test
+ ↓
+Performance test
+ ↓
+Accept
+```
+
+---
+
+# 152. GOLDEN BUSINESS FLOW
+
+The complete core workflow must work:
+
+```text
+Create Business
+ ↓
+Create Customer
+ ↓
+Create Product
+ ↓
+Configure Inventory
+ ↓
+Create Sale
+ ↓
+Receive Payment
+ ↓
+Inventory Updated
+ ↓
+Customer Updated
+ ↓
+Finance Updated
+ ↓
+Dashboard Updated
+ ↓
+AI Context Updated
+ ↓
+Audit Created
+```
+
+---
+
+# 153. GOLDEN OFFLINE FLOW
+
+```text
+Device Offline
+ ↓
+Create Sale
+ ↓
+Local Validation
+ ↓
+SQLite Transaction
+ ↓
+UI Updated
+ ↓
+Queued
+ ↓
+Network Returns
+ ↓
+Sync
+ ↓
+Server Validation
+ ↓
+Commit
+ ↓
+Other Devices Update
+```
+
+---
+
+# 154. GOLDEN AI FLOW
+
+```text
+Business Activity
+ ↓
+AI Detection
+ ↓
+Insight
+ ↓
+Evidence
+ ↓
+Recommendation
+ ↓
+Action Proposal
+ ↓
+Owner Approval
+ ↓
+Execution
+ ↓
+Business Update
+ ↓
+Audit
+ ↓
+Memory/Context Update
+```
+
+---
+
+# 155. GOLDEN CONNECTION FLOW
+
+```text
+Open Connection Portfolio
+ ↓
+Select Provider
+ ↓
+Connect
+ ↓
+Authorization
+ ↓
+Secure Credential
+ ↓
+Initial Sync
+ ↓
+Connected
+ ↓
+Ongoing Sync
+ ↓
+Health Monitoring
+```
+
+---
+
+# 156. COMPLETE APP JOURNEY
+
+```text
+                         VEPARI AI
+                             │
+                         APP OPEN
+                             │
+                         SECURITY
+                             │
+                    ┌────────┴────────┐
+                    │                 │
+                 New User         Returning User
+                    │                 │
+                Onboarding         AI OS
+                    │                 │
+                    └────────┬────────┘
+                             │
+                         AI OS CORE
+                             │
+              ┌──────────────┼──────────────┐
+              │              │              │
+             AI           BUSINESS       ALERTS
+              │              │              │
+        ┌─────┼─────┐   ┌────┼────┐         │
+        │     │     │   │    │    │         │
+      Voice  Chat Memory CRM Stock Finance  Insights
+                          │
+              ┌───────────┼────────────┐
+              │           │            │
+            Sales      Expenses     Purchases
+              │           │            │
+              └───────────┼────────────┘
+                          │
+                      OPERATIONS
+                          │
+                      DOCUMENTS
+                          │
+                       REPORTS
+                          │
+                      ANALYTICS
+                          │
+                      AUTOMATION
+                          │
+                 CONNECTION PORTFOLIO
+                          │
+                       SETTINGS
+```
+
+---
+
+# 157. EXPERIENCE PRINCIPLE
+
+The user should never have to understand the underlying architecture.
+
+They should experience:
+
+> **"Vepari AI knows what is happening in my business and helps me operate it."**
+
+The complexity remains underneath.
+
+---
+
+# 158. FINAL APP FLOW — ONE LINE
+
+```text
+SECURE → AWAKEN → UNDERSTAND → BRIEF → OPERATE → REMEMBER → ANALYZE → RECOMMEND → ACT → SYNC → LEARN → REPEAT
+```
+
+---
+
+# 159. FINAL ARCHITECTURAL FLOW — ONE LINE
+
+```text
+UI → DOMAIN → ENCRYPTED SQLITE → MEMORY → AI → BUSINESS ENGINE → OPTIONAL CLOUD/SYNC → AUDIT → UPDATED LOCAL STATE
+```
+
+---
+
+# 160. FINAL VEPARI AI LOOP
+
+```text
+             ┌─────────────────────┐
+             │   BUSINESS ACTIVITY │
+             └──────────┬──────────┘
+                        ↓
+                    LOCAL DATA
+                        ↓
+                     MEMORY
+                        ↓
+                  AI INTELLIGENCE
+                        ↓
+                     INSIGHT
+                        ↓
+                  RECOMMENDATION
+                        ↓
+                     ACTION
+                        ↓
+                 BUSINESS RESULT
+                        ↓
+                    LOCAL DATA
+                        │
+                        └───────────→ CONTINUE
+```
+
+---
+
+# 161. MASTER APP FLOW STATUS
+
+| Flow Area | Status |
+|---|---|
+| First launch | ✅ Defined |
+| Registration | ✅ Defined |
+| Login | ✅ Defined |
+| Language selection | ✅ Defined |
+| Security | ✅ Defined |
+| PIN/Biometrics | ✅ Defined |
+| Device trust | ✅ Defined |
+| Business creation | ✅ Defined |
+| Micro experience | ✅ Defined |
+| Small/Medium | ✅ Defined |
+| Enterprise | ✅ Defined |
+| Onboarding | ✅ Defined |
+| AI OS activation | ✅ Defined |
+| Security-before-animation | ✅ Defined |
+| While-you-were-away | ✅ Defined |
+| AI briefing | ✅ Defined |
+| AI chat | ✅ Defined |
+| AI voice | ✅ Defined |
+| AI memory | ✅ Defined |
+| AI insights | ✅ Defined |
+| AI actions | ✅ Defined |
+| Home | ✅ Defined |
+| Customers | ✅ Defined |
+| Suppliers | ✅ Defined |
+| Products | ✅ Defined |
+| Inventory | ✅ Defined |
+| Sales | ✅ Defined |
+| Expenses | ✅ Defined |
+| Purchases | ✅ Defined |
+| Payments | ✅ Defined |
+| Returns | ✅ Defined |
+| Refunds | ✅ Defined |
+| Finance | ✅ Defined |
+| Operations | ✅ Defined |
+| Documents | ✅ Defined |
+| Reports | ✅ Defined |
+| Analytics | ✅ Defined |
+| Search | ✅ Defined |
+| Notifications | ✅ Defined |
+| Alerts | ✅ Defined |
+| Team | ✅ Defined |
+| Permissions | ✅ Defined |
+| Automation | ✅ Defined |
+| Offline | ✅ Defined |
+| Local storage | ✅ Defined |
+| Sync | ✅ Defined |
+| Conflict handling | ✅ Defined |
+| Realtime | ✅ Defined |
+| Cloud | ✅ Defined |
+| AI provider layer | ✅ Defined |
+| Sarvam integration layer | ✅ Defined |
+| Connection Portfolio | ✅ Defined |
+| Settings | ✅ Defined |
+| Device management | ✅ Defined |
+| Data management | ✅ Defined |
+| Security failure | ✅ Defined |
+| Recovery | ✅ Defined |
+| Multi-device | ✅ Defined |
+| Android | ✅ Defined |
+| Future iOS | ✅ Defined |
+| Implementation sequence | ✅ Defined |
+| Testing flows | ✅ Defined |
+
+---
+
+# FINAL CONCLUSION
+
+The **Vepari AI Master App Flow is now consolidated**.
+
+It covers the complete user journey and the underlying system journey:
+
+**Launch → Security → AI OS → Business Briefing → Home → Business Operations → AI → Memory → Actions → Finance → Documents → Reports → Team → Automation → Offline → Sync → Connections → Settings → Recovery → Repeat.**
+
+The most important product behavior remains:
+
+> **The owner secures the app first. Vepari AI then awakens, understands what happened while the owner was away, presents the important business resources and events, and lets the owner move directly from understanding to action.**
+
+And technically:
+
+> **Core business operation remains local-first and offline-first, with encrypted SQLite as the local business data foundation, custom accounting as the financial engine, on-device memory for AI context, and optional controlled cloud/synchronization capabilities.**
+
+This App Flow document therefore sits alongside the **Master PRD** and **Master TRD** as the consolidated behavioral specification for implementation.

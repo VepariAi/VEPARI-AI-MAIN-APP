@@ -1,0 +1,3891 @@
+# VEPARI AI
+# MASTER AI OS DOCUMENT
+
+**Document Type:** Consolidated AI OS Product + UX + Intelligence + Architecture Specification  
+**Product:** Vepari AI  
+**Status:** Master Source of Truth  
+**Primary Platform:** Android  
+**Framework:** React Native + TypeScript  
+**Future Platform:** iOS  
+**Business Scope:** Micro → Small → Medium → Enterprise  
+**Language Scope:** All 23 supported Indian languages  
+**AI Identity:** Vepari AI OS  
+**Interaction Model:** Voice + Text + Visual + Proactive Intelligence  
+**Design Inspiration:** Cinematic, spatial, Jarvis-style AI interaction — interpreted as Vepari AI's own original identity  
+**AI Provider Layer:** Sarvam AI + future provider abstraction  
+**Architecture:** Local-first · Cloud-authoritative · Context-aware · Secure · Multimodal
+
+---
+
+# 1. WHAT IS THE VEPARI AI OS?
+
+Vepari AI OS is **not a chatbot sitting inside the application**.
+
+It is the intelligent operating layer of Vepari AI.
+
+It sits above the entire business platform and allows the business owner to interact with the business through:
+
+- conversation
+- voice
+- business intelligence
+- proactive alerts
+- recommendations
+- navigation
+- contextual search
+- memory
+- automation
+- approved actions
+
+The fundamental concept is:
+
+```text
+Traditional Business App
+
+User
+ ↓
+Menu
+ ↓
+Feature
+ ↓
+Screen
+ ↓
+Action
+```
+
+Vepari AI changes this to:
+
+```text
+Vepari AI
+
+Owner
+ ↓
+AI OS
+ ↓
+Understands intent
+ ↓
+Understands business context
+ ↓
+Retrieves relevant information
+ ↓
+Explains
+ ↓
+Recommends
+ ↓
+Acts with permission
+```
+
+---
+
+# 2. THE AI OS PROMISE
+
+The AI OS should make the owner feel:
+
+> **"My business is running, and Vepari AI is watching it with me."**
+
+The system should reduce the need to manually inspect dozens of screens.
+
+Instead of:
+
+```text
+Dashboard
+ ↓
+Sales
+ ↓
+Inventory
+ ↓
+Customers
+ ↓
+Expenses
+ ↓
+Reports
+```
+
+the owner can simply ask:
+
+> "What happened while I was away?"
+
+And Vepari AI OS understands the business context.
+
+---
+
+# 3. FIRST-OPEN EXPERIENCE
+
+The AI OS does **not** immediately appear when the application launches.
+
+The sequence is:
+
+```text
+App Launch
+ ↓
+Security / Authentication
+ ↓
+Identity Verification
+ ↓
+Business Context Loaded
+ ↓
+AI OS Initialization
+ ↓
+Cinematic AI Entrance
+ ↓
+Operational Briefing
+```
+
+---
+
+# 4. SECURITY FIRST
+
+The owner must complete the configured security flow before the AI OS becomes active.
+
+Possible security mechanisms include:
+
+- authentication
+- device verification
+- biometric verification
+- session validation
+- business authorization
+
+The AI OS must never bypass the security boundary.
+
+---
+
+# 5. AI OS ENTRANCE
+
+After successful security verification:
+
+```text
+Security Complete
+       ↓
+Environment stabilizes
+       ↓
+AI initialization
+       ↓
+Spatial visual elements appear
+       ↓
+AI core forms
+       ↓
+AI OS rises/pops into the interface
+       ↓
+Greeting / briefing begins
+```
+
+The animation should feel:
+
+- cinematic
+- responsive
+- intelligent
+- physical
+- premium
+- spatial
+
+without copying the exact Iron Man/Jarvis interface.
+
+---
+
+# 6. ORIGINAL VEPARI AI IDENTITY
+
+The Jarvis references establish the interaction philosophy:
+
+- holographic feeling
+- spatial depth
+- intelligent assistant presence
+- animated information
+- contextual awareness
+
+But Vepari AI must have its **own visual language, color system, typography, shapes, textures and motion language**.
+
+---
+
+# 7. OFFICIAL VEPARI AI DESIGN SYSTEM
+
+The AI OS uses the **official Vepari AI color palette and typography defined in the project's master UI/UX specification**.
+
+Most importantly:
+
+### English primary typeface
+
+**Lora**
+
+The typography system must not be replaced by arbitrary fonts during implementation.
+
+---
+
+# 8. 23-LANGUAGE SUPPORT
+
+The AI OS is multilingual by architecture, not by translation added later.
+
+It must support the established 23-language Indian language scope.
+
+The system must support:
+
+```text
+Input language
+ ↓
+Understanding
+ ↓
+Reasoning
+ ↓
+Response language
+ ↓
+Voice language
+```
+
+---
+
+# 9. LANGUAGE DETECTION
+
+The AI OS can determine the language from:
+
+- explicit user setting
+- typed input
+- voice input
+- current application locale
+- conversation context
+
+---
+
+# 10. LANGUAGE PREFERENCE
+
+The owner can configure:
+
+```text
+Primary language
+Secondary language
+Voice language
+Text language
+```
+
+---
+
+# 11. CODE-SWITCHING
+
+The AI OS should handle natural Indian multilingual usage.
+
+For example, a user may mix:
+
+```text
+Tamil + English
+Hindi + English
+Malayalam + English
+Telugu + English
+```
+
+without requiring manual switching for every sentence.
+
+---
+
+# 12. SCRIPT SUPPORT
+
+The interface must correctly render supported Indian scripts.
+
+The typography system should provide appropriate fallbacks for each language while preserving the Vepari AI visual identity.
+
+---
+
+# 13. VOICE-FIRST DESIGN
+
+Voice is a first-class interaction mechanism.
+
+The owner can speak naturally rather than navigating through menus.
+
+Example:
+
+> "இன்று sales எப்படி இருக்கு?"
+
+or:
+
+> "Show today's sales."
+
+The AI OS should understand both.
+
+---
+
+# 14. VOICE PIPELINE
+
+```text
+Voice
+ ↓
+Speech recognition
+ ↓
+Language detection
+ ↓
+Intent understanding
+ ↓
+Business context
+ ↓
+AI reasoning
+ ↓
+Response
+ ↓
+Text
+ ↓
+Speech synthesis
+```
+
+---
+
+# 15. AI OS HOME STATE
+
+The main AI OS is a living business surface.
+
+It should not look like a conventional chat screen.
+
+The central AI presence remains visually dominant.
+
+Around it can appear:
+
+```text
+Business state
+Alerts
+Insights
+Actions
+Resources
+Activity
+```
+
+---
+
+# 16. CENTRAL AI CORE
+
+The central AI element is the visual identity of Vepari AI OS.
+
+It can have:
+
+- layered rings
+- glowing depth
+- particle movement
+- subtle waveform behavior
+- contextual state changes
+- responsive motion
+
+---
+
+# 17. AI CORE STATES
+
+The AI core has multiple states.
+
+### Idle
+
+Quiet, breathing animation.
+
+### Listening
+
+Voice input detected.
+
+### Thinking
+
+Processing request.
+
+### Speaking
+
+AI response being delivered.
+
+### Alert
+
+Important business issue.
+
+### Success
+
+Completed operation.
+
+### Offline
+
+Operating from local context.
+
+### Syncing
+
+Synchronizing with cloud.
+
+---
+
+# 18. AI OS PHYSICS
+
+Motion should feel physically coherent.
+
+Elements should appear to have:
+
+- depth
+- momentum
+- inertia
+- spring
+- blur
+- scale
+- opacity
+- spatial layering
+
+---
+
+# 19. MOTION PRINCIPLE
+
+Animations should communicate meaning.
+
+Not:
+
+> "Animation because it looks cool."
+
+Instead:
+
+```text
+Movement
+ ↓
+State
+ ↓
+Meaning
+```
+
+---
+
+# 20. IDLE ANIMATION
+
+When inactive:
+
+```text
+AI Core
+ ↕
+subtle breathing
+ ↻
+slow ambient rotation
+```
+
+Motion must remain subtle enough not to become distracting.
+
+---
+
+# 21. LISTENING ANIMATION
+
+When listening:
+
+```text
+Voice
+ ↓
+Waveform
+ ↓
+AI Core reacts
+```
+
+The visual response should follow microphone/audio activity.
+
+---
+
+# 22. THINKING ANIMATION
+
+Thinking should visually communicate processing without pretending to reveal hidden chain-of-thought.
+
+Use:
+
+- expanding rings
+- moving particles
+- contextual indicators
+- subtle pulse
+
+---
+
+# 23. SPEAKING ANIMATION
+
+The AI core responds rhythmically to generated speech.
+
+---
+
+# 24. ALERT ANIMATION
+
+Important alerts can create a more noticeable state transition.
+
+Example:
+
+```text
+AI Core
+ ↓
+pulse
+ ↓
+alert card
+ ↓
+priority indicator
+```
+
+---
+
+# 25. AI OS OPENING BRIEFING
+
+The most important first interaction is the owner's business briefing.
+
+The AI OS should answer:
+
+> **What happened while I was away?**
+
+---
+
+# 26. BRIEFING CONTENT
+
+The briefing can include:
+
+### Sales
+
+- sales activity
+- notable changes
+- unusually high/low activity
+
+### Inventory
+
+- low stock
+- stock-outs
+- unusual movement
+
+### Customers
+
+- important customer activity
+- outstanding issues
+- important follow-ups
+
+### Suppliers
+
+- purchases
+- supplier updates
+- delays where available
+
+### Finance
+
+- payments
+- expenses
+- receivables
+- payables
+- unusual financial movement
+
+### Team
+
+- important staff activity
+- pending approvals
+- tasks
+
+### Alerts
+
+- critical issues
+- warnings
+
+### Connections
+
+- integration failures
+- synchronization issues
+
+---
+
+# 27. BRIEFING PRIORITY
+
+The AI should not dump every event.
+
+It should prioritize:
+
+```text
+Critical
+ ↓
+Important
+ ↓
+Actionable
+ ↓
+Informational
+```
+
+---
+
+# 28. BRIEFING EXAMPLE
+
+Conceptually:
+
+```text
+Good morning.
+
+While you were away:
+
+₹82,450 in sales were recorded.
+
+3 products reached low-stock levels.
+
+2 customer payments are still pending.
+
+One supplier delivery was delayed.
+
+There is one important issue
+that needs your attention.
+```
+
+The exact content is dynamically generated from authoritative business data.
+
+---
+
+# 29. FACTUALITY
+
+The briefing must be grounded in actual business data.
+
+The AI must not invent:
+
+- sales
+- payments
+- customers
+- inventory
+- employees
+- events
+
+---
+
+# 30. DATA FRESHNESS
+
+The AI should know whether information is:
+
+```text
+Real-time
+Recently synchronized
+Cached
+Offline/local
+Potentially stale
+```
+
+---
+
+# 31. OFFLINE BRIEFING
+
+When offline, the AI can provide a briefing from locally available synchronized data.
+
+It must clearly distinguish local/cached information from confirmed current cloud state when that distinction matters.
+
+---
+
+# 32. AI OS DASHBOARD
+
+After the briefing, the owner reaches the primary AI OS experience.
+
+Core zones:
+
+```text
+Top
+ ↓
+Business identity / status
+
+Center
+ ↓
+AI Core
+
+Around / below
+ ↓
+Priority information
+
+Bottom
+ ↓
+Voice / Ask / Actions
+```
+
+---
+
+# 33. TOP STATUS AREA
+
+Can contain:
+
+- business name
+- current branch
+- online/offline state
+- sync status
+- notifications
+- profile/security
+
+---
+
+# 34. AI CONTEXT INDICATOR
+
+The owner should be able to see what the AI is currently considering.
+
+Example:
+
+```text
+Current context:
+Main Branch
+Today
+Sales + Inventory
+```
+
+---
+
+# 35. QUICK INSIGHTS
+
+The AI OS can surface compact intelligence cards:
+
+```text
+Sales ↑
+Inventory ↓
+Payments pending
+Customer follow-up
+```
+
+---
+
+# 36. PRIORITY STACK
+
+The AI OS should automatically rank business issues.
+
+Example:
+
+```text
+1 Critical
+2 Important
+3 Watch
+4 Informational
+```
+
+---
+
+# 37. AI OS ACTION BAR
+
+The primary interaction area can include:
+
+```text
+🎙 Speak
+⌕ Ask
+＋ Create
+⋯ More
+```
+
+The exact visual treatment follows the finalized UI/UX system.
+
+---
+
+# 38. ASK AI
+
+The user can open a conversational interface.
+
+But the AI remains contextual.
+
+It should know the current business and current screen.
+
+---
+
+# 39. CONTEXTUAL AI
+
+If the user is viewing inventory and asks:
+
+> "Which one is performing badly?"
+
+the AI should interpret the question in the current inventory context rather than requiring the user to explain the entire situation.
+
+---
+
+# 40. UNIVERSAL BUSINESS SEARCH
+
+The AI OS acts as a natural-language business search layer.
+
+Examples:
+
+> "Find Rahul's last payment."
+
+> "Show products below 10 units."
+
+> "What did we spend this month?"
+
+---
+
+# 41. BUSINESS EXPLANATION
+
+The AI should not merely return data.
+
+It should explain it.
+
+Example:
+
+> "Expenses increased 18% this month, mainly because of higher supplier and transport costs."
+
+---
+
+# 42. INSIGHT ENGINE
+
+The AI OS can identify:
+
+- trends
+- anomalies
+- opportunities
+- risks
+- changes
+- recurring patterns
+
+---
+
+# 43. TREND DETECTION
+
+Example:
+
+```text
+Sales
+Week 1 → ₹X
+Week 2 → ₹Y
+Week 3 → ₹Z
+```
+
+AI explains the direction rather than simply showing a chart.
+
+---
+
+# 44. ANOMALY DETECTION
+
+The AI can flag unusual:
+
+- sales
+- expenses
+- stock movement
+- refunds
+- customer behavior
+- supplier behavior
+
+---
+
+# 45. OPPORTUNITY DETECTION
+
+The system can identify potential opportunities such as:
+
+- fast-selling products
+- repeat customers
+- underused inventory
+- high-value customer segments
+
+Recommendations must be presented as recommendations, not facts.
+
+---
+
+# 46. RISK DETECTION
+
+Possible risks:
+
+- low inventory
+- overdue payments
+- unusual expenses
+- integration failures
+- operational bottlenecks
+
+---
+
+# 47. AI RECOMMENDATIONS
+
+Recommendations should contain:
+
+```text
+What
+Why
+Evidence
+Possible action
+```
+
+---
+
+# 48. AI EVIDENCE
+
+When possible, an insight should link back to its underlying business data.
+
+Example:
+
+```text
+Why am I seeing this?
+
+→ 14 sales
+→ 3 weeks
+→ 27% increase
+```
+
+---
+
+# 49. AI CONFIDENCE
+
+Where uncertainty exists, the AI should communicate it.
+
+Avoid false certainty.
+
+---
+
+# 50. PROACTIVE AI
+
+The AI OS should not wait for the owner to ask every question.
+
+It can proactively surface important situations.
+
+---
+
+# 51. PROACTIVE INTELLIGENCE RULE
+
+Proactivity must be:
+
+- useful
+- relevant
+- explainable
+- controllable
+- non-annoying
+
+---
+
+# 52. PROACTIVE ALERT EXAMPLE
+
+> "Your best-selling item may run out in approximately three days based on recent sales."
+
+This should clearly be an estimate.
+
+---
+
+# 53. ALERT ACTIONS
+
+Possible actions:
+
+```text
+View
+Explain
+Create purchase
+Dismiss
+Remind me
+```
+
+---
+
+# 54. AI OS QUICK ACTIONS
+
+Common actions can include:
+
+```text
+Add sale
+Add expense
+Add customer
+Add supplier
+Add product
+Record payment
+Adjust stock
+Create invoice
+Create report
+```
+
+---
+
+# 55. AI ACTION MODEL
+
+The AI can convert natural language into structured actions.
+
+Example:
+
+> "Record ₹2,500 payment from Arun."
+
+Becomes:
+
+```text
+Intent
+ ↓
+Record Payment
+ ↓
+Customer identification
+ ↓
+Amount validation
+ ↓
+Confirmation
+ ↓
+Execution
+```
+
+---
+
+# 56. ACTION CONFIRMATION
+
+Sensitive operations should require confirmation.
+
+Examples:
+
+- financial actions
+- deletion
+- refunds
+- major inventory adjustments
+- external integration actions
+
+---
+
+# 57. ACTION PREVIEW
+
+Before execution:
+
+```text
+Action:
+Record payment
+
+Customer:
+Arun
+
+Amount:
+₹2,500
+
+[Cancel] [Confirm]
+```
+
+---
+
+# 58. ACTION EXECUTION
+
+After confirmation:
+
+```text
+AI
+ ↓
+API
+ ↓
+Permission
+ ↓
+Domain validation
+ ↓
+Transaction
+ ↓
+Audit
+ ↓
+Result
+```
+
+---
+
+# 59. AI NEVER BYPASSES BACKEND
+
+The AI must use normal Vepari APIs/domain services.
+
+It cannot directly manipulate the database.
+
+---
+
+# 60. AI ACTION RESULT
+
+After completion:
+
+> "Done. The ₹2,500 payment has been recorded against Arun's account."
+
+---
+
+# 61. FAILED ACTION
+
+If unsuccessful:
+
+> "I couldn't record that payment because the customer account could not be confirmed."
+
+The system should explain recovery options.
+
+---
+
+# 62. AI OS NAVIGATION
+
+The owner can ask:
+
+> "Open inventory."
+
+The AI OS can navigate to the appropriate screen.
+
+---
+
+# 63. AI NAVIGATION MODEL
+
+```text
+Natural language
+ ↓
+Intent
+ ↓
+Destination
+ ↓
+Authorization
+ ↓
+Navigation
+```
+
+---
+
+# 64. AI CAN EXPLAIN SCREENS
+
+When a user asks:
+
+> "What is this?"
+
+the AI explains the currently visible feature.
+
+---
+
+# 65. AI SCREEN CONTEXT
+
+The AI can know:
+
+```text
+Current screen
+Selected record
+Active filters
+Current business
+Current branch
+Language
+```
+
+subject to privacy/security.
+
+---
+
+# 66. AI OS + BUSINESS MODULES
+
+The AI OS connects to all major Vepari modules:
+
+```text
+Dashboard
+Customers
+Suppliers
+Products
+Inventory
+Sales
+Purchases
+Expenses
+Payments
+Finance
+Accounting
+Reports
+Analytics
+Documents
+Team
+Automation
+Notifications
+Connections
+Settings
+```
+
+---
+
+# 67. MICRO BUSINESS EXPERIENCE
+
+For smaller businesses, the AI OS should remain simple.
+
+Focus on:
+
+- sales
+- customers
+- inventory
+- expenses
+- payments
+- basic finance
+- alerts
+
+---
+
+# 68. SMALL BUSINESS EXPERIENCE
+
+Additional intelligence can include:
+
+- customer trends
+- supplier management
+- deeper inventory
+- team activity
+- analytics
+
+---
+
+# 69. MEDIUM BUSINESS EXPERIENCE
+
+Add:
+
+- branches
+- teams
+- workflows
+- advanced analytics
+- automation
+- stronger controls
+
+---
+
+# 70. ENTERPRISE EXPERIENCE
+
+Add:
+
+- multi-branch
+- custom roles
+- advanced permissions
+- enterprise integrations
+- automation
+- advanced reporting
+- usage controls
+- extensive Connection Portfolio
+
+---
+
+# 71. ONE AI OS
+
+Despite different business sizes:
+
+```text
+Micro
+Small
+Medium
+Enterprise
+      ↓
+Same Vepari AI OS
+```
+
+Capabilities expand according to configuration and authorization.
+
+---
+
+# 72. AI OS MEMORY
+
+The AI remembers relevant long-term context.
+
+Examples:
+
+- preferred interaction language
+- business preferences
+- recurring priorities
+- relevant operating context
+
+---
+
+# 73. MEMORY PRINCIPLE
+
+Memory is contextual.
+
+Database records remain authoritative.
+
+```text
+Database
+    >
+Memory
+```
+
+---
+
+# 74. MEMORY RETRIEVAL
+
+The AI retrieves only relevant memory.
+
+It should not inject the entire memory store into every request.
+
+---
+
+# 75. MEMORY CONTROL
+
+Users should have appropriate controls to:
+
+- inspect
+- correct
+- delete
+- manage
+
+AI memory.
+
+---
+
+# 76. AI OS CONVERSATION
+
+Conversation can support:
+
+```text
+Follow-up questions
+Context retention
+Clarification
+Action execution
+Explanation
+Navigation
+```
+
+---
+
+# 77. CONVERSATION CONTEXT
+
+Example:
+
+> "How were sales yesterday?"
+
+AI:
+
+> "₹X."
+
+User:
+
+> "Why?"
+
+AI understands "why" refers to yesterday's sales.
+
+---
+
+# 78. MULTI-TURN ACTIONS
+
+Example:
+
+> "Create a purchase order."
+
+AI asks:
+
+> "For which supplier?"
+
+User:
+
+> "ABC Traders."
+
+AI:
+
+> "Which products?"
+
+This is conversational workflow completion.
+
+---
+
+# 79. AI CLARIFICATION
+
+The AI should ask a concise clarification when required information is missing.
+
+---
+
+# 80. AI SHOULD NOT GUESS CRITICAL VALUES
+
+For critical business operations:
+
+```text
+Unknown
+ ↓
+Ask
+```
+
+not:
+
+```text
+Unknown
+ ↓
+Guess
+```
+
+---
+
+# 81. AI OS NOTIFICATION CENTER
+
+The AI OS can aggregate:
+
+- critical alerts
+- business events
+- reminders
+- sync warnings
+- connection issues
+
+---
+
+# 82. NOTIFICATION PRIORITY
+
+```text
+Critical
+Important
+Normal
+Informational
+```
+
+---
+
+# 83. AI OS RESOURCE CENTER
+
+The AI can surface relevant resources:
+
+- documents
+- reports
+- invoices
+- receipts
+- files
+- business records
+
+---
+
+# 84. AI RESOURCE SEARCH
+
+Example:
+
+> "Find the invoice from last month's ABC purchase."
+
+AI retrieves the appropriate document/resource if authorized.
+
+---
+
+# 85. AI OS + DOCUMENTS
+
+The AI can summarize authorized documents.
+
+Example:
+
+> "Summarize this supplier invoice."
+
+---
+
+# 86. AI OS + REPORTS
+
+The AI can explain reports rather than requiring users to interpret every chart themselves.
+
+---
+
+# 87. AI OS + ANALYTICS
+
+Analytics become conversational.
+
+Instead of:
+
+> "Open analytics."
+
+User:
+
+> "Which branch made the most revenue this month?"
+
+---
+
+# 88. AI OS + FINANCE
+
+Examples:
+
+> "How much cash came in today?"
+
+> "Who owes us the most?"
+
+> "What were our biggest expenses?"
+
+---
+
+# 89. AI OS + INVENTORY
+
+Examples:
+
+> "What is running low?"
+
+> "Which product isn't moving?"
+
+> "What should I reorder?"
+
+---
+
+# 90. AI OS + CUSTOMERS
+
+Examples:
+
+> "Who are my most valuable customers?"
+
+> "Who hasn't paid?"
+
+> "Which customers haven't purchased recently?"
+
+---
+
+# 91. AI OS + SUPPLIERS
+
+Examples:
+
+> "Which supplier is causing the most delays?"
+
+> "How much did we buy from ABC this month?"
+
+---
+
+# 92. AI OS + SALES
+
+Examples:
+
+> "How are today's sales?"
+
+> "What sold the most?"
+
+> "Compare this week with last week."
+
+---
+
+# 93. AI OS + EXPENSES
+
+Examples:
+
+> "Where did most of our money go this month?"
+
+---
+
+# 94. AI OS + TEAM
+
+Authorized managers can ask:
+
+> "What is pending today?"
+
+or:
+
+> "Show me tasks that need approval."
+
+---
+
+# 95. AI OS + AUTOMATION
+
+The AI can help create automation.
+
+Example:
+
+> "Remind me every Monday to review unpaid invoices."
+
+The automation system remains responsible for execution.
+
+---
+
+# 96. AI OS + CONNECTION PORTFOLIO
+
+The AI can explain integration state:
+
+> "Why isn't this data updating?"
+
+Possible response:
+
+> "The connection hasn't synchronized successfully since 9:40 AM."
+
+---
+
+# 97. AI OS CONNECTION ACTIONS
+
+Where authorized:
+
+```text
+Reconnect
+Sync now
+View issue
+Open connection
+```
+
+---
+
+# 98. AI OS + CLOUD
+
+The AI should understand sync state.
+
+Example:
+
+> "Your device has 3 changes waiting to synchronize."
+
+---
+
+# 99. AI OS + OFFLINE
+
+When offline:
+
+```text
+AI Core
+ ↓
+Local business context
+ ↓
+Local memory/context
+ ↓
+Available capabilities
+```
+
+The AI should clearly indicate limitations.
+
+---
+
+# 100. AI OS OFFLINE LIMITATIONS
+
+The system must not pretend to have current cloud information when it does not.
+
+---
+
+# 101. AI OS SYNC STATE
+
+The visual interface can indicate:
+
+```text
+✓ Synced
+↻ Syncing
+○ Offline
+! Attention
+```
+
+---
+
+# 102. AI OS SECURITY
+
+Every AI interaction inherits:
+
+```text
+User identity
++
+Business membership
++
+Role
++
+Permissions
++
+Branch scope
+```
+
+---
+
+# 103. AI DATA ISOLATION
+
+The AI must never expose:
+
+```text
+Business A
+ ↓
+Business B data
+```
+
+---
+
+# 104. AI MEMORY ISOLATION
+
+Likewise:
+
+```text
+Business A memory
+≠
+Business B memory
+```
+
+---
+
+# 105. AI PROMPT-INJECTION DEFENSE
+
+Business documents, imported data and external integrations are untrusted content.
+
+They must never override Vepari AI's system/security rules.
+
+---
+
+# 106. AI PROVIDER GATEWAY
+
+The AI OS connects to:
+
+```text
+Vepari AI AI Gateway
+          │
+    ┌─────┴─────┐
+    ↓           ↓
+ Sarvam       Future
+ AI           Providers
+```
+
+---
+
+# 107. WHY THE GATEWAY EXISTS
+
+It provides:
+
+- provider abstraction
+- centralized security
+- usage control
+- logging
+- routing
+- fallback
+- future flexibility
+
+---
+
+# 108. SARVAM AI ROLE
+
+Sarvam AI is an important integration point for India's multilingual AI requirements, particularly where Indian language and voice capabilities are relevant.
+
+But Vepari AI OS must not be architecturally locked to one provider.
+
+---
+
+# 109. AI PROVIDER FAILURE
+
+If a provider fails:
+
+```text
+AI request
+ ↓
+Provider failure
+ ↓
+Fallback if configured
+OR
+Graceful unavailable state
+```
+
+Core business functionality continues.
+
+---
+
+# 110. AI OS NO-NETWORK STATE
+
+The AI OS can still provide:
+
+- local business information
+- local navigation
+- saved context
+- pending operations
+- previously synchronized information
+
+while cloud-dependent features become unavailable.
+
+---
+
+# 111. AI OS ERROR UX
+
+Never show:
+
+> "500 Internal Server Error"
+
+to the owner.
+
+Instead:
+
+> "I couldn't complete that right now. Your data is safe. Try again."
+
+---
+
+# 112. AI OS THINKING UX
+
+Do not expose hidden chain-of-thought.
+
+Instead provide concise status:
+
+```text
+Checking your sales...
+Comparing recent activity...
+Preparing the answer...
+```
+
+---
+
+# 113. AI OS TRUST MODEL
+
+The owner should always understand whether the AI is:
+
+```text
+Reporting
+Estimating
+Recommending
+Acting
+```
+
+---
+
+# 114. AI RESPONSE LABELS
+
+Where appropriate:
+
+```text
+FACT
+INSIGHT
+ESTIMATE
+RECOMMENDATION
+ACTION
+```
+
+---
+
+# 115. AI EXPLANATION MODE
+
+The owner can ask:
+
+> "Why?"
+
+The AI explains the evidence supporting its conclusion.
+
+---
+
+# 116. AI DRILL-DOWN
+
+Insight:
+
+> "Expenses increased."
+
+User:
+
+> "Show me."
+
+AI navigates to relevant expense information.
+
+---
+
+# 117. AI FOLLOW-UP
+
+The system should preserve conversational context naturally.
+
+---
+
+# 118. AI OS VISUAL INFORMATION HIERARCHY
+
+Priority:
+
+```text
+AI Core
+ ↓
+Critical information
+ ↓
+Primary action
+ ↓
+Secondary information
+ ↓
+Navigation/resources
+```
+
+---
+
+# 119. MOBILE-FIRST PRINCIPLE
+
+Everything is designed for mobile.
+
+No desktop dashboard should simply be shrunk onto a phone.
+
+---
+
+# 120. TOUCH INTERACTION
+
+The AI OS should support:
+
+- tap
+- swipe
+- drag where meaningful
+- long press where useful
+- voice
+- typing
+
+---
+
+# 121. GESTURES
+
+Gestures should remain discoverable and never be required for critical functionality.
+
+---
+
+# 122. BOTTOM INTERACTION ZONE
+
+The lower portion of the interface provides the primary interaction controls.
+
+It should remain reachable with one hand.
+
+---
+
+# 123. AI OS SHEETS
+
+Supporting information can appear through:
+
+- bottom sheets
+- contextual cards
+- expandable panels
+- full-screen detail views
+
+---
+
+# 124. AI OS TRANSITIONS
+
+When navigating:
+
+```text
+AI Core
+ ↓
+context transforms
+ ↓
+target screen
+```
+
+rather than abruptly switching between unrelated interfaces where animation can improve continuity.
+
+---
+
+# 125. AI OS + STANDARD UI
+
+The AI OS does not replace all conventional UI.
+
+Vepari AI still provides dedicated screens for precise tasks.
+
+The AI OS is the intelligent layer connecting them.
+
+---
+
+# 126. DUAL INTERACTION MODEL
+
+Users can:
+
+### Traditional
+
+```text
+Tap
+ ↓
+Screen
+ ↓
+Button
+```
+
+### AI
+
+```text
+Speak
+ ↓
+Intent
+ ↓
+Action
+```
+
+Both paths execute through the same backend/domain logic.
+
+---
+
+# 127. AI OS UNIVERSAL COMMAND
+
+Conceptually:
+
+```text
+"Vepari, ..."
+```
+
+can invoke the assistant, subject to the finalized voice UX.
+
+---
+
+# 128. WAKE/ACTIVATION MODEL
+
+Activation can occur through:
+
+- AI button
+- voice interaction
+- contextual prompt
+- proactive alert
+
+Background listening should follow explicit product/privacy settings and platform capabilities.
+
+---
+
+# 129. PRIVACY INDICATORS
+
+When microphone/camera/location or other sensitive capabilities are active, the app must use appropriate platform-visible indicators and permission flows.
+
+---
+
+# 130. AI OS SETTINGS
+
+The owner can control:
+
+```text
+Language
+Voice
+AI behavior
+Notifications
+Proactive insights
+Memory
+Privacy
+Automation
+```
+
+according to account permissions.
+
+---
+
+# 131. PROACTIVE INTELLIGENCE SETTINGS
+
+Possible options:
+
+```text
+High
+Balanced
+Minimal
+Off
+```
+
+---
+
+# 132. MEMORY SETTINGS
+
+Possible controls:
+
+```text
+Memory enabled
+View memory
+Delete memory
+Clear conversation context
+```
+
+---
+
+# 133. AI VOICE SETTINGS
+
+Can include:
+
+- language
+- voice
+- speed
+- volume
+- speech behavior
+
+subject to available provider capabilities.
+
+---
+
+# 134. AI PERSONALITY
+
+The personality should feel:
+
+- professional
+- intelligent
+- calm
+- proactive
+- concise
+- business-focused
+- trustworthy
+
+---
+
+# 135. NOT TOO HUMAN
+
+The AI should feel like an advanced business operating system, not pretend to be a human employee.
+
+---
+
+# 136. NOT TOO ROBOTIC
+
+It should still communicate naturally.
+
+---
+
+# 137. AI TONE BY CONTEXT
+
+### Normal
+
+Concise and helpful.
+
+### Critical
+
+Direct and clear.
+
+### Financial
+
+Precise.
+
+### Error
+
+Calm and reassuring.
+
+### Recommendation
+
+Explain reasoning.
+
+---
+
+# 138. AI OS BUSINESS LANGUAGE
+
+Avoid unnecessary technical terminology.
+
+Instead of:
+
+> "Your database transaction failed."
+
+Say:
+
+> "I couldn't save that change right now."
+
+---
+
+# 139. AI OS ACCESSIBILITY
+
+Support:
+
+- screen readers where applicable
+- scalable text
+- sufficient contrast
+- reduced motion
+- accessible touch targets
+- voice interaction
+
+---
+
+# 140. REDUCED MOTION
+
+Users who enable reduced-motion preferences should receive simplified transitions.
+
+---
+
+# 141. AI OS PERFORMANCE
+
+Animations must not compromise:
+
+- startup time
+- battery
+- memory
+- scrolling
+- voice latency
+
+---
+
+# 142. AI OS PERFORMANCE STATES
+
+The AI interface should gracefully degrade visual effects on lower-end devices.
+
+---
+
+# 143. AI OS RESOURCE MANAGEMENT
+
+Avoid:
+
+- continuously running expensive animations
+- unnecessary background AI processing
+- excessive network calls
+
+---
+
+# 144. AI OS BATTERY PRINCIPLE
+
+Intelligence must not come at the cost of unreasonable battery drain.
+
+---
+
+# 145. AI OS CLOUD COST CONTROL
+
+The backend should:
+
+- cache appropriate context
+- limit unnecessary AI requests
+- track usage
+- avoid repeated context transmission
+
+---
+
+# 146. AI OS CONTEXT ENGINE
+
+The context engine combines:
+
+```text
+Current Screen
++
+Current Business
++
+Current Branch
++
+Current User
++
+Relevant Records
++
+Recent Events
++
+Memory
++
+Language
++
+Time
++
+Sync State
+```
+
+---
+
+# 147. CONTEXT PRIORITY
+
+Not all context has equal importance.
+
+```text
+Current user intent
+        ↓
+Current screen
+        ↓
+Current business
+        ↓
+Relevant data
+        ↓
+Relevant memory
+        ↓
+General context
+```
+
+---
+
+# 148. CONTEXT WINDOW CONTROL
+
+Only relevant information should be passed to the model.
+
+---
+
+# 149. AI DATA RETRIEVAL
+
+The AI should use backend services to retrieve authoritative information.
+
+```text
+AI question
+ ↓
+Tool/domain query
+ ↓
+Database
+ ↓
+Relevant result
+ ↓
+AI
+```
+
+---
+
+# 150. AI TOOL MODEL
+
+Conceptually:
+
+```text
+get_sales()
+get_inventory()
+get_customer()
+get_expenses()
+get_finance()
+get_report()
+navigate()
+create_action()
+```
+
+Each tool is permission-controlled.
+
+---
+
+# 151. AI TOOL AUTHORIZATION
+
+Every tool call must validate:
+
+```text
+User
+Business
+Branch
+Permission
+Parameters
+```
+
+---
+
+# 152. AI TOOL RESULT
+
+Tools return structured data to the AI.
+
+---
+
+# 153. AI ACTION TOOL
+
+An AI action tool should generate a domain command rather than directly modifying storage.
+
+---
+
+# 154. AI OS AUDIT
+
+AI actions must be auditable.
+
+Example:
+
+```text
+AI suggested
+ ↓
+User approved
+ ↓
+Payment created
+```
+
+The audit should capture this relationship.
+
+---
+
+# 155. AI OS MEMORY AUDIT
+
+Memory changes can also be recorded where appropriate for transparency/security.
+
+---
+
+# 156. AI OS SECURITY EVENTS
+
+Important AI security events should be observable.
+
+---
+
+# 157. AI OS LOGGING
+
+Technical logs should capture:
+
+- AI request metadata
+- provider latency
+- failures
+- validation errors
+- usage metrics
+
+without unnecessarily logging sensitive conversation/business data.
+
+---
+
+# 158. AI OS OBSERVABILITY
+
+Track:
+
+```text
+AI latency
+Provider success rate
+Action failure rate
+Tool failures
+Memory retrieval failures
+Voice failures
+```
+
+---
+
+# 159. AI OS OFFLINE MEMORY
+
+Where appropriate, limited local context may be available offline.
+
+Sensitive data remains subject to local storage security.
+
+---
+
+# 160. AI OS CLOUD MEMORY
+
+Long-term business memory can be synchronized through the cloud under the same tenant/security model.
+
+---
+
+# 161. MEMORY CONFLICTS
+
+If local and cloud memory differ:
+
+```text
+Compare
+ ↓
+Resolve
+ ↓
+Preserve authoritative/contextual distinction
+```
+
+---
+
+# 162. AI OS + SYNC
+
+The AI can explain synchronization:
+
+> "Three changes are waiting to upload."
+
+---
+
+# 163. AI OS + MULTI-DEVICE
+
+The same business context can be reflected across authorized devices.
+
+```text
+Phone
+ ↓
+Cloud
+ ↓
+Other authorized devices
+```
+
+---
+
+# 164. TEAM AI
+
+Different users see different AI capabilities based on permissions.
+
+An employee should not receive owner-only financial intelligence merely by asking the AI.
+
+---
+
+# 165. ROLE-AWARE AI
+
+The AI adapts responses according to role.
+
+Example:
+
+```text
+Owner
+→ financial overview
+
+Inventory Staff
+→ inventory operations
+
+Sales Staff
+→ sales/customer information
+```
+
+---
+
+# 166. ENTERPRISE AI GOVERNANCE
+
+Enterprise administrators can control:
+
+- AI access
+- AI usage
+- memory
+- integrations
+- automation
+- permissions
+
+where configured.
+
+---
+
+# 167. AI OS REPORTING
+
+The AI can generate summaries such as:
+
+> "Give me today's business summary."
+
+---
+
+# 168. EXECUTIVE SUMMARY
+
+For owners/managers:
+
+```text
+Revenue
+Profit
+Cash
+Inventory
+Receivables
+Payables
+Major alerts
+```
+
+---
+
+# 169. MORNING BRIEF
+
+The morning briefing is one of the signature Vepari AI experiences.
+
+```text
+Security
+ ↓
+AI OS entrance
+ ↓
+Morning briefing
+ ↓
+Priority actions
+ ↓
+Business overview
+```
+
+---
+
+# 170. AWAY-BRIEF
+
+The same system can answer:
+
+> "What happened while I was away?"
+
+---
+
+# 171. END-OF-DAY BRIEF
+
+Potential summary:
+
+```text
+Today's sales
+Expenses
+Payments
+Inventory movement
+Pending items
+Important events
+```
+
+---
+
+# 172. WEEKLY BRIEF
+
+Potential:
+
+```text
+Performance
+Trends
+Top products
+Customers
+Expenses
+Risks
+Opportunities
+```
+
+---
+
+# 173. AI OS PROACTIVE CARD
+
+A card should answer:
+
+```text
+What happened?
+Why does it matter?
+What can I do?
+```
+
+---
+
+# 174. EXAMPLE
+
+```text
+LOW STOCK
+
+Product X is selling 32% faster
+than its recent average.
+
+Recommended:
+Review stock and reorder.
+
+[View Product]
+[Create Purchase]
+```
+
+---
+
+# 175. AI OS ACTION CHAIN
+
+The owner can say:
+
+> "Okay, reorder it."
+
+AI:
+
+```text
+Identify product
+ ↓
+Identify supplier
+ ↓
+Determine quantity
+ ↓
+Show proposal
+ ↓
+Confirm
+ ↓
+Create purchase/order
+```
+
+---
+
+# 176. HUMAN CONTROL
+
+The owner remains in control of consequential operations.
+
+---
+
+# 177. NO AUTONOMOUS FINANCIAL ACTION WITHOUT POLICY
+
+The AI cannot independently execute sensitive operations unless the product explicitly defines and authorizes that automation.
+
+---
+
+# 178. AUTOMATED ACTIONS
+
+Where the user deliberately configures an automation:
+
+```text
+Trigger
+ ↓
+Condition
+ ↓
+Authorized action
+ ↓
+Execution
+ ↓
+Audit
+```
+
+---
+
+# 179. AI OS + AUTOMATION
+
+The AI can create or explain automations, but the automation engine controls execution.
+
+---
+
+# 180. AI OS + CONNECTIONS
+
+AI can explain integration health and initiate authorized connection workflows.
+
+---
+
+# 181. AI OS + FILES
+
+AI can summarize and locate authorized files.
+
+---
+
+# 182. AI OS + REPORTS
+
+AI can transform raw reports into understandable explanations.
+
+---
+
+# 183. AI OS + SEARCH
+
+Natural-language search becomes the universal retrieval layer.
+
+---
+
+# 184. AI OS + NOTIFICATIONS
+
+Important notifications can become conversational.
+
+Instead of merely:
+
+> "Low stock."
+
+The AI can say:
+
+> "Product X is low and has been selling faster than usual. Would you like me to show the reorder options?"
+
+---
+
+# 185. AI OS + USER JOURNEY
+
+```text id="1j3n5r"
+OPEN APP
+ ↓
+SECURITY
+ ↓
+AI OS ARRIVAL
+ ↓
+BUSINESS BRIEF
+ ↓
+PRIORITY ISSUES
+ ↓
+OWNER QUESTION
+ ↓
+AI UNDERSTANDS
+ ↓
+RETRIEVES
+ ↓
+EXPLAINS
+ ↓
+RECOMMENDS
+ ↓
+OWNER APPROVES
+ ↓
+ACTION
+ ↓
+AUDIT
+ ↓
+SYNC
+```
+
+---
+
+# 186. AI OS ARCHITECTURE
+
+```text id="s7k5vv"
+                    VEPARI AI OS
+                          │
+             ┌────────────┼────────────┐
+             ↓            ↓            ↓
+          Voice         Text         Visual
+             │            │            │
+             └────────────┼────────────┘
+                          ↓
+                     AI CONTEXT
+                          │
+              ┌───────────┼───────────┐
+              ↓           ↓           ↓
+           Memory      Business     Screen
+                         Data       Context
+              └───────────┼───────────┘
+                          ↓
+                    AI GATEWAY
+                          │
+                Sarvam / Providers
+                          │
+                          ↓
+                  Structured Result
+                          │
+            ┌─────────────┼─────────────┐
+            ↓             ↓             ↓
+        Explanation    Navigation     Action
+                                        │
+                                     Approval
+                                        │
+                                   Domain API
+                                        │
+                                   Database
+```
+
+---
+
+# 187. AI OS DATA FLOW
+
+```text id="b9w4um"
+USER
+ ↓
+AI OS
+ ↓
+Intent
+ ↓
+Context Engine
+ ↓
+Authorized Data Retrieval
+ ↓
+Memory
+ ↓
+AI
+ ↓
+Response
+ ↓
+Visual/Voice
+```
+
+---
+
+# 188. AI ACTION DATA FLOW
+
+```text id="o5c9o5"
+USER
+ ↓
+AI OS
+ ↓
+Intent
+ ↓
+Action Proposal
+ ↓
+Permission
+ ↓
+Confirmation
+ ↓
+API
+ ↓
+Domain Service
+ ↓
+Database Transaction
+ ↓
+Audit
+ ↓
+Event
+ ↓
+Result
+ ↓
+AI OS
+```
+
+---
+
+# 189. AI OS SECURITY FLOW
+
+```text id="26gzqv"
+Security Complete
+ ↓
+Authenticated Session
+ ↓
+Business Context
+ ↓
+Role
+ ↓
+Permission
+ ↓
+AI Context
+ ↓
+Tool Authorization
+ ↓
+Action Authorization
+```
+
+---
+
+# 190. AI OS FAILURE FLOW
+
+```text id="y5k8qg"
+Request
+ ↓
+Failure
+ ↓
+Classify
+ ├── Offline
+ ├── Provider
+ ├── Permission
+ ├── Validation
+ ├── Conflict
+ └── Internal
+ ↓
+Safe explanation
+ ↓
+Recovery
+```
+
+---
+
+# 191. AI OS DATABASE RELATIONSHIP
+
+The AI OS does not become another independent business database.
+
+```text
+AI OS
+ ↓
+AI Context
+ ↓
+Business APIs
+ ↓
+Authoritative Database
+```
+
+---
+
+# 192. AI OS MEMORY RELATIONSHIP
+
+```text
+Business Database
+       │
+       ├── Facts
+       │
+       ↓
+Context Engine
+       ↑
+       │
+AI Memory
+       │
+       ↓
+AI Model
+```
+
+---
+
+# 193. AI OS LOCAL RELATIONSHIP
+
+```text
+AI OS
+ ↓
+Local Repository
+ ↓
+SQLite
+```
+
+when offline or when locally available information is sufficient.
+
+---
+
+# 194. AI OS CLOUD RELATIONSHIP
+
+```text
+AI OS
+ ↓
+API
+ ↓
+Cloud
+```
+
+for authoritative current shared data.
+
+---
+
+# 195. AI OS REALTIME
+
+Important events can reach the AI OS through the realtime/event layer.
+
+Example:
+
+```text
+Payment received
+ ↓
+Event
+ ↓
+AI OS
+ ↓
+"₹5,000 payment received."
+```
+
+---
+
+# 196. AI OS PROACTIVE ENGINE
+
+The proactive engine evaluates important events.
+
+```text
+Business Event
+ ↓
+Rules
+ ↓
+Importance
+ ↓
+AI analysis
+ ↓
+Insight
+ ↓
+Notification
+```
+
+---
+
+# 197. PROACTIVE ENGINE SAFETY
+
+It should not generate unnecessary alerts from every minor event.
+
+---
+
+# 198. ALERT FATIGUE CONTROL
+
+Use:
+
+- prioritization
+- deduplication
+- cooldowns
+- user preferences
+
+---
+
+# 199. AI OS PERSONALIZATION
+
+Personalization can adapt:
+
+- language
+- response length
+- preferred modules
+- preferred voice
+- briefing style
+
+without changing business truth.
+
+---
+
+# 200. AI OS BUSINESS PERSONALIZATION
+
+The AI can adapt to business-specific preferences stored as authorized context.
+
+---
+
+# 201. AI OS LEARNING
+
+The system can improve contextual usefulness from explicitly retained preferences and patterns, but should not silently convert every interaction into permanent memory.
+
+---
+
+# 202. AI OS TRUST
+
+Every important AI answer should be traceable to:
+
+```text
+Data
+ ↓
+Reasoning/result
+ ↓
+Conclusion
+```
+
+without exposing private chain-of-thought.
+
+---
+
+# 203. AI OS DESIGN LANGUAGE
+
+The final visual identity should consistently use:
+
+- official Vepari AI palette
+- official Vepari AI typography
+- Lora for primary English
+- approved multilingual fallback typography
+- Vepari AI textures
+- spatial depth
+- glass/holographic surfaces where appropriate
+- controlled glow
+- subtle particles
+- responsive motion
+
+---
+
+# 204. TEXTURE
+
+Textures should support the feeling of:
+
+```text
+Digital intelligence
++
+Premium technology
++
+Business precision
+```
+
+They should never interfere with readability.
+
+---
+
+# 205. GLOW
+
+Glow should be used for:
+
+- AI core
+- active state
+- focus
+- important alerts
+- interaction feedback
+
+not every UI element.
+
+---
+
+# 206. GLASS / SURFACE LANGUAGE
+
+Supporting panels can use layered surfaces to create depth while maintaining accessibility and contrast.
+
+---
+
+# 207. DEPTH SYSTEM
+
+Conceptually:
+
+```text
+Background
+ ↓
+Ambient layer
+ ↓
+AI core
+ ↓
+Information cards
+ ↓
+Interactive controls
+ ↓
+Modal/action confirmation
+```
+
+---
+
+# 208. VISUAL HIERARCHY
+
+The AI core is the primary identity.
+
+Business information remains highly legible.
+
+Decorative effects never outrank business information.
+
+---
+
+# 209. AI OS TYPOGRAPHY
+
+### English
+
+**Lora** as the established primary Vepari AI English font.
+
+### Indian languages
+
+Use the finalized Vepari multilingual typography system with appropriate script coverage/fallbacks.
+
+Never force an unsupported Latin-only font onto Indian scripts.
+
+---
+
+# 210. FONT CONSISTENCY
+
+The AI OS, standard application screens, dialogs, cards and navigation should follow the same master typography system.
+
+---
+
+# 211. COLOR CONSISTENCY
+
+The AI OS must use only the official Vepari AI color palette already established for the product.
+
+No arbitrary new brand palette should be introduced.
+
+---
+
+# 212. STATE COLORS
+
+Where semantic colors are needed:
+
+```text
+Success
+Warning
+Critical
+Info
+```
+
+they must be implemented within the official Vepari design system rather than becoming separate branding.
+
+---
+
+# 213. AI OS RESPONSIVE BEHAVIOR
+
+The layout must adapt to:
+
+- different Android screen sizes
+- aspect ratios
+- safe areas
+- accessibility text sizes
+- foldable devices where relevant
+
+---
+
+# 214. ORIENTATION
+
+Primary mobile experience should be optimized for portrait.
+
+---
+
+# 215. TABLET/FUTURE
+
+The architecture should permit expanded layouts without changing the AI interaction model.
+
+---
+
+# 216. FUTURE iOS
+
+The AI OS design system must remain platform-independent at the product level.
+
+React Native implementation should allow the same conceptual experience to reach iOS later.
+
+---
+
+# 217. CROSS-PLATFORM PRINCIPLE
+
+```text
+Same intelligence
+Same design language
+Same business rules
+Platform-specific implementation
+```
+
+---
+
+# 218. AI OS IMPLEMENTATION BOUNDARY
+
+```text
+UI
+ ↓
+AI OS Controller
+ ↓
+AI Repository
+ ↓
+AI API
+ ↓
+Backend AI Gateway
+```
+
+---
+
+# 219. FRONTEND AI STATE
+
+The mobile client should track:
+
+```text
+idle
+listening
+thinking
+speaking
+error
+offline
+syncing
+executing
+awaiting_confirmation
+```
+
+---
+
+# 220. AI STREAMING
+
+Where supported, AI responses can stream progressively to reduce perceived latency.
+
+---
+
+# 221. STREAM FAILURE
+
+If streaming fails, the system should recover gracefully rather than leaving the AI OS permanently in a "thinking" state.
+
+---
+
+# 222. VOICE LATENCY
+
+The architecture should minimize:
+
+```text
+speech
+ ↓
+recognition
+ ↓
+AI
+ ↓
+speech
+```
+
+latency.
+
+---
+
+# 223. AI OS PRELOADING
+
+After authentication, the application can preload relevant:
+
+- business summary
+- recent activity
+- alerts
+- local context
+
+so the first AI briefing feels immediate.
+
+---
+
+# 224. AI OS CACHING
+
+Cache suitable non-sensitive/relevant context locally to improve responsiveness.
+
+---
+
+# 225. AI OS CACHE INVALIDATION
+
+Cloud changes must eventually invalidate/reconcile stale local AI context.
+
+---
+
+# 226. AI OS SECURITY BOUNDARY
+
+The AI OS is activated only after the security state is valid.
+
+---
+
+# 227. SESSION EXPIRATION
+
+If authentication expires:
+
+```text
+AI OS
+ ↓
+Locked
+ ↓
+Re-authentication
+ ↓
+AI OS restored
+```
+
+---
+
+# 228. APP BACKGROUNDING
+
+When the app is backgrounded, sensitive AI/business content should be handled according to the mobile privacy/security policy.
+
+---
+
+# 229. SCREEN PRIVACY
+
+Sensitive screens can optionally use appropriate platform protections against casual exposure where required.
+
+---
+
+# 230. AI OS LOGOUT
+
+On logout:
+
+```text
+Session revoked
+ ↓
+AI OS deactivated
+ ↓
+Sensitive context cleared/locked
+```
+
+according to retention policy.
+
+---
+
+# 231. AI OS MULTI-USER DEVICE
+
+If a device can be used by different authorized accounts, AI context must never leak between accounts.
+
+---
+
+# 232. BUSINESS SWITCH
+
+When switching businesses:
+
+```text
+Business A
+ ↓
+Context cleared/re-scoped
+ ↓
+Business B
+ ↓
+New AI context
+```
+
+---
+
+# 233. BRANCH SWITCH
+
+Likewise, branch-specific context must update.
+
+---
+
+# 234. AI OS CONTEXT RESET
+
+Users should have a way to reset the current conversational context without necessarily deleting long-term memory.
+
+---
+
+# 235. AI OS CONVERSATION MODES
+
+Potential modes:
+
+```text
+Ask
+Analyze
+Create
+Explain
+Navigate
+Summarize
+```
+
+---
+
+# 236. ASK MODE
+
+General business questions.
+
+---
+
+# 237. ANALYZE MODE
+
+Deeper business analysis.
+
+---
+
+# 238. CREATE MODE
+
+Create records/workflows.
+
+---
+
+# 239. EXPLAIN MODE
+
+Explain data or screens.
+
+---
+
+# 240. NAVIGATE MODE
+
+Open appropriate features.
+
+---
+
+# 241. SUMMARIZE MODE
+
+Generate concise business summaries.
+
+---
+
+# 242. AI OS COMMAND EXAMPLES
+
+```text
+"Show today's sales."
+
+"Why are expenses higher?"
+
+"Find low-stock products."
+
+"Record this payment."
+
+"Open customers."
+
+"Summarize today's business."
+
+"What happened while I was away?"
+
+"Create a purchase for these products."
+
+"Why hasn't this connection synced?"
+```
+
+---
+
+# 243. AI OS RESPONSE PATTERN
+
+Prefer:
+
+```text
+Answer
+ ↓
+Evidence
+ ↓
+Action
+```
+
+when relevant.
+
+---
+
+# 244. AI OS RESPONSE LENGTH
+
+The default should be concise.
+
+The owner can request:
+
+> "Explain more."
+
+---
+
+# 245. BUSINESS OWNER EXPERIENCE
+
+The owner should feel that Vepari AI:
+
+```text
+Understands
+ ↓
+Watches
+ ↓
+Explains
+ ↓
+Helps
+ ↓
+Acts
+```
+
+---
+
+# 246. NOTIFICATION EXPERIENCE
+
+The owner should not need to continuously monitor dashboards.
+
+The AI OS brings high-priority information forward.
+
+---
+
+# 247. AI OS MORNING EXPERIENCE
+
+```text
+SECURITY
+ ↓
+AI ARRIVES
+ ↓
+"Good morning."
+ ↓
+Business briefing
+ ↓
+Critical items
+ ↓
+Recommended actions
+ ↓
+Owner asks
+ ↓
+AI continues
+```
+
+---
+
+# 248. AI OS DURING THE DAY
+
+```text
+Business event
+ ↓
+AI detects significance
+ ↓
+AI surfaces insight
+ ↓
+Owner interacts
+```
+
+---
+
+# 249. AI OS END OF DAY
+
+```text
+Day activity
+ ↓
+Summary
+ ↓
+Pending items
+ ↓
+Tomorrow priorities
+```
+
+---
+
+# 250. AI OS LONG-TERM ROLE
+
+Eventually the AI OS becomes the owner's primary interface to the business.
+
+But traditional interfaces remain available for precision and transparency.
+
+---
+
+# 251. MASTER AI OS EXPERIENCE
+
+```text id="k99w0d"
+                  SECURITY
+                     │
+                     ↓
+                AI OS ARRIVAL
+                     │
+                     ↓
+               BUSINESS BRIEF
+                     │
+        ┌────────────┼────────────┐
+        ↓            ↓            ↓
+      ALERTS       INSIGHTS     RESOURCES
+        │            │            │
+        └────────────┼────────────┘
+                     ↓
+                 OWNER ASK
+                     │
+              ┌──────┼──────┐
+              ↓      ↓      ↓
+            ANSWER  NAVIGATE ACT
+                     │       │
+                     │    APPROVAL
+                     │       │
+                     └───┬───┘
+                         ↓
+                    DOMAIN API
+                         ↓
+                    DATABASE
+                         ↓
+                  AUDIT + EVENT
+                         ↓
+                    AI OS RESULT
+```
+
+---
+
+# 252. MASTER AI OS TECHNICAL ARCHITECTURE
+
+```text
+                         MOBILE
+                           │
+                       React Native
+                           │
+                      AI OS UI Layer
+                           │
+                   AI OS State Machine
+                           │
+                ┌──────────┼──────────┐
+                ↓          ↓          ↓
+             Voice       Text      Visual
+                └──────────┼──────────┘
+                           ↓
+                     Context Engine
+                           │
+                ┌──────────┼──────────┐
+                ↓          ↓          ↓
+             SQLite      Memory     Cloud API
+                │          │          │
+                └──────────┼──────────┘
+                           ↓
+                       AI Gateway
+                           │
+                     Provider Layer
+                           │
+                    Sarvam / Future
+                           │
+                           ↓
+                    Structured Output
+                           │
+               ┌───────────┼───────────┐
+               ↓           ↓           ↓
+             Answer      Action      Navigation
+                           │
+                      Confirmation
+                           │
+                       Domain API
+                           │
+                       Database
+```
+
+---
+
+# 253. MASTER AI OS SECURITY ARCHITECTURE
+
+```text
+Authentication
+      ↓
+Business Context
+      ↓
+Membership
+      ↓
+Role
+      ↓
+Permission
+      ↓
+AI Context
+      ↓
+Tool Authorization
+      ↓
+Action Authorization
+      ↓
+Domain Validation
+      ↓
+Transaction
+      ↓
+Audit
+```
+
+---
+
+# 254. MASTER AI OS DATA ARCHITECTURE
+
+```text
+                    AI OS
+                      │
+          ┌───────────┼───────────┐
+          ↓           ↓           ↓
+       Context      Memory      Business
+          │           │           │
+          └───────────┼───────────┘
+                      ↓
+                 AI Gateway
+                      │
+                   Provider
+                      │
+                 AI Response
+                      │
+       ┌──────────────┼──────────────┐
+       ↓              ↓              ↓
+     Answer        Insight         Action
+                                      │
+                                  Approval
+                                      │
+                                  Backend
+```
+
+---
+
+# 255. MASTER AI OS OFFLINE ARCHITECTURE
+
+```text
+             AI OS
+               │
+        Local Context
+               │
+             SQLite
+               │
+       Cached Business Data
+               │
+        Local AI Capability
+               │
+       ┌───────┴────────┐
+       ↓                ↓
+    Available       Cloud Required
+       │                │
+    Execute         Queue/Wait
+       │                │
+       └───────┬────────┘
+               ↓
+            SYNC
+```
+
+---
+
+# 256. MASTER AI OS CLOUD ARCHITECTURE
+
+```text
+AI OS
+ ↓
+API
+ ↓
+AI Gateway
+ ↓
+Context Retrieval
+ ↓
+Database
+ ↓
+Memory
+ ↓
+Provider
+ ↓
+Response
+```
+
+---
+
+# 257. MASTER AI OS EVENT ARCHITECTURE
+
+```text
+Business Transaction
+ ↓
+Database Commit
+ ↓
+Event
+ ↓
+AI Proactive Engine
+ ↓
+Priority Analysis
+ ↓
+AI Insight
+ ↓
+AI OS
+```
+
+---
+
+# 258. MASTER AI OS MEMORY ARCHITECTURE
+
+```text
+Interaction
+ ↓
+Memory Candidate
+ ↓
+Classification
+ ↓
+Authorization
+ ↓
+Memory
+ ↓
+Future Context
+ ↓
+AI
+```
+
+---
+
+# 259. MASTER AI OS CONNECTION ARCHITECTURE
+
+```text
+AI OS
+ ↓
+Connection Portfolio
+ ↓
+Connection Service
+ ↓
+Provider Adapter
+ ↓
+External System
+ ↓
+Normalized Data
+ ↓
+Business Database
+ ↓
+AI Context
+```
+
+---
+
+# 260. MASTER AI OS COMPLETION CRITERIA
+
+The AI OS is not complete merely because a chat box works.
+
+It requires:
+
+```text
+AI Core UI ✓
+Entrance animation ✓
+Security-gated activation ✓
+Business briefing ✓
+Voice ✓
+Text ✓
+23-language architecture ✓
+Context engine ✓
+Memory ✓
+Business retrieval ✓
+Insights ✓
+Recommendations ✓
+Navigation ✓
+Actions ✓
+Approval flow ✓
+Backend integration ✓
+Offline support ✓
+Sync awareness ✓
+Multi-device ✓
+Connection Portfolio ✓
+Security ✓
+Audit ✓
+Observability ✓
+Provider abstraction ✓
+Sarvam boundary ✓
+Error handling ✓
+Accessibility ✓
+Performance strategy ✓
+Future iOS architecture ✓
+```
+
+---
+
+# 261. FINAL AI OS PRINCIPLES
+
+### 1.
+**AI OS appears only after security is completed.**
+
+### 2.
+**The AI OS is the operating layer of Vepari AI, not a separate chatbot.**
+
+### 3.
+**The AI OS uses the official Vepari AI color palette and typography.**
+
+### 4.
+**Lora remains the primary English font.**
+
+### 5.
+**All 23 Indian languages are first-class citizens.**
+
+### 6.
+**Voice and text are equally important interaction channels.**
+
+### 7.
+**The opening experience begins with a business briefing.**
+
+### 8.
+**The briefing explains what happened while the owner was away and surfaces important resources and issues.**
+
+### 9.
+**The AI is proactive but never unnecessarily intrusive.**
+
+### 10.
+**Authoritative business facts come from the business data layer.**
+
+### 11.
+**Memory provides context, not business truth.**
+
+### 12.
+**AI recommendations are distinguishable from facts.**
+
+### 13.
+**AI actions require normal backend authorization.**
+
+### 14.
+**Sensitive actions can require explicit confirmation.**
+
+### 15.
+**AI cannot bypass business/domain rules.**
+
+### 16.
+**Offline operation is a first-class experience.**
+
+### 17.
+**Cloud remains the authoritative shared state.**
+
+### 18.
+**AI provider integrations remain behind the Vepari AI gateway.**
+
+### 19.
+**Sarvam AI can power appropriate Indian-language capabilities without creating provider lock-in.**
+
+### 20.
+**Every consequential AI action is auditable.**
+
+### 21.
+**The AI adapts to Micro, Small, Medium and Enterprise businesses.**
+
+### 22.
+**The AI experience is mobile-first.**
+
+### 23.
+**The architecture supports future iOS expansion.**
+
+### 24.
+**The AI should make the business easier to operate, not make the interface more complicated.**
+
+---
+
+# 262. FINAL VISION
+
+The final Vepari AI experience is:
+
+```text
+                     OWNER
+                       │
+                       ↓
+                   SECURITY
+                       │
+                       ↓
+              ┌────────────────┐
+              │   VEPARI AI    │
+              │      OS        │
+              └────────────────┘
+                       │
+                  "Good morning."
+                       │
+                       ↓
+              BUSINESS BRIEFING
+                       │
+          ┌────────────┼────────────┐
+          ↓            ↓            ↓
+       WHAT        WHY IT        WHAT TO
+      HAPPENED      MATTERS       DO
+          │            │            │
+          └────────────┼────────────┘
+                       ↓
+                  OWNER SPEAKS
+                       │
+                       ↓
+                  AI UNDERSTANDS
+                       │
+                       ↓
+              BUSINESS CONTEXT
+                       │
+                       ↓
+                MEMORY + DATA
+                       │
+                       ↓
+                   AI ENGINE
+                       │
+              ┌────────┼────────┐
+              ↓        ↓        ↓
+           ANSWER   INSIGHT   ACTION
+                                │
+                            CONFIRM
+                                │
+                              EXECUTE
+                                │
+                           DOMAIN SYSTEM
+                                │
+                         DATABASE + AUDIT
+                                │
+                           RESULT
+                                │
+                             AI OS
+```
+
+## THE CORE IDEA
+
+> **Vepari AI OS is the intelligent operating layer between the business owner and the entire business.**
+
+It watches authorized business activity, understands context, remembers useful information, speaks the owner's language, explains what matters, surfaces what needs attention, navigates the business, recommends what to do, and—when explicitly authorized—executes the operation through Vepari AI's normal secure business infrastructure.
+
+**This is the consolidated Master AI OS specification and should now sit alongside the Master PRD, TRD, App Flow, UI/UX, Frontend, Backend/API, and Database/Storage/Memory/Logs/Cloud documents as the AI OS source of truth.**

@@ -1,0 +1,3675 @@
+# VEPARI AI
+# MASTER FRONTEND DOCUMENT
+
+**Document Type:** Complete Frontend Engineering Specification  
+**Product:** Vepari AI  
+**Status:** Consolidated Source of Truth  
+**Primary Platform:** Android  
+**Future Platform:** iOS  
+**Framework:** React Native + Expo + TypeScript  
+**Architecture:** Feature-based, domain-driven, local-first, offline-first  
+**Business Scope:** Micro → Small → Medium → Enterprise  
+**Language Scope:** 23 Indian languages  
+**AI:** Vepari AI OS + Voice + Memory + Intelligence  
+**Design:** Official Vepari AI Design System  
+**Primary English Display Font:** Lora  
+**Backend:** Existing Vepari AI API/backend architecture  
+**Local Database:** SQLite-based mobile persistence  
+**Cloud:** Controlled synchronization and remote services  
+**Integration Layer:** Connection Portfolio, added after core platform maturity
+
+---
+
+# 1. PURPOSE
+
+This document defines the **complete frontend of the Vepari AI mobile application**.
+
+It translates the previously established:
+
+- PRD
+- TRD
+- App Flow
+- UI/UX specification
+- AI OS design
+- database architecture
+- local storage strategy
+- security architecture
+- backend/API architecture
+- offline/sync architecture
+- multilingual requirements
+- Connection Portfolio
+
+into one frontend engineering specification.
+
+The frontend is not merely a collection of screens.
+
+It is the mobile client that connects:
+
+```text
+USER
+ ↓
+UI/UX
+ ↓
+FRONTEND STATE
+ ↓
+DOMAIN LOGIC
+ ↓
+LOCAL DATABASE
+ ↓
+SYNC ENGINE
+ ↓
+API
+ ↓
+BACKEND
+ ↓
+AI / INTEGRATIONS
+```
+
+---
+
+# 2. FRONTEND PRODUCT PRINCIPLE
+
+The frontend must make Vepari AI feel like a **business operating system**, not an accounting application with an AI chatbot attached.
+
+The fundamental experience is:
+
+```text
+SECURE
+ ↓
+AI OS AWAKENS
+ ↓
+UNDERSTAND BUSINESS
+ ↓
+BRIEF OWNER
+ ↓
+OPERATE BUSINESS
+ ↓
+AI ASSISTS
+ ↓
+LOCAL STATE UPDATES
+ ↓
+SYNC
+ ↓
+BUSINESS STATE EVOLVES
+```
+
+---
+
+# 3. FRONTEND TECHNOLOGY
+
+## Core
+
+```text
+React Native
+Expo
+TypeScript
+```
+
+The codebase must be structured so that future iOS expansion does not require rebuilding the application.
+
+---
+
+# 4. PLATFORM STRATEGY
+
+## Phase 1
+
+**Android-first**
+
+Optimized for:
+
+- Android phones
+- touch interaction
+- biometric authentication
+- local SQLite
+- Android lifecycle
+- notifications
+- microphone/voice
+- background synchronization where permitted
+
+## Phase 2
+
+**iOS expansion**
+
+The domain, state, UI component and service layers should already be platform-neutral.
+
+Only platform-specific adapters should differ.
+
+---
+
+# 5. FRONTEND ARCHITECTURE
+
+Recommended conceptual architecture:
+
+```text
+Presentation
+    ↓
+Feature Layer
+    ↓
+Domain Layer
+    ↓
+Application Services
+    ↓
+Repositories
+    ↓
+Local / Remote Data Sources
+```
+
+More specifically:
+
+```text
+Screens
+ ↓
+UI Components
+ ↓
+Feature Controllers / Hooks
+ ↓
+Domain Services
+ ↓
+Repositories
+ ├── Local Data Source
+ └── Remote Data Source
+```
+
+---
+
+# 6. FRONTEND LAYERS
+
+## Layer 1 — Design System
+
+Responsible for:
+
+- colors
+- typography
+- spacing
+- radius
+- elevation
+- icons
+- motion
+- haptics
+
+## Layer 2 — UI Components
+
+Reusable components.
+
+## Layer 3 — Features
+
+Customers, sales, inventory, finance, etc.
+
+## Layer 4 — Domain
+
+Business rules and entities.
+
+## Layer 5 — Data
+
+SQLite/API/sync.
+
+## Layer 6 — Platform
+
+Android/iOS capabilities.
+
+---
+
+# 7. RECOMMENDED PROJECT STRUCTURE
+
+```text
+src/
+│
+├── app/
+│   ├── navigation/
+│   ├── providers/
+│   ├── bootstrap/
+│   ├── lifecycle/
+│   └── routing/
+│
+├── design-system/
+│   ├── tokens/
+│   │   ├── colors/
+│   │   ├── typography/
+│   │   ├── spacing/
+│   │   ├── radius/
+│   │   ├── elevation/
+│   │   └── motion/
+│   │
+│   ├── components/
+│   ├── icons/
+│   ├── animations/
+│   └── haptics/
+│
+├── features/
+│   ├── auth/
+│   ├── onboarding/
+│   ├── security/
+│   ├── ai-os/
+│   ├── home/
+│   ├── customers/
+│   ├── suppliers/
+│   ├── products/
+│   ├── inventory/
+│   ├── sales/
+│   ├── expenses/
+│   ├── purchases/
+│   ├── payments/
+│   ├── returns/
+│   ├── refunds/
+│   ├── finance/
+│   ├── operations/
+│   ├── documents/
+│   ├── reports/
+│   ├── analytics/
+│   ├── search/
+│   ├── notifications/
+│   ├── alerts/
+│   ├── team/
+│   ├── automation/
+│   ├── connections/
+│   └── settings/
+│
+├── domain/
+│   ├── entities/
+│   ├── value-objects/
+│   ├── services/
+│   └── rules/
+│
+├── data/
+│   ├── database/
+│   ├── repositories/
+│   ├── api/
+│   ├── sync/
+│   ├── cache/
+│   └── migrations/
+│
+├── ai/
+│   ├── context/
+│   ├── memory/
+│   ├── voice/
+│   ├── actions/
+│   ├── insights/
+│   └── gateway/
+│
+├── localization/
+│   ├── languages/
+│   ├── formatters/
+│   └── locale/
+│
+├── security/
+│   ├── authentication/
+│   ├── biometrics/
+│   ├── secure-storage/
+│   └── sessions/
+│
+├── platform/
+│   ├── android/
+│   ├── ios/
+│   └── shared/
+│
+└── utils/
+```
+
+The exact directory names can evolve, but the architectural separation must remain.
+
+---
+
+# 8. FRONTEND BOOTSTRAP
+
+When the application starts:
+
+```text
+App Launch
+ ↓
+Native initialization
+ ↓
+Load configuration
+ ↓
+Initialize secure storage
+ ↓
+Initialize local database
+ ↓
+Run migrations
+ ↓
+Restore session
+ ↓
+Initialize state
+ ↓
+Check connectivity
+ ↓
+Security gate
+```
+
+---
+
+# 9. APP STARTUP STATE MACHINE
+
+```text
+BOOTING
+ ↓
+INITIALIZING
+ ↓
+MIGRATING
+ ↓
+SESSION_CHECK
+ ↓
+SECURITY_REQUIRED
+ ↓
+AUTHENTICATED
+```
+
+Possible alternate:
+
+```text
+SESSION_INVALID
+ ↓
+LOGIN
+```
+
+---
+
+# 10. SECURITY GATE
+
+The application must not expose protected business information before the security gate is satisfied.
+
+```text
+App
+ ↓
+Security
+ ↓
+PIN/Biometric
+ ↓
+Verified
+ ↓
+Application
+```
+
+---
+
+# 11. AI OS BOOT SEQUENCE
+
+The cinematic animation begins **after successful security authentication**.
+
+```text
+Security Verified
+ ↓
+AI OS Initializing
+ ↓
+Cinematic Animation
+ ↓
+AI Presence
+ ↓
+Business Context Loading
+ ↓
+Briefing
+```
+
+---
+
+# 12. AI OS FRONTEND ARCHITECTURE
+
+The AI OS should be implemented as a dedicated frontend subsystem rather than scattered across screens.
+
+```text
+AI OS
+├── Core
+├── State
+├── Renderer
+├── Motion
+├── Voice
+├── Context
+├── Conversation
+├── Insights
+├── Actions
+└── Overlay
+```
+
+---
+
+# 13. AI OS STATE MACHINE
+
+```text
+DORMANT
+ ↓
+AWAKENING
+ ↓
+ANALYZING
+ ↓
+READY
+ ↓
+LISTENING
+ ↓
+THINKING
+ ↓
+RESPONDING
+ ↓
+ACTION_REQUIRED
+ ↓
+EXECUTING
+ ↓
+COMPLETED
+```
+
+---
+
+# 14. AI OS CORE
+
+The AI OS core is the central visual interaction point.
+
+It should support:
+
+- expansion
+- collapse
+- response animation
+- listening
+- state transitions
+- contextual actions
+- touch interaction
+- voice interaction
+
+---
+
+# 15. AI OS PHYSICS
+
+Motion should use:
+
+- spring-based transitions
+- inertia
+- subtle depth
+- parallax
+- controlled scaling
+- opacity transitions
+- spatial layering
+
+Avoid excessive animation.
+
+---
+
+# 16. AI OS ACCESSIBILITY
+
+The AI OS must remain usable when:
+
+- animations are reduced
+- haptics are disabled
+- voice is unavailable
+- screen readers are enabled
+
+The animation is enhancement, not functionality.
+
+---
+
+# 17. AI OS OVERLAY
+
+The AI OS can appear above the current business context.
+
+Example:
+
+```text
+Inventory
+   ↓
+Open AI
+   ↓
+AI OS overlay
+   ↓
+"Which products need attention?"
+```
+
+The AI receives the inventory context automatically.
+
+---
+
+# 18. AI CONTEXT ENGINE
+
+Frontend context can include:
+
+```text
+Current screen
+Current business
+Current branch
+Selected record
+Current filters
+Current operation
+User role
+Language
+```
+
+Only relevant information should be passed downstream.
+
+---
+
+# 19. AI CHAT FRONTEND
+
+The chat interface supports:
+
+```text
+Message
+ ↓
+Context
+ ↓
+Response
+ ↓
+Evidence
+ ↓
+Action
+```
+
+It should not become a generic chatbot interface.
+
+---
+
+# 20. AI RESPONSE COMPONENT
+
+An AI response can contain:
+
+```text
+Text
+Metric
+Chart
+Evidence
+Record link
+Recommendation
+Action
+```
+
+---
+
+# 21. AI INSIGHT COMPONENT
+
+```text
+AI Insight
+ ├── Title
+ ├── Summary
+ ├── Metric
+ ├── Evidence
+ ├── Impact
+ └── Action
+```
+
+---
+
+# 22. AI ACTION COMPONENT
+
+```text
+Proposed Action
+ ↓
+Affected Records
+ ↓
+Expected Result
+ ↓
+Approval
+```
+
+---
+
+# 23. AI ACTION STATES
+
+```text
+PROPOSED
+ ↓
+AWAITING_APPROVAL
+ ↓
+EXECUTING
+ ↓
+SUCCESS
+```
+
+or:
+
+```text
+EXECUTING
+ ↓
+FAILED
+ ↓
+RETRY
+```
+
+---
+
+# 24. AI MEMORY FRONTEND
+
+The frontend interacts with the memory service but does not become the authority for memory.
+
+```text
+AI
+ ↓
+Memory Service
+ ↓
+Relevant context
+```
+
+The user should be able to manage visible/stored memory where supported.
+
+---
+
+# 25. VOICE FRONTEND
+
+Voice state:
+
+```text
+IDLE
+ ↓
+LISTENING
+ ↓
+PROCESSING
+ ↓
+RESPONDING
+ ↓
+IDLE
+```
+
+---
+
+# 26. VOICE UI
+
+The interface should clearly communicate:
+
+- microphone active
+- listening
+- processing
+- response
+- error
+
+---
+
+# 27. VOICE ERROR
+
+```text
+Couldn't understand
+ ↓
+Try Again
+ ↓
+Type Instead
+```
+
+---
+
+# 28. MULTILINGUAL FRONTEND
+
+Localization must be built into the application architecture from the beginning.
+
+The frontend must support the established **23 Indian languages**.
+
+---
+
+# 29. LOCALIZATION ARCHITECTURE
+
+```text
+UI
+ ↓
+Translation Key
+ ↓
+Locale
+ ↓
+Localized String
+```
+
+Never hardcode user-facing strings throughout feature code.
+
+---
+
+# 30. TYPOGRAPHY
+
+English display/brand typography uses:
+
+**Lora**
+
+The approved Vepari AI supporting UI fonts/fallbacks are used for interface text and other scripts.
+
+All fonts must be loaded and bundled appropriately.
+
+---
+
+# 31. LANGUAGE-SAFE COMPONENTS
+
+Components must support:
+
+```text
+English
+Tamil
+Hindi
+Telugu
+Kannada
+Malayalam
+Bengali
+Gujarati
+Marathi
+Punjabi
+Odia
+Urdu
+...
+```
+
+across the complete supported language set.
+
+---
+
+# 32. LOCALIZED FORMATTING
+
+Frontend formatters must support:
+
+- numbers
+- currency
+- dates
+- time
+- percentages
+- relative dates
+
+---
+
+# 33. RTL SUPPORT
+
+Where a supported language requires right-to-left presentation, the frontend architecture must support RTL layouts.
+
+---
+
+# 34. DESIGN SYSTEM
+
+The design system is the central UI implementation layer.
+
+```text
+Design Tokens
+ ↓
+Components
+ ↓
+Patterns
+ ↓
+Screens
+ ↓
+Flows
+```
+
+---
+
+# 35. COLOR TOKENS
+
+The official Vepari AI palette must be encoded as tokens.
+
+```text
+primary
+secondary
+accent
+background
+surface
+elevated
+text
+muted
+border
+success
+warning
+error
+info
+ai
+```
+
+No feature should introduce its own unrelated palette.
+
+---
+
+# 36. TYPOGRAPHY TOKENS
+
+```text
+display
+headline
+title
+body
+label
+caption
+numeric
+```
+
+with multilingual fallbacks.
+
+---
+
+# 37. COMPONENT LIBRARY
+
+Core components:
+
+```text
+Button
+IconButton
+TextField
+SearchField
+Select
+Checkbox
+Radio
+Switch
+Card
+MetricCard
+ListItem
+Avatar
+Badge
+Chip
+Tabs
+SegmentedControl
+BottomSheet
+Modal
+Dialog
+Toast
+Banner
+Skeleton
+EmptyState
+ErrorState
+SuccessState
+Chart
+Table
+DocumentPreview
+```
+
+---
+
+# 38. BUSINESS COMPONENTS
+
+```text
+CustomerCard
+SupplierCard
+ProductCard
+InventoryCard
+SaleCard
+PaymentCard
+ExpenseCard
+PurchaseCard
+TransactionCard
+```
+
+---
+
+# 39. AI COMPONENTS
+
+```text
+AIOSCore
+AIStatus
+AIBriefing
+AIInsight
+AIEvidence
+AIRecommendation
+AIAction
+AIApproval
+AIResult
+AIConversation
+AIVoice
+```
+
+---
+
+# 40. COMPONENT STATES
+
+Components should support relevant:
+
+```text
+Default
+Pressed
+Focused
+Selected
+Disabled
+Loading
+Error
+Success
+Offline
+Syncing
+```
+
+---
+
+# 41. NAVIGATION ARCHITECTURE
+
+Conceptually:
+
+```text
+Root Navigator
+│
+├── Auth
+├── Onboarding
+├── Security
+└── Main App
+     │
+     ├── AI OS
+     ├── Home
+     ├── Business
+     ├── Search
+     ├── Alerts
+     └── Settings
+```
+
+Feature-specific navigation remains nested where necessary.
+
+---
+
+# 42. DEEP NAVIGATION
+
+Navigation must preserve:
+
+- business context
+- branch context
+- selected record
+- filters
+- drafts
+
+where applicable.
+
+---
+
+# 43. AUTHENTICATION FRONTEND
+
+Screens:
+
+```text
+Welcome
+Login
+Registration
+Verification
+Session Recovery
+```
+
+---
+
+# 44. ONBOARDING FRONTEND
+
+```text
+Language
+ ↓
+Account
+ ↓
+Business
+ ↓
+Business Size
+ ↓
+Industry
+ ↓
+Configuration
+ ↓
+Security
+ ↓
+AI Setup
+ ↓
+Ready
+```
+
+---
+
+# 45. BUSINESS SIZE UI
+
+The interface adapts to:
+
+```text
+Micro
+Small
+Medium
+Enterprise
+```
+
+but remains one product.
+
+---
+
+# 46. PROGRESSIVE DISCLOSURE
+
+Micro users see simpler defaults.
+
+Advanced features appear as the user's business requires them.
+
+Enterprise users receive deeper controls without requiring a separate application.
+
+---
+
+# 47. HOME FRONTEND
+
+The home screen contains:
+
+```text
+Header
+ ↓
+AI OS
+ ↓
+Business Health
+ ↓
+Metrics
+ ↓
+Alerts
+ ↓
+Quick Actions
+ ↓
+Recent Activity
+```
+
+---
+
+# 48. HOME DATA SOURCES
+
+Home can consume:
+
+```text
+Local database
+ ↓
+Computed business state
+ ↓
+Synced remote state
+ ↓
+AI insights
+```
+
+---
+
+# 49. HOME PERFORMANCE
+
+Home should open quickly using locally available state.
+
+Cloud refresh should occur progressively.
+
+---
+
+# 50. CUSTOMER FEATURE
+
+```text
+Customer List
+ ↓
+Customer Detail
+ ↓
+Transactions
+ ↓
+Payments
+ ↓
+Activity
+ ↓
+AI
+```
+
+---
+
+# 51. CUSTOMER FRONTEND ACTIONS
+
+```text
+Add
+Edit
+Search
+Filter
+Call/contact where supported
+View transactions
+Record payment
+Ask AI
+```
+
+---
+
+# 52. SUPPLIER FEATURE
+
+```text
+Supplier List
+ ↓
+Supplier Detail
+ ↓
+Purchases
+ ↓
+Payments
+ ↓
+Outstanding
+ ↓
+Activity
+```
+
+---
+
+# 53. PRODUCT FEATURE
+
+```text
+Products
+ ↓
+Search
+ ↓
+Filter
+ ↓
+Product Detail
+ ↓
+Inventory
+ ↓
+Pricing
+ ↓
+History
+```
+
+---
+
+# 54. INVENTORY FEATURE
+
+```text
+Inventory Overview
+ ↓
+Stock
+ ↓
+Low Stock
+ ↓
+Locations
+ ↓
+Transfers
+ ↓
+Adjustments
+ ↓
+History
+```
+
+---
+
+# 55. INVENTORY STATE
+
+The UI should distinguish:
+
+```text
+Healthy
+Low
+Out
+Reserved
+Pending Sync
+```
+
+where applicable.
+
+---
+
+# 56. SALES FEATURE
+
+```text
+Sales
+ ↓
+New Sale
+ ↓
+Customer
+ ↓
+Products
+ ↓
+Cart
+ ↓
+Pricing
+ ↓
+Payment
+ ↓
+Review
+ ↓
+Complete
+```
+
+---
+
+# 57. SALES LOCAL FLOW
+
+```text
+Sale UI
+ ↓
+Domain validation
+ ↓
+SQLite transaction
+ ↓
+Immediate UI update
+ ↓
+Sync queue
+```
+
+---
+
+# 58. EXPENSE FEATURE
+
+```text
+Expenses
+ ↓
+Overview
+ ↓
+List
+ ↓
+Add
+ ↓
+Detail
+```
+
+---
+
+# 59. PURCHASE FEATURE
+
+```text
+Purchases
+ ↓
+Overview
+ ↓
+New Purchase
+ ↓
+Supplier
+ ↓
+Items
+ ↓
+Cost
+ ↓
+Payment
+ ↓
+Complete
+```
+
+---
+
+# 60. PAYMENT FEATURE
+
+```text
+Payments
+ ↓
+Recent
+ ↓
+Outstanding
+ ↓
+Record Payment
+ ↓
+Detail
+```
+
+---
+
+# 61. RETURNS
+
+```text
+Transaction
+ ↓
+Return
+ ↓
+Items
+ ↓
+Reason
+ ↓
+Refund
+ ↓
+Confirm
+```
+
+---
+
+# 62. REFUNDS
+
+```text
+Return
+ ↓
+Refund
+ ↓
+Method
+ ↓
+Amount
+ ↓
+Confirm
+```
+
+---
+
+# 63. FINANCE FRONTEND
+
+```text
+Finance
+├── Revenue
+├── Expenses
+├── Profit
+├── Cash Flow
+├── Receivables
+├── Payables
+├── Accounts
+└── Ledger
+```
+
+---
+
+# 64. FINANCE DATA VISUALIZATION
+
+Use:
+
+- metric cards
+- trend charts
+- comparisons
+- drill-down
+
+Financial precision takes priority over visual decoration.
+
+---
+
+# 65. OPERATIONS
+
+```text
+Operations
+├── Orders
+├── Tasks
+├── Processes
+├── Assignments
+└── Activity
+```
+
+---
+
+# 66. DOCUMENTS
+
+```text
+Documents
+├── Invoices
+├── Receipts
+├── Bills
+├── Quotations
+└── Purchase Orders
+```
+
+---
+
+# 67. DOCUMENT VIEWER
+
+Must support:
+
+```text
+Preview
+Zoom
+Share
+Export
+Related Record
+```
+
+---
+
+# 68. REPORTS
+
+```text
+Reports
+ ↓
+Report Type
+ ↓
+Date Range
+ ↓
+Filters
+ ↓
+Generate
+ ↓
+Result
+ ↓
+Drill-down
+ ↓
+Export
+```
+
+---
+
+# 69. ANALYTICS
+
+```text
+Analytics
+ ↓
+Business Overview
+ ↓
+Trends
+ ↓
+Comparisons
+ ↓
+Drivers
+ ↓
+AI Explanation
+```
+
+---
+
+# 70. SEARCH
+
+Global search:
+
+```text
+Search
+ ↓
+Query
+ ↓
+Results
+ ↓
+Categories
+ ↓
+Record
+```
+
+Search should cover relevant business entities.
+
+---
+
+# 71. AI SEARCH
+
+Natural language queries should be routed through the AI layer when appropriate.
+
+Example:
+
+```text
+"Show customers who haven't paid."
+```
+
+Result:
+
+```text
+AI interpretation
+ ↓
+Customer results
+ ↓
+Relevant filters
+ ↓
+Action
+```
+
+---
+
+# 72. NOTIFICATIONS
+
+```text
+Notifications
+├── Business
+├── AI
+├── Payments
+├── Inventory
+└── System
+```
+
+---
+
+# 73. ALERTS
+
+Alerts represent higher-value business events.
+
+```text
+Low Stock
+Overdue Payment
+Unusual Expense
+Risk
+Opportunity
+```
+
+---
+
+# 74. TEAM FRONTEND
+
+```text
+Team
+ ↓
+Members
+ ↓
+Invitations
+ ↓
+Roles
+ ↓
+Permissions
+ ↓
+Activity
+```
+
+---
+
+# 75. ROLE-BASED UI
+
+The frontend can adapt the visible interface based on permissions.
+
+However:
+
+> **Frontend hiding is not authorization.**
+
+The backend remains authoritative.
+
+---
+
+# 76. AUTOMATION FRONTEND
+
+```text
+Automations
+ ↓
+Active
+Draft
+History
+ ↓
+Create
+```
+
+---
+
+# 77. AUTOMATION BUILDER
+
+```text
+WHEN
+ ↓
+CONDITION
+ ↓
+DO
+ ↓
+SCHEDULE
+ ↓
+REVIEW
+ ↓
+ACTIVATE
+```
+
+---
+
+# 78. CONNECTION PORTFOLIO
+
+The Connection Portfolio is a dedicated integration layer.
+
+```text
+Connections
+├── Available
+├── Connected
+└── Needs Attention
+```
+
+---
+
+# 79. CONNECTION SETUP UX
+
+```text
+Provider
+ ↓
+Connect
+ ↓
+Authorization
+ ↓
+Permissions
+ ↓
+Initial Sync
+ ↓
+Connected
+```
+
+---
+
+# 80. CONNECTION STATUS
+
+```text
+Connected
+Syncing
+Degraded
+Disconnected
+Needs Authorization
+```
+
+---
+
+# 81. SETTINGS FRONTEND
+
+```text
+Settings
+├── Profile
+├── Business
+├── Language
+├── AI
+├── Voice
+├── Security
+├── Notifications
+├── Team
+├── Devices
+├── Connections
+├── Data
+├── Storage
+└── About
+```
+
+---
+
+# 82. LOCAL DATABASE
+
+SQLite is the primary local persistence layer for supported business data.
+
+The frontend accesses it through repositories rather than direct SQL calls from screens.
+
+```text
+Screen
+ ↓
+Repository
+ ↓
+SQLite
+```
+
+---
+
+# 83. REPOSITORY RULE
+
+Screens must not directly manipulate database tables.
+
+Instead:
+
+```text
+Feature
+ ↓
+Repository
+ ↓
+Data Source
+```
+
+This preserves testability and future platform flexibility.
+
+---
+
+# 84. LOCAL-FIRST RULE
+
+For supported operations:
+
+```text
+User Action
+ ↓
+Local validation
+ ↓
+Local transaction
+ ↓
+UI update
+ ↓
+Cloud synchronization
+```
+
+not:
+
+```text
+User
+ ↓
+Cloud
+ ↓
+Wait
+ ↓
+UI
+```
+
+---
+
+# 85. OFFLINE FRONTEND
+
+Offline is a normal application state.
+
+The frontend must support:
+
+```text
+Offline
+Saved Locally
+Queued
+Syncing
+Synced
+Failed
+Conflict
+```
+
+---
+
+# 86. OFFLINE SALE
+
+```text
+Create Sale
+ ↓
+Validate
+ ↓
+SQLite
+ ↓
+Sale Complete
+ ↓
+"Saved locally"
+ ↓
+Queue
+```
+
+---
+
+# 87. SYNC FRONTEND
+
+```text
+Network Available
+ ↓
+Sync Queue
+ ↓
+Upload mutations
+ ↓
+Receive server state
+ ↓
+Reconcile
+ ↓
+Update local database
+ ↓
+Update UI
+```
+
+---
+
+# 88. SYNC INDICATOR
+
+A global or contextual sync state can display:
+
+```text
+✓ Synced
+↻ Syncing
+• Queued
+! Needs Attention
+```
+
+---
+
+# 89. CONFLICT FRONTEND
+
+If a conflict requires user intervention:
+
+```text
+Conflict
+ ↓
+Record
+ ↓
+Local version
+ ↓
+Remote version
+ ↓
+Resolution
+```
+
+The UI must make the consequence of each choice understandable.
+
+---
+
+# 90. NETWORK STATE
+
+The frontend maintains a network state service:
+
+```text
+ONLINE
+OFFLINE
+UNSTABLE
+```
+
+This state must not be confused with sync state.
+
+---
+
+# 91. BACKGROUND SYNC
+
+Where platform capabilities allow it:
+
+```text
+App background
+ ↓
+Eligible sync
+ ↓
+Queue processing
+```
+
+The system must respect Android/iOS background execution constraints.
+
+---
+
+# 92. API CLIENT
+
+All remote requests should pass through a centralized API layer.
+
+```text
+Feature
+ ↓
+Repository
+ ↓
+API Client
+ ↓
+Backend
+```
+
+---
+
+# 93. API CLIENT RESPONSIBILITIES
+
+The API client handles:
+
+- base configuration
+- authentication
+- headers
+- serialization
+- retries
+- errors
+- request IDs
+- timeout
+- response normalization
+
+---
+
+# 94. API ERROR MODEL
+
+Frontend should normalize backend errors into predictable states.
+
+```text
+Network Error
+Authentication Error
+Authorization Error
+Validation Error
+Conflict
+Server Error
+Unknown Error
+```
+
+---
+
+# 95. AUTH TOKEN FLOW
+
+```text
+Login
+ ↓
+Secure credential/session storage
+ ↓
+API client
+ ↓
+Authenticated request
+```
+
+Sensitive credentials must use platform secure storage.
+
+---
+
+# 96. SESSION EXPIRATION
+
+```text
+API response
+ ↓
+Session expired
+ ↓
+Security/authentication flow
+ ↓
+Restore
+```
+
+---
+
+# 97. API RETRY
+
+Only safe/retryable operations should be automatically retried.
+
+Financial mutations must use idempotency/operation identity as defined by the backend.
+
+---
+
+# 98. IDEMPOTENCY
+
+The frontend should attach stable operation identifiers to queued mutations where required.
+
+This prevents:
+
+```text
+One sale
+ ↓
+Retry
+ ↓
+Duplicate sale
+```
+
+---
+
+# 99. DATA NORMALIZATION
+
+Remote data should be normalized into domain/application models where useful.
+
+The UI should not depend directly on backend response shapes.
+
+---
+
+# 100. FRONTEND STATE MANAGEMENT
+
+State should be separated into categories:
+
+```text
+UI State
+Server/Remote State
+Local Business State
+Session State
+AI State
+Sync State
+```
+
+---
+
+# 101. UI STATE
+
+Examples:
+
+- modal open
+- selected tab
+- search field
+- filter
+- animation state
+
+---
+
+# 102. BUSINESS STATE
+
+Examples:
+
+- customer
+- product
+- sale
+- inventory
+- payment
+
+---
+
+# 103. SERVER STATE
+
+Represents synchronized remote information.
+
+---
+
+# 104. AI STATE
+
+```text
+AI status
+Conversation
+Current context
+Voice state
+Pending action
+```
+
+---
+
+# 105. SYNC STATE
+
+```text
+Queue
+Progress
+Errors
+Conflicts
+```
+
+---
+
+# 106. STATE RULE
+
+Do not put every piece of state into one global store.
+
+State ownership should remain close to the feature that uses it.
+
+---
+
+# 107. CACHE STRATEGY
+
+The local database is the durable business cache.
+
+Temporary in-memory caches should be used only for appropriate transient information.
+
+---
+
+# 108. FRONTEND SECURITY
+
+Security responsibilities include:
+
+- secure session handling
+- biometric integration
+- secure storage
+- sensitive screen handling where appropriate
+- permission-aware UI
+- logout
+- session expiration
+
+---
+
+# 109. SENSITIVE DATA
+
+Sensitive credentials must never be stored in ordinary application state or plain local storage.
+
+---
+
+# 110. LOGOUT
+
+```text
+Logout
+ ↓
+Invalidate session
+ ↓
+Clear sensitive session state
+ ↓
+Return to authentication
+```
+
+Business data handling remains governed by the established data-retention architecture.
+
+---
+
+# 111. DEVICE TRUST
+
+The frontend can display:
+
+```text
+Current Device
+Trusted Devices
+Sessions
+```
+
+---
+
+# 112. DEVICE REVOCATION
+
+```text
+Device
+ ↓
+Revoke
+ ↓
+Confirm
+ ↓
+Backend revocation
+ ↓
+UI updated
+```
+
+---
+
+# 113. PERMISSIONS
+
+Frontend permission checks improve UX.
+
+Backend authorization remains the security boundary.
+
+---
+
+# 114. NOTIFICATION PERMISSIONS
+
+The application should request notification permissions contextually rather than immediately overwhelming the user.
+
+---
+
+# 115. MICROPHONE PERMISSION
+
+Voice onboarding should explain why microphone access is needed before requesting permission.
+
+---
+
+# 116. FILE/CAMERA PERMISSIONS
+
+Only request when the feature needs them.
+
+---
+
+# 117. APP LIFECYCLE
+
+Frontend must handle:
+
+```text
+Active
+Inactive
+Background
+Foreground
+Terminated
+```
+
+---
+
+# 118. APP RESUME
+
+```text
+Resume
+ ↓
+Security timeout check
+ ↓
+Restore state
+ ↓
+Check connectivity
+ ↓
+Sync
+ ↓
+Continue
+```
+
+---
+
+# 119. DRAFT RECOVERY
+
+Important forms should recover saved drafts where supported.
+
+---
+
+# 120. CRASH RECOVERY
+
+After a crash/restart:
+
+```text
+Initialize
+ ↓
+Recover local DB
+ ↓
+Recover queued operations
+ ↓
+Recover drafts
+ ↓
+Continue safely
+```
+
+---
+
+# 121. DESIGN SYSTEM MOTION
+
+Motion should have defined tokens:
+
+```text
+duration.fast
+duration.normal
+duration.slow
+
+easing.standard
+easing.emphasized
+easing.spring
+```
+
+---
+
+# 122. AI OS MOTION
+
+AI OS uses richer motion than ordinary business screens.
+
+Ordinary screens should remain efficient and calm.
+
+---
+
+# 123. HAPTICS
+
+Haptic feedback can be used for:
+
+- important confirmation
+- success
+- error
+- AI activation
+- voice interaction
+
+It should remain subtle.
+
+---
+
+# 124. ACCESSIBILITY
+
+Frontend must support:
+
+- screen readers
+- dynamic text
+- touch target sizing
+- sufficient contrast
+- reduced motion
+- accessible labels
+- semantic roles
+
+---
+
+# 125. ACCESSIBILITY AND AI
+
+AI content must be exposed semantically.
+
+An animated AI state cannot be the only indicator that the system is listening.
+
+---
+
+# 126. MULTILINGUAL QA
+
+Every major screen must be tested with all 23 supported languages.
+
+Test specifically for:
+
+- overflow
+- wrapping
+- button expansion
+- font fallback
+- RTL where applicable
+- line-height
+- dialog size
+
+---
+
+# 127. RESPONSIVE MOBILE LAYOUT
+
+Support:
+
+```text
+Small Android phone
+Standard Android phone
+Large Android phone
+Future iPhone sizes
+```
+
+---
+
+# 128. SAFE AREAS
+
+The UI must respect:
+
+- status bar
+- navigation area
+- display cutouts
+- gesture areas
+- keyboard
+
+---
+
+# 129. KEYBOARD HANDLING
+
+Forms should automatically adjust for:
+
+- keyboard appearance
+- focused fields
+- bottom action controls
+
+---
+
+# 130. PERFORMANCE TARGET
+
+The frontend should prioritize:
+
+- fast startup
+- fast local data access
+- smooth scrolling
+- responsive touch
+- low unnecessary network usage
+- efficient rendering
+
+---
+
+# 131. LIST PERFORMANCE
+
+Large lists should use virtualization and incremental loading.
+
+Do not render thousands of rows simultaneously.
+
+---
+
+# 132. IMAGE PERFORMANCE
+
+Images/documents should use:
+
+- appropriate resolution
+- caching
+- lazy loading
+- placeholders
+
+---
+
+# 133. CHART PERFORMANCE
+
+Charts should render efficiently and avoid unnecessary recalculation.
+
+---
+
+# 134. AI PERFORMANCE
+
+AI UI should immediately acknowledge requests:
+
+```text
+User asks
+ ↓
+Listening/processing state
+```
+
+rather than leaving the interface apparently frozen.
+
+---
+
+# 135. ERROR UX
+
+Every feature must define:
+
+```text
+Loading
+Empty
+Success
+Error
+Offline
+Syncing
+Conflict
+Permission denied
+```
+
+where applicable.
+
+---
+
+# 136. EMPTY STATE
+
+Every empty state should answer:
+
+```text
+What is empty?
+Why does it matter?
+What should I do?
+```
+
+---
+
+# 137. ERROR STATE
+
+Every error should communicate:
+
+```text
+What happened?
+Was data saved?
+What can I do next?
+```
+
+---
+
+# 138. SUCCESS STATE
+
+After a successful mutation:
+
+```text
+Success
+ ↓
+Updated state
+ ↓
+Next relevant action
+```
+
+---
+
+# 139. OFFLINE STATE
+
+The frontend must distinguish:
+
+```text
+Saved locally
+```
+
+from:
+
+```text
+Synced to cloud
+```
+
+---
+
+# 140. AI FACT VS RECOMMENDATION
+
+Frontend visual language should distinguish:
+
+```text
+Fact
+Estimate
+Prediction
+Recommendation
+```
+
+---
+
+# 141. AI EVIDENCE
+
+Important AI insights should provide an entry point to underlying business records.
+
+---
+
+# 142. AI UNCERTAINTY
+
+When data is insufficient:
+
+```text
+Not enough information
+```
+
+rather than displaying a fabricated certainty.
+
+---
+
+# 143. AI ACTION CONFIRMATION
+
+Financially meaningful or destructive actions should have explicit confirmation.
+
+---
+
+# 144. AI CONTEXTUAL ACTION
+
+Example:
+
+```text
+Inventory
+ ↓
+AI insight
+ ↓
+[Review]
+[Take Action]
+```
+
+The action opens the correct business workflow.
+
+---
+
+# 145. FRONTEND → API DOMAIN MAP
+
+```text
+Auth
+→ Authentication API
+
+Customers
+→ Customer API
+
+Suppliers
+→ Supplier API
+
+Products
+→ Product API
+
+Inventory
+→ Inventory API
+
+Sales
+→ Sales API
+
+Expenses
+→ Expense API
+
+Purchases
+→ Purchase API
+
+Payments
+→ Payment API
+
+Finance
+→ Finance API
+
+Documents
+→ Document API
+
+Reports
+→ Reporting API
+
+Team
+→ Team/Permission API
+
+Automation
+→ Automation API
+
+AI
+→ AI Gateway
+
+Connections
+→ Integration API
+```
+
+---
+
+# 146. DOMAIN EVENT FLOW
+
+A frontend mutation may ultimately produce:
+
+```text
+Sale
+ ↓
+Inventory event
+ ↓
+Customer event
+ ↓
+Payment event
+ ↓
+Finance event
+ ↓
+Analytics update
+ ↓
+AI context update
+```
+
+The frontend should reflect resulting state without manually duplicating backend business rules.
+
+---
+
+# 147. FRONTEND BUSINESS RULE
+
+The frontend may validate for user experience.
+
+The backend remains authoritative for critical business rules.
+
+---
+
+# 148. FINANCIAL SAFETY
+
+Never calculate critical financial truth solely from UI state.
+
+Financial truth comes from the authoritative domain/backend/local transaction model defined by the system.
+
+---
+
+# 149. LOCAL TRANSACTION SAFETY
+
+Multi-record operations must execute atomically where required.
+
+Example:
+
+```text
+Sale
+ ├── Sale record
+ ├── Inventory update
+ ├── Payment
+ └── Customer balance
+```
+
+The UI must not create a partially completed local transaction.
+
+---
+
+# 150. FRONTEND AUDIT EXPERIENCE
+
+The frontend should expose audit/history where appropriate.
+
+Example:
+
+```text
+Record
+ ↓
+Activity
+ ↓
+Change
+ ↓
+Actor
+ ↓
+Time
+```
+
+---
+
+# 151. REALTIME UPDATES
+
+When supported:
+
+```text
+Server Event
+ ↓
+Sync/Realtime layer
+ ↓
+Local database
+ ↓
+Frontend state
+ ↓
+UI
+```
+
+---
+
+# 152. MULTI-DEVICE EXPERIENCE
+
+Example:
+
+```text
+Device A
+ ↓
+Sale
+ ↓
+Sync
+ ↓
+Server
+ ↓
+Device B
+ ↓
+Updated state
+```
+
+The frontend should make cross-device updates feel natural.
+
+---
+
+# 153. TEAM MULTI-DEVICE
+
+Each user/device maintains its own secure local state while authorized business information synchronizes according to the backend model.
+
+---
+
+# 154. FRONTEND DATA OWNERSHIP
+
+The frontend owns:
+
+- presentation
+- local interaction
+- local state
+- caching
+- synchronization orchestration
+
+The backend owns:
+
+- authoritative authorization
+- authoritative business rules
+- authoritative shared state
+- server-side audit
+- shared business truth
+
+---
+
+# 155. CONNECTION PORTFOLIO FRONTEND ARCHITECTURE
+
+```text
+Connection UI
+ ↓
+Connection Service
+ ↓
+Integration API
+ ↓
+Provider
+```
+
+Provider-specific logic should not leak throughout the UI.
+
+---
+
+# 156. CONNECTION CREDENTIAL UX
+
+The frontend must never expose raw sensitive credentials.
+
+Display:
+
+```text
+Connected
+Account
+Permissions
+Last Sync
+```
+
+not secret tokens.
+
+---
+
+# 157. CONNECTION DISCONNECT
+
+```text
+Disconnect
+ ↓
+Explain impact
+ ↓
+Confirm
+ ↓
+Disconnect
+ ↓
+Update UI
+```
+
+---
+
+# 158. CONNECTION HEALTH
+
+The user should be able to determine whether an integration is:
+
+```text
+Healthy
+Syncing
+Needs attention
+Disconnected
+```
+
+---
+
+# 159. SETTINGS ARCHITECTURE
+
+Settings should be modular rather than a single giant screen.
+
+---
+
+# 160. PROFILE
+
+```text
+Profile
+ ↓
+Personal information
+ ↓
+Preferences
+```
+
+---
+
+# 161. BUSINESS SETTINGS
+
+```text
+Business
+ ↓
+Identity
+ ↓
+Industry
+ ↓
+Size
+ ↓
+Branches
+ ↓
+Preferences
+```
+
+---
+
+# 162. AI SETTINGS
+
+```text
+AI
+ ↓
+Preferences
+ ↓
+Memory
+ ↓
+Permissions
+ ↓
+Action confirmation
+```
+
+---
+
+# 163. VOICE SETTINGS
+
+```text
+Voice
+ ↓
+Language
+ ↓
+Voice
+ ↓
+Input/output preferences
+```
+
+---
+
+# 164. SECURITY SETTINGS
+
+```text
+Security
+ ↓
+PIN
+ ↓
+Biometrics
+ ↓
+Devices
+ ↓
+Sessions
+```
+
+---
+
+# 165. DATA SETTINGS
+
+```text
+Data
+ ↓
+Import
+ ↓
+Export
+ ↓
+Storage
+ ↓
+Retention
+ ↓
+Deletion
+```
+
+---
+
+# 166. TEST ARCHITECTURE
+
+Frontend testing should operate at multiple levels.
+
+```text
+Unit
+ ↓
+Component
+ ↓
+Feature
+ ↓
+Integration
+ ↓
+E2E
+```
+
+---
+
+# 167. UNIT TESTS
+
+Test:
+
+- formatters
+- validators
+- business helpers
+- state reducers
+- sync logic
+- domain calculations
+
+---
+
+# 168. COMPONENT TESTS
+
+Test:
+
+- rendering
+- interactions
+- states
+- accessibility
+
+---
+
+# 169. FEATURE TESTS
+
+Examples:
+
+```text
+Create Customer
+Create Sale
+Record Payment
+Adjust Inventory
+```
+
+---
+
+# 170. OFFLINE TESTS
+
+Every supported offline workflow must test:
+
+```text
+Offline
+ ↓
+Create
+ ↓
+Save
+ ↓
+Queue
+ ↓
+Reconnect
+ ↓
+Sync
+```
+
+---
+
+# 171. CONFLICT TESTS
+
+Test:
+
+```text
+Device A change
+Device B change
+ ↓
+Conflict
+ ↓
+Resolution
+```
+
+---
+
+# 172. AI TESTS
+
+Test:
+
+- AI states
+- contextual rendering
+- action confirmation
+- unavailable AI
+- voice states
+- multilingual responses
+- incorrect/insufficient data behavior
+
+---
+
+# 173. ACCESSIBILITY TESTING
+
+Test:
+
+- screen reader
+- dynamic font size
+- reduced motion
+- touch target
+- contrast
+- keyboard behavior
+
+---
+
+# 174. LOCALIZATION TESTING
+
+All supported languages must undergo UI regression testing.
+
+---
+
+# 175. SECURITY TESTING
+
+Test:
+
+- locked state
+- session expiration
+- unauthorized action
+- device revocation
+- secure storage
+- logout
+- sensitive screen handling
+
+---
+
+# 176. PERFORMANCE TESTING
+
+Measure:
+
+- cold start
+- warm start
+- navigation
+- list rendering
+- database queries
+- AI UI responsiveness
+- sync performance
+
+---
+
+# 177. FRONTEND RELEASE CHANNELS
+
+Recommended conceptual environments:
+
+```text
+Development
+ ↓
+Internal testing
+ ↓
+QA
+ ↓
+Staging
+ ↓
+Production
+```
+
+---
+
+# 178. FEATURE FLAGS
+
+Feature flags can be used for:
+
+- unfinished features
+- gradual rollout
+- enterprise-only capabilities
+- experimental AI features
+- integration rollout
+
+---
+
+# 179. FRONTEND OBSERVABILITY
+
+The frontend should capture appropriate technical telemetry for:
+
+- crashes
+- performance
+- failed sync
+- API failures
+- navigation failures
+
+without leaking sensitive business information.
+
+---
+
+# 180. LOGGING RULE
+
+Never log:
+
+- passwords
+- tokens
+- sensitive credentials
+- unnecessary financial/customer data
+
+---
+
+# 181. ERROR REPORTING
+
+Errors should contain enough technical context to debug without exposing private business information.
+
+---
+
+# 182. APP UPDATE COMPATIBILITY
+
+Frontend updates must remain compatible with supported API versions and database migrations.
+
+---
+
+# 183. DATABASE MIGRATION UX
+
+On upgrade:
+
+```text
+App update
+ ↓
+Migration
+ ↓
+Validation
+ ↓
+Continue
+```
+
+The user should not lose local business data.
+
+---
+
+# 184. API VERSION COMPATIBILITY
+
+The frontend should be able to handle supported API version transitions without sudden application failure.
+
+---
+
+# 185. ANDROID-SPECIFIC FRONTEND
+
+Android implementation should integrate:
+
+- biometrics
+- notifications
+- lifecycle
+- secure storage
+- microphone
+- file handling
+- background capabilities
+- app links/deep links
+
+through platform adapters.
+
+---
+
+# 186. IOS-READY ARCHITECTURE
+
+Avoid embedding Android-specific behavior directly into business/domain code.
+
+Use:
+
+```text
+Shared interface
+ ↓
+Android implementation
+ ↓
+iOS implementation
+```
+
+---
+
+# 187. PLATFORM ADAPTER EXAMPLE
+
+Conceptually:
+
+```text
+SecureStorage
+├── AndroidSecureStorage
+└── IOSSecureStorage
+```
+
+while the feature sees only:
+
+```text
+SecureStorage
+```
+
+---
+
+# 188. FRONTEND DEVELOPMENT ORDER
+
+The frontend should be constructed in dependency order:
+
+```text
+1. Project foundation
+2. Expo/React Native configuration
+3. TypeScript configuration
+4. Design tokens
+5. Fonts
+6. Icons
+7. Core components
+8. Navigation
+9. App bootstrap
+10. Security
+11. Authentication
+12. Onboarding
+13. Local database
+14. Repository layer
+15. Sync foundation
+16. AI OS
+17. Home
+18. Customers
+19. Suppliers
+20. Products
+21. Inventory
+22. Sales
+23. Expenses
+24. Purchases
+25. Payments
+26. Returns
+27. Refunds
+28. Finance
+29. Operations
+30. Documents
+31. Reports
+32. Analytics
+33. Search
+34. Notifications
+35. Alerts
+36. Team
+37. Automation
+38. AI contextual features
+39. Multilingual completion
+40. Accessibility
+41. Connection Portfolio
+42. Final optimization
+43. QA
+44. Production
+```
+
+---
+
+# 189. FRONTEND IMPLEMENTATION RULE
+
+Do not build all screens as visual mockups first and connect them later.
+
+Each feature should be built as:
+
+```text
+UI
+ +
+State
+ +
+Domain
+ +
+Local data
+ +
+API
+ +
+Sync
+ +
+Error handling
+ +
+Testing
+```
+
+---
+
+# 190. FEATURE COMPLETION DEFINITION
+
+A frontend feature is **not complete** merely because its screen exists.
+
+It is complete only when:
+
+```text
+UI ✓
+Navigation ✓
+State ✓
+Validation ✓
+Local persistence ✓
+API integration ✓
+Offline behavior ✓
+Sync ✓
+Errors ✓
+Loading ✓
+Empty state ✓
+Permissions ✓
+Accessibility ✓
+Localization ✓
+Testing ✓
+```
+
+where applicable.
+
+---
+
+# 191. SCREEN COMPLETION DEFINITION
+
+Every production screen must define:
+
+```text
+Purpose
+Entry
+Exit
+
+Header
+Navigation
+Content
+Actions
+
+Loading
+Empty
+Error
+Success
+
+Offline
+Sync
+Conflict
+
+AI
+Voice
+
+Permissions
+Accessibility
+Localization
+
+Analytics/telemetry where appropriate
+```
+
+---
+
+# 192. FRONTEND QUALITY GATE
+
+Before a feature moves forward:
+
+```text
+TypeScript ✓
+Lint ✓
+Tests ✓
+UI ✓
+Navigation ✓
+API ✓
+SQLite ✓
+Offline ✓
+Security ✓
+Localization ✓
+Accessibility ✓
+Performance ✓
+```
+
+---
+
+# 193. MASTER FRONTEND FLOW
+
+```text
+                 VEPARI AI MOBILE
+                       │
+                       ↓
+                    BOOT
+                       │
+                       ↓
+                   SECURITY
+                       │
+                       ↓
+                 AI OS AWAKENS
+                       │
+                       ↓
+              BUSINESS BRIEFING
+                       │
+                       ↓
+                     HOME
+                       │
+        ┌──────────────┼───────────────┐
+        ↓              ↓               ↓
+       AI          BUSINESS          ALERTS
+        │              │
+   ┌────┼────┐    ┌────┼──────────────┐
+   ↓    ↓    ↓    ↓    ↓              ↓
+ Voice Chat Memory CRM Commerce      Finance
+                   │
+          ┌────────┼─────────┐
+          ↓        ↓         ↓
+       Inventory  Sales   Purchases
+          │        │         │
+          └────────┼─────────┘
+                   ↓
+              OPERATIONS
+                   ↓
+              DOCUMENTS
+                   ↓
+             REPORTS/ANALYTICS
+                   ↓
+               AUTOMATION
+                   ↓
+          CONNECTION PORTFOLIO
+                   ↓
+                SETTINGS
+```
+
+---
+
+# 194. FRONTEND DATA FLOW
+
+```text
+USER
+ ↓
+SCREEN
+ ↓
+FEATURE
+ ↓
+DOMAIN SERVICE
+ ↓
+REPOSITORY
+ ├──────────────┐
+ ↓              ↓
+SQLite          API
+ ↓              ↓
+Local State     Backend
+ │              │
+ └──────┬───────┘
+        ↓
+      SYNC
+        ↓
+  UPDATED STATE
+        ↓
+       UI
+```
+
+---
+
+# 195. FRONTEND AI FLOW
+
+```text
+USER
+ ↓
+AI OS
+ ↓
+Current UI Context
+ ↓
+Local Business Context
+ ↓
+Memory
+ ↓
+AI Gateway
+ ↓
+Response
+ ↓
+AI Component
+ ↓
+Action
+ ↓
+Domain Service
+ ↓
+Local DB
+ ↓
+Sync
+```
+
+---
+
+# 196. FRONTEND OFFLINE FLOW
+
+```text
+USER
+ ↓
+FEATURE
+ ↓
+LOCAL VALIDATION
+ ↓
+SQLITE
+ ↓
+UI UPDATE
+ ↓
+SYNC QUEUE
+ ↓
+NETWORK RETURNS
+ ↓
+API
+ ↓
+SERVER
+ ↓
+RECONCILIATION
+ ↓
+LOCAL DB
+ ↓
+UI
+```
+
+---
+
+# 197. FRONTEND SECURITY FLOW
+
+```text
+APP
+ ↓
+SESSION
+ ↓
+PIN / BIOMETRIC
+ ↓
+SECURITY VERIFIED
+ ↓
+AI OS
+ ↓
+BUSINESS APP
+```
+
+---
+
+# 198. FRONTEND MULTI-DEVICE FLOW
+
+```text
+DEVICE A
+ ↓
+LOCAL OPERATION
+ ↓
+SYNC
+ ↓
+SERVER
+ ↓
+DEVICE B
+ ↓
+LOCAL UPDATE
+ ↓
+UI
+```
+
+---
+
+# 199. FRONTEND CONNECTION FLOW
+
+```text
+CONNECTION PORTFOLIO
+ ↓
+PROVIDER
+ ↓
+AUTHORIZATION
+ ↓
+SECURE CONNECTION
+ ↓
+INITIAL SYNC
+ ↓
+CONNECTED
+ ↓
+ONGOING SYNC
+```
+
+---
+
+# 200. FRONTEND FAILURE FLOW
+
+```text
+FAILURE
+ ↓
+CLASSIFY
+ ├── Network
+ ├── API
+ ├── Validation
+ ├── Permission
+ ├── Sync
+ └── Unknown
+ ↓
+USER-FRIENDLY STATE
+ ↓
+RECOVERY
+```
+
+---
+
+# 201. FRONTEND PRINCIPLE — BUSINESS FIRST
+
+The frontend should never force users into AI interaction to perform ordinary business operations.
+
+AI accelerates the business.
+
+It does not become a mandatory intermediary for every action.
+
+---
+
+# 202. FRONTEND PRINCIPLE — AI FIRST-CLASS
+
+At the same time, AI must be deeply integrated into the application rather than existing as a separate chat page.
+
+---
+
+# 203. FRONTEND PRINCIPLE — LOCAL FIRST
+
+The user should be able to continue supported business operations even when connectivity disappears.
+
+---
+
+# 204. FRONTEND PRINCIPLE — CLOUD SECOND
+
+Cloud capabilities enhance synchronization, collaboration, integrations and AI services.
+
+They should not unnecessarily block local business operations.
+
+---
+
+# 205. FRONTEND PRINCIPLE — ONE PRODUCT
+
+Micro, Small, Medium and Enterprise are experiences within the same Vepari AI platform.
+
+---
+
+# 206. FRONTEND PRINCIPLE — ONE DESIGN SYSTEM
+
+No separate visual identities should emerge for different modules.
+
+---
+
+# 207. FRONTEND PRINCIPLE — ONE AI
+
+The AI OS, chat, voice, insights and contextual assistance are parts of one Vepari intelligence layer.
+
+---
+
+# 208. FRONTEND PRINCIPLE — ONE BUSINESS TRUTH
+
+The frontend must never create competing versions of financial/business truth.
+
+---
+
+# 209. FRONTEND PRINCIPLE — ONE MEMORY MODEL
+
+AI memory must have a consistent model across the entire application.
+
+---
+
+# 210. FRONTEND PRINCIPLE — ONE SECURITY MODEL
+
+Authentication, authorization, device trust and session handling must remain consistent across every feature.
+
+---
+
+# 211. FINAL FRONTEND ARCHITECTURE
+
+```text
+                         VEPARI AI
+                            │
+                       REACT NATIVE
+                            │
+          ┌─────────────────┼─────────────────┐
+          │                 │                 │
+     DESIGN SYSTEM       FEATURES          AI OS
+          │                 │                 │
+     Components       Business Modules   Voice/Memory
+          │                 │                 │
+          └─────────────────┼─────────────────┘
+                            ↓
+                       DOMAIN LAYER
+                            ↓
+                     REPOSITORY LAYER
+                    ┌───────┴────────┐
+                    ↓                ↓
+                 SQLITE             API
+                    ↓                ↓
+               LOCAL STATE        BACKEND
+                    └───────┬────────┘
+                            ↓
+                          SYNC
+                            ↓
+                    SHARED BUSINESS STATE
+```
+
+---
+
+# 212. FINAL FRONTEND EXPERIENCE
+
+The owner should experience:
+
+```text
+OPEN
+ ↓
+SECURE
+ ↓
+AI AWAKENS
+ ↓
+"WHILE YOU WERE AWAY..."
+ ↓
+BUSINESS STATUS
+ ↓
+IMPORTANT EVENTS
+ ↓
+INSIGHTS
+ ↓
+QUICK ACTIONS
+ ↓
+BUSINESS OPERATIONS
+ ↓
+AI ASSISTANCE
+ ↓
+LOCAL SAVE
+ ↓
+SYNC
+ ↓
+UPDATED BUSINESS
+```
+
+---
+
+# 213. FINAL FRONTEND COMPLETION MATRIX
+
+| Frontend Area | Specification |
+|---|---|
+| React Native | ✅ |
+| Expo | ✅ |
+| TypeScript | ✅ |
+| Android-first | ✅ |
+| iOS-ready architecture | ✅ |
+| Design system | ✅ |
+| Official Vepari palette | ✅ |
+| Lora typography | ✅ |
+| 23-language architecture | ✅ |
+| Authentication | ✅ |
+| Security gate | ✅ |
+| PIN | ✅ |
+| Biometrics | ✅ |
+| AI OS | ✅ |
+| AI OS animation | ✅ |
+| AI OS physics | ✅ |
+| AI chat | ✅ |
+| AI voice | ✅ |
+| AI memory | ✅ |
+| AI insights | ✅ |
+| AI actions | ✅ |
+| AI evidence | ✅ |
+| Home | ✅ |
+| Customers | ✅ |
+| Suppliers | ✅ |
+| Products | ✅ |
+| Inventory | ✅ |
+| Sales | ✅ |
+| Expenses | ✅ |
+| Purchases | ✅ |
+| Payments | ✅ |
+| Returns | ✅ |
+| Refunds | ✅ |
+| Finance | ✅ |
+| Operations | ✅ |
+| Documents | ✅ |
+| Reports | ✅ |
+| Analytics | ✅ |
+| Search | ✅ |
+| Notifications | ✅ |
+| Alerts | ✅ |
+| Team | ✅ |
+| Permissions | ✅ |
+| Automation | ✅ |
+| SQLite | ✅ |
+| Offline UX | ✅ |
+| Sync | ✅ |
+| Conflict handling | ✅ |
+| Realtime architecture | ✅ |
+| API layer | ✅ |
+| Security architecture | ✅ |
+| Device management | ✅ |
+| Accessibility | ✅ |
+| Localization | ✅ |
+| Performance | ✅ |
+| Testing | ✅ |
+| Connection Portfolio | ✅ |
+| Multi-device | ✅ |
+| Micro → Enterprise | ✅ |
+| Error/recovery states | ✅ |
+| App lifecycle | ✅ |
+| Production architecture | ✅ |
+
+---
+
+# 214. FINAL FRONTEND DEFINITION
+
+The **Vepari AI frontend is a mobile operating layer over the complete Vepari business system**.
+
+Its architecture is:
+
+> **React Native + Expo + TypeScript → Design System → Feature Modules → Domain Services → Repository Layer → SQLite + API → Sync → AI/Integrations**
+
+Its experience is:
+
+> **Security → AI Awakening → Business Briefing → Home → Operations → Intelligence → Action → Local Save → Synchronization**
+
+Its design identity is:
+
+> **Official Vepari AI colors + Lora-led typography + multilingual Indian-language support + premium spatial AI OS**
+
+Its business model is:
+
+> **Micro-first depth + full Small/Medium/Enterprise scalability**
+
+Its reliability model is:
+
+> **Local-first + offline-first + synchronized cloud state**
+
+Its AI model is:
+
+> **Context-aware + multilingual + voice-capable + memory-enabled + evidence-based + approval-controlled**
+
+And its platform strategy is:
+
+> **Android now, iOS without architectural rewrite later.**
+
+**This is the consolidated Master Frontend specification and should be treated as the frontend source of truth alongside the Master PRD, Master TRD, Master App Flow and Master UI/UX documents.**

@@ -1,0 +1,3072 @@
+# VEPARI AI
+# MASTER IMPLEMENTATION PLAN
+
+**Document Type:** Complete Product Implementation & Engineering Execution Plan  
+**Product:** Vepari AI  
+**Status:** Master Source of Truth  
+**Implementation Target:** Production-ready Android application  
+**Future Expansion:** iOS  
+**Frontend:** React Native + TypeScript  
+**Local Data:** SQLite + secure device storage  
+**Cloud:** Authoritative backend/database/storage  
+**AI:** Vepari AI OS + Sarvam AI integration layer  
+**Languages:** 23 Indian languages  
+**Business Scope:** Micro → Small → Medium → Enterprise  
+**Development Model:** Modular · API-first · Local-first · Offline-first · Multi-device  
+
+---
+
+# 1. IMPLEMENTATION OBJECTIVE
+
+The objective is to transform the complete Vepari AI product specification into a production-ready application.
+
+The implementation must not be treated as:
+
+```text
+Build UI
+→ connect API
+→ launch
+```
+
+Instead:
+
+```text
+Product Specification
+        ↓
+Architecture
+        ↓
+Infrastructure
+        ↓
+Database
+        ↓
+Backend/API
+        ↓
+Local Storage + Sync
+        ↓
+AI OS
+        ↓
+Frontend
+        ↓
+Integrations
+        ↓
+Testing
+        ↓
+Security
+        ↓
+Staging
+        ↓
+Production
+        ↓
+Continuous Improvement
+```
+
+---
+
+# 2. MASTER IMPLEMENTATION PRINCIPLE
+
+Every implementation decision must trace back to the master product documents:
+
+```text
+PRD
+TRD
+App Flow
+UI/UX
+Frontend
+Backend/API
+Database/Storage/Memory/Cloud
+AI OS
+        ↓
+Implementation Plan
+```
+
+No implementation should casually redefine an already-finalized product decision.
+
+If implementation reveals a genuine technical conflict, document the conflict and resolve it deliberately rather than silently changing scope.
+
+---
+
+# 3. PRODUCT TARGET
+
+The final product is one Vepari AI platform supporting:
+
+```text
+Micro
+Small
+Medium
+Enterprise
+```
+
+The Micro experience remains especially important, but the architecture must not prevent advanced MSME/Enterprise functionality.
+
+---
+
+# 4. CLIENT STRATEGY
+
+## Phase 1
+
+Android-first.
+
+```text
+React Native
++
+TypeScript
++
+Expo / appropriate native tooling
+```
+
+## Phase 2
+
+iOS expansion using the same core architecture.
+
+```text
+Shared
+├── Business logic
+├── API client
+├── Sync
+├── State
+├── AI integration
+└── UI system
+
+Platform-specific
+├── Android
+└── iOS
+```
+
+---
+
+# 5. TEAM DEVELOPMENT MODEL
+
+The project is designed to be worked on from multiple computers/devices by the six-member team.
+
+The source of truth for code is:
+
+```text
+GitHub Repository
+        ↓
+Main App
+        ↓
+Shared source
+```
+
+The team must **not** rely on a particular Claude Code session as the source of truth.
+
+Claude Code sessions are development environments/context windows.
+
+GitHub is the code collaboration source of truth.
+
+---
+
+# 6. MULTI-DEVICE DEVELOPMENT RULE
+
+Any developer should be able to:
+
+```text
+Clone/Pull
+ ↓
+Install dependencies
+ ↓
+Load environment
+ ↓
+Run project
+ ↓
+Create branch
+ ↓
+Develop
+ ↓
+Test
+ ↓
+Commit
+ ↓
+Push
+ ↓
+Pull Request
+ ↓
+Review
+ ↓
+Merge
+```
+
+---
+
+# 7. REPOSITORY FOUNDATION
+
+The first implementation task is establishing a clean repository structure.
+
+Recommended conceptual structure:
+
+```text
+vepari-ai/
+├── apps/
+│   └── mobile/
+├── packages/
+│   ├── api-client/
+│   ├── shared-types/
+│   ├── validation/
+│   ├── design-system/
+│   └── business-logic/
+├── backend/
+├── database/
+├── docs/
+├── scripts/
+├── tests/
+└── .github/
+```
+
+The exact structure can be adjusted to the chosen backend framework.
+
+---
+
+# 8. DOCUMENTATION DIRECTORY
+
+The repository should contain the master specifications.
+
+```text
+docs/
+├── PRD.md
+├── TRD.md
+├── APP_FLOW.md
+├── UI_UX.md
+├── FRONTEND.md
+├── BACKEND_API.md
+├── DATABASE_STORAGE_CLOUD.md
+├── AI_OS.md
+└── IMPLEMENTATION_PLAN.md
+```
+
+These documents become engineering reference material.
+
+---
+
+# 9. DEVELOPMENT ENVIRONMENT
+
+Standardize:
+
+- Node.js version
+- package manager
+- TypeScript version
+- React Native/Expo version
+- backend runtime
+- database tooling
+- linting
+- formatting
+- testing
+- Git conventions
+
+The versions must be pinned rather than allowing every developer to use arbitrary versions.
+
+---
+
+# 10. ENVIRONMENT MODEL
+
+Create:
+
+```text
+Development
+Staging
+Production
+```
+
+Each environment has separate:
+
+- databases
+- secrets
+- storage
+- AI credentials
+- integrations
+- telemetry where appropriate
+
+---
+
+# 11. ENVIRONMENT VARIABLES
+
+Never commit secrets.
+
+Use environment variables/secrets management for:
+
+```text
+Database
+Authentication
+AI providers
+Storage
+OAuth
+Notifications
+External integrations
+```
+
+---
+
+# 12. FIRST DEVELOPMENT MILESTONE
+
+Before building product features:
+
+```text
+Repository
+✓
+Development environment
+✓
+TypeScript
+✓
+Lint
+✓
+Formatting
+✓
+Testing
+✓
+Environment configuration
+✓
+CI foundation
+✓
+Basic app boot
+✓
+Basic backend boot
+```
+
+---
+
+# 13. DESIGN SYSTEM IMPLEMENTATION
+
+The finalized Vepari AI design system must be implemented before building every screen individually.
+
+It includes:
+
+- official Vepari AI color palette
+- official typography
+- Lora as the main English font
+- multilingual typography strategy
+- spacing
+- radius
+- elevation
+- icons
+- buttons
+- cards
+- inputs
+- navigation
+- animations
+- AI OS visual language
+- dark/premium visual treatment where defined
+
+---
+
+# 14. MULTILINGUAL TYPOGRAPHY
+
+The application must support the established 23-language requirement.
+
+The font system must therefore use:
+
+```text
+English
+→ Lora primary
+
+Indian scripts
+→ appropriate script-compatible font fallback
+```
+
+The implementation must ensure that every supported language renders correctly.
+
+---
+
+# 15. DESIGN TOKENS
+
+Create centralized tokens for:
+
+```text
+colors
+typography
+spacing
+radius
+shadows
+motion
+z-index
+breakpoints where applicable
+```
+
+Components should consume tokens rather than hard-coded styling.
+
+---
+
+# 16. UI COMPONENT FOUNDATION
+
+Build reusable components first:
+
+```text
+Button
+Input
+Card
+Chip
+Badge
+Avatar
+List
+Modal
+Bottom Sheet
+Toast
+Banner
+Tabs
+Navigation
+Data Row
+Metric Card
+Chart Container
+Empty State
+Loading State
+Error State
+```
+
+---
+
+# 17. AI OS COMPONENT FOUNDATION
+
+Build dedicated components:
+
+```text
+AI Orb
+AI Glow
+AI Panel
+AI Header
+AI Briefing
+AI Insight Card
+AI Recommendation
+AI Action Card
+AI Voice Control
+AI Transcript
+AI Command Result
+AI Loading State
+AI Error State
+```
+
+---
+
+# 18. ANIMATION FOUNDATION
+
+The AI OS animation system must be implemented centrally.
+
+It should support:
+
+```text
+Entrance
+Exit
+Expansion
+Collapse
+Pulse
+Glow
+Loading
+Voice activity
+Transitions
+Micro-interactions
+```
+
+---
+
+# 19. PHYSICS / MOTION
+
+The Jarvis-inspired interaction language should use controlled:
+
+- spring motion
+- depth
+- scaling
+- opacity
+- blur/glow
+- spatial transitions
+
+It must remain usable on mobile rather than becoming decorative animation everywhere.
+
+---
+
+# 20. ACCESSIBILITY
+
+Implement:
+
+- readable typography
+- touch-safe controls
+- screen-reader labels
+- contrast
+- dynamic text considerations
+- motion reduction where appropriate
+- language-aware rendering
+
+---
+
+# 21. MOBILE NAVIGATION FOUNDATION
+
+Implement the finalized navigation architecture before individual modules.
+
+It must support:
+
+```text
+Home / AI OS
+Business
+Operations
+Finance
+Inventory
+Customers
+Suppliers
+Reports
+Team
+Connections
+Settings
+```
+
+with the exact final navigation determined by the UI/UX specification.
+
+---
+
+# 22. SECURITY-FIRST ENTRY FLOW
+
+The application launch flow begins with security.
+
+Conceptually:
+
+```text
+App Launch
+ ↓
+Device/App Security
+ ↓
+Owner Authentication
+ ↓
+Security Verification
+ ↓
+AI OS Entrance
+```
+
+---
+
+# 23. AI OS FIRST-LOAD FLOW
+
+After successful owner security:
+
+```text
+Security completed
+ ↓
+AI OS animation
+ ↓
+AI OS appears
+ ↓
+Business state loads
+ ↓
+Operational briefing
+ ↓
+Alerts
+ ↓
+Important resources
+ ↓
+Recommended actions
+```
+
+The animation must **not** appear before the defined security completion point.
+
+---
+
+# 24. AI OS BRIEFING
+
+The first AI OS experience should explain:
+
+- what happened while the owner was away
+- important business operations
+- urgent alerts
+- financial changes
+- inventory events
+- customer/supplier developments
+- pending tasks
+- important resources
+- recommended actions
+
+The content must be dynamically generated from authorized business context.
+
+---
+
+# 25. AI OS IMPLEMENTATION ORDER
+
+```text
+AI shell
+ ↓
+Animation
+ ↓
+Briefing
+ ↓
+Context
+ ↓
+Voice
+ ↓
+Memory
+ ↓
+Insights
+ ↓
+Recommendations
+ ↓
+Actions
+ ↓
+Automation
+```
+
+---
+
+# 26. LOCAL DATABASE IMPLEMENTATION
+
+Implement SQLite before full offline workflows.
+
+Core responsibilities:
+
+```text
+Local business cache
+Local operational state
+Drafts
+Sync queue
+Sync metadata
+Local preferences
+```
+
+---
+
+# 27. SECURE DEVICE STORAGE
+
+Implement platform secure storage for sensitive authentication/device information.
+
+Never place provider secrets in ordinary SQLite.
+
+---
+
+# 28. LOCAL DATABASE MIGRATIONS
+
+Create a migration system from the beginning.
+
+Example:
+
+```text
+001_initial
+002_users
+003_business
+004_customers
+005_products
+...
+```
+
+The actual migration sequence follows implementation.
+
+---
+
+# 29. CLOUD DATABASE FOUNDATION
+
+Create the authoritative cloud schema.
+
+Initial domains:
+
+```text
+Identity
+Businesses
+Memberships
+Branches
+Roles
+Permissions
+```
+
+---
+
+# 30. CORE BUSINESS DATABASE
+
+Then implement:
+
+```text
+Customers
+Suppliers
+Products
+Inventory
+```
+
+---
+
+# 31. TRANSACTION DATABASE
+
+Then:
+
+```text
+Sales
+Sale Items
+Purchases
+Purchase Items
+Expenses
+Payments
+Returns
+Refunds
+```
+
+---
+
+# 32. FINANCE DATABASE
+
+Then:
+
+```text
+Accounts
+Ledger
+Financial transactions
+Receivables
+Payables
+Financial summaries
+```
+
+---
+
+# 33. DOCUMENT DATABASE
+
+Then:
+
+```text
+Documents
+Files
+File metadata
+Generated documents
+```
+
+---
+
+# 34. SYSTEM DATABASE
+
+Then:
+
+```text
+Notifications
+Automations
+Connections
+Audit
+Sync
+AI memory
+AI usage
+```
+
+---
+
+# 35. DATABASE SECURITY
+
+Implement:
+
+```text
+Tenant isolation
+Branch scope
+Foreign keys
+Constraints
+Indexes
+Transaction safety
+Access policies
+```
+
+---
+
+# 36. BACKEND FOUNDATION
+
+Build backend infrastructure:
+
+```text
+Application bootstrap
+ ↓
+Configuration
+ ↓
+Database connection
+ ↓
+Authentication
+ ↓
+Authorization
+ ↓
+Validation
+ ↓
+Error handling
+ ↓
+Logging
+ ↓
+API versioning
+```
+
+---
+
+# 37. API FOUNDATION
+
+Implement:
+
+```text
+/api/v1
+```
+
+with standardized:
+
+- authentication
+- responses
+- errors
+- request IDs
+- validation
+- pagination
+- filtering
+
+---
+
+# 38. AUTH IMPLEMENTATION
+
+Build:
+
+```text
+Registration / onboarding
+Login
+Session
+Logout
+Session management
+Device registration
+Device revocation
+```
+
+according to the finalized authentication UX.
+
+---
+
+# 39. BUSINESS ONBOARDING
+
+Implement:
+
+```text
+Create business
+ ↓
+Business profile
+ ↓
+Business type
+ ↓
+Industry
+ ↓
+Operating settings
+ ↓
+Language
+ ↓
+Currency
+ ↓
+Branch configuration
+ ↓
+Owner
+```
+
+---
+
+# 40. TEAM IMPLEMENTATION
+
+Implement:
+
+```text
+Members
+Invitations
+Roles
+Permissions
+Branch access
+Device/session management
+```
+
+---
+
+# 41. CUSTOMER MODULE
+
+Implement in this order:
+
+```text
+Database
+ ↓
+Repository
+ ↓
+Domain service
+ ↓
+API
+ ↓
+Local SQLite
+ ↓
+Sync
+ ↓
+UI
+ ↓
+Tests
+```
+
+Repeat this architecture for other modules.
+
+---
+
+# 42. SUPPLIER MODULE
+
+Same implementation pattern:
+
+```text
+DB
+→ Domain
+→ API
+→ Local
+→ Sync
+→ UI
+→ Tests
+```
+
+---
+
+# 43. PRODUCT MODULE
+
+Implement:
+
+- products
+- categories
+- SKU
+- barcode
+- pricing
+- status
+- metadata
+
+---
+
+# 44. INVENTORY MODULE
+
+Implement:
+
+```text
+Inventory
+ ↓
+Movements
+ ↓
+Adjustments
+ ↓
+Transfers
+ ↓
+Reservations where required
+ ↓
+Sync
+```
+
+---
+
+# 45. SALES MODULE
+
+Implement:
+
+```text
+Create sale
+ ↓
+Calculate
+ ↓
+Validate
+ ↓
+Inventory
+ ↓
+Payment
+ ↓
+Financial effect
+ ↓
+Audit
+```
+
+---
+
+# 46. PURCHASE MODULE
+
+Implement:
+
+```text
+Purchase
+ ↓
+Supplier
+ ↓
+Items
+ ↓
+Inventory
+ ↓
+Payment
+ ↓
+Finance
+```
+
+---
+
+# 47. EXPENSE MODULE
+
+Implement:
+
+```text
+Create
+ ↓
+Categorize
+ ↓
+Attach documentation
+ ↓
+Finance
+ ↓
+Audit
+```
+
+---
+
+# 48. PAYMENT MODULE
+
+Implement:
+
+```text
+Payment
+ ↓
+Allocation
+ ↓
+Balance
+ ↓
+Financial record
+ ↓
+Audit
+```
+
+---
+
+# 49. RETURN / REFUND MODULE
+
+Implement against original transaction references.
+
+---
+
+# 50. FINANCE MODULE
+
+Implement dashboards after authoritative transaction flows are stable.
+
+```text
+Revenue
+Expenses
+Profit
+Cash flow
+Receivables
+Payables
+```
+
+---
+
+# 51. ACCOUNTING MODULE
+
+Implement accounting rules separately from presentation.
+
+The UI should consume accounting APIs rather than performing accounting logic locally.
+
+---
+
+# 52. REPORTING
+
+Implement:
+
+```text
+Filters
+ ↓
+Server query
+ ↓
+Aggregation
+ ↓
+Report response
+```
+
+Large reports become background jobs.
+
+---
+
+# 53. ANALYTICS
+
+Use aggregated server-side data.
+
+Avoid sending massive raw transaction sets to mobile devices unnecessarily.
+
+---
+
+# 54. SEARCH
+
+Implement centralized business-scoped search.
+
+```text
+Query
+ ↓
+Authorization
+ ↓
+Business scope
+ ↓
+Indexed search
+ ↓
+Categorized results
+```
+
+---
+
+# 55. NOTIFICATIONS
+
+Implement:
+
+```text
+Event
+ ↓
+Notification rule
+ ↓
+User preferences
+ ↓
+Notification
+ ↓
+Delivery
+```
+
+---
+
+# 56. AUTOMATION
+
+Implement the automation engine after event infrastructure exists.
+
+```text
+Trigger
+ ↓
+Condition
+ ↓
+Action
+ ↓
+Execution
+ ↓
+Audit
+```
+
+---
+
+# 57. EVENT SYSTEM
+
+Introduce domain events after core transactional domains are functioning.
+
+Examples:
+
+```text
+sale.created
+payment.recorded
+inventory.adjusted
+purchase.created
+expense.created
+```
+
+---
+
+# 58. BACKGROUND JOB SYSTEM
+
+Introduce jobs for:
+
+- documents
+- reports
+- notifications
+- integrations
+- AI tasks
+- heavy processing
+
+---
+
+# 59. SYNC ENGINE
+
+Implement only after both cloud APIs and local repositories exist.
+
+Architecture:
+
+```text
+Local Mutation
+ ↓
+Operation Queue
+ ↓
+Sync Worker
+ ↓
+API
+ ↓
+Cloud
+ ↓
+Response
+ ↓
+Reconciliation
+```
+
+---
+
+# 60. SYNC IMPLEMENTATION PHASES
+
+### Phase A
+
+Local operation queue.
+
+### Phase B
+
+Push.
+
+### Phase C
+
+Pull.
+
+### Phase D
+
+Cursor.
+
+### Phase E
+
+Versioning.
+
+### Phase F
+
+Conflict detection.
+
+### Phase G
+
+Conflict resolution.
+
+### Phase H
+
+Realtime acceleration.
+
+---
+
+# 61. SYNC RETRY
+
+Implement exponential/backoff-style retry appropriate to transient failures.
+
+Permanent validation failures should not retry forever.
+
+---
+
+# 62. MULTI-DEVICE SYNC
+
+Test:
+
+```text
+Device A
+ ↓
+Cloud
+ ↓
+Device B
+```
+
+before calling sync production-ready.
+
+---
+
+# 63. AI GATEWAY
+
+Implement:
+
+```text
+AI API
+ ↓
+AI Service
+ ↓
+Context Service
+ ↓
+Memory Service
+ ↓
+Provider Gateway
+ ↓
+Sarvam Adapter
+```
+
+---
+
+# 64. SARVAM INTEGRATION
+
+Integrate Sarvam through the gateway rather than directly from frontend code.
+
+```text
+Mobile
+ ✗
+Sarvam
+
+Mobile
+ ✓
+Vepari AI Backend
+ ✓
+AI Gateway
+ ✓
+Sarvam
+```
+
+---
+
+# 65. AI CONTEXT ENGINE
+
+Build context retrieval:
+
+```text
+Current screen
++
+Current business
++
+Current user
++
+Relevant records
++
+Relevant memory
++
+Language
+```
+
+---
+
+# 66. AI MEMORY ENGINE
+
+Implement:
+
+```text
+Memory candidate
+ ↓
+Classification
+ ↓
+Authorization
+ ↓
+Storage
+ ↓
+Retrieval
+ ↓
+Freshness
+ ↓
+Deletion
+```
+
+---
+
+# 67. AI OS VOICE
+
+Implement:
+
+```text
+Microphone
+ ↓
+Speech processing
+ ↓
+Language detection/selection
+ ↓
+AI
+ ↓
+Response
+ ↓
+Voice output
+```
+
+subject to supported provider capabilities.
+
+---
+
+# 68. AI ACTION SYSTEM
+
+Implement:
+
+```text
+AI recommendation
+ ↓
+Action proposal
+ ↓
+User confirmation
+ ↓
+API command
+ ↓
+Authorization
+ ↓
+Domain service
+ ↓
+Transaction
+ ↓
+Audit
+```
+
+---
+
+# 69. AI NEVER GETS DIRECT DATABASE ACCESS
+
+This is a hard architecture rule.
+
+AI must use normal backend services.
+
+---
+
+# 70. AI PROACTIVE INTELLIGENCE
+
+After basic AI functionality works, add:
+
+- anomaly detection
+- business insights
+- reminders
+- summaries
+- recommendations
+- operational alerts
+
+---
+
+# 71. AI OS BUSINESS BRIEFING
+
+Then integrate all major domains:
+
+```text
+Sales
+Inventory
+Finance
+Customers
+Suppliers
+Tasks
+Notifications
+Connections
+```
+
+into the owner's briefing.
+
+---
+
+# 72. AI OS NAVIGATION
+
+The AI should be capable of taking the user to authorized app locations.
+
+Example:
+
+```text
+"Show today's sales"
+ ↓
+AI
+ ↓
+Navigation command
+ ↓
+Sales screen
+```
+
+---
+
+# 73. AI OS ACTIONS
+
+The AI can initiate actions only through approved business APIs.
+
+---
+
+# 74. CONNECTION PORTFOLIO
+
+Implement after the internal business data model is stable.
+
+The portfolio should provide:
+
+```text
+Providers
+Connections
+Status
+Permissions
+Sync
+Reconnect
+Disconnect
+Health
+```
+
+---
+
+# 75. INTEGRATION ADAPTERS
+
+Each integration should have its own adapter.
+
+```text
+Connection
+ ↓
+Adapter
+ ↓
+External provider
+```
+
+---
+
+# 76. WEBHOOK SYSTEM
+
+Implement:
+
+```text
+Receive
+ ↓
+Verify
+ ↓
+Deduplicate
+ ↓
+Normalize
+ ↓
+Process
+ ↓
+Audit
+```
+
+---
+
+# 77. FILE STORAGE
+
+Implement private object storage.
+
+Use relational records for metadata and object storage for actual binary files.
+
+---
+
+# 78. DOCUMENT ENGINE
+
+Implement:
+
+```text
+Template
+ ↓
+Business data
+ ↓
+Generate
+ ↓
+Store
+ ↓
+Reference
+```
+
+---
+
+# 79. SECURITY IMPLEMENTATION
+
+Security is implemented throughout the project rather than at the end.
+
+---
+
+# 80. SECURITY LAYERS
+
+```text
+Device
+ ↓
+App
+ ↓
+Authentication
+ ↓
+Authorization
+ ↓
+Tenant
+ ↓
+API
+ ↓
+Database
+ ↓
+Storage
+ ↓
+AI
+ ↓
+Integrations
+```
+
+---
+
+# 81. SECURITY TESTING
+
+Test:
+
+- unauthorized access
+- cross-business access
+- cross-branch access
+- role escalation
+- invalid tokens
+- revoked devices
+- malicious inputs
+- file access
+- AI actions
+
+---
+
+# 82. AI SECURITY TESTING
+
+Test:
+
+- prompt injection
+- malicious documents
+- unauthorized actions
+- cross-tenant retrieval
+- hallucinated operations
+- invalid structured outputs
+
+---
+
+# 83. DATABASE TESTING
+
+Test:
+
+- transactions
+- constraints
+- concurrency
+- migrations
+- tenant isolation
+- financial integrity
+
+---
+
+# 84. API TESTING
+
+Every API endpoint requires:
+
+```text
+Happy path
+Validation
+Authentication
+Authorization
+Tenant isolation
+Failure
+Retry/idempotency where applicable
+```
+
+---
+
+# 85. FRONTEND TESTING
+
+Test:
+
+- screens
+- navigation
+- state
+- forms
+- accessibility
+- language rendering
+- offline behavior
+- AI OS
+- error states
+
+---
+
+# 86. DEVICE TESTING
+
+Test on multiple Android device classes:
+
+```text
+Low-end
+Mid-range
+High-end
+Small screen
+Large screen
+Different Android versions
+```
+
+---
+
+# 87. OFFLINE TESTING
+
+Simulate:
+
+```text
+No network
+Slow network
+Intermittent network
+Network restored
+Concurrent edits
+```
+
+---
+
+# 88. MULTILINGUAL TESTING
+
+All 23 languages must be tested for:
+
+- UI rendering
+- text overflow
+- navigation
+- AI responses
+- voice where supported
+- forms
+- notifications
+- documents
+
+---
+
+# 89. TYPOGRAPHY TESTING
+
+Particular attention:
+
+```text
+Lora English
++
+Indian script fallback
+```
+
+No language should fall back to unreadable/missing glyphs.
+
+---
+
+# 90. AI OS PERFORMANCE
+
+The AI OS should feel immediate.
+
+Use:
+
+- cached context
+- local state
+- streaming where appropriate
+- progressive rendering
+- asynchronous secondary loading
+
+---
+
+# 91. AI OS FAILURE EXPERIENCE
+
+If AI is unavailable:
+
+```text
+AI unavailable
+ ↓
+Core app remains usable
+```
+
+The application must never become unusable simply because the AI provider is unavailable.
+
+---
+
+# 92. CLOUD FAILURE EXPERIENCE
+
+If cloud is unavailable:
+
+```text
+Offline-capable features
+ ↓
+Continue locally
+ ↓
+Queue
+ ↓
+Sync later
+```
+
+subject to the specific operation's safety requirements.
+
+---
+
+# 93. FINANCIAL OFFLINE SAFETY
+
+Operations that cannot safely be finalized offline must remain drafts/pending rather than pretending to be authoritative.
+
+---
+
+# 94. OBSERVABILITY IMPLEMENTATION
+
+Implement from early backend development:
+
+```text
+Structured logs
+Request IDs
+Metrics
+Error tracking
+Tracing
+```
+
+---
+
+# 95. AUDIT IMPLEMENTATION
+
+Add audit events to sensitive business operations from the first production-capable version.
+
+---
+
+# 96. CI PIPELINE
+
+Every pull request should run:
+
+```text
+Install
+ ↓
+Type check
+ ↓
+Lint
+ ↓
+Unit tests
+ ↓
+API tests
+ ↓
+Build
+```
+
+where practical.
+
+---
+
+# 97. BRANCHING STRATEGY
+
+Recommended:
+
+```text
+main
+develop where useful
+feature/*
+fix/*
+release/*
+```
+
+The exact strategy can remain lightweight.
+
+---
+
+# 98. CODE REVIEW
+
+Every significant production change should undergo review.
+
+Review:
+
+- functionality
+- security
+- performance
+- architecture
+- tests
+- UI consistency
+
+---
+
+# 99. NO DIRECT PRODUCTION EXPERIMENTS
+
+Do not test unfinished migrations or experimental AI actions against production data.
+
+---
+
+# 100. STAGING
+
+Staging should resemble production architecture sufficiently to catch:
+
+- API issues
+- migrations
+- sync problems
+- AI provider problems
+- storage problems
+- deployment issues
+
+---
+
+# 101. SEED DATA
+
+Maintain safe development/staging seed data.
+
+Never use real customer/business data casually in development.
+
+---
+
+# 102. PRODUCTION DATA PROTECTION
+
+Production credentials and data must remain isolated from development.
+
+---
+
+# 103. RELEASE CANDIDATE
+
+Before first public/internal production release:
+
+```text
+Feature freeze
+ ↓
+Regression
+ ↓
+Security
+ ↓
+Performance
+ ↓
+Migration
+ ↓
+Backup verification
+ ↓
+Staging validation
+ ↓
+Release candidate
+```
+
+---
+
+# 104. PRODUCTION DEPLOYMENT
+
+Deploy:
+
+```text
+Backend
+Database migrations
+Storage
+Workers
+Realtime
+AI gateway
+Mobile build
+```
+
+in a controlled dependency order.
+
+---
+
+# 105. DATABASE MIGRATION DEPLOYMENT
+
+Migration compatibility must be checked against the currently deployed application version.
+
+---
+
+# 106. MOBILE RELEASE
+
+Android release pipeline should include:
+
+```text
+Build
+ ↓
+Signing
+ ↓
+QA
+ ↓
+Internal testing
+ ↓
+Staged rollout
+```
+
+---
+
+# 107. IOS PREPARATION
+
+Architecture must avoid Android-only business logic.
+
+Future iOS work should primarily require:
+
+- platform UI adjustments
+- platform capabilities
+- native integration adaptation
+- App Store release process
+
+rather than rebuilding the product.
+
+---
+
+# 108. FIRST PRODUCTION RELEASE SCOPE
+
+The first release should prioritize the stable core:
+
+```text
+Authentication
+Business setup
+AI OS
+Customers
+Suppliers
+Products
+Inventory
+Sales
+Purchases
+Expenses
+Payments
+Finance overview
+Notifications
+Team
+Offline/local storage
+Sync
+Core AI
+```
+
+Advanced Enterprise functionality can expand progressively while preserving the architecture.
+
+---
+
+# 109. ENTERPRISE EXPANSION
+
+After core stability:
+
+```text
+Advanced permissions
+Multi-branch
+Advanced analytics
+Automations
+Advanced integrations
+Enterprise controls
+Advanced AI
+```
+
+---
+
+# 110. CONNECTION PORTFOLIO EXPANSION
+
+Add providers incrementally through adapters.
+
+Never hard-wire provider-specific behavior into core business modules.
+
+---
+
+# 111. PERFORMANCE OPTIMIZATION PHASE
+
+After functional completion:
+
+```text
+Measure
+ ↓
+Identify bottlenecks
+ ↓
+Optimize
+ ↓
+Measure again
+```
+
+Do not optimize based only on assumptions.
+
+---
+
+# 112. DATABASE OPTIMIZATION
+
+Focus on:
+
+- indexes
+- query plans
+- pagination
+- connection pooling
+- aggregation
+- archival
+
+---
+
+# 113. MOBILE OPTIMIZATION
+
+Focus on:
+
+- startup
+- memory
+- SQLite queries
+- image handling
+- list rendering
+- animations
+- battery/network usage
+
+---
+
+# 114. AI OPTIMIZATION
+
+Focus on:
+
+- context size
+- latency
+- caching
+- provider selection
+- usage
+- cost
+
+---
+
+# 115. STORAGE OPTIMIZATION
+
+Focus on:
+
+- file size
+- compression
+- lifecycle
+- duplicate files
+- archival
+
+---
+
+# 116. OBSERVABILITY REVIEW
+
+Before launch confirm:
+
+```text
+Can we detect an API failure?
+Can we trace a request?
+Can we identify sync failures?
+Can we detect AI failure?
+Can we identify security events?
+Can we investigate a business mutation?
+```
+
+---
+
+# 117. BACKUP REVIEW
+
+Before launch confirm:
+
+```text
+Backups running
+Restore tested
+Files recoverable
+Database recoverable
+Credentials recoverable through secure process
+```
+
+---
+
+# 118. DISASTER RECOVERY DRILL
+
+Run a controlled recovery test before declaring production infrastructure complete.
+
+---
+
+# 119. SECURITY RELEASE GATE
+
+Production launch requires:
+
+```text
+Authentication ✓
+Authorization ✓
+Tenant isolation ✓
+Secure secrets ✓
+File security ✓
+AI security ✓
+Rate limiting ✓
+Audit ✓
+Logging ✓
+Backups ✓
+```
+
+---
+
+# 120. DATA RELEASE GATE
+
+Verify:
+
+```text
+Database migrations ✓
+SQLite migrations ✓
+Sync ✓
+Conflict handling ✓
+Storage ✓
+Retention ✓
+Deletion ✓
+Export ✓
+```
+
+---
+
+# 121. AI RELEASE GATE
+
+Verify:
+
+```text
+AI Gateway ✓
+Provider integration ✓
+Memory ✓
+Context ✓
+Voice ✓
+Action approval ✓
+AI security ✓
+Failure handling ✓
+Usage monitoring ✓
+```
+
+---
+
+# 122. UX RELEASE GATE
+
+Verify:
+
+```text
+Design system ✓
+Typography ✓
+Colors ✓
+23 languages ✓
+Navigation ✓
+AI OS ✓
+Animations ✓
+Offline states ✓
+Error states ✓
+Loading states ✓
+Accessibility ✓
+```
+
+---
+
+# 123. FULL FEATURE IMPLEMENTATION TEMPLATE
+
+Every feature should follow:
+
+```text
+1. Specification
+2. Data model
+3. Migration
+4. Repository
+5. Domain logic
+6. API
+7. API tests
+8. Local model
+9. Sync
+10. State management
+11. UI
+12. AI integration if applicable
+13. Audit
+14. Analytics/events
+15. Error handling
+16. Security review
+17. E2E test
+18. Documentation
+```
+
+---
+
+# 124. FEATURE DEFINITION OF DONE
+
+A feature is **not complete** because the screen works.
+
+It is complete only when:
+
+```text
+UI ✓
+UX ✓
+API ✓
+Database ✓
+Local storage ✓
+Sync ✓
+Security ✓
+Validation ✓
+Errors ✓
+Tests ✓
+Audit ✓
+Observability ✓
+Documentation ✓
+```
+
+where applicable.
+
+---
+
+# 125. IMPLEMENTATION PHASES
+
+## PHASE 0 — GOVERNANCE
+
+```text
+Master documents
+Repository
+Team conventions
+Git strategy
+Development standards
+```
+
+---
+
+## PHASE 1 — FOUNDATION
+
+```text
+React Native
+TypeScript
+Backend
+Database
+Environment
+CI
+Design system
+Navigation
+```
+
+---
+
+## PHASE 2 — IDENTITY
+
+```text
+Authentication
+Sessions
+Devices
+Business onboarding
+Membership
+RBAC
+```
+
+---
+
+## PHASE 3 — LOCAL DATA
+
+```text
+SQLite
+Secure storage
+Repositories
+Local migrations
+State
+Offline foundation
+```
+
+---
+
+## PHASE 4 — CORE BUSINESS
+
+```text
+Customers
+Suppliers
+Products
+Inventory
+```
+
+---
+
+## PHASE 5 — TRANSACTIONS
+
+```text
+Sales
+Purchases
+Expenses
+Payments
+Returns
+Refunds
+```
+
+---
+
+## PHASE 6 — FINANCE
+
+```text
+Accounting
+Ledger
+Finance dashboard
+Reports
+Analytics
+```
+
+---
+
+## PHASE 7 — SYNC
+
+```text
+Queue
+Push
+Pull
+Cursor
+Versions
+Conflicts
+Realtime
+```
+
+---
+
+## PHASE 8 — AI FOUNDATION
+
+```text
+AI gateway
+Context
+Memory
+Sarvam
+Voice
+```
+
+---
+
+## PHASE 9 — AI OS
+
+```text
+Security gate
+Animation
+Briefing
+Insights
+Recommendations
+Navigation
+Actions
+```
+
+---
+
+## PHASE 10 — COLLABORATION
+
+```text
+Team
+Notifications
+Alerts
+Automation
+Realtime
+```
+
+---
+
+## PHASE 11 — DOCUMENTS
+
+```text
+Files
+Storage
+Invoices
+Receipts
+Reports
+Document generation
+```
+
+---
+
+## PHASE 12 — CONNECTION PORTFOLIO
+
+```text
+Connections
+OAuth/API
+Sync
+Webhooks
+Adapters
+```
+
+---
+
+## PHASE 13 — ENTERPRISE
+
+```text
+Advanced RBAC
+Multi-branch
+Advanced analytics
+Automation
+Enterprise controls
+Advanced integrations
+```
+
+---
+
+## PHASE 14 — HARDENING
+
+```text
+Security
+Performance
+Reliability
+Accessibility
+Multilingual QA
+Offline QA
+AI QA
+```
+
+---
+
+## PHASE 15 — PRODUCTION
+
+```text
+Staging
+Release candidate
+Production infrastructure
+Android release
+Monitoring
+Rollback/recovery
+```
+
+---
+
+# 126. IMPLEMENTATION DEPENDENCY GRAPH
+
+```text
+Foundation
+    ↓
+Identity
+    ↓
+Business
+    ↓
+Local DB
+    ↓
+Core Business
+    ↓
+Transactions
+    ↓
+Finance
+    ↓
+Sync
+    ↓
+AI Foundation
+    ↓
+AI OS
+    ↓
+Automation / Connections
+    ↓
+Enterprise
+    ↓
+Hardening
+    ↓
+Production
+```
+
+---
+
+# 127. PARALLEL DEVELOPMENT
+
+Once foundations are stable, teams can work in parallel.
+
+```text
+                    Foundation
+                        │
+       ┌────────────────┼────────────────┐
+       ↓                ↓                ↓
+    Frontend          Backend          Database
+       │                │                │
+       └────────────────┼────────────────┘
+                        ↓
+                       Sync
+                        │
+             ┌──────────┼──────────┐
+             ↓          ↓          ↓
+            AI       Documents  Connections
+```
+
+---
+
+# 128. TEAM WORKSTREAMS
+
+A six-member team can be organized around:
+
+### Workstream 1
+Frontend / mobile foundation
+
+### Workstream 2
+Backend/API
+
+### Workstream 3
+Database/cloud/sync
+
+### Workstream 4
+AI OS / AI gateway
+
+### Workstream 5
+Integrations / documents / automation
+
+### Workstream 6
+QA / security / DevOps
+
+Responsibilities can overlap as the project evolves.
+
+---
+
+# 129. SHARED CODE RULE
+
+Before creating a new utility/component/service:
+
+```text
+Search existing code
+ ↓
+Reuse if appropriate
+ ↓
+Extend if appropriate
+ ↓
+Create new only if necessary
+```
+
+Avoid duplicate implementations.
+
+---
+
+# 130. GIT RULE
+
+Never allow multiple developers to casually commit conflicting work directly into `main`.
+
+Use controlled branches and review.
+
+---
+
+# 131. CLAUDE CODE WORKFLOW
+
+Claude Code can be used from different machines.
+
+The workflow remains:
+
+```text
+GitHub
+ ↓
+Clone/Pull
+ ↓
+Claude Code
+ ↓
+Implement
+ ↓
+Test
+ ↓
+Commit
+ ↓
+Push
+```
+
+Claude Code sessions are not the shared project state.
+
+The repository is.
+
+---
+
+# 132. PROJECT KNOWLEDGE RULE
+
+The previously uploaded product knowledge remains the product-context reference.
+
+The implementation repository contains the engineering implementation.
+
+```text
+Project Knowledge
+→ Product/context authority
+
+GitHub
+→ Code authority
+```
+
+The two should remain aligned.
+
+---
+
+# 133. DOCUMENTATION SYNCHRONIZATION
+
+When implementation changes an architectural decision:
+
+```text
+Code change
+ ↓
+Document update
+```
+
+The documents must not become stale.
+
+---
+
+# 134. ISSUE TRACKING
+
+Every significant task should identify:
+
+```text
+Feature
+Domain
+Dependencies
+Owner
+Status
+Tests
+```
+
+---
+
+# 135. IMPLEMENTATION STATUS MODEL
+
+Use:
+
+```text
+PLANNED
+IN PROGRESS
+BLOCKED
+IN REVIEW
+TESTING
+STAGING
+COMPLETED
+```
+
+Do not mark something complete merely because code exists.
+
+---
+
+# 136. MILESTONE COMPLETION
+
+A milestone becomes complete only after its exit criteria are met.
+
+---
+
+# 137. PHASE EXIT CRITERIA
+
+Each phase requires:
+
+```text
+Implementation
+Tests
+Security
+Integration
+Documentation
+```
+
+where applicable.
+
+---
+
+# 138. REGRESSION PROTECTION
+
+Every bug discovered should result in a regression test when practical.
+
+---
+
+# 139. PRODUCTION INCIDENT FLOW
+
+```text
+Detect
+ ↓
+Contain
+ ↓
+Investigate
+ ↓
+Fix
+ ↓
+Test
+ ↓
+Deploy
+ ↓
+Monitor
+ ↓
+Post-incident review
+```
+
+---
+
+# 140. POST-LAUNCH LOOP
+
+```text
+Telemetry
+ ↓
+User feedback
+ ↓
+Issues
+ ↓
+Prioritization
+ ↓
+Development
+ ↓
+Testing
+ ↓
+Release
+```
+
+---
+
+# 141. FUTURE IOS IMPLEMENTATION
+
+Once Android reaches stability:
+
+```text
+Shared architecture
+ ↓
+iOS platform adaptation
+ ↓
+iOS UI/UX validation
+ ↓
+Native capability adaptation
+ ↓
+iOS testing
+ ↓
+App Store release
+```
+
+The business backend does not need to be rebuilt for iOS.
+
+---
+
+# 142. FUTURE SCALE
+
+The architecture should permit:
+
+```text
+More users
+More businesses
+More branches
+More transactions
+More devices
+More integrations
+More AI usage
+```
+
+without redesigning the fundamental data model.
+
+---
+
+# 143. FINAL IMPLEMENTATION ORDER
+
+The recommended master sequence is:
+
+```text
+01  Repository + development standards
+02  Environment setup
+03  CI/CD foundation
+04  Design system
+05  Mobile shell
+06  Backend shell
+07  Cloud database
+08  Authentication
+09  Business onboarding
+10  RBAC
+11  SQLite
+12  Core repositories
+13  Customers
+14  Suppliers
+15  Products
+16  Inventory
+17  Sales
+18  Purchases
+19  Expenses
+20  Payments
+21  Returns/refunds
+22  Finance
+23  Documents/files
+24  Notifications
+25  Event system
+26  Sync
+27  Realtime
+28  AI gateway
+29  Sarvam integration
+30  Memory
+31  Voice
+32  AI OS
+33  AI actions
+34  Automation
+35  Connection Portfolio
+36  Enterprise controls
+37  Security hardening
+38  Performance
+39  Multilingual QA
+40  Offline QA
+41  E2E QA
+42  Staging
+43  Production infrastructure
+44  Android release
+45  Monitoring
+46  Post-launch iteration
+47  iOS expansion
+```
+
+---
+
+# 144. MASTER IMPLEMENTATION ARCHITECTURE
+
+```text
+                         VEPARI AI
+                            │
+                    PRODUCT DOCUMENTS
+                            │
+                     IMPLEMENTATION
+                            │
+          ┌─────────────────┼─────────────────┐
+          ↓                 ↓                 ↓
+       MOBILE             BACKEND           CLOUD
+          │                 │                 │
+      React Native        API v1           Database
+          │                 │              Storage
+       SQLite              │              Security
+          │                 │                 │
+          └─────────────────┼─────────────────┘
+                            ↓
+                           SYNC
+                            │
+                    SHARED BUSINESS
+                         STATE
+                            │
+               ┌────────────┼────────────┐
+               ↓            ↓            ↓
+              AI          EVENTS       AUDIT
+               │            │
+            AI OS      Automation     Logs
+               │            │
+            Memory     Notifications
+               │
+           Sarvam AI
+               │
+               ↓
+      CONNECTION PORTFOLIO
+               │
+        External Providers
+```
+
+---
+
+# 145. FINAL IMPLEMENTATION DEFINITION
+
+Vepari AI implementation is complete only when the product can reliably perform the complete cycle:
+
+```text
+OWNER
+ ↓
+SECURITY
+ ↓
+AI OS
+ ↓
+BUSINESS BRIEFING
+ ↓
+BUSINESS OPERATIONS
+ ↓
+LOCAL STORAGE
+ ↓
+OFFLINE OPERATION
+ ↓
+CLOUD SYNC
+ ↓
+TEAM COLLABORATION
+ ↓
+FINANCE
+ ↓
+AI INTELLIGENCE
+ ↓
+APPROVED AI ACTION
+ ↓
+AUDIT
+ ↓
+NOTIFICATION
+ ↓
+ANALYTICS
+ ↓
+CONNECTIONS
+```
+
+while maintaining:
+
+```text
+Security
+Privacy
+Data integrity
+Tenant isolation
+Offline resilience
+Multi-device consistency
+AI safety
+Observability
+Scalability
+```
+
+---
+
+# 146. MASTER IMPLEMENTATION GATE
+
+Before declaring **Vepari AI Production Ready**, the final system must pass:
+
+### Product
+
+- [ ] PRD requirements implemented
+- [ ] MSME scope implemented
+- [ ] Micro-specific capabilities preserved
+- [ ] Enterprise architecture validated
+
+### Mobile
+
+- [ ] Android application
+- [ ] React Native architecture
+- [ ] Design system
+- [ ] AI OS
+- [ ] 23-language support
+- [ ] Accessibility
+- [ ] Offline operation
+
+### Backend
+
+- [ ] API v1
+- [ ] Authentication
+- [ ] RBAC
+- [ ] Business isolation
+- [ ] Branch isolation
+- [ ] Domain services
+- [ ] Transactions
+- [ ] Error handling
+
+### Data
+
+- [ ] Cloud database
+- [ ] SQLite
+- [ ] Secure storage
+- [ ] Object storage
+- [ ] Migrations
+- [ ] Backups
+- [ ] Recovery
+
+### Sync
+
+- [ ] Queue
+- [ ] Push
+- [ ] Pull
+- [ ] Cursor
+- [ ] Versions
+- [ ] Conflict resolution
+- [ ] Multi-device
+- [ ] Realtime
+
+### AI
+
+- [ ] AI gateway
+- [ ] Sarvam integration
+- [ ] Context
+- [ ] Memory
+- [ ] Voice
+- [ ] AI OS
+- [ ] Insights
+- [ ] Recommendations
+- [ ] Approved actions
+- [ ] AI security
+
+### Integrations
+
+- [ ] Connection Portfolio
+- [ ] Provider adapters
+- [ ] OAuth/API handling
+- [ ] Webhooks
+- [ ] Sync
+- [ ] Failure handling
+
+### Security
+
+- [ ] Authentication
+- [ ] Authorization
+- [ ] Tenant isolation
+- [ ] Secret protection
+- [ ] File security
+- [ ] AI security
+- [ ] Rate limiting
+- [ ] Audit
+- [ ] Security testing
+
+### Operations
+
+- [ ] Logging
+- [ ] Metrics
+- [ ] Tracing
+- [ ] Alerts
+- [ ] CI/CD
+- [ ] Staging
+- [ ] Production
+- [ ] Backup verification
+- [ ] Disaster recovery test
+
+---
+
+# 147. FINAL MASTER ROADMAP
+
+```text
+                    VEPARI AI
+                        │
+                        ▼
+              ┌─────────────────┐
+              │  FOUNDATION     │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ IDENTITY +      │
+              │ BUSINESS        │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ LOCAL + CLOUD   │
+              │ DATA            │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ CORE MSME       │
+              │ OPERATIONS      │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ FINANCE         │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ SYNC + REALTIME │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ AI FOUNDATION   │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ VEPARI AI OS    │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ AUTOMATION +    │
+              │ CONNECTIONS     │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ ENTERPRISE      │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ SECURITY + QA   │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ STAGING         │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ PRODUCTION      │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ ANDROID LAUNCH  │
+              └────────┬────────┘
+                       ▼
+              ┌─────────────────┐
+              │ SCALE + iOS     │
+              └─────────────────┘
+```
+
+---
+
+# FINAL IMPLEMENTATION STATUS
+
+The **implementation architecture and execution plan are now fully defined**.
+
+What this document does **not** claim is that the actual software has already been implemented. It defines the complete sequence, dependencies, engineering gates and production criteria required to implement it.
+
+The distinction is important:
+
+```text
+MASTER PLANS
+      ↓
+DEFINED ✓
+
+ACTUAL CODE
+      ↓
+Must be implemented and verified
+
+PRODUCTION
+      ↓
+Only after all release gates pass
+```
+
+The complete Vepari AI master documentation set is now conceptually:
+
+```text
+01 — MASTER PRD
+02 — MASTER TRD
+03 — MASTER APP FLOW
+04 — MASTER UI/UX
+05 — MASTER FRONTEND
+06 — MASTER BACKEND + API
+07 — MASTER DATABASE + STORAGE + MEMORY + LOGS + CLOUD
+08 — MASTER AI OS
+09 — MASTER IMPLEMENTATION PLAN
+```
+
+Together these form the **Vepari AI Master Product & Engineering Blueprint**.

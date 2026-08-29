@@ -1,0 +1,4172 @@
+# VEPARI AI
+# MASTER BACKEND + API DOCUMENT
+
+**Document Type:** Consolidated Backend & API Engineering Specification  
+**Product:** Vepari AI  
+**Status:** Master / Source of Truth  
+**Primary Client:** Android React Native + Expo + TypeScript  
+**Future Client:** iOS  
+**Business Scope:** Micro → Small → Medium → Enterprise  
+**Language Scope:** 23 Indian languages  
+**Architecture:** API-first · Local-first · Offline-first · Multi-tenant · Secure-by-default  
+**AI:** Vepari AI OS + Voice + Memory + Intelligence  
+**Primary Local Client Store:** SQLite  
+**Cloud:** Authoritative shared backend + controlled synchronization  
+**Integration Layer:** Connection Portfolio
+
+---
+
+# 1. PURPOSE
+
+This document defines the complete backend and API architecture required to power Vepari AI.
+
+It connects the previously established frontend and UI/UX to:
+
+```text
+Mobile App
+    ↓
+API Layer
+    ↓
+Backend Services
+    ↓
+Business Domain
+    ↓
+Database
+    ↓
+Events / Audit / Sync
+    ↓
+AI / Integrations / Notifications
+```
+
+The backend must support both a simple Micro business and a highly complex Enterprise business without creating separate products.
+
+---
+
+# 2. BACKEND CORE PRINCIPLE
+
+The backend is the **authoritative shared business system**.
+
+The mobile application can operate locally, but shared and authoritative business state is ultimately governed by the backend.
+
+```text
+Mobile Local State
+        ↓
+       Sync
+        ↓
+Backend Authority
+        ↓
+Shared Business State
+```
+
+---
+
+# 3. ARCHITECTURAL PRINCIPLES
+
+The backend must be:
+
+- modular
+- secure
+- multi-tenant
+- API-first
+- transaction-safe
+- offline-compatible
+- idempotent
+- observable
+- scalable
+- multilingual
+- AI-ready
+- integration-ready
+- mobile-optimized
+
+---
+
+# 4. HIGH-LEVEL ARCHITECTURE
+
+```text
+                    VEPARI AI MOBILE
+                          │
+                          ↓
+                     API GATEWAY
+                          │
+              ┌───────────┼───────────┐
+              ↓           ↓           ↓
+          AUTH/API     BUSINESS       AI
+              │         SERVICES      GATEWAY
+              │           │             │
+              │      ┌────┼─────┐       │
+              │      ↓    ↓     ↓       ↓
+              │     CRM Commerce Finance AI Providers
+              │      │    │     │       │
+              └──────┴────┴─────┴───────┘
+                          │
+                    DOMAIN ENGINE
+                          │
+                    DATABASE LAYER
+                          │
+             ┌────────────┼────────────┐
+             ↓            ↓            ↓
+           Audit        Events       Storage
+             │            │
+             └──────┬─────┘
+                    ↓
+             SYNC / REALTIME
+                    ↓
+              OTHER DEVICES
+```
+
+---
+
+# 5. BACKEND LAYERS
+
+## Layer 1 — API
+
+Handles external client communication.
+
+## Layer 2 — Application
+
+Coordinates use cases.
+
+## Layer 3 — Domain
+
+Contains business rules.
+
+## Layer 4 — Persistence
+
+Database repositories and transactions.
+
+## Layer 5 — Infrastructure
+
+Queues, storage, email, notifications, AI providers, integrations.
+
+---
+
+# 6. SERVICE BOUNDARIES
+
+The backend should be organized around business capabilities.
+
+```text
+Auth
+Users
+Businesses
+Branches
+Teams
+Customers
+Suppliers
+Products
+Inventory
+Sales
+Purchases
+Expenses
+Payments
+Returns
+Refunds
+Finance
+Accounting
+Documents
+Reports
+Analytics
+Notifications
+Alerts
+Automation
+AI
+Memory
+Sync
+Connections
+Audit
+Files
+```
+
+---
+
+# 7. MULTI-TENANT MODEL
+
+Vepari AI is fundamentally multi-tenant.
+
+Conceptually:
+
+```text
+User
+ ↓
+Membership
+ ↓
+Business
+ ↓
+Branch
+ ↓
+Resources
+```
+
+A user does not automatically gain access to every business merely because they are authenticated.
+
+---
+
+# 8. TENANT ISOLATION
+
+Every business-owned resource must be associated with its business/tenant context.
+
+The backend must enforce isolation at the server/data layer.
+
+Frontend filtering is not sufficient.
+
+---
+
+# 9. MULTI-BUSINESS USER
+
+One user may belong to multiple businesses:
+
+```text
+User
+├── Business A
+├── Business B
+└── Business C
+```
+
+Every API request involving business data must operate inside an explicitly validated business context.
+
+---
+
+# 10. BRANCH MODEL
+
+Where enabled:
+
+```text
+Business
+├── Branch A
+├── Branch B
+└── Branch C
+```
+
+Resources may be:
+
+- business-wide
+- branch-specific
+- multi-branch
+
+depending on their domain.
+
+---
+
+# 11. ENTERPRISE HIERARCHY
+
+Enterprise businesses can therefore have:
+
+```text
+Organization
+ ↓
+Business
+ ↓
+Region
+ ↓
+Branch
+ ↓
+Team
+ ↓
+User
+```
+
+The exact hierarchy is determined by the business configuration.
+
+---
+
+# 12. AUTHENTICATION
+
+Authentication establishes identity.
+
+```text
+Client
+ ↓
+Login
+ ↓
+Identity verification
+ ↓
+Session/token
+ ↓
+Authenticated
+```
+
+Authentication does **not** determine business permissions by itself.
+
+---
+
+# 13. AUTHORIZATION
+
+Authorization determines:
+
+```text
+Who
+ ↓
+Can access
+ ↓
+Which business
+ ↓
+Which resource
+ ↓
+Which action
+```
+
+---
+
+# 14. RBAC
+
+Role-based access control supports:
+
+```text
+Owner
+Admin
+Manager
+Staff
+Custom Enterprise Roles
+```
+
+The exact roles can evolve.
+
+---
+
+# 15. PERMISSION MODEL
+
+Permissions should be capability-based.
+
+Conceptually:
+
+```text
+resource.action
+```
+
+Examples:
+
+```text
+sales.create
+sales.read
+sales.update
+sales.cancel
+
+inventory.read
+inventory.adjust
+
+finance.read
+finance.export
+```
+
+---
+
+# 16. RESOURCE-LEVEL AUTHORIZATION
+
+Authorization must verify:
+
+```text
+Authenticated user
++
+Business membership
++
+Role
++
+Permission
++
+Resource ownership/scope
+```
+
+---
+
+# 17. BRANCH-LEVEL AUTHORIZATION
+
+A user may have:
+
+```text
+All branches
+Specific branches
+No branch access
+```
+
+The backend enforces this independently of the UI.
+
+---
+
+# 18. AUTHENTICATION SESSION
+
+The backend manages:
+
+- session lifecycle
+- token validation
+- expiration
+- revocation
+- device/session metadata
+
+---
+
+# 19. DEVICE SESSIONS
+
+A user can have multiple authorized devices.
+
+```text
+User
+├── Device A
+├── Device B
+└── Device C
+```
+
+---
+
+# 20. DEVICE REVOCATION
+
+```text
+Device
+ ↓
+Revoke
+ ↓
+Backend invalidates authorization
+ ↓
+Device loses access
+```
+
+---
+
+# 21. SECURITY BOUNDARY
+
+The backend must never trust:
+
+- client-provided roles
+- client-provided business IDs without validation
+- client-provided ownership
+- frontend permission checks
+
+---
+
+# 22. REQUEST PIPELINE
+
+Every protected API request follows:
+
+```text
+Request
+ ↓
+Request ID
+ ↓
+Authentication
+ ↓
+Tenant resolution
+ ↓
+Authorization
+ ↓
+Validation
+ ↓
+Rate limiting
+ ↓
+Business logic
+ ↓
+Transaction
+ ↓
+Audit/event
+ ↓
+Response
+```
+
+---
+
+# 23. API STYLE
+
+The primary API should be versioned REST APIs with predictable resource-oriented conventions.
+
+Example:
+
+```text
+/api/v1/customers
+/api/v1/products
+/api/v1/sales
+/api/v1/inventory
+```
+
+---
+
+# 24. API VERSIONING
+
+The public API begins with:
+
+```text
+v1
+```
+
+Future breaking changes use a new version rather than silently breaking existing clients.
+
+---
+
+# 25. API RESPONSE STANDARD
+
+Responses should follow a predictable structure.
+
+Conceptually:
+
+```json
+{
+  "data": {},
+  "meta": {},
+  "requestId": "..."
+}
+```
+
+Errors should use a consistent error contract.
+
+---
+
+# 26. ERROR RESPONSE
+
+Conceptually:
+
+```json
+{
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "message": "The request is invalid.",
+    "details": []
+  },
+  "requestId": "..."
+}
+```
+
+Do not expose internal stack traces.
+
+---
+
+# 27. HTTP STATUS SEMANTICS
+
+Use standard HTTP semantics.
+
+Examples:
+
+```text
+200 OK
+201 Created
+204 No Content
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+409 Conflict
+422 Validation Error
+429 Rate Limited
+500 Internal Error
+503 Service Unavailable
+```
+
+---
+
+# 28. REQUEST IDENTIFIERS
+
+Every request should receive a request ID.
+
+This enables:
+
+```text
+Mobile
+ ↓
+API
+ ↓
+Logs
+ ↓
+Audit/troubleshooting
+```
+
+---
+
+# 29. IDEMPOTENCY
+
+Mutating endpoints that may be retried by offline clients should support idempotency.
+
+Example:
+
+```text
+POST /sales
+Idempotency-Key: operation-id
+```
+
+This prevents duplicate transactions.
+
+---
+
+# 30. OFFLINE MUTATION MODEL
+
+The mobile client may submit an operation later than when it was created.
+
+The API therefore needs to understand:
+
+```text
+operationId
+clientId
+deviceId
+clientTimestamp
+entityVersion
+```
+
+where appropriate.
+
+---
+
+# 31. SYNC API
+
+Dedicated synchronization endpoints should support:
+
+```text
+Push local mutations
+ ↓
+Server validation
+ ↓
+Return accepted/rejected/conflicted operations
+ ↓
+Pull changes
+```
+
+---
+
+# 32. SYNC CURSOR
+
+The client can maintain a server change cursor/version.
+
+Conceptually:
+
+```text
+lastSyncCursor
+ ↓
+GET changes since cursor
+ ↓
+new cursor
+```
+
+---
+
+# 33. SYNC ENDPOINT MODEL
+
+Conceptually:
+
+```text
+POST /api/v1/sync/push
+GET  /api/v1/sync/changes
+POST /api/v1/sync/resolve
+```
+
+Exact contracts can evolve with implementation.
+
+---
+
+# 34. SYNC RESPONSE
+
+A sync response should identify:
+
+```text
+Accepted
+Rejected
+Conflicted
+Server changes
+New cursor
+```
+
+---
+
+# 35. CONFLICT MODEL
+
+A conflict occurs when the client's base version is stale.
+
+```text
+Client Version 5
+Server Version 6
+ ↓
+Client tries update
+ ↓
+Conflict
+```
+
+---
+
+# 36. CONFLICT STRATEGY
+
+Conflict resolution depends on domain.
+
+### Low-risk data
+
+May use last-write or field-level resolution where safe.
+
+### Financial data
+
+Requires strict transaction/version controls.
+
+Never silently overwrite authoritative financial records.
+
+---
+
+# 37. FINANCIAL IMMUTABILITY
+
+Where accounting rules require it, corrections should be represented through appropriate reversal/adjustment mechanisms rather than destructive rewriting.
+
+---
+
+# 38. DATABASE ARCHITECTURE
+
+The backend database is the authoritative cloud/shared data store.
+
+It contains:
+
+```text
+Identity
+Businesses
+Memberships
+Roles
+Customers
+Suppliers
+Products
+Inventory
+Transactions
+Finance
+Documents
+AI context
+Audit
+Sync metadata
+```
+
+---
+
+# 39. DATABASE PRINCIPLES
+
+The database must enforce:
+
+- relationships
+- constraints
+- indexes
+- uniqueness
+- tenant isolation
+- transaction integrity
+
+---
+
+# 40. TRANSACTION PRINCIPLE
+
+Operations affecting multiple records must be atomic.
+
+Example:
+
+```text
+Sale
+ ├── Sale
+ ├── Inventory
+ ├── Payment
+ ├── Customer balance
+ └── Accounting
+```
+
+Either the complete valid transaction succeeds, or the transaction is rolled back.
+
+---
+
+# 41. CUSTOMER API
+
+Core endpoints:
+
+```text
+GET    /api/v1/customers
+POST   /api/v1/customers
+GET    /api/v1/customers/:id
+PATCH  /api/v1/customers/:id
+DELETE /api/v1/customers/:id
+```
+
+Additional endpoints can support:
+
+```text
+transactions
+payments
+activity
+```
+
+---
+
+# 42. CUSTOMER FILTERING
+
+Support:
+
+- search
+- status
+- activity
+- outstanding balance
+- branch
+- date
+
+where applicable.
+
+---
+
+# 43. SUPPLIER API
+
+```text
+GET    /api/v1/suppliers
+POST   /api/v1/suppliers
+GET    /api/v1/suppliers/:id
+PATCH  /api/v1/suppliers/:id
+DELETE /api/v1/suppliers/:id
+```
+
+---
+
+# 44. PRODUCT API
+
+```text
+GET    /api/v1/products
+POST   /api/v1/products
+GET    /api/v1/products/:id
+PATCH  /api/v1/products/:id
+DELETE /api/v1/products/:id
+```
+
+---
+
+# 45. PRODUCT SEARCH
+
+Support:
+
+- name
+- SKU
+- barcode
+- category
+- status
+
+---
+
+# 46. INVENTORY API
+
+Conceptually:
+
+```text
+GET  /api/v1/inventory
+GET  /api/v1/inventory/:productId
+POST /api/v1/inventory/adjustments
+POST /api/v1/inventory/transfers
+GET  /api/v1/inventory/movements
+```
+
+---
+
+# 47. INVENTORY TRANSACTION
+
+An inventory adjustment should record:
+
+```text
+Product
+Location
+Previous quantity
+Adjustment
+New quantity
+Reason
+Actor
+Timestamp
+Operation ID
+```
+
+---
+
+# 48. INVENTORY TRANSFER
+
+A transfer should be atomic:
+
+```text
+Source decrement
++
+Destination increment
+```
+
+Both succeed or neither succeeds.
+
+---
+
+# 49. SALES API
+
+```text
+GET  /api/v1/sales
+POST /api/v1/sales
+GET  /api/v1/sales/:id
+PATCH /api/v1/sales/:id
+```
+
+Cancellation/return endpoints should use domain-specific operations.
+
+---
+
+# 50. SALE CREATION
+
+A sale request can contain:
+
+```text
+Customer
+Items
+Quantities
+Pricing
+Discount
+Tax
+Payment
+Branch
+Metadata
+Operation ID
+```
+
+---
+
+# 51. SALE PROCESSING
+
+Backend:
+
+```text
+Validate
+ ↓
+Check permissions
+ ↓
+Check product availability
+ ↓
+Calculate authoritative totals
+ ↓
+Create sale
+ ↓
+Update inventory
+ ↓
+Process payment allocation
+ ↓
+Update balances
+ ↓
+Create accounting effects
+ ↓
+Audit
+ ↓
+Emit events
+```
+
+---
+
+# 52. SERVER-SIDE CALCULATION
+
+Critical values such as totals, taxes, balances and inventory effects must be validated/recalculated server-side.
+
+The client cannot be trusted as the financial authority.
+
+---
+
+# 53. EXPENSE API
+
+```text
+GET  /api/v1/expenses
+POST /api/v1/expenses
+GET  /api/v1/expenses/:id
+PATCH /api/v1/expenses/:id
+```
+
+---
+
+# 54. PURCHASE API
+
+```text
+GET  /api/v1/purchases
+POST /api/v1/purchases
+GET  /api/v1/purchases/:id
+PATCH /api/v1/purchases/:id
+```
+
+---
+
+# 55. PURCHASE PROCESSING
+
+```text
+Validate
+ ↓
+Supplier
+ ↓
+Items
+ ↓
+Cost
+ ↓
+Inventory
+ ↓
+Payment
+ ↓
+Accounting
+ ↓
+Audit
+```
+
+---
+
+# 56. PAYMENT API
+
+```text
+GET  /api/v1/payments
+POST /api/v1/payments
+GET  /api/v1/payments/:id
+```
+
+---
+
+# 57. PAYMENT ALLOCATION
+
+Payments may be allocated against:
+
+- invoices
+- sales
+- purchases
+- outstanding balances
+
+according to domain rules.
+
+---
+
+# 58. PARTIAL PAYMENTS
+
+The backend must preserve:
+
+```text
+Original amount
+Paid amount
+Remaining amount
+```
+
+without losing transaction history.
+
+---
+
+# 59. RETURN API
+
+Returns should reference original transactions.
+
+```text
+POST /api/v1/sales/:id/returns
+GET  /api/v1/returns/:id
+```
+
+---
+
+# 60. REFUND API
+
+Refund processing should remain connected to the original transaction/return.
+
+---
+
+# 61. FINANCE API
+
+Potential endpoints:
+
+```text
+GET /api/v1/finance/overview
+GET /api/v1/finance/revenue
+GET /api/v1/finance/expenses
+GET /api/v1/finance/profit
+GET /api/v1/finance/cash-flow
+GET /api/v1/finance/receivables
+GET /api/v1/finance/payables
+```
+
+---
+
+# 62. ACCOUNTING API
+
+Accounting data should expose appropriate views without allowing arbitrary manipulation of protected accounting truth.
+
+Potential:
+
+```text
+GET /api/v1/accounting/ledger
+GET /api/v1/accounting/journals
+GET /api/v1/accounting/accounts
+```
+
+---
+
+# 63. DOCUMENT API
+
+```text
+GET  /api/v1/documents
+POST /api/v1/documents
+GET  /api/v1/documents/:id
+POST /api/v1/documents/:id/generate
+```
+
+---
+
+# 64. FILE STORAGE
+
+Files should be separated from ordinary relational business records.
+
+```text
+Business Record
+ ↓
+File metadata
+ ↓
+Object storage
+```
+
+---
+
+# 65. FILE SECURITY
+
+File access must use authorization-controlled access mechanisms.
+
+Do not expose private object storage publicly.
+
+---
+
+# 66. DOCUMENT GENERATION
+
+```text
+Business record
+ ↓
+Template
+ ↓
+Document engine
+ ↓
+PDF/document
+ ↓
+Storage
+ ↓
+Secure access
+```
+
+---
+
+# 67. REPORT API
+
+```text
+POST /api/v1/reports/query
+GET  /api/v1/reports/:id
+```
+
+Reports can support:
+
+- filters
+- periods
+- branch
+- category
+- entity
+
+---
+
+# 68. ANALYTICS API
+
+Analytics should provide aggregated data rather than forcing the mobile client to download huge raw datasets.
+
+---
+
+# 69. SEARCH API
+
+```text
+GET /api/v1/search?q=...
+```
+
+Search can return categorized results:
+
+```text
+Customers
+Products
+Sales
+Payments
+Documents
+```
+
+---
+
+# 70. NOTIFICATION API
+
+```text
+GET  /api/v1/notifications
+POST /api/v1/notifications/:id/read
+POST /api/v1/notifications/read-all
+```
+
+---
+
+# 71. ALERT API
+
+Business alerts can be retrieved separately from ordinary notifications.
+
+---
+
+# 72. TEAM API
+
+```text
+GET  /api/v1/team/members
+POST /api/v1/team/invitations
+GET  /api/v1/team/roles
+PATCH /api/v1/team/members/:id
+```
+
+---
+
+# 73. INVITATION FLOW
+
+```text
+Owner/Admin
+ ↓
+Invitation
+ ↓
+Recipient
+ ↓
+Accept
+ ↓
+Membership
+ ↓
+Role
+ ↓
+Access
+```
+
+---
+
+# 74. ROLE API
+
+Enterprise administrators can manage appropriate custom roles.
+
+---
+
+# 75. PERMISSION API
+
+Permissions should be discoverable by authorized administration interfaces.
+
+---
+
+# 76. AUTOMATION API
+
+```text
+GET  /api/v1/automations
+POST /api/v1/automations
+GET  /api/v1/automations/:id
+PATCH /api/v1/automations/:id
+POST /api/v1/automations/:id/activate
+POST /api/v1/automations/:id/disable
+```
+
+---
+
+# 77. AUTOMATION ENGINE
+
+```text
+Trigger
+ ↓
+Condition
+ ↓
+Action
+ ↓
+Execution
+ ↓
+Result
+ ↓
+Audit
+```
+
+---
+
+# 78. AI GATEWAY
+
+The AI gateway isolates the rest of Vepari AI from individual AI providers.
+
+```text
+Frontend
+ ↓
+AI API
+ ↓
+AI Gateway
+ ↓
+Provider Adapter
+ ↓
+AI Provider
+```
+
+---
+
+# 79. AI PROVIDER ABSTRACTION
+
+Do not couple business services directly to a specific provider.
+
+Conceptually:
+
+```text
+AIProvider
+├── SarvamAdapter
+├── OtherApprovedProvider
+└── FutureProvider
+```
+
+This protects future flexibility.
+
+---
+
+# 80. SARVAM AI
+
+Sarvam AI can be integrated through the AI provider abstraction, particularly for:
+
+- Indian-language AI
+- language processing
+- speech capabilities
+- multilingual interaction
+
+The exact provider APIs should remain behind the Vepari AI gateway.
+
+---
+
+# 81. AI REQUEST PIPELINE
+
+```text
+User
+ ↓
+AI endpoint
+ ↓
+Authentication
+ ↓
+Business authorization
+ ↓
+Context selection
+ ↓
+Memory retrieval
+ ↓
+Data minimization
+ ↓
+AI gateway
+ ↓
+Provider
+ ↓
+Structured result
+ ↓
+Response
+```
+
+---
+
+# 82. AI CONTEXT
+
+AI context can include:
+
+```text
+Current business
+Current branch
+Current screen
+Selected record
+Relevant transactions
+User preferences
+Memory
+Language
+```
+
+Only necessary information should be included.
+
+---
+
+# 83. AI DATA MINIMIZATION
+
+Do not send the entire business database to an AI provider for every request.
+
+Use targeted retrieval.
+
+```text
+Question
+ ↓
+Relevant data
+ ↓
+AI
+```
+
+---
+
+# 84. AI RESPONSE CONTRACT
+
+AI responses should be structured where actions/UI rendering depend on them.
+
+Conceptually:
+
+```json
+{
+  "type": "insight",
+  "message": "...",
+  "evidence": [],
+  "actions": []
+}
+```
+
+---
+
+# 85. AI FACT / RECOMMENDATION MODEL
+
+Responses should distinguish:
+
+```text
+FACT
+INSIGHT
+ESTIMATE
+RECOMMENDATION
+ACTION
+```
+
+---
+
+# 86. AI ACTION API
+
+Conceptually:
+
+```text
+POST /api/v1/ai/actions
+```
+
+The server must independently validate the requested action.
+
+---
+
+# 87. AI ACTION SAFETY
+
+AI cannot bypass:
+
+- permissions
+- business rules
+- validation
+- transaction rules
+- confirmation requirements
+
+---
+
+# 88. AI ACTION APPROVAL
+
+The AI can propose:
+
+```text
+Action
+ ↓
+Approval
+ ↓
+Execution
+```
+
+where required.
+
+---
+
+# 89. AI EXECUTION
+
+The backend converts an approved AI action into a normal domain operation.
+
+Example:
+
+```text
+AI
+ ↓
+Create Purchase Proposal
+ ↓
+User approves
+ ↓
+Purchase service
+ ↓
+Normal business transaction
+```
+
+The AI does not get a special unrestricted database pathway.
+
+---
+
+# 90. AI MEMORY API
+
+Potential conceptual endpoints:
+
+```text
+GET    /api/v1/ai/memory
+POST   /api/v1/ai/memory
+DELETE /api/v1/ai/memory/:id
+```
+
+Memory must follow privacy and retention rules.
+
+---
+
+# 91. MEMORY CATEGORIES
+
+```text
+User preference
+Business context
+Conversation context
+Relevant operational context
+```
+
+---
+
+# 92. MEMORY AUTHORITY
+
+AI memory is contextual information.
+
+It must never override authoritative transactional data.
+
+---
+
+# 93. VOICE API
+
+Voice should pass through an appropriate service layer:
+
+```text
+Voice Input
+ ↓
+Speech service
+ ↓
+Text
+ ↓
+AI
+ ↓
+Text response
+ ↓
+Speech
+```
+
+---
+
+# 94. MULTILINGUAL AI API
+
+The API should accept locale/language context where required.
+
+Conceptually:
+
+```text
+language
+locale
+voiceLanguage
+```
+
+---
+
+# 95. LANGUAGE FALLBACK
+
+If a requested capability is unavailable for a particular language:
+
+```text
+Preferred language
+ ↓
+Capability check
+ ↓
+Supported fallback
+```
+
+The system must communicate this appropriately.
+
+---
+
+# 96. BUSINESS LANGUAGE
+
+Business records themselves should remain language-neutral at the data-model level where possible.
+
+Localization belongs in presentation.
+
+---
+
+# 97. CURRENCY
+
+Financial values should use exact numeric/decimal representations appropriate to the accounting model.
+
+Avoid floating-point money calculations.
+
+---
+
+# 98. TIME
+
+Store timestamps consistently and convert for the user's/business locale at presentation.
+
+---
+
+# 99. AUDIT SYSTEM
+
+Important business mutations must produce audit records.
+
+```text
+Who
+What
+When
+Business
+Resource
+Action
+Result
+Request ID
+```
+
+---
+
+# 100. AUDIT API
+
+Authorized users can access appropriate history:
+
+```text
+GET /api/v1/audit
+GET /api/v1/audit/:id
+```
+
+---
+
+# 101. AUDIT IMMUTABILITY
+
+Audit records should be append-oriented and protected from ordinary user modification.
+
+---
+
+# 102. EVENT SYSTEM
+
+Important domain events can include:
+
+```text
+sale.created
+sale.completed
+payment.recorded
+inventory.adjusted
+inventory.transferred
+purchase.created
+expense.created
+customer.created
+```
+
+---
+
+# 103. EVENT ARCHITECTURE
+
+```text
+Domain Transaction
+ ↓
+Domain Event
+ ↓
+Event consumers
+ ├── Notifications
+ ├── Analytics
+ ├── AI context
+ ├── Automation
+ └── Sync/realtime
+```
+
+---
+
+# 104. EVENT RULE
+
+Business transaction success must not depend unnecessarily on secondary consumers.
+
+For example:
+
+```text
+Sale
+ ↓
+Transaction succeeds
+ ↓
+Notification processing
+```
+
+A notification failure should not undo a valid sale.
+
+---
+
+# 105. ASYNC JOBS
+
+Use background jobs for:
+
+- report generation
+- document generation
+- notifications
+- AI processing where appropriate
+- integrations
+- heavy analytics
+- synchronization tasks
+
+---
+
+# 106. JOB RELIABILITY
+
+Jobs require:
+
+- retries
+- idempotency
+- failure handling
+- dead-letter/error handling
+- observability
+
+---
+
+# 107. NOTIFICATION ENGINE
+
+Events can trigger:
+
+```text
+Push notification
+In-app notification
+Email where configured
+```
+
+according to preferences.
+
+---
+
+# 108. NOTIFICATION PREFERENCES
+
+Users can control appropriate categories.
+
+The backend should respect preferences before delivery.
+
+---
+
+# 109. REALTIME
+
+Realtime updates may be used for:
+
+- team activity
+- shared business changes
+- notifications
+- sync
+- selected dashboard information
+
+---
+
+# 110. REALTIME FLOW
+
+```text
+Business mutation
+ ↓
+Event
+ ↓
+Realtime layer
+ ↓
+Authorized devices
+ ↓
+Local database
+ ↓
+UI
+```
+
+---
+
+# 111. REALTIME SECURITY
+
+A device must receive only events it is authorized to see.
+
+Tenant and branch isolation apply to realtime channels as well.
+
+---
+
+# 112. SEARCH INDEXING
+
+As data volume increases, search should use appropriate indexes/search infrastructure rather than scanning entire tables.
+
+---
+
+# 113. PAGINATION
+
+Large API collections must be paginated.
+
+Cursor-based pagination is preferred for large or frequently changing datasets where appropriate.
+
+---
+
+# 114. FILTERING
+
+Filtering occurs server-side for large datasets.
+
+The client should not download millions of records merely to filter them.
+
+---
+
+# 115. SORTING
+
+APIs should expose controlled sortable fields rather than accepting arbitrary SQL-like expressions.
+
+---
+
+# 116. RATE LIMITING
+
+Rate limits should exist at multiple levels:
+
+```text
+IP
+User
+Business
+Endpoint
+AI usage
+Integration
+```
+
+---
+
+# 117. AI RATE LIMITING
+
+AI endpoints require separate protection because they can be computationally and financially expensive.
+
+---
+
+# 118. ENTERPRISE USAGE
+
+Enterprise plans can have usage controls based on:
+
+- users
+- AI usage
+- integrations
+- automation
+- storage
+- API volume
+
+according to the product's commercial model.
+
+---
+
+# 119. API SECURITY
+
+Use:
+
+- HTTPS
+- secure authentication
+- authorization
+- validation
+- rate limiting
+- secure headers
+- secrets management
+- audit logging
+
+---
+
+# 120. INPUT VALIDATION
+
+Every API endpoint validates:
+
+- type
+- required fields
+- ranges
+- formats
+- relationships
+- business constraints
+
+---
+
+# 121. OUTPUT VALIDATION
+
+Structured responses should be validated before leaving the service boundary where appropriate.
+
+This is particularly important for AI-generated structured outputs.
+
+---
+
+# 122. SQL INJECTION PROTECTION
+
+Use parameterized queries/ORM-safe mechanisms.
+
+Never concatenate user input into SQL.
+
+---
+
+# 123. XSS / CONTENT SECURITY
+
+User-provided content rendered in documents or web-compatible surfaces must be safely handled.
+
+---
+
+# 124. FILE UPLOAD SECURITY
+
+Validate:
+
+- file type
+- file size
+- content
+- ownership
+- access permissions
+
+---
+
+# 125. MALICIOUS FILE HANDLING
+
+Uploaded files must not automatically become trusted executable content.
+
+---
+
+# 126. SECRET MANAGEMENT
+
+API keys, database credentials, provider secrets and signing keys must remain in secure server-side secret management.
+
+Never ship provider secrets inside the React Native application.
+
+---
+
+# 127. AI PROVIDER SECRETS
+
+Sarvam/other AI provider credentials belong on the backend/provider gateway.
+
+Not inside the mobile app.
+
+---
+
+# 128. DATABASE SECURITY
+
+Use:
+
+- encrypted connections
+- least-privilege database roles
+- access policies
+- backups
+- migration control
+- monitoring
+
+---
+
+# 129. BACKUPS
+
+The backend must have a controlled backup/recovery strategy.
+
+---
+
+# 130. DISASTER RECOVERY
+
+Recovery planning must account for:
+
+```text
+Database
+Files
+Configuration
+Secrets
+Events
+```
+
+---
+
+# 131. DATA RETENTION
+
+Retention must distinguish:
+
+```text
+Operational data
+Financial records
+Audit records
+AI memory
+Temporary data
+Files
+```
+
+---
+
+# 132. DATA DELETION
+
+Deletion requests must respect:
+
+- authorization
+- dependencies
+- legal/financial retention
+- audit requirements
+
+---
+
+# 133. ACCOUNT DELETION
+
+Account deletion must not accidentally destroy business data belonging to other users.
+
+---
+
+# 134. BUSINESS DELETION
+
+Business deletion requires:
+
+```text
+Authorization
+ ↓
+Dependency check
+ ↓
+Retention rules
+ ↓
+Confirmation
+ ↓
+Controlled deletion/archive
+```
+
+---
+
+# 135. CONNECTION PORTFOLIO API
+
+Conceptual endpoints:
+
+```text
+GET  /api/v1/connections
+GET  /api/v1/connections/providers
+POST /api/v1/connections
+GET  /api/v1/connections/:id
+POST /api/v1/connections/:id/sync
+POST /api/v1/connections/:id/reconnect
+DELETE /api/v1/connections/:id
+```
+
+---
+
+# 136. PROVIDER ADAPTER
+
+Each integration uses an adapter:
+
+```text
+Connection Service
+ ↓
+Provider Adapter
+ ↓
+External API
+```
+
+The business domain remains provider-independent.
+
+---
+
+# 137. CONNECTION CREDENTIALS
+
+OAuth tokens/API credentials must be encrypted/protected server-side.
+
+The mobile client should receive connection status, not raw secrets.
+
+---
+
+# 138. CONNECTION SYNC
+
+```text
+Provider
+ ↓
+Fetch
+ ↓
+Normalize
+ ↓
+Validate
+ ↓
+Map
+ ↓
+Business domain
+ ↓
+Audit
+```
+
+---
+
+# 139. CONNECTION FAILURE
+
+Integration failures should not break core Vepari functionality.
+
+```text
+Provider failure
+ ↓
+Connection degraded
+ ↓
+Retry/reconnect
+```
+
+---
+
+# 140. API OBSERVABILITY
+
+Every backend request should be traceable through:
+
+```text
+Request ID
+ ↓
+Logs
+ ↓
+Metrics
+ ↓
+Traces
+```
+
+where the infrastructure supports distributed tracing.
+
+---
+
+# 141. LOGGING
+
+Logs should record useful technical information without exposing sensitive business data.
+
+Never log:
+
+- passwords
+- raw access tokens
+- provider secrets
+- unnecessary personal/financial data
+
+---
+
+# 142. AUDIT VS LOGS
+
+They are different.
+
+### Logs
+
+Technical diagnostics.
+
+### Audit
+
+Business/security accountability.
+
+Both are required.
+
+---
+
+# 143. MONITORING
+
+Monitor:
+
+- API latency
+- errors
+- database health
+- queue failures
+- sync failures
+- AI failures
+- integration failures
+- resource usage
+
+---
+
+# 144. HEALTH ENDPOINT
+
+The service should expose an appropriate health mechanism for infrastructure monitoring.
+
+For example:
+
+```text
+/health
+```
+
+and deeper readiness checks where appropriate.
+
+---
+
+# 145. API DOCUMENTATION
+
+All public/internal client APIs should have machine-readable documentation, preferably OpenAPI-compatible.
+
+---
+
+# 146. CONTRACT-FIRST DEVELOPMENT
+
+The frontend and backend should agree on:
+
+```text
+Request
+Response
+Error
+Authentication
+Pagination
+Sync
+```
+
+before implementing complex features.
+
+---
+
+# 147. FRONTEND/API CONTRACT
+
+The React Native application should not directly depend on internal database schemas.
+
+```text
+Frontend
+ ↓
+API Contract
+ ↓
+Backend
+ ↓
+Database
+```
+
+---
+
+# 148. API DTOs
+
+Use explicit request/response DTOs.
+
+Do not automatically expose database entities as public API objects.
+
+---
+
+# 149. API DOMAIN SEPARATION
+
+For example:
+
+```text
+Database Sale Entity
+≠
+Sale API Response
+```
+
+The API should expose only what the client needs.
+
+---
+
+# 150. API FIELD COMPATIBILITY
+
+Adding optional fields should generally be backward compatible.
+
+Removing/renaming fields requires versioning or migration.
+
+---
+
+# 151. API DEPRECATION
+
+Deprecated endpoints should have:
+
+- documented replacement
+- migration window
+- monitoring
+- eventual removal process
+
+---
+
+# 152. BUSINESS DOMAIN MAP
+
+```text
+Customer
+   │
+   ├── Sales
+   └── Payments
+
+Supplier
+   │
+   └── Purchases
+
+Product
+   │
+   ├── Inventory
+   ├── Sales
+   └── Purchases
+
+Sale
+   ├── Customer
+   ├── Inventory
+   ├── Payment
+   └── Finance
+
+Purchase
+   ├── Supplier
+   ├── Inventory
+   ├── Payment
+   └── Finance
+```
+
+---
+
+# 153. FINANCE DOMAIN MAP
+
+```text
+Transactions
+ ↓
+Accounting
+ ↓
+Ledger
+ ↓
+Financial summaries
+ ↓
+Reports
+ ↓
+Analytics
+```
+
+---
+
+# 154. AI DOMAIN MAP
+
+```text
+Business State
+ ↓
+Context
+ ↓
+Memory
+ ↓
+AI Gateway
+ ↓
+Insight
+ ↓
+Recommendation
+ ↓
+Approved Action
+ ↓
+Business Domain
+```
+
+---
+
+# 155. AUTOMATION DOMAIN MAP
+
+```text
+Business Event
+ ↓
+Trigger
+ ↓
+Condition
+ ↓
+Automation
+ ↓
+Action
+ ↓
+Domain Service
+```
+
+---
+
+# 156. NOTIFICATION DOMAIN MAP
+
+```text
+Domain Event
+ ↓
+Notification Rule
+ ↓
+User Preferences
+ ↓
+Delivery
+```
+
+---
+
+# 157. SYNC DOMAIN MAP
+
+```text
+Local Operation
+ ↓
+Sync API
+ ↓
+Validation
+ ↓
+Domain transaction
+ ↓
+Server event/version
+ ↓
+Client reconciliation
+```
+
+---
+
+# 158. MOBILE API USAGE
+
+The mobile application should generally use:
+
+```text
+GET
+POST
+PATCH
+DELETE
+```
+
+according to resource semantics, plus dedicated domain operations where necessary.
+
+---
+
+# 159. NEVER USE GENERIC UPDATE FOR EVERYTHING
+
+Financial operations should not be represented as arbitrary:
+
+```text
+PATCH /sale
+```
+
+when the business action is actually:
+
+```text
+return sale
+cancel sale
+record payment
+```
+
+Use domain-specific operations.
+
+---
+
+# 160. DOMAIN COMMANDS
+
+Important operations are commands:
+
+```text
+Create Sale
+Record Payment
+Adjust Inventory
+Transfer Stock
+Return Sale
+Generate Document
+```
+
+Commands execute validated business logic.
+
+---
+
+# 161. EVENTUAL CONSISTENCY
+
+Some secondary systems may update asynchronously:
+
+```text
+Sale
+ ↓
+Primary transaction committed
+ ↓
+Analytics updates later
+```
+
+The UI should understand this where relevant.
+
+---
+
+# 162. STRONG CONSISTENCY
+
+Financial and inventory invariants require stronger transactional guarantees.
+
+---
+
+# 163. ANALYTICS CONSISTENCY
+
+Analytics may be eventually consistent where appropriate.
+
+The UI can show the last updated timestamp when useful.
+
+---
+
+# 164. AI CONSISTENCY
+
+AI insights may lag behind the most recent transaction.
+
+The AI layer should have a mechanism to understand data freshness.
+
+---
+
+# 165. DATA FRESHNESS
+
+Important API responses can include:
+
+```text
+updatedAt
+generatedAt
+dataAsOf
+```
+
+where useful.
+
+---
+
+# 166. AI DATA FRESHNESS
+
+AI should avoid claiming a real-time state when its context is stale.
+
+---
+
+# 167. REPORT GENERATION
+
+Small reports may be synchronous.
+
+Large reports can become jobs:
+
+```text
+POST report
+ ↓
+Job created
+ ↓
+Processing
+ ↓
+Completed
+ ↓
+Download/view
+```
+
+---
+
+# 168. DOCUMENT GENERATION
+
+Likewise:
+
+```text
+Request
+ ↓
+Generate
+ ↓
+Store
+ ↓
+Return document reference
+```
+
+---
+
+# 169. FILE ACCESS
+
+Use controlled, expiring access URLs or equivalent secure access mechanisms for private files.
+
+---
+
+# 170. API CACHING
+
+Cache only data where stale values are acceptable.
+
+Do not casually cache mutable financial truth in a way that produces incorrect results.
+
+---
+
+# 171. CACHE INVALIDATION
+
+Business mutations should invalidate/update appropriate caches.
+
+---
+
+# 172. DATABASE INDEXING
+
+Indexes should cover common:
+
+- tenant lookups
+- branch filtering
+- timestamps
+- foreign keys
+- search fields
+- sync queries
+
+---
+
+# 173. LARGE TENANT SCALABILITY
+
+Enterprise businesses may produce significantly more records.
+
+Queries must always account for tenant/branch scope and indexed access paths.
+
+---
+
+# 174. ARCHIVAL
+
+Large historical datasets may require archival strategies while preserving required accessibility and retention.
+
+---
+
+# 175. API PAGINATION CONTRACT
+
+Conceptually:
+
+```json
+{
+  "data": [],
+  "pagination": {
+    "nextCursor": "...",
+    "hasMore": true
+  }
+}
+```
+
+---
+
+# 176. API FILTER CONTRACT
+
+Filters should use explicit query parameters.
+
+Example conceptually:
+
+```text
+?branchId=...
+&status=...
+&from=...
+&to=...
+```
+
+---
+
+# 177. API SORT CONTRACT
+
+Allow a controlled set of server-supported sort fields.
+
+---
+
+# 178. API SEARCH CONTRACT
+
+Search must be scoped to the authenticated business context.
+
+---
+
+# 179. API AUTHORIZATION FAILURE
+
+Return:
+
+```text
+403
+```
+
+without leaking whether unauthorized resources exist where that distinction could expose sensitive information.
+
+---
+
+# 180. NOT FOUND BEHAVIOR
+
+Resource lookup must not reveal protected data to unauthorized users.
+
+---
+
+# 181. VALIDATION FAILURE
+
+Return structured field-level information where useful.
+
+---
+
+# 182. CONFLICT RESPONSE
+
+A conflict should identify enough information for the mobile client to reconcile.
+
+---
+
+# 183. RETRYABLE ERRORS
+
+The backend should make it possible for clients to distinguish transient failures from permanent validation failures.
+
+---
+
+# 184. API RATE LIMIT RESPONSE
+
+When rate limited:
+
+```text
+429
+```
+
+with appropriate retry information where appropriate.
+
+---
+
+# 185. SERVER ERROR
+
+Internal errors should return a safe generic message plus request ID.
+
+---
+
+# 186. FRONTEND ERROR MAPPING
+
+The frontend maps backend codes to UX states.
+
+```text
+VALIDATION_ERROR
+→ Form errors
+
+AUTH_REQUIRED
+→ Login/security
+
+FORBIDDEN
+→ Permission screen
+
+CONFLICT
+→ Conflict resolver
+
+NETWORK_ERROR
+→ Offline/retry
+
+SERVER_ERROR
+→ Retry
+```
+
+---
+
+# 187. API TESTING
+
+Every endpoint requires:
+
+- authentication tests
+- authorization tests
+- validation tests
+- happy path
+- failure path
+- tenant isolation
+- idempotency where relevant
+
+---
+
+# 188. DOMAIN TESTING
+
+Critical business rules require unit/integration tests independent of HTTP.
+
+---
+
+# 189. DATABASE TESTING
+
+Test:
+
+- constraints
+- transactions
+- migrations
+- indexes
+- isolation
+- rollback behavior
+
+---
+
+# 190. SYNC TESTING
+
+Test:
+
+```text
+Offline
+ ↓
+Mutation
+ ↓
+Reconnect
+ ↓
+Push
+ ↓
+Conflict
+ ↓
+Resolve
+ ↓
+Pull
+```
+
+---
+
+# 191. MULTI-DEVICE TESTING
+
+Test:
+
+```text
+Device A
+ ↓
+Change
+ ↓
+Server
+ ↓
+Device B
+```
+
+and simultaneous modifications.
+
+---
+
+# 192. AI TESTING
+
+Test:
+
+- provider failure
+- invalid structured output
+- insufficient context
+- unauthorized action
+- prompt injection defenses
+- multilingual behavior
+- action confirmation
+
+---
+
+# 193. AI SECURITY
+
+External content must never be blindly treated as trusted instructions.
+
+AI-generated commands must still pass normal authorization and domain validation.
+
+---
+
+# 194. PROMPT INJECTION DEFENSE
+
+Business records, documents and external integrations can contain untrusted text.
+
+The AI system must distinguish:
+
+```text
+System instructions
+Business data
+User instructions
+External/untrusted content
+```
+
+---
+
+# 195. AI ACTION VALIDATION
+
+Even if an AI produces:
+
+```text
+"delete customer"
+```
+
+the backend must treat it as an untrusted request until validated through the normal permission/action pipeline.
+
+---
+
+# 196. AI OUTPUT SAFETY
+
+Structured AI outputs should be schema-validated.
+
+Invalid outputs should not directly execute business operations.
+
+---
+
+# 197. PROVIDER FAILURE
+
+If Sarvam or another provider is unavailable:
+
+```text
+AI Gateway
+ ↓
+Failure handling
+ ↓
+Fallback where approved
+OR
+AI unavailable
+```
+
+Core business operations continue.
+
+---
+
+# 198. AI COST CONTROL
+
+The backend should monitor:
+
+- request count
+- tokens/usage where applicable
+- provider cost
+- business-level usage
+- user-level usage
+
+---
+
+# 199. AI ENTERPRISE CONTROLS
+
+Enterprise customers may require:
+
+- usage visibility
+- limits
+- administrative controls
+- provider policies
+
+---
+
+# 200. MEMORY SECURITY
+
+AI memory must follow the same tenant/user authorization boundaries as business data.
+
+No cross-business memory leakage.
+
+---
+
+# 201. MEMORY ISOLATION
+
+```text
+Business A Memory
+≠
+Business B Memory
+```
+
+unless explicitly defined as user-level preference/context.
+
+---
+
+# 202. AI CONVERSATION STORAGE
+
+If conversations are stored, they require:
+
+- authorization
+- retention policy
+- tenant isolation
+- deletion controls
+
+---
+
+# 203. CONNECTION DATA ISOLATION
+
+External integration data must be scoped to the business and connection that authorized it.
+
+---
+
+# 204. WEBHOOKS
+
+Connection Portfolio integrations may require secure webhook endpoints.
+
+Webhook pipeline:
+
+```text
+Provider
+ ↓
+Webhook
+ ↓
+Signature verification
+ ↓
+Validation
+ ↓
+Event processing
+ ↓
+Business update
+```
+
+---
+
+# 205. WEBHOOK SECURITY
+
+Never trust an external webhook without verification.
+
+---
+
+# 206. DUPLICATE WEBHOOKS
+
+Webhook handlers must be idempotent.
+
+---
+
+# 207. INTEGRATION MAPPING
+
+External records should map through provider-independent internal models where possible.
+
+---
+
+# 208. INTEGRATION CONFLICTS
+
+External changes must follow explicit mapping/conflict rules.
+
+---
+
+# 209. API SECURITY HEADERS
+
+Production APIs should use appropriate secure transport and server security headers.
+
+---
+
+# 210. CORS / CLIENT POLICY
+
+Configure access explicitly rather than permitting unrestricted origins.
+
+---
+
+# 211. ADMIN APIs
+
+Administrative functionality should be isolated from ordinary customer/business APIs and require stronger authorization.
+
+---
+
+# 212. INTERNAL SERVICE AUTH
+
+If multiple backend services exist, service-to-service communication must use authenticated mechanisms.
+
+---
+
+# 213. ARCHITECTURAL DEPLOYMENT
+
+A practical initial architecture can remain modular without prematurely splitting into dozens of microservices.
+
+Recommended:
+
+```text
+Modular Backend
+ ↓
+Clear Domain Boundaries
+ ↓
+Shared Infrastructure
+```
+
+Individual components can later be extracted if scale requires it.
+
+---
+
+# 214. MODULAR MONOLITH OPTION
+
+The initial backend can use a modular monolith if appropriate.
+
+Benefits:
+
+- easier transactions
+- simpler deployment
+- easier development
+- clear domain boundaries
+- future extraction possible
+
+---
+
+# 215. FUTURE SCALING
+
+Potential extraction candidates:
+
+```text
+AI
+Notifications
+Document generation
+Search
+Integration workers
+Analytics
+```
+
+Only when scale warrants it.
+
+---
+
+# 216. DATABASE MIGRATIONS
+
+All schema changes must be versioned.
+
+```text
+Migration 001
+Migration 002
+Migration 003
+...
+```
+
+---
+
+# 217. MIGRATION SAFETY
+
+Migrations must:
+
+- be repeatable/safely tracked
+- preserve existing data
+- be tested
+- support deployment order
+
+---
+
+# 218. API DEPLOYMENT COMPATIBILITY
+
+Backend changes should remain compatible with currently deployed mobile clients during rollout.
+
+---
+
+# 219. MOBILE VERSION COMPATIBILITY
+
+Do not assume every user upgrades instantly.
+
+The backend should support an appropriate compatibility window.
+
+---
+
+# 220. FEATURE FLAGS
+
+Feature flags can control:
+
+- AI features
+- integrations
+- enterprise capabilities
+- experimental endpoints
+
+---
+
+# 221. BACKEND ENVIRONMENTS
+
+```text
+Development
+ ↓
+Test
+ ↓
+Staging
+ ↓
+Production
+```
+
+---
+
+# 222. SECRETS BY ENVIRONMENT
+
+Development and production must not share sensitive credentials.
+
+---
+
+# 223. PRODUCTION DATABASE
+
+Production database access must be tightly restricted.
+
+---
+
+# 224. BACKEND DEPLOYMENT PIPELINE
+
+```text
+Code
+ ↓
+Type check
+ ↓
+Lint
+ ↓
+Unit tests
+ ↓
+Integration tests
+ ↓
+Migration validation
+ ↓
+Build
+ ↓
+Deploy staging
+ ↓
+Smoke tests
+ ↓
+Production
+```
+
+---
+
+# 225. ROLLBACK
+
+Deployments must have a recovery strategy.
+
+Database migrations require special care because application rollback and schema rollback are not always symmetrical.
+
+---
+
+# 226. API SMOKE TEST
+
+Production release should verify:
+
+```text
+Health
+Auth
+Business access
+Core read
+Core mutation
+AI gateway
+Sync
+```
+
+---
+
+# 227. BACKEND PERFORMANCE
+
+Primary targets:
+
+- low API latency
+- predictable database queries
+- efficient pagination
+- fast local-to-server synchronization
+- scalable AI requests
+
+---
+
+# 228. DATABASE PERFORMANCE
+
+Monitor:
+
+- slow queries
+- index usage
+- connection pool
+- locks
+- transaction duration
+
+---
+
+# 229. QUEUE PERFORMANCE
+
+Monitor:
+
+- queue depth
+- processing time
+- retry rate
+- dead letters
+
+---
+
+# 230. SYNC PERFORMANCE
+
+Monitor:
+
+- operations/second
+- sync latency
+- conflict frequency
+- failed operations
+- device backlog
+
+---
+
+# 231. AI PERFORMANCE
+
+Monitor:
+
+- request latency
+- provider failures
+- usage
+- output validation failures
+
+---
+
+# 232. FRONTEND/BACKEND CONTRACT EXAMPLE
+
+A sale begins:
+
+```text
+POST /api/v1/sales
+        ↓
+Auth
+        ↓
+Tenant
+        ↓
+Permission
+        ↓
+Validation
+        ↓
+Transaction
+        ↓
+Sale
+Inventory
+Payment
+Accounting
+        ↓
+Event
+        ↓
+Response
+```
+
+---
+
+# 233. SALE RESPONSE
+
+The response should contain the information needed by the client to update its local model, such as:
+
+- sale identifier
+- status
+- totals
+- timestamps
+- versions
+- related references
+
+---
+
+# 234. INVENTORY RESPONSE
+
+The client should receive authoritative resulting quantities/version information.
+
+---
+
+# 235. PAYMENT RESPONSE
+
+The client receives:
+
+- payment ID
+- amount
+- status
+- allocation
+- timestamps
+- resulting balance
+
+---
+
+# 236. SYNC RESPONSE TO FRONTEND
+
+The mobile app should receive enough information to transition:
+
+```text
+Queued
+ ↓
+Accepted
+ ↓
+Synced
+```
+
+or:
+
+```text
+Queued
+ ↓
+Conflict
+```
+
+or:
+
+```text
+Queued
+ ↓
+Rejected
+```
+
+---
+
+# 237. REJECTED OFFLINE OPERATION
+
+The backend should return a meaningful reason.
+
+The frontend can then show:
+
+```text
+Could not sync
+ ↓
+Why
+ ↓
+Resolution
+```
+
+---
+
+# 238. SYNC SECURITY
+
+A device must not be able to push arbitrary business mutations merely because it has an operation ID.
+
+Every queued operation is re-authorized server-side.
+
+---
+
+# 239. DEVICE IDENTITY
+
+Sync requests can include a registered device identifier.
+
+The backend can use this for:
+
+- auditing
+- revocation
+- synchronization
+- troubleshooting
+
+---
+
+# 240. CLIENT VERSION
+
+Sync/API requests can include application version information for compatibility diagnostics.
+
+---
+
+# 241. API OBSERVABILITY CORRELATION
+
+A single business action can be traced:
+
+```text
+Device
+ ↓
+Request ID
+ ↓
+API
+ ↓
+Domain transaction
+ ↓
+Database
+ ↓
+Event
+ ↓
+Notification/AI
+```
+
+---
+
+# 242. BUSINESS EVENT AUDIT
+
+Example:
+
+```text
+Sale Created
+Actor: User
+Device: Device A
+Business: Business X
+Timestamp: ...
+Request ID: ...
+```
+
+---
+
+# 243. SECURITY EVENT AUDIT
+
+Examples:
+
+- login
+- failed login
+- device registration
+- device revocation
+- permission changes
+- sensitive actions
+
+---
+
+# 244. DATA PRIVACY
+
+The backend should follow data minimization:
+
+```text
+Collect
+ ↓
+Use
+ ↓
+Retain
+```
+
+only what is required.
+
+---
+
+# 245. AI PRIVACY
+
+Business data supplied to external AI providers must follow the established privacy/data-boundary design.
+
+---
+
+# 246. API DATA MINIMIZATION
+
+Each endpoint should return only the fields required for its purpose unless an authorized detail endpoint is requested.
+
+---
+
+# 247. BULK APIs
+
+Enterprise workflows may require controlled bulk operations.
+
+Example:
+
+```text
+POST /api/v1/products/bulk-import
+```
+
+These require:
+
+- validation
+- limits
+- job tracking
+- error reporting
+- audit
+
+---
+
+# 248. IMPORT JOB
+
+```text
+Upload
+ ↓
+Validate
+ ↓
+Preview
+ ↓
+Confirm
+ ↓
+Process
+ ↓
+Result
+```
+
+---
+
+# 249. EXPORT JOB
+
+Large exports should use asynchronous jobs:
+
+```text
+Request
+ ↓
+Job
+ ↓
+Generate
+ ↓
+Secure file
+ ↓
+Download
+```
+
+---
+
+# 250. API FILE UPLOAD
+
+Use multipart or secure upload mechanisms appropriate to the storage architecture.
+
+---
+
+# 251. API DOCUMENTATION STRUCTURE
+
+The final implementation API reference should be organized:
+
+```text
+Authentication
+Businesses
+Users
+Memberships
+Branches
+Customers
+Suppliers
+Products
+Inventory
+Sales
+Purchases
+Expenses
+Payments
+Returns
+Refunds
+Finance
+Accounting
+Documents
+Reports
+Analytics
+Search
+Notifications
+Alerts
+Team
+Automation
+AI
+Memory
+Voice
+Sync
+Connections
+Audit
+Files
+```
+
+---
+
+# 252. FRONTEND INTEGRATION RULE
+
+Every frontend feature should map to:
+
+```text
+Screen
+ ↓
+Hook/Controller
+ ↓
+Repository
+ ↓
+API contract
+```
+
+rather than directly constructing arbitrary HTTP calls inside components.
+
+---
+
+# 253. API CLIENT ARCHITECTURE
+
+```text
+API Client
+├── Auth
+├── Customers
+├── Suppliers
+├── Products
+├── Inventory
+├── Sales
+├── Purchases
+├── Expenses
+├── Payments
+├── Finance
+├── Documents
+├── Reports
+├── Analytics
+├── Notifications
+├── Team
+├── Automation
+├── AI
+├── Sync
+└── Connections
+```
+
+---
+
+# 254. DOMAIN SERVICE RULE
+
+The API controller should remain thin.
+
+```text
+Controller
+ ↓
+Application Service
+ ↓
+Domain
+ ↓
+Repository
+```
+
+---
+
+# 255. CONTROLLER RESPONSIBILITY
+
+Controller handles:
+
+- request parsing
+- authentication context
+- validation invocation
+- response formatting
+
+Not complex business rules.
+
+---
+
+# 256. DOMAIN SERVICE RESPONSIBILITY
+
+Domain/application service handles:
+
+- business rules
+- transaction coordination
+- authorization checks
+- state transitions
+
+---
+
+# 257. REPOSITORY RESPONSIBILITY
+
+Repository handles:
+
+- database access
+- queries
+- persistence
+
+---
+
+# 258. EVENT CONSUMER RESPONSIBILITY
+
+Consumers handle secondary work:
+
+- notifications
+- analytics
+- AI indexing
+- integrations
+
+---
+
+# 259. AI SERVICE RESPONSIBILITY
+
+AI service handles:
+
+- context
+- provider communication
+- structured output
+- AI actions
+
+It does not bypass domain services.
+
+---
+
+# 260. FINAL BACKEND ARCHITECTURE
+
+```text
+                         VEPARI AI
+                             │
+                          API v1
+                             │
+                    ┌────────┴────────┐
+                    │                 │
+                 AUTH               ROUTES
+                                      │
+                             APPLICATION SERVICES
+                                      │
+                              DOMAIN SERVICES
+                                      │
+                          ┌───────────┼───────────┐
+                          ↓           ↓           ↓
+                       BUSINESS     FINANCE       AI
+                          │           │            │
+                          └───────────┼────────────┘
+                                      ↓
+                                  DATABASE
+                                      │
+                     ┌────────────────┼──────────────┐
+                     ↓                ↓              ↓
+                   EVENTS           AUDIT          FILES
+                     │
+            ┌────────┼────────┐
+            ↓        ↓        ↓
+          SYNC    NOTIFY    AUTOMATION
+            │
+            ↓
+       OTHER DEVICES
+```
+
+---
+
+# 261. COMPLETE MOBILE → BACKEND FLOW
+
+```text
+USER
+ ↓
+React Native
+ ↓
+Feature Controller
+ ↓
+Repository
+ ↓
+SQLite
+ ↓
+Immediate UI
+ ↓
+Sync Queue
+ ↓
+API v1
+ ↓
+Authentication
+ ↓
+Authorization
+ ↓
+Validation
+ ↓
+Domain Service
+ ↓
+Database Transaction
+ ↓
+Event
+ ↓
+Audit
+ ↓
+Response
+ ↓
+Sync Reconciliation
+ ↓
+SQLite
+ ↓
+UI
+```
+
+---
+
+# 262. COMPLETE AI FLOW
+
+```text
+USER
+ ↓
+AI OS
+ ↓
+AI API
+ ↓
+Authentication
+ ↓
+Business Authorization
+ ↓
+Current Context
+ ↓
+Relevant Business Data
+ ↓
+Memory
+ ↓
+AI Gateway
+ ↓
+Sarvam / Approved Provider
+ ↓
+Structured Response
+ ↓
+AI UI
+ ↓
+Recommendation
+ ↓
+Approval
+ ↓
+Domain Action
+ ↓
+Transaction
+ ↓
+Audit
+```
+
+---
+
+# 263. COMPLETE OFFLINE FLOW
+
+```text
+USER
+ ↓
+MOBILE UI
+ ↓
+LOCAL DOMAIN
+ ↓
+SQLITE
+ ↓
+SUCCESS
+ ↓
+SYNC QUEUE
+ ↓
+NETWORK RETURNS
+ ↓
+SYNC API
+ ↓
+AUTHORIZATION
+ ↓
+VALIDATION
+ ↓
+TRANSACTION
+ ↓
+SERVER VERSION
+ ↓
+RECONCILIATION
+ ↓
+SYNCED
+```
+
+---
+
+# 264. COMPLETE MULTI-DEVICE FLOW
+
+```text
+DEVICE A
+ ↓
+Operation
+ ↓
+Backend
+ ↓
+Event
+ ↓
+Realtime / Sync
+ ↓
+DEVICE B
+ ↓
+SQLite
+ ↓
+UI
+```
+
+---
+
+# 265. COMPLETE CONNECTION FLOW
+
+```text
+Mobile
+ ↓
+Connection Portfolio
+ ↓
+Backend
+ ↓
+Provider Authorization
+ ↓
+Secure Credentials
+ ↓
+Provider API
+ ↓
+Normalization
+ ↓
+Business Domain
+ ↓
+Audit/Event
+ ↓
+Sync
+```
+
+---
+
+# 266. COMPLETE SECURITY FLOW
+
+```text
+Request
+ ↓
+TLS
+ ↓
+Authentication
+ ↓
+Session
+ ↓
+Tenant
+ ↓
+Membership
+ ↓
+Role
+ ↓
+Permission
+ ↓
+Resource scope
+ ↓
+Validation
+ ↓
+Domain rule
+ ↓
+Transaction
+```
+
+---
+
+# 267. COMPLETE BUSINESS TRANSACTION FLOW
+
+```text
+Create
+ ↓
+Validate
+ ↓
+Authorize
+ ↓
+Calculate
+ ↓
+Transaction
+ ↓
+Persist
+ ↓
+Audit
+ ↓
+Event
+ ↓
+Secondary processing
+ ↓
+Response
+```
+
+---
+
+# 268. COMPLETE ERROR FLOW
+
+```text
+Request
+ ↓
+Failure
+ ↓
+Classify
+ ├── Validation
+ ├── Auth
+ ├── Permission
+ ├── Conflict
+ ├── Network
+ ├── Provider
+ └── Internal
+ ↓
+Safe response
+ ↓
+Frontend mapping
+ ↓
+Recovery
+```
+
+---
+
+# 269. COMPLETE AI ACTION FLOW
+
+```text
+AI Recommendation
+ ↓
+Action Proposal
+ ↓
+Permission Check
+ ↓
+User Approval
+ ↓
+API Command
+ ↓
+Normal Domain Authorization
+ ↓
+Domain Validation
+ ↓
+Transaction
+ ↓
+Audit
+ ↓
+Result
+ ↓
+AI OS
+```
+
+---
+
+# 270. BACKEND COMPLETION CRITERIA
+
+The backend is not considered complete merely because API routes exist.
+
+A production feature requires:
+
+```text
+API ✓
+Authentication ✓
+Authorization ✓
+Validation ✓
+Domain logic ✓
+Database ✓
+Transaction safety ✓
+Audit ✓
+Events ✓
+Offline compatibility ✓
+Sync ✓
+Error handling ✓
+Testing ✓
+Observability ✓
+Security ✓
+Documentation ✓
+```
+
+where applicable.
+
+---
+
+# 271. API COMPLETION CRITERIA
+
+Every production endpoint must define:
+
+```text
+Method
+Path
+Authentication
+Authorization
+Request schema
+Response schema
+Errors
+Pagination
+Filtering
+Idempotency
+Concurrency
+Audit
+Rate limit
+```
+
+where relevant.
+
+---
+
+# 272. SECURITY COMPLETION CRITERIA
+
+```text
+Authentication ✓
+RBAC ✓
+Tenant isolation ✓
+Branch isolation ✓
+Secure secrets ✓
+TLS ✓
+Validation ✓
+Rate limiting ✓
+Audit ✓
+Logging ✓
+File security ✓
+AI security ✓
+```
+
+---
+
+# 273. OFFLINE COMPLETION CRITERIA
+
+```text
+Operation ID ✓
+Sync queue ✓
+Push API ✓
+Pull API ✓
+Versioning ✓
+Conflict detection ✓
+Conflict resolution ✓
+Retry ✓
+Idempotency ✓
+Multi-device ✓
+```
+
+---
+
+# 274. AI COMPLETION CRITERIA
+
+```text
+AI Gateway ✓
+Provider abstraction ✓
+Sarvam integration boundary ✓
+Context ✓
+Memory ✓
+Structured output ✓
+Action validation ✓
+Approval ✓
+Provider failure ✓
+Usage control ✓
+Security ✓
+```
+
+---
+
+# 275. FINAL BACKEND PRINCIPLES
+
+### 1.
+**The backend is the authoritative shared business system.**
+
+### 2.
+**The frontend is never trusted for security.**
+
+### 3.
+**Financial operations are transaction-safe.**
+
+### 4.
+**Offline operations are first-class citizens.**
+
+### 5.
+**Every retryable mutation can be made idempotent.**
+
+### 6.
+**AI never bypasses normal business rules.**
+
+### 7.
+**AI providers remain behind an abstraction layer.**
+
+### 8.
+**Sarvam AI integration remains replaceable at the infrastructure boundary.**
+
+### 9.
+**Memory never overrides business truth.**
+
+### 10.
+**Every business belongs to an isolated tenant context.**
+
+### 11.
+**Enterprise complexity is supported without creating a separate backend product.**
+
+### 12.
+**The Connection Portfolio remains modular and provider-independent.**
+
+### 13.
+**Audit records are distinct from technical logs.**
+
+### 14.
+**Realtime and asynchronous systems never compromise core transaction integrity.**
+
+### 15.
+**The API remains versioned and backward-compatible wherever possible.**
+
+---
+
+# 276. MASTER BACKEND STATUS
+
+| Area | Status |
+|---|---|
+| Backend architecture | ✅ |
+| API architecture | ✅ |
+| API versioning | ✅ |
+| Authentication | ✅ |
+| Sessions | ✅ |
+| Device management | ✅ |
+| Multi-tenancy | ✅ |
+| Business isolation | ✅ |
+| Branch isolation | ✅ |
+| RBAC | ✅ |
+| Permissions | ✅ |
+| Customers | ✅ |
+| Suppliers | ✅ |
+| Products | ✅ |
+| Inventory | ✅ |
+| Sales | ✅ |
+| Purchases | ✅ |
+| Expenses | ✅ |
+| Payments | ✅ |
+| Returns | ✅ |
+| Refunds | ✅ |
+| Finance | ✅ |
+| Accounting | ✅ |
+| Documents | ✅ |
+| Files | ✅ |
+| Reports | ✅ |
+| Analytics | ✅ |
+| Search | ✅ |
+| Notifications | ✅ |
+| Alerts | ✅ |
+| Team | ✅ |
+| Automation | ✅ |
+| AI Gateway | ✅ |
+| Sarvam integration boundary | ✅ |
+| AI memory | ✅ |
+| Voice architecture | ✅ |
+| AI actions | ✅ |
+| AI security | ✅ |
+| Sync | ✅ |
+| Offline compatibility | ✅ |
+| Conflict handling | ✅ |
+| Realtime | ✅ |
+| Connection Portfolio | ✅ |
+| Webhooks | ✅ |
+| Audit | ✅ |
+| Logs | ✅ |
+| Monitoring | ✅ |
+| Rate limiting | ✅ |
+| File security | ✅ |
+| Data retention | ✅ |
+| Backup/recovery | ✅ |
+| API testing | ✅ |
+| Security testing | ✅ |
+| AI testing | ✅ |
+| Deployment architecture | ✅ |
+| API documentation | ✅ |
+| Frontend integration contracts | ✅ |
+| Android client support | ✅ |
+| Future iOS support | ✅ |
+| Micro → Enterprise scalability | ✅ |
+
+---
+
+# FINAL BACKEND + API DEFINITION
+
+The Vepari AI backend is:
+
+> **A secure, multi-tenant, transaction-safe, API-first business platform that provides authoritative shared business state while enabling the mobile application to operate locally and synchronize safely.**
+
+Its core path is:
+
+```text
+AUTH
+ ↓
+TENANT
+ ↓
+PERMISSION
+ ↓
+VALIDATION
+ ↓
+DOMAIN
+ ↓
+TRANSACTION
+ ↓
+DATABASE
+ ↓
+AUDIT
+ ↓
+EVENT
+ ↓
+SYNC / AI / NOTIFICATION / AUTOMATION
+```
+
+And the complete product architecture becomes:
+
+```text
+                  VEPARI AI
+                      │
+             ┌────────┴────────┐
+             │                 │
+          MOBILE             CLOUD
+             │                 │
+        React Native         API v1
+             │                 │
+          SQLite          Backend Domain
+             │                 │
+          Sync  ←────────→ Database
+             │                 │
+             └────────┬────────┘
+                      │
+              ┌───────┼────────┐
+              ↓       ↓        ↓
+             AI     Events   Connections
+              │       │        │
+           Memory   Audit    Providers
+              │
+           Sarvam /
+        approved AI layer
+```
+
+**This is the consolidated Master Backend + API specification and is intended to sit alongside the Master PRD, Master TRD, Master App Flow, Master UI/UX and Master Frontend documents as the backend source of truth.**

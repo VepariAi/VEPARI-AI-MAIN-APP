@@ -1,0 +1,4561 @@
+# VEPARI AI
+# MASTER UI/UX REQUIREMENTS DOCUMENT
+
+**Document:** Master UI/UX Specification  
+**Product:** Vepari AI  
+**Status:** Consolidated Source of Truth  
+**Platform:** Android-first mobile application  
+**Future:** iOS  
+**Framework:** React Native + Expo + TypeScript  
+**Business Scope:** Micro → Small → Medium → Enterprise  
+**Languages:** 23 Indian languages  
+**Design Philosophy:** AI-native · Mobile-first · Local-first · Offline-first · Privacy-first  
+**Primary Typography:** Lora for English display/brand typography  
+**Visual Identity:** Official Vepari AI palette and typography system  
+**AI Experience:** Cinematic spatial AI OS, inspired by the interaction quality of futuristic personal AI interfaces, but uniquely branded as Vepari AI
+
+---
+
+# 1. UI/UX VISION
+
+Vepari AI should not feel like a collection of traditional business-management screens.
+
+It should feel like:
+
+> **A living business operating system that the owner can see, speak to, and operate.**
+
+The interface combines:
+
+```text
+Business Software
+        +
+AI Assistant
+        +
+Business Intelligence
+        +
+Mobile Operating Experience
+```
+
+The application should progressively move the user from:
+
+**Seeing → Understanding → Deciding → Acting.**
+
+---
+
+# 2. CORE UX PRINCIPLE
+
+The central experience is:
+
+```text
+SECURE
+   ↓
+AWAKEN
+   ↓
+UNDERSTAND
+   ↓
+BRIEF
+   ↓
+OPERATE
+   ↓
+REMEMBER
+   ↓
+ANALYZE
+   ↓
+RECOMMEND
+   ↓
+ACT
+```
+
+---
+
+# 3. DESIGN CHARACTER
+
+The Vepari AI interface should communicate:
+
+- intelligent
+- premium
+- trustworthy
+- futuristic
+- calm
+- powerful
+- professional
+- Indian
+- multilingual
+- approachable
+
+It must **not** look like a generic accounting app.
+
+It must also **not** become so futuristic that everyday business operations become difficult.
+
+---
+
+# 4. VISUAL IDENTITY
+
+The official Vepari AI design system is the single visual source of truth.
+
+Use:
+
+- official Vepari AI color palette
+- approved typography
+- Lora for primary English display/brand typography
+- approved multilingual font fallbacks
+- official logo
+- official iconography
+- established spacing
+- established component shapes
+- established AI OS visual language
+
+No new palette should be introduced during implementation.
+
+---
+
+# 5. COLOR SYSTEM
+
+The implementation must use the **previously approved official Vepari AI palette** consistently.
+
+The palette should be represented as design tokens rather than hardcoded colors.
+
+Example architecture:
+
+```text
+colors/
+├── primary
+├── secondary
+├── accent
+├── background
+├── surface
+├── elevated
+├── text
+├── border
+├── success
+├── warning
+├── error
+├── info
+└── ai
+```
+
+The exact official color values already established for Vepari AI must be used by the implementation.
+
+---
+
+# 6. COLOR SEMANTICS
+
+Colors have meaning.
+
+```text
+Primary
+→ brand / primary interaction
+
+Accent
+→ important interactive emphasis
+
+Success
+→ completed / healthy
+
+Warning
+→ attention
+
+Error
+→ failure / danger
+
+Info
+→ information
+
+AI
+→ AI-generated / AI interaction
+```
+
+Color must never be the only way to communicate status.
+
+---
+
+# 7. TYPOGRAPHY
+
+## Primary English typography
+
+**Lora** is the main English display/brand typeface.
+
+Use it for:
+
+- major headings
+- AI OS statements where appropriate
+- brand moments
+- premium/high-emphasis content
+
+UI body text should use the approved supporting UI font system from the official Vepari AI typography specification.
+
+---
+
+# 8. MULTILINGUAL TYPOGRAPHY
+
+The UI must support the complete planned **23-language Indian-language experience**.
+
+Typography must handle:
+
+- Devanagari
+- Tamil
+- Telugu
+- Kannada
+- Malayalam
+- Bengali
+- Gujarati
+- Punjabi/Gurmukhi
+- Odia
+- Urdu
+- other supported Indian scripts
+
+The implementation must use approved script-compatible fonts/fallbacks.
+
+---
+
+# 9. TYPOGRAPHY RULE
+
+Never assume that English dimensions work for every language.
+
+Components must tolerate:
+
+```text
+Short English
+       ↓
+Long translation
+       ↓
+Different script
+       ↓
+Different line height
+```
+
+---
+
+# 10. DESIGN TOKENS
+
+The UI should be implemented using tokens for:
+
+```text
+Color
+Typography
+Spacing
+Radius
+Elevation
+Border
+Opacity
+Motion
+Duration
+Haptics
+```
+
+Example:
+
+```text
+spacing.xs
+spacing.sm
+spacing.md
+spacing.lg
+spacing.xl
+```
+
+---
+
+# 11. SPACING
+
+The application uses a consistent spacing scale.
+
+Spacing must remain systematic across:
+
+- cards
+- lists
+- forms
+- dashboards
+- AI OS
+- bottom sheets
+- navigation
+
+Avoid arbitrary per-screen spacing.
+
+---
+
+# 12. CORNER RADIUS
+
+The approved Vepari AI radius system should be applied consistently.
+
+Different component classes may use different radius levels:
+
+```text
+Small controls
+Cards
+Sheets
+Dialogs
+AI surfaces
+```
+
+---
+
+# 13. ELEVATION
+
+Elevation is used to establish hierarchy.
+
+Use it selectively.
+
+Important layers:
+
+```text
+Base
+Surface
+Elevated
+Floating
+AI Overlay
+Modal
+```
+
+Avoid excessive shadows.
+
+---
+
+# 14. ICONOGRAPHY
+
+Icons should be:
+
+- consistent
+- recognizable
+- touch-friendly
+- accessible
+- visually compatible with the Vepari AI identity
+
+Icons should support labels where ambiguity exists.
+
+---
+
+# 15. LOGO
+
+The official Vepari AI logo is used consistently across:
+
+- launch
+- authentication
+- AI OS
+- app navigation
+- business identity
+- settings
+- system-level branded moments
+
+The logo must not be redrawn independently by individual developers.
+
+---
+
+# 16. APP LAUNCH EXPERIENCE
+
+The first visual sequence is:
+
+```text
+App Opens
+   ↓
+Brand Presence
+   ↓
+Session Check
+   ↓
+Security
+```
+
+The cinematic AI OS animation **does not happen before security completion**.
+
+---
+
+# 17. SECURITY SCREEN
+
+Possible interface:
+
+```text
+Vepari AI
+        ↓
+Secure your business
+        ↓
+Biometric / PIN
+        ↓
+Authenticate
+```
+
+The experience should be fast and low-friction.
+
+---
+
+# 18. BIOMETRIC EXPERIENCE
+
+When enabled:
+
+```text
+Security
+ ↓
+Biometric prompt
+ ↓
+Success
+ ↓
+AI OS
+```
+
+Failure:
+
+```text
+Biometric failed
+ ↓
+Retry
+ ↓
+PIN fallback where configured
+```
+
+---
+
+# 19. AI OS AWAKENING
+
+After successful security:
+
+```text
+SECURITY VERIFIED
+       ↓
+AI OS ACTIVATION
+       ↓
+Cinematic animation
+       ↓
+AI presence appears
+       ↓
+Business scan
+```
+
+This is one of the signature Vepari AI moments.
+
+---
+
+# 20. AI OS VISUAL LANGUAGE
+
+The AI OS should feel:
+
+- spatial
+- responsive
+- intelligent
+- layered
+- fluid
+- physically believable
+
+The interaction can take inspiration from the **feeling** of futuristic personal AI interfaces, but the visual language must remain unmistakably Vepari AI.
+
+---
+
+# 21. AI OS PHYSICS
+
+AI OS elements should behave as if they have:
+
+- depth
+- inertia
+- subtle spring movement
+- magnetic attraction
+- smooth transitions
+- controlled parallax
+- responsive reactions
+
+Physics must remain subtle enough not to distract from business information.
+
+---
+
+# 22. AI OS MOTION
+
+Motion should communicate state.
+
+```text
+Dormant
+ ↓
+Awakening
+ ↓
+Analyzing
+ ↓
+Ready
+ ↓
+Listening
+ ↓
+Thinking
+ ↓
+Responding
+```
+
+Each state should have distinct but related motion.
+
+---
+
+# 23. AI OS — DORMANT
+
+Minimal visual presence.
+
+The system is available but does not constantly demand attention.
+
+---
+
+# 24. AI OS — AWAKENING
+
+The interface expands into the user's view.
+
+Conceptually:
+
+```text
+Core
+ ↓
+Expansion
+ ↓
+Layer formation
+ ↓
+Presence
+ ↓
+Business data appears
+```
+
+---
+
+# 25. AI OS — ANALYZING
+
+The AI visually communicates that it is processing business information.
+
+It should not imply human-like consciousness.
+
+---
+
+# 26. AI OS — READY
+
+The AI becomes calm and available.
+
+The user can:
+
+- speak
+- type
+- tap
+- navigate
+- dismiss
+
+---
+
+# 27. AI OS — LISTENING
+
+Voice interaction provides clear feedback.
+
+Possible visual cues:
+
+```text
+Microphone
+Waveform
+Listening indicator
+Language
+```
+
+---
+
+# 28. AI OS — THINKING
+
+The interface should show an intelligent processing state without exposing misleading internal chain-of-thought.
+
+Show:
+
+- processing state
+- brief status
+- relevant context if useful
+
+Do not expose private reasoning.
+
+---
+
+# 29. AI OS — RESPONSE
+
+The response appears progressively where appropriate.
+
+Support:
+
+- text
+- voice
+- cards
+- charts
+- actions
+- evidence
+- navigation shortcuts
+
+---
+
+# 30. AI OS — ACTION
+
+When AI proposes an operation:
+
+```text
+What I recommend
+       ↓
+What will happen
+       ↓
+Confirm
+```
+
+---
+
+# 31. AI OS — COMPLETION
+
+After an action:
+
+```text
+Completed
+ ↓
+Result
+ ↓
+Updated business state
+```
+
+---
+
+# 32. "WHILE YOU WERE AWAY"
+
+This is a signature screen/state.
+
+After security and AI awakening:
+
+```text
+Welcome back
+       ↓
+While you were away...
+       ↓
+Important business activity
+```
+
+---
+
+# 33. BRIEFING CONTENT
+
+Potential cards:
+
+```text
+Sales
+Expenses
+Payments
+Inventory
+Customers
+Suppliers
+Operations
+Alerts
+Opportunities
+```
+
+Only meaningful information should be presented.
+
+---
+
+# 34. BRIEFING PRIORITY
+
+Order by:
+
+1. urgent
+2. high business impact
+3. important changes
+4. opportunities
+5. routine activity
+
+---
+
+# 35. AI BRIEFING CARD
+
+A briefing card can contain:
+
+```text
+Category
+Title
+Summary
+Metric
+Change
+Impact
+Action
+```
+
+Example structure:
+
+```text
+Inventory Alert
+
+12 products are below
+their preferred stock level.
+
+[Review Stock]
+```
+
+---
+
+# 36. AI EVIDENCE
+
+For important AI statements:
+
+```text
+Insight
+ ↓
+Why?
+ ↓
+Evidence
+```
+
+Evidence should connect to real business records.
+
+---
+
+# 37. AI RECOMMENDATION CARD
+
+Structure:
+
+```text
+What happened
+Why it matters
+Recommended action
+
+[Do it]
+[Review]
+[Dismiss]
+```
+
+---
+
+# 38. AI ACTION CARD
+
+For actions:
+
+```text
+Action
+Affected records
+Expected result
+
+[Approve]
+[Cancel]
+```
+
+---
+
+# 39. AI PERMISSION UX
+
+If the AI cannot perform something:
+
+```text
+This action requires permission.
+```
+
+Then:
+
+```text
+[Request Access]
+```
+
+or another appropriate route.
+
+---
+
+# 40. AI CONFIRMATION
+
+For financially significant or destructive actions:
+
+```text
+Review
+ ↓
+Impact
+ ↓
+Confirm
+```
+
+Never hide consequential actions behind ambiguous buttons.
+
+---
+
+# 41. HOME SCREEN
+
+The home screen is the primary business command center.
+
+Conceptual hierarchy:
+
+```text
+Header
+ ↓
+AI OS
+ ↓
+Business Health
+ ↓
+Key Metrics
+ ↓
+Alerts
+ ↓
+Quick Actions
+ ↓
+Recent Activity
+```
+
+---
+
+# 42. HOME HEADER
+
+Header can contain:
+
+- business identity
+- branch/context where applicable
+- profile
+- notification access
+- AI entry point
+
+The header should remain compact.
+
+---
+
+# 43. BUSINESS SWITCHER
+
+For users with multiple businesses:
+
+```text
+Current Business
+ ↓
+Business list
+ ↓
+Select
+ ↓
+Context changes
+```
+
+The switch must be visually obvious.
+
+---
+
+# 44. BUSINESS HEALTH
+
+A high-level visualization should answer:
+
+> How is my business doing?
+
+Potential dimensions:
+
+- sales
+- expenses
+- profit
+- cash
+- inventory
+- receivables
+- payables
+
+---
+
+# 45. METRIC CARDS
+
+Each metric should contain:
+
+```text
+Label
+Value
+Change
+Period
+Optional status
+```
+
+Avoid excessive decimal/detail density.
+
+---
+
+# 46. QUICK ACTIONS
+
+Quick actions should include frequently used operations:
+
+```text
+New Sale
+Add Customer
+Add Product
+Add Expense
+Record Payment
+New Purchase
+Ask AI
+```
+
+The exact actions can adapt to business behavior.
+
+---
+
+# 47. RECENT ACTIVITY
+
+Shows useful recent business events.
+
+Examples:
+
+- sale completed
+- payment received
+- stock adjusted
+- expense recorded
+- purchase completed
+
+---
+
+# 48. CUSTOMERS — LIST
+
+Screen:
+
+```text
+Header
+Search
+Filters
+Customer list
+FAB / Add
+```
+
+Each row:
+
+```text
+Name
+Relevant secondary information
+Status/value where useful
+```
+
+---
+
+# 49. CUSTOMER — DETAIL
+
+Structure:
+
+```text
+Header
+Customer identity
+Key information
+Balance
+Actions
+Transactions
+Payments
+Activity
+AI Insights
+```
+
+---
+
+# 50. ADD CUSTOMER
+
+Flow:
+
+```text
+Add Customer
+ ↓
+Basic information
+ ↓
+Contact
+ ↓
+Address
+ ↓
+Additional information
+ ↓
+Save
+```
+
+---
+
+# 51. CUSTOMER AI
+
+Customer detail may provide:
+
+```text
+AI Insight
+Payment behavior
+Purchase pattern
+Outstanding balance
+Important activity
+```
+
+The AI should clearly distinguish facts from recommendations.
+
+---
+
+# 52. SUPPLIERS — LIST
+
+```text
+Header
+Search
+Filter
+Supplier list
+Add
+```
+
+---
+
+# 53. SUPPLIER — DETAIL
+
+```text
+Supplier
+ ↓
+Overview
+Purchases
+Payments
+Outstanding
+Activity
+AI Insights
+```
+
+---
+
+# 54. PRODUCTS — LIST
+
+```text
+Header
+Search
+Filter
+Categories
+Products
+Add
+```
+
+Product cards/rows can show:
+
+- product name
+- SKU
+- price
+- stock status
+
+---
+
+# 55. PRODUCT — DETAIL
+
+```text
+Product
+ ↓
+Overview
+ ↓
+Pricing
+ ↓
+Inventory
+ ↓
+Variants
+ ↓
+History
+ ↓
+AI Insights
+```
+
+---
+
+# 56. INVENTORY HOME
+
+```text
+Inventory
+ ↓
+Stock health
+ ↓
+Low stock
+ ↓
+Products
+ ↓
+Locations
+ ↓
+Transfers
+ ↓
+Adjustments
+ ↓
+History
+```
+
+---
+
+# 57. LOW-STOCK EXPERIENCE
+
+```text
+Low Stock
+ ↓
+Product
+ ↓
+Current quantity
+ ↓
+Preferred/minimum level
+ ↓
+Recommendation
+```
+
+---
+
+# 58. STOCK ADJUSTMENT
+
+```text
+Product
+ ↓
+Current stock
+ ↓
+Adjustment
+ ↓
+Reason
+ ↓
+Review
+ ↓
+Confirm
+```
+
+---
+
+# 59. STOCK TRANSFER
+
+```text
+Source
+ ↓
+Destination
+ ↓
+Products
+ ↓
+Quantity
+ ↓
+Review
+ ↓
+Confirm
+```
+
+---
+
+# 60. SALES HOME
+
+```text
+Sales
+ ↓
+Today's sales
+ ↓
+Recent sales
+ ↓
+Search
+ ↓
+New Sale
+```
+
+---
+
+# 61. NEW SALE UI
+
+The sale workflow should minimize unnecessary navigation.
+
+```text
+Customer
+ ↓
+Products
+ ↓
+Cart
+ ↓
+Pricing
+ ↓
+Discount
+ ↓
+Tax
+ ↓
+Payment
+ ↓
+Review
+ ↓
+Complete
+```
+
+---
+
+# 62. SALES CART
+
+Cart should clearly show:
+
+- product
+- quantity
+- unit price
+- discount
+- subtotal
+- tax
+- total
+
+---
+
+# 63. PAYMENT SCREEN
+
+```text
+Total
+ ↓
+Payment method
+ ↓
+Amount
+ ↓
+Remaining balance
+ ↓
+Confirm
+```
+
+---
+
+# 64. SALE COMPLETION
+
+After success:
+
+```text
+Sale complete
+ ↓
+Receipt
+ ↓
+Share
+ ↓
+New Sale
+ ↓
+Done
+```
+
+---
+
+# 65. EXPENSES
+
+```text
+Expenses
+ ↓
+Overview
+ ↓
+Recent
+ ↓
+Categories
+ ↓
+Add Expense
+```
+
+---
+
+# 66. ADD EXPENSE
+
+```text
+Amount
+ ↓
+Category
+ ↓
+Vendor
+ ↓
+Payment
+ ↓
+Attachment
+ ↓
+Review
+ ↓
+Save
+```
+
+---
+
+# 67. PURCHASES
+
+```text
+Purchases
+ ↓
+Overview
+ ↓
+Recent
+ ↓
+Suppliers
+ ↓
+New Purchase
+```
+
+---
+
+# 68. NEW PURCHASE
+
+```text
+Supplier
+ ↓
+Products
+ ↓
+Quantity
+ ↓
+Cost
+ ↓
+Tax
+ ↓
+Payment
+ ↓
+Review
+ ↓
+Confirm
+```
+
+---
+
+# 69. PAYMENTS
+
+```text
+Payments
+ ↓
+Recent
+ ↓
+Pending
+ ↓
+Outstanding
+ ↓
+Record Payment
+```
+
+---
+
+# 70. PAYMENT DETAIL
+
+```text
+Payment
+ ↓
+Amount
+Method
+Date
+Allocation
+Source
+Receipt
+```
+
+---
+
+# 71. RETURNS
+
+```text
+Original transaction
+ ↓
+Return
+ ↓
+Items
+ ↓
+Quantity
+ ↓
+Reason
+ ↓
+Refund
+ ↓
+Confirm
+```
+
+---
+
+# 72. REFUNDS
+
+```text
+Return
+ ↓
+Refund details
+ ↓
+Method
+ ↓
+Amount
+ ↓
+Confirm
+```
+
+---
+
+# 73. FINANCE HOME
+
+Finance should feel clear rather than intimidating.
+
+```text
+Finance
+ ↓
+Revenue
+ ↓
+Expenses
+ ↓
+Profit
+ ↓
+Cash Flow
+ ↓
+Receivables
+ ↓
+Payables
+```
+
+---
+
+# 74. FINANCE DETAIL
+
+Progressive disclosure:
+
+```text
+Summary
+ ↓
+Category
+ ↓
+Account
+ ↓
+Transaction
+ ↓
+Source
+```
+
+---
+
+# 75. ACCOUNTING UX
+
+The owner should not need to understand accounting mechanics for ordinary operations.
+
+The system handles:
+
+```text
+Transaction
+ ↓
+Accounting engine
+ ↓
+Financial state
+```
+
+Advanced users can access deeper financial information.
+
+---
+
+# 76. OPERATIONS
+
+```text
+Operations
+ ↓
+Orders
+ ↓
+Tasks
+ ↓
+Processes
+ ↓
+Assignments
+ ↓
+Statuses
+ ↓
+Activity
+```
+
+---
+
+# 77. DOCUMENTS
+
+```text
+Documents
+ ↓
+All
+Invoices
+Receipts
+Bills
+Quotations
+Purchase Orders
+ ↓
+Document Detail
+```
+
+---
+
+# 78. DOCUMENT DETAIL
+
+```text
+Document
+ ↓
+Preview
+ ↓
+Share
+ ↓
+Export
+ ↓
+Related transaction
+```
+
+---
+
+# 79. REPORTS
+
+```text
+Reports
+ ↓
+Choose report
+ ↓
+Period
+ ↓
+Filters
+ ↓
+Generate
+ ↓
+Results
+```
+
+---
+
+# 80. REPORT RESULT
+
+The result should support:
+
+- summary
+- charts
+- tables
+- drill-down
+- export
+- AI explanation
+
+---
+
+# 81. ANALYTICS
+
+```text
+Analytics
+ ↓
+Business overview
+ ↓
+Trend
+ ↓
+Comparison
+ ↓
+Drivers
+ ↓
+AI explanation
+```
+
+---
+
+# 82. SEARCH
+
+Global search should be accessible from the primary application experience.
+
+```text
+Search
+ ↓
+Query
+ ↓
+Results
+ ↓
+Filter
+ ↓
+Open
+```
+
+---
+
+# 83. AI SEARCH
+
+Natural language:
+
+```text
+"What did I spend on suppliers last month?"
+```
+
+The AI should return:
+
+```text
+Answer
+ ↓
+Relevant numbers
+ ↓
+Evidence
+ ↓
+Open details
+```
+
+---
+
+# 84. NOTIFICATION CENTER
+
+```text
+Notifications
+ ↓
+All
+Important
+AI
+Payments
+Inventory
+System
+```
+
+Notifications should link directly to relevant screens.
+
+---
+
+# 85. ALERT CENTER
+
+Alerts are more important than ordinary notifications.
+
+Potential categories:
+
+- low stock
+- overdue payment
+- unusual expense
+- business risk
+- opportunity
+
+---
+
+# 86. TEAM
+
+```text
+Team
+ ↓
+Members
+ ↓
+Invitations
+ ↓
+Roles
+ ↓
+Permissions
+ ↓
+Activity
+```
+
+---
+
+# 87. MEMBER DETAIL
+
+```text
+Member
+ ↓
+Role
+ ↓
+Access
+ ↓
+Branch
+ ↓
+Activity
+```
+
+---
+
+# 88. AUTOMATION UI
+
+```text
+Automation
+ ↓
+Active
+Drafts
+History
+ ↓
+Create Automation
+```
+
+---
+
+# 89. AUTOMATION BUILDER
+
+```text
+WHEN
+ ↓
+Condition
+ ↓
+DO
+ ↓
+Schedule
+ ↓
+Review
+ ↓
+Activate
+```
+
+---
+
+# 90. CONNECTION PORTFOLIO
+
+The Connection Portfolio comes after the core product is stable.
+
+Main screen:
+
+```text
+Connections
+ ↓
+Connected
+Available
+Needs Attention
+```
+
+---
+
+# 91. CONNECTION CARD
+
+```text
+Provider
+Status
+Last Sync
+Account
+```
+
+Actions:
+
+```text
+Open
+Sync
+Reconnect
+Disconnect
+```
+
+---
+
+# 92. CONNECTION SETUP
+
+```text
+Select Provider
+ ↓
+Connect
+ ↓
+Authorization
+ ↓
+Permissions
+ ↓
+Initial Sync
+ ↓
+Connected
+```
+
+---
+
+# 93. CONNECTION FAILURE
+
+```text
+Connection issue
+ ↓
+Explain
+ ↓
+Reconnect
+```
+
+The core Vepari application must remain usable.
+
+---
+
+# 94. SETTINGS
+
+```text
+Settings
+├── Profile
+├── Business
+├── Language
+├── AI
+├── Voice
+├── Security
+├── Notifications
+├── Team
+├── Devices
+├── Connections
+├── Data
+├── Storage
+└── About
+```
+
+---
+
+# 95. PROFILE
+
+```text
+Profile
+ ↓
+Name
+Contact
+Preferences
+```
+
+---
+
+# 96. BUSINESS SETTINGS
+
+```text
+Business
+ ↓
+Profile
+Industry
+Size
+Branches
+Locations
+Business preferences
+```
+
+---
+
+# 97. LANGUAGE SETTINGS
+
+```text
+Language
+ ↓
+Select
+ ↓
+Preview
+ ↓
+Apply
+```
+
+The application should update language consistently.
+
+---
+
+# 98. AI SETTINGS
+
+```text
+AI
+ ↓
+Preferences
+Memory
+Voice
+Permissions
+Action confirmation
+```
+
+---
+
+# 99. VOICE SETTINGS
+
+Potential controls:
+
+- voice language
+- input language
+- output language
+- voice preferences
+- voice enable/disable
+
+---
+
+# 100. SECURITY SETTINGS
+
+```text
+Security
+ ↓
+PIN
+Biometrics
+Trusted Devices
+Sessions
+Security Activity
+```
+
+---
+
+# 101. NOTIFICATION SETTINGS
+
+```text
+Notifications
+ ↓
+Business
+AI
+Payments
+Inventory
+System
+```
+
+Each category can be controlled according to the notification architecture.
+
+---
+
+# 102. DEVICE SETTINGS
+
+```text
+Devices
+ ↓
+Device list
+ ↓
+Device detail
+ ↓
+Trust
+ ↓
+Revoke
+```
+
+---
+
+# 103. DATA SETTINGS
+
+```text
+Data
+ ↓
+Import
+Export
+Storage
+Backup where available
+Retention
+Deletion
+```
+
+---
+
+# 104. AI MEMORY MANAGEMENT
+
+The user should be able to understand and manage relevant AI memory.
+
+```text
+Memory
+ ↓
+Stored context
+ ↓
+Details
+ ↓
+Manage / Remove
+```
+
+---
+
+# 105. OFFLINE UX
+
+Offline mode is a first-class state.
+
+The interface should never behave as if the application has simply "broken" when connectivity disappears.
+
+---
+
+# 106. OFFLINE INDICATOR
+
+A subtle persistent indicator can communicate:
+
+```text
+Offline
+```
+
+while detailed actions communicate the exact state.
+
+---
+
+# 107. OFFLINE SAVE
+
+After an eligible transaction:
+
+```text
+Saved locally
+```
+
+This is much more reassuring than:
+
+```text
+Waiting for server...
+```
+
+---
+
+# 108. SYNC STATUS
+
+Possible UI:
+
+```text
+Synced
+Syncing
+Queued
+Failed
+Conflict
+```
+
+---
+
+# 109. OFFLINE TRANSACTION UX
+
+Example:
+
+```text
+Sale completed
+
+✓ Saved to this device
+↻ Will sync when connection returns
+```
+
+This makes the behavior explicit.
+
+---
+
+# 110. SYNC ERROR
+
+```text
+Couldn't sync yet
+Your data is still saved locally.
+
+[Retry]
+[View Details]
+```
+
+---
+
+# 111. CONFLICT UX
+
+A conflict should never be silently hidden.
+
+```text
+Some changes need review
+ ↓
+Affected record
+ ↓
+What changed
+ ↓
+Choose resolution
+```
+
+Financial conflicts require particularly careful UX.
+
+---
+
+# 112. APP RESTART UX
+
+After restart:
+
+```text
+Security
+ ↓
+Restore local state
+ ↓
+Recover pending operations
+ ↓
+Continue
+```
+
+The user should not lose a draft or queued operation because the application was closed.
+
+---
+
+# 113. LOADING STATES
+
+Use contextual loading.
+
+Examples:
+
+```text
+Skeleton
+Progressive loading
+Inline spinner
+AI processing state
+```
+
+Avoid full-screen blocking loaders for every operation.
+
+---
+
+# 114. EMPTY STATES
+
+Every empty screen should explain:
+
+1. what is empty
+2. why it matters
+3. what the user can do
+
+Example:
+
+```text
+No customers yet
+
+Add your first customer to start
+tracking sales and payments.
+
+[Add Customer]
+```
+
+---
+
+# 115. ERROR STATES
+
+Errors must answer:
+
+```text
+What happened?
+Was my data saved?
+What can I do?
+```
+
+---
+
+# 116. SUCCESS STATES
+
+Success should provide confirmation without unnecessary interruption.
+
+```text
+✓ Sale completed
+```
+
+Then offer relevant next actions.
+
+---
+
+# 117. DESTRUCTIVE ACTIONS
+
+For:
+
+- delete
+- revoke
+- disconnect
+- destructive changes
+
+use:
+
+```text
+Explain
+ ↓
+Confirm
+ ↓
+Execute
+```
+
+---
+
+# 118. BOTTOM SHEETS
+
+Bottom sheets should be used for:
+
+- quick actions
+- filters
+- selection
+- contextual actions
+- compact forms
+
+They should not become giant replacement screens.
+
+---
+
+# 119. MODALS
+
+Use modals for:
+
+- confirmation
+- critical decisions
+- short focused interaction
+
+Avoid nesting multiple modals.
+
+---
+
+# 120. FORMS
+
+Forms should:
+
+- use clear labels
+- show validation inline
+- preserve user input
+- support keyboard navigation
+- support multilingual expansion
+- provide appropriate defaults
+
+---
+
+# 121. FORM VALIDATION
+
+Validation should be:
+
+```text
+Immediate where helpful
++
+Complete on submit
+```
+
+Errors should be attached to the relevant field.
+
+---
+
+# 122. KEYBOARD UX
+
+Forms must work naturally with mobile keyboards.
+
+The interface should:
+
+- scroll focused fields into view
+- avoid keyboard covering actions
+- provide correct keyboard types
+- support numeric fields properly
+
+---
+
+# 123. TOUCH TARGETS
+
+Interactive controls must have sufficiently large touch areas.
+
+Do not optimize for visual compactness at the expense of usability.
+
+---
+
+# 124. HAPTICS
+
+Haptics can reinforce:
+
+- successful actions
+- confirmations
+- important AI states
+- errors
+- selected controls
+
+Use sparingly.
+
+---
+
+# 125. MOTION ACCESSIBILITY
+
+Provide reduced-motion behavior where the platform/user preference requests it.
+
+The AI OS should remain usable without elaborate animation.
+
+---
+
+# 126. SCREEN READER SUPPORT
+
+Every meaningful interactive element needs:
+
+- accessible label
+- role
+- state
+- action description where needed
+
+Decorative animation should not overwhelm screen readers.
+
+---
+
+# 127. MULTILINGUAL UX
+
+Every screen must be tested in all supported languages.
+
+Especially:
+
+- headers
+- buttons
+- cards
+- tables
+- dialogs
+- AI responses
+- forms
+- notifications
+
+---
+
+# 128. TEXT EXPANSION
+
+A button such as:
+
+```text
+Save
+```
+
+may become significantly longer in another language.
+
+Buttons must adapt rather than truncate important text.
+
+---
+
+# 129. NUMBERS
+
+Support localized presentation where appropriate while preserving financial precision.
+
+---
+
+# 130. CURRENCY
+
+Currency presentation must follow business configuration.
+
+Financial values must remain mathematically accurate regardless of display localization.
+
+---
+
+# 131. DATE/TIME
+
+Use locale-aware date/time formatting.
+
+---
+
+# 132. VOICE LANGUAGE UX
+
+The user should know which language the voice interface is listening to/responding in.
+
+Language detection can assist but should not create confusing silent changes.
+
+---
+
+# 133. AI LANGUAGE UX
+
+AI responses should follow the user's configured language unless the user explicitly asks for another language.
+
+---
+
+# 134. LANGUAGE SWITCHING DURING AI
+
+The user should be able to naturally change language during interaction.
+
+Example:
+
+```text
+User speaks Tamil
+ ↓
+AI responds Tamil
+
+User asks in Hindi
+ ↓
+AI can respond Hindi
+```
+
+Subject to configured behavior.
+
+---
+
+# 135. AI + UI CONNECTION
+
+AI should not only answer in a chat bubble.
+
+It should be able to provide:
+
+```text
+Answer
+ ↓
+Relevant screen
+ ↓
+Relevant record
+ ↓
+Action
+```
+
+---
+
+# 136. AI NAVIGATION
+
+Example:
+
+```text
+User:
+"Show low-stock products."
+
+AI
+ ↓
+Low-stock result
+ ↓
+[Open Inventory]
+```
+
+---
+
+# 137. AI ACTION SHORTCUT
+
+Example:
+
+```text
+AI:
+"12 products are below stock level."
+
+[Review]
+[Create Purchase]
+```
+
+If "Create Purchase" has meaningful consequences, appropriate confirmation remains required.
+
+---
+
+# 138. AI DASHBOARD EMBEDDING
+
+AI insights can appear inside relevant business modules.
+
+Example:
+
+```text
+Inventory
+ ↓
+AI:
+"Three products have unusual demand."
+```
+
+---
+
+# 139. AI PERSONALIZATION
+
+The UI can adapt based on legitimate usage patterns.
+
+Examples:
+
+- frequently used actions
+- recently accessed records
+- preferred workflows
+
+Personalization must not make important functionality inaccessible.
+
+---
+
+# 140. MICRO BUSINESS UX
+
+Micro users should experience:
+
+```text
+Simple
+ ↓
+Guided
+ ↓
+Fast
+ ↓
+AI-assisted
+```
+
+The interface should avoid exposing enterprise complexity unnecessarily.
+
+---
+
+# 141. SMALL BUSINESS UX
+
+Introduce:
+
+- more team controls
+- deeper reporting
+- more inventory
+- automation
+- finance
+
+as required.
+
+---
+
+# 142. MEDIUM BUSINESS UX
+
+Support:
+
+- branches
+- teams
+- advanced operations
+- deeper analytics
+- integrations
+
+---
+
+# 143. ENTERPRISE UX
+
+Support:
+
+- complex permissions
+- multiple branches
+- larger teams
+- advanced analytics
+- enterprise integrations
+- advanced automation
+- usage controls
+
+---
+
+# 144. PROGRESSIVE DISCLOSURE
+
+Do not show every capability at once.
+
+```text
+Simple view
+ ↓
+More
+ ↓
+Advanced
+```
+
+This is especially important for Micro users.
+
+---
+
+# 145. BUSINESS CONTEXT
+
+The interface should always make clear:
+
+```text
+Which business?
+Which branch?
+Which user?
+Which period?
+```
+
+when ambiguity could cause an incorrect action.
+
+---
+
+# 146. FINANCIAL UX SAFETY
+
+Financial values should be:
+
+- clearly labeled
+- consistently formatted
+- easy to verify
+- traceable to source transactions
+
+---
+
+# 147. AI FINANCIAL UX
+
+When AI discusses money, provide sufficient context:
+
+```text
+Amount
+Period
+Comparison
+Source/evidence
+```
+
+when relevant.
+
+---
+
+# 148. AI TRUST UX
+
+The AI should distinguish:
+
+```text
+Fact
+Estimate
+Prediction
+Recommendation
+```
+
+These must not visually appear identical.
+
+---
+
+# 149. AI UNCERTAINTY
+
+If data is insufficient:
+
+```text
+I don't have enough information
+```
+
+is preferable to inventing an answer.
+
+---
+
+# 150. AI EXPLANATION
+
+For important recommendations:
+
+```text
+Why am I seeing this?
+```
+
+opens the reasoning summary and evidence, without exposing hidden chain-of-thought.
+
+---
+
+# 151. AI MEMORY UX
+
+If the system uses a remembered preference/context:
+
+```text
+Based on your preference...
+```
+
+where appropriate.
+
+Users should have controls over memory.
+
+---
+
+# 152. AI PRIVACY UX
+
+When information is sent to an external provider where applicable, the system must follow the established privacy/data-boundary architecture.
+
+The UI should not make false claims about data remaining local if a feature requires external processing.
+
+---
+
+# 153. CONNECTION PRIVACY
+
+Connection permissions should be understandable.
+
+Show:
+
+```text
+What will be connected
+What Vepari can access
+Why it is needed
+```
+
+---
+
+# 154. NOTIFICATION UX
+
+Notifications should be:
+
+- relevant
+- actionable
+- concise
+- privacy-aware
+
+Avoid notification spam.
+
+---
+
+# 155. HOME PERSONALIZATION
+
+The home screen can prioritize frequently relevant information while retaining a predictable base structure.
+
+---
+
+# 156. SEARCH UX
+
+Search should feel immediate.
+
+Possible categories:
+
+```text
+All
+Customers
+Products
+Sales
+Purchases
+Payments
+Documents
+```
+
+---
+
+# 157. GLOBAL ACTION ACCESS
+
+The user should be able to quickly reach common operations without navigating through multiple layers.
+
+This can be achieved through:
+
+- quick actions
+- contextual actions
+- AI
+- search
+- shortcuts
+
+---
+
+# 158. NAVIGATION PRINCIPLE
+
+Navigation should optimize for:
+
+```text
+Frequency
+Context
+Speed
+Discoverability
+```
+
+not simply the number of available modules.
+
+---
+
+# 159. NAVIGATION DEPTH
+
+Avoid unnecessarily deep flows.
+
+Ideal principle:
+
+```text
+Home
+ ↓
+Module
+ ↓
+Record
+ ↓
+Action
+```
+
+Complex operations may naturally require more steps.
+
+---
+
+# 160. BACK NAVIGATION
+
+Back navigation must preserve:
+
+- scroll position
+- filters
+- drafts
+- relevant context
+
+where practical.
+
+---
+
+# 161. DEEP LINKING
+
+Relevant notifications, AI actions, documents and connections should be able to open directly into the appropriate context.
+
+---
+
+# 162. APP STATE RESTORATION
+
+When the app resumes:
+
+```text
+Previous context
+ ↓
+Security check if required
+ ↓
+Restore
+```
+
+Avoid unnecessarily returning users to the home screen.
+
+---
+
+# 163. AI OS OVERLAY
+
+The AI OS should be able to operate as an overlay over business screens where appropriate.
+
+It must never permanently obscure critical controls.
+
+---
+
+# 164. AI OS DISMISSAL
+
+The user should be able to minimize/dismiss the AI OS and continue normal business operations.
+
+---
+
+# 165. AI OS RE-ENTRY
+
+AI OS can be reopened through:
+
+- dedicated AI control
+- voice
+- gesture if approved
+- contextual AI buttons
+
+---
+
+# 166. AI OS CONTEXT AWARENESS
+
+If opened from Inventory:
+
+```text
+AI
+ ↓
+Inventory context
+```
+
+If opened from Finance:
+
+```text
+AI
+ ↓
+Finance context
+```
+
+The user should not have to repeat obvious context.
+
+---
+
+# 167. CONTEXTUAL AI
+
+Examples:
+
+```text
+Customer screen
+→ "What should I know about this customer?"
+
+Inventory
+→ "Which items need attention?"
+
+Finance
+→ "Why did profit change?"
+```
+
+---
+
+# 168. AI CHAT HISTORY
+
+Conversations can be accessed through the AI experience.
+
+The interface should distinguish:
+
+- active conversation
+- previous conversation
+- business context
+
+---
+
+# 169. AI CONVERSATION UX
+
+```text
+Conversation
+ ↓
+User message
+ ↓
+AI response
+ ↓
+Evidence/action
+```
+
+Avoid turning Vepari into a generic standalone chatbot.
+
+---
+
+# 170. VOICE UX
+
+Voice should feel integrated into the OS rather than being a separate "voice app."
+
+```text
+Tap
+ ↓
+Speak
+ ↓
+AI
+ ↓
+Action
+```
+
+---
+
+# 171. VOICE CONFIRMATION
+
+For potentially consequential voice actions:
+
+```text
+You asked me to...
+[Confirm]
+```
+
+---
+
+# 172. VOICE ERROR
+
+If recognition is uncertain:
+
+```text
+I didn't catch that.
+
+[Try Again]
+[Type Instead]
+```
+
+---
+
+# 173. VOICE PRIVACY
+
+The UI should clearly communicate when microphone capture is active.
+
+---
+
+# 174. ONBOARDING UX
+
+Onboarding should progressively collect only information necessary at each stage.
+
+```text
+Identity
+ ↓
+Business
+ ↓
+Configuration
+ ↓
+Security
+ ↓
+AI
+ ↓
+Ready
+```
+
+---
+
+# 175. ONBOARDING PROGRESS
+
+Show meaningful progress without creating a stressful multi-page wizard.
+
+---
+
+# 176. BUSINESS SETUP ASSISTANT
+
+AI can assist onboarding:
+
+```text
+Business setup
+ ↓
+AI asks useful questions
+ ↓
+User answers
+ ↓
+Configuration generated
+ ↓
+User reviews
+```
+
+---
+
+# 177. IMPORT UX
+
+```text
+Import
+ ↓
+Choose source
+ ↓
+Map
+ ↓
+Validate
+ ↓
+Preview
+ ↓
+Confirm
+```
+
+Never silently import questionable records.
+
+---
+
+# 178. IMPORT ERROR
+
+Show:
+
+```text
+Imported: 950
+Needs review: 12
+Failed: 3
+```
+
+and provide access to affected records.
+
+---
+
+# 179. DATA EXPORT UX
+
+```text
+Export
+ ↓
+Choose data
+ ↓
+Format
+ ↓
+Generate
+ ↓
+Secure file
+```
+
+---
+
+# 180. DATA DELETION UX
+
+Deletion must be explicit and explain consequences.
+
+---
+
+# 181. BUSINESS SWITCHING SAFETY
+
+When switching businesses:
+
+```text
+Current context
+ ↓
+Confirm/switch
+ ↓
+Clear old business-specific view state
+ ↓
+Load new business
+```
+
+This prevents cross-business UI leakage.
+
+---
+
+# 182. BRANCH SWITCHING
+
+Where branch scope is enabled:
+
+```text
+Business
+ ↓
+Branch
+ ↓
+Data
+```
+
+The current branch should be visible when relevant.
+
+---
+
+# 183. ROLE-AWARE UI
+
+The UI can hide actions the user cannot perform, but backend authorization remains authoritative.
+
+---
+
+# 184. PERMISSION-DENIED UX
+
+Do not simply remove everything without explanation.
+
+Where appropriate:
+
+```text
+You don't have permission to perform this action.
+```
+
+---
+
+# 185. ENTERPRISE DENSITY
+
+Enterprise screens can contain more information, but they must retain the same design system.
+
+---
+
+# 186. RESPONSIVE MOBILE DESIGN
+
+The primary target is mobile.
+
+Layouts must handle:
+
+- small Android phones
+- larger Android phones
+- future iPhones
+- portrait
+- landscape where supported
+
+---
+
+# 187. SCREEN ORIENTATION
+
+Default orientation should follow the product requirements and individual workflow needs.
+
+Core business flows should prioritize portrait mobile usability.
+
+---
+
+# 188. PERFORMANCE UX
+
+The user should perceive the app as responsive even when backend/cloud operations are occurring.
+
+Use:
+
+- optimistic local updates where safe
+- skeletons
+- progressive rendering
+- local database access
+- background sync
+
+---
+
+# 189. OFFLINE-FIRST PERCEPTION
+
+The user should experience:
+
+> "The app works."
+
+rather than:
+
+> "The app is waiting for the server."
+
+---
+
+# 190. CLOUD-DEPENDENT UX
+
+When a feature genuinely requires cloud connectivity:
+
+```text
+Internet required
+ ↓
+Explain why
+ ↓
+Retry
+```
+
+---
+
+# 191. AI DEPENDENCY UX
+
+If cloud AI is unavailable:
+
+```text
+AI is temporarily unavailable.
+Your business data and core operations remain available.
+```
+
+---
+
+# 192. CONNECTION DEPENDENCY UX
+
+If an external integration fails:
+
+```text
+Connection needs attention.
+Core Vepari operations remain available.
+```
+
+---
+
+# 193. SYSTEM STATUS
+
+A subtle system status area may expose:
+
+```text
+Online
+Offline
+Syncing
+AI status
+Connection status
+```
+
+without cluttering the primary UI.
+
+---
+
+# 194. ACCESSIBILITY COLOR
+
+Status must not rely exclusively on color.
+
+Use:
+
+- icons
+- labels
+- patterns
+- text
+- shapes
+
+where needed.
+
+---
+
+# 195. ACCESSIBILITY MOTION
+
+Important information must remain accessible if animations are disabled.
+
+---
+
+# 196. ACCESSIBILITY AI OS
+
+The AI OS must have a functional non-cinematic equivalent.
+
+Animation enhances the experience; it does not define functionality.
+
+---
+
+# 197. COMPONENT LIBRARY
+
+Core components should include:
+
+```text
+Button
+IconButton
+TextField
+SearchField
+Select
+Dropdown
+Checkbox
+Radio
+Switch
+Card
+MetricCard
+ListItem
+Avatar
+Badge
+Chip
+Tabs
+BottomSheet
+Modal
+Dialog
+Toast
+Banner
+Progress
+Skeleton
+EmptyState
+ErrorState
+AIResponse
+AIInsightCard
+AIActionCard
+AIOrb/AIOSCore
+Chart
+Table
+DocumentPreview
+```
+
+---
+
+# 198. COMPONENT STATE SYSTEM
+
+Every reusable component should define:
+
+```text
+Default
+Pressed
+Focused
+Disabled
+Loading
+Error
+Selected
+Success
+```
+
+where applicable.
+
+---
+
+# 199. AI COMPONENT SYSTEM
+
+Special AI components include:
+
+```text
+AI Core
+AI Status
+AI Briefing
+AI Insight
+AI Evidence
+AI Recommendation
+AI Action
+AI Approval
+AI Result
+AI Voice
+AI Conversation
+```
+
+---
+
+# 200. CARD SYSTEM
+
+Cards should have consistent:
+
+- padding
+- radius
+- hierarchy
+- title
+- metadata
+- action placement
+
+---
+
+# 201. BUTTON HIERARCHY
+
+Use a clear hierarchy:
+
+```text
+Primary
+Secondary
+Tertiary
+Destructive
+AI action
+```
+
+---
+
+# 202. PRIMARY ACTION RULE
+
+One screen should generally have a clear primary action.
+
+Avoid competing primary buttons.
+
+---
+
+# 203. ICON BUTTON RULE
+
+Icon-only controls must be recognizable and accessible.
+
+---
+
+# 204. TABLES ON MOBILE
+
+Avoid forcing desktop-style tables onto mobile.
+
+Use:
+
+```text
+Summary
+ ↓
+Cards/List
+ ↓
+Detail
+```
+
+where appropriate.
+
+---
+
+# 205. CHARTS
+
+Charts must be:
+
+- readable
+- touch-friendly
+- accessible
+- localized
+- understandable without color alone
+
+---
+
+# 206. DATA VISUALIZATION
+
+Always show the actual values where precision matters.
+
+Charts supplement data; they do not replace exact figures.
+
+---
+
+# 207. REPORT FILTERS
+
+Use a bottom sheet/filter panel:
+
+```text
+Date
+Category
+Branch
+Customer
+Supplier
+```
+
+then:
+
+```text
+Apply
+```
+
+---
+
+# 208. FILTER PERSISTENCE
+
+Within a useful session, preserve filters where appropriate.
+
+---
+
+# 209. LIST PERFORMANCE
+
+Large lists must use virtualization and efficient rendering.
+
+---
+
+# 210. LARGE BUSINESS UX
+
+For large datasets:
+
+- search early
+- filter
+- paginate/virtualize
+- progressive load
+- avoid rendering huge lists at once
+
+---
+
+# 211. AI RESOURCE CARDS
+
+The AI OS can summarize:
+
+```text
+Cash
+Inventory
+Receivables
+Payables
+Sales
+Expenses
+```
+
+as visually connected resource cards.
+
+---
+
+# 212. AI RESOURCE DRILL-DOWN
+
+```text
+Resource
+ ↓
+Summary
+ ↓
+Why
+ ↓
+Records
+```
+
+---
+
+# 213. AI BUSINESS HEALTH FLOW
+
+```text
+Business Health
+ ↓
+Overall state
+ ↓
+Drivers
+ ↓
+Risks
+ ↓
+Opportunities
+ ↓
+Actions
+```
+
+---
+
+# 214. AI RISK UX
+
+Risk should show:
+
+```text
+Risk
+ ↓
+Severity
+ ↓
+Evidence
+ ↓
+Potential impact
+ ↓
+Recommendation
+```
+
+---
+
+# 215. AI OPPORTUNITY UX
+
+```text
+Opportunity
+ ↓
+Evidence
+ ↓
+Potential benefit
+ ↓
+Recommendation
+ ↓
+Optional action
+```
+
+---
+
+# 216. AI DAILY SUMMARY
+
+At the end of a period:
+
+```text
+Today's business
+ ↓
+What happened
+ ↓
+What changed
+ ↓
+What needs attention
+```
+
+---
+
+# 217. AI WEEKLY/MONTHLY SUMMARY
+
+Same pattern, but aggregated:
+
+```text
+Period
+ ↓
+Performance
+ ↓
+Trends
+ ↓
+Problems
+ ↓
+Opportunities
+ ↓
+Next actions
+```
+
+---
+
+# 218. HOME AI PERSONALIZATION
+
+The AI can prioritize the most relevant cards based on current business conditions.
+
+But navigation and core controls should remain predictable.
+
+---
+
+# 219. NOTIFICATION → SCREEN FLOW
+
+Every actionable notification should have a destination.
+
+Example:
+
+```text
+Low stock
+ ↓
+Tap
+ ↓
+Inventory
+ ↓
+Product
+```
+
+---
+
+# 220. AI → SCREEN FLOW
+
+```text
+AI insight
+ ↓
+Tap
+ ↓
+Relevant record
+```
+
+---
+
+# 221. SCREEN → AI FLOW
+
+Every important business screen should provide contextual AI access where appropriate.
+
+---
+
+# 222. ACTION → RESULT FLOW
+
+```text
+Action
+ ↓
+Processing
+ ↓
+Success
+ ↓
+Updated screen
+```
+
+---
+
+# 223. DATA REFRESH
+
+After mutations, local state should update immediately where safe.
+
+No unnecessary full-screen reload.
+
+---
+
+# 224. REALTIME UI
+
+When another authorized device changes relevant business data:
+
+```text
+Realtime event
+ ↓
+Local state update
+ ↓
+UI refresh
+```
+
+---
+
+# 225. REALTIME CONFLICT
+
+Realtime updates must not blindly overwrite unsaved local user work.
+
+---
+
+# 226. DRAFTS
+
+Forms should preserve drafts where appropriate.
+
+Example:
+
+```text
+Create Sale
+ ↓
+App backgrounded
+ ↓
+Return
+ ↓
+Draft remains
+```
+
+---
+
+# 227. UNSAVED CHANGES
+
+If the user leaves a form with important unsaved changes:
+
+```text
+Save draft?
+```
+
+where appropriate.
+
+---
+
+# 228. SECURITY TIMEOUT UX
+
+If configured:
+
+```text
+App idle
+ ↓
+Security timeout
+ ↓
+Re-authentication
+ ↓
+Restore previous screen
+```
+
+---
+
+# 229. LOGOUT UX
+
+```text
+Settings
+ ↓
+Logout
+ ↓
+Confirm
+ ↓
+Session cleared
+ ↓
+Login
+```
+
+Local business data should not be accidentally deleted.
+
+---
+
+# 230. CRITICAL UX PRINCIPLE
+
+**Never make the user wonder whether a business transaction was saved.**
+
+The application must explicitly communicate:
+
+```text
+Saved locally
+Synced
+Queued
+Failed
+Conflict
+```
+
+---
+
+# 231. UX PRINCIPLE FOR FINANCE
+
+**Never make the user wonder where a number came from.**
+
+Provide drill-down/evidence where useful.
+
+---
+
+# 232. UX PRINCIPLE FOR AI
+
+**Never make the user wonder why the AI said something important.**
+
+Provide:
+
+```text
+Why
+Evidence
+Impact
+```
+
+where appropriate.
+
+---
+
+# 233. UX PRINCIPLE FOR SECURITY
+
+**Never hide important security state.**
+
+Users should understand when they are:
+
+- authenticated
+- locked
+- trusted
+- offline
+- connected
+
+---
+
+# 234. UX PRINCIPLE FOR AI ACTIONS
+
+**Never make consequential AI actions ambiguous.**
+
+The user should know:
+
+```text
+What
+Why
+Impact
+Approval
+Result
+```
+
+---
+
+# 235. UX PRINCIPLE FOR MULTILINGUAL DESIGN
+
+**Never treat translation as an afterthought.**
+
+Every component must be language-resilient from the beginning.
+
+---
+
+# 236. UX PRINCIPLE FOR MICRO USERS
+
+**Never expose enterprise complexity before the user needs it.**
+
+---
+
+# 237. UX PRINCIPLE FOR ENTERPRISE USERS
+
+**Never sacrifice power simply to keep the interface minimal.**
+
+Use progressive disclosure.
+
+---
+
+# 238. MASTER NAVIGATION FLOW
+
+```text
+                         AI OS
+                           │
+              ┌────────────┼────────────┐
+              │            │            │
+             AI         Business      Alerts
+              │            │
+              │      ┌─────┼─────────┐
+              │      │     │         │
+              │    CRM   Commerce   Finance
+              │
+              ├── Voice
+              ├── Chat
+              ├── Memory
+              ├── Insights
+              └── Actions
+```
+
+---
+
+# 239. COMPLETE SCREEN MAP
+
+```text
+APP
+│
+├── Launch
+├── Security
+│
+├── Onboarding
+│   ├── Language
+│   ├── Account
+│   ├── Business
+│   ├── Industry
+│   ├── Size
+│   ├── Location
+│   ├── Configuration
+│   ├── AI
+│   └── Security
+│
+├── AI OS
+│   ├── Awakening
+│   ├── Briefing
+│   ├── Resources
+│   ├── Insights
+│   ├── Voice
+│   ├── Chat
+│   ├── Evidence
+│   ├── Recommendations
+│   ├── Actions
+│   └── Results
+│
+├── Home
+│
+├── Customers
+│   ├── List
+│   ├── Search
+│   ├── Detail
+│   ├── Add
+│   └── Edit
+│
+├── Suppliers
+│   ├── List
+│   ├── Detail
+│   ├── Add
+│   └── Edit
+│
+├── Products
+│   ├── List
+│   ├── Detail
+│   ├── Add
+│   └── Edit
+│
+├── Inventory
+│   ├── Overview
+│   ├── Stock
+│   ├── Low Stock
+│   ├── Locations
+│   ├── Transfers
+│   ├── Adjustments
+│   └── History
+│
+├── Sales
+│   ├── Overview
+│   ├── List
+│   ├── New Sale
+│   ├── Cart
+│   ├── Payment
+│   ├── Review
+│   └── Receipt
+│
+├── Expenses
+│   ├── Overview
+│   ├── List
+│   ├── Add
+│   └── Detail
+│
+├── Purchases
+│   ├── Overview
+│   ├── List
+│   ├── New Purchase
+│   └── Detail
+│
+├── Payments
+│   ├── List
+│   ├── Add
+│   └── Detail
+│
+├── Returns
+├── Refunds
+│
+├── Finance
+│   ├── Overview
+│   ├── Revenue
+│   ├── Expenses
+│   ├── Profit
+│   ├── Cash Flow
+│   ├── Receivables
+│   ├── Payables
+│   ├── Accounts
+│   └── Ledger
+│
+├── Operations
+│   ├── Orders
+│   ├── Tasks
+│   ├── Processes
+│   ├── Assignments
+│   └── Activity
+│
+├── Documents
+│   ├── Invoices
+│   ├── Receipts
+│   ├── Bills
+│   ├── Quotations
+│   └── Purchase Orders
+│
+├── Reports
+│
+├── Analytics
+│
+├── Search
+│
+├── Notifications
+├── Alerts
+│
+├── Team
+│   ├── Members
+│   ├── Invitations
+│   ├── Roles
+│   └── Permissions
+│
+├── Automation
+│
+├── Connection Portfolio
+│   ├── Available
+│   ├── Connected
+│   ├── Setup
+│   ├── Sync
+│   └── Health
+│
+└── Settings
+    ├── Profile
+    ├── Business
+    ├── Language
+    ├── AI
+    ├── Voice
+    ├── Security
+    ├── Notifications
+    ├── Team
+    ├── Devices
+    ├── Connections
+    ├── Data
+    ├── Storage
+    └── About
+```
+
+---
+
+# 240. COMPLETE FIRST-LAUNCH FLOW
+
+```text
+Launch
+ ↓
+Welcome
+ ↓
+Language
+ ↓
+Login / Create
+ ↓
+Verification
+ ↓
+Security
+ ↓
+Business Setup
+ ↓
+Business Size
+ ↓
+Industry
+ ↓
+Configuration
+ ↓
+Optional Import
+ ↓
+AI Setup
+ ↓
+Voice Setup
+ ↓
+AI OS Introduction
+ ↓
+Home
+```
+
+---
+
+# 241. COMPLETE RETURNING-USER FLOW
+
+```text
+Launch
+ ↓
+Session Check
+ ↓
+PIN / Biometric
+ ↓
+Security Success
+ ↓
+AI OS Awakening
+ ↓
+Business Scan
+ ↓
+While You Were Away
+ ↓
+Resources
+ ↓
+Alerts
+ ↓
+Insights
+ ↓
+Home
+```
+
+---
+
+# 242. COMPLETE DAILY FLOW
+
+```text
+Open
+ ↓
+Security
+ ↓
+AI Briefing
+ ↓
+Review
+ ↓
+Ask AI
+ ↓
+Business Action
+ ↓
+Sale / Expense / Payment / Inventory
+ ↓
+Updated Business State
+ ↓
+Continue
+```
+
+---
+
+# 243. COMPLETE OFFLINE FLOW
+
+```text
+Open
+ ↓
+Security
+ ↓
+Offline detected
+ ↓
+Continue
+ ↓
+Business operation
+ ↓
+Local database
+ ↓
+Saved locally
+ ↓
+Queued
+ ↓
+Network returns
+ ↓
+Sync
+ ↓
+Result
+```
+
+---
+
+# 244. COMPLETE AI FLOW
+
+```text
+Open AI
+ ↓
+Context
+ ↓
+Ask
+ ↓
+Understand
+ ↓
+Retrieve
+ ↓
+Respond
+ ↓
+Evidence
+ ↓
+Recommendation
+ ↓
+Action
+ ↓
+Approval
+ ↓
+Execution
+ ↓
+Result
+```
+
+---
+
+# 245. COMPLETE CONNECTION FLOW
+
+```text
+Connections
+ ↓
+Provider
+ ↓
+Connect
+ ↓
+Authorization
+ ↓
+Permissions
+ ↓
+Initial Sync
+ ↓
+Connected
+ ↓
+Ongoing Sync
+ ↓
+Health
+```
+
+---
+
+# 246. COMPLETE SETTINGS FLOW
+
+```text
+Settings
+ ↓
+Category
+ ↓
+Detail
+ ↓
+Change
+ ↓
+Validation
+ ↓
+Save
+ ↓
+Success
+```
+
+---
+
+# 247. COMPLETE ERROR FLOW
+
+```text
+Operation
+ ↓
+Failure
+ ↓
+Explain
+ ↓
+Determine whether data saved
+ ↓
+Retry / Resolve / Exit
+```
+
+---
+
+# 248. COMPLETE SECURITY FLOW
+
+```text
+Launch
+ ↓
+Session
+ ↓
+PIN/Biometrics
+ ↓
+Verified
+ ↓
+AI OS
+```
+
+If failure:
+
+```text
+Failed
+ ↓
+Retry / fallback
+ ↓
+Lock if necessary
+```
+
+---
+
+# 249. COMPLETE DATA FLOW FROM UX PERSPECTIVE
+
+```text
+USER
+ ↓
+UI
+ ↓
+LOCAL DOMAIN ACTION
+ ↓
+LOCAL DATABASE
+ ↓
+IMMEDIATE UI STATE
+ ↓
+OPTIONAL SYNC
+ ↓
+CLOUD
+ ↓
+OTHER DEVICES
+```
+
+---
+
+# 250. COMPLETE AI DATA FLOW FROM UX PERSPECTIVE
+
+```text
+USER
+ ↓
+AI OS
+ ↓
+CURRENT SCREEN CONTEXT
+ ↓
+RELEVANT BUSINESS DATA
+ ↓
+MEMORY
+ ↓
+AI
+ ↓
+ANSWER / INSIGHT
+ ↓
+ACTION
+```
+
+---
+
+# 251. UX QUALITY GATES
+
+Every screen must pass:
+
+### Visual
+
+- correct Vepari colors
+- correct typography
+- correct spacing
+- correct components
+
+### Functional
+
+- all actions work
+- navigation works
+- states work
+
+### Data
+
+- real data
+- correct loading
+- correct errors
+
+### Offline
+
+- applicable workflows work offline
+
+### Localization
+
+- all 23 languages tolerate the layout
+
+### Accessibility
+
+- screen reader
+- touch targets
+- contrast
+- dynamic text
+
+### AI
+
+- correct context
+- evidence
+- permissions
+- action confirmation
+
+---
+
+# 252. SCREEN COMPLETION CHECKLIST
+
+A screen is not complete until it defines:
+
+```text
+Purpose
+Entry
+Exit
+
+Header
+Logo
+Title
+Actions
+
+Content
+Components
+Fields
+Buttons
+Tabs
+Filters
+
+AI
+Voice
+
+Navigation
+
+Loading
+Empty
+Error
+Success
+
+Offline
+Sync
+Conflict
+
+Permissions
+
+Animation
+Haptics
+
+Accessibility
+Localization
+
+API
+State
+Database relation
+
+Related screens
+```
+
+---
+
+# 253. DESIGN-TO-CODE RULE
+
+Design components should map cleanly to reusable React Native components.
+
+```text
+Figma/UI specification
+        ↓
+Design tokens
+        ↓
+Component
+        ↓
+Feature screen
+        ↓
+Application
+```
+
+Do not implement each screen as a completely independent visual system.
+
+---
+
+# 254. COMPONENT-TO-FEATURE RULE
+
+```text
+Design System
+ ↓
+Shared Components
+ ↓
+Feature Components
+ ↓
+Screens
+ ↓
+Flows
+```
+
+---
+
+# 255. UI/UX IMPLEMENTATION ORDER
+
+The actual UI should be implemented in this order:
+
+```text
+1. Design Tokens
+2. Typography
+3. Colors
+4. Icons
+5. Core Components
+6. Navigation
+7. Security
+8. Onboarding
+9. AI OS
+10. Home
+11. Customers
+12. Suppliers
+13. Products
+14. Inventory
+15. Sales
+16. Expenses
+17. Purchases
+18. Payments
+19. Returns/Refunds
+20. Finance
+21. Operations
+22. Documents
+23. Reports
+24. Analytics
+25. Search
+26. Notifications
+27. Team
+28. Automation
+29. Offline States
+30. Sync UI
+31. Connection Portfolio
+32. Settings
+33. Accessibility
+34. Localization
+35. Final motion/haptics
+```
+
+---
+
+# 256. DESIGN SYSTEM IMPLEMENTATION GATE
+
+Before building all business screens:
+
+```text
+Colors ✓
+Typography ✓
+Spacing ✓
+Components ✓
+Navigation ✓
+AI OS ✓
+Forms ✓
+States ✓
+Accessibility ✓
+Localization foundation ✓
+```
+
+Only then should large-scale screen implementation proceed.
+
+---
+
+# 257. AI OS IMPLEMENTATION GATE
+
+Before integrating AI into every screen:
+
+```text
+AI Core
+ ↓
+State machine
+ ↓
+Animation
+ ↓
+Voice
+ ↓
+Briefing
+ ↓
+Insight
+ ↓
+Action
+ ↓
+Approval
+```
+
+must work as a standalone subsystem.
+
+---
+
+# 258. OFFLINE UI IMPLEMENTATION GATE
+
+Before calling mobile business workflows complete:
+
+```text
+Offline
+ ↓
+Local Save
+ ↓
+Queue
+ ↓
+Sync
+ ↓
+Conflict
+ ↓
+Recovery
+```
+
+must be visually and functionally represented.
+
+---
+
+# 259. MULTILINGUAL UI IMPLEMENTATION GATE
+
+Before declaring UI complete:
+
+```text
+English
+ ↓
+All 23 supported languages
+ ↓
+Text expansion
+ ↓
+Script rendering
+ ↓
+Voice
+ ↓
+AI
+```
+
+must be tested.
+
+---
+
+# 260. FINAL UI/UX PRINCIPLES
+
+### 1.
+**The AI is the intelligence layer, not the entire interface.**
+
+### 2.
+**Business operations remain easy without AI.**
+
+### 3.
+**AI makes existing workflows faster and smarter.**
+
+### 4.
+**Local-first behavior must feel natural.**
+
+### 5.
+**Financial operations must always be trustworthy.**
+
+### 6.
+**Security happens before the cinematic AI OS awakening.**
+
+### 7.
+**The AI OS is spatial, cinematic and responsive, but never distracting.**
+
+### 8.
+**Lora remains the primary English display/brand typography.**
+
+### 9.
+**The official Vepari AI palette is used everywhere.**
+
+### 10.
+**All 23 Indian languages are first-class citizens.**
+
+### 11.
+**Micro users receive simplicity; Enterprise users receive depth.**
+
+### 12.
+**Every important action has a clear result.**
+
+### 13.
+**Every important AI recommendation can be understood.**
+
+### 14.
+**Every important business number can be traced.**
+
+### 15.
+**Every core workflow survives temporary connectivity failure.**
+
+---
+
+# 261. MASTER UX LOOP
+
+```text
+             ┌─────────────────┐
+             │      OWNER      │
+             └────────┬────────┘
+                      ↓
+                   SECURE
+                      ↓
+                  AI AWAKENS
+                      ↓
+                  UNDERSTAND
+                      ↓
+                   BRIEFING
+                      ↓
+                   BUSINESS
+                      ↓
+              ┌───────┴───────┐
+              ↓               ↓
+             AI            OPERATE
+              ↓               ↓
+          INSIGHT          ACTION
+              ↓               ↓
+        RECOMMENDATION    RESULT
+              │               │
+              └───────┬───────┘
+                      ↓
+                 BUSINESS DATA
+                      ↓
+                    MEMORY
+                      ↓
+                 NEXT BRIEFING
+```
+
+---
+
+# 262. MASTER VISUAL FLOW
+
+```text
+SECURITY
+   ↓
+VEPARI AI AWAKENING
+   ↓
+AI OS
+   ↓
+BUSINESS BRIEFING
+   ↓
+BUSINESS HEALTH
+   ↓
+QUICK ACTIONS
+   ↓
+BUSINESS MODULES
+   ↓
+AI INSIGHTS
+   ↓
+AI ACTIONS
+   ↓
+FINANCE / INVENTORY / OPERATIONS
+   ↓
+REPORTS / ANALYTICS
+   ↓
+MEMORY
+   ↓
+OFFLINE / SYNC
+   ↓
+CONNECTIONS
+   ↓
+SETTINGS
+```
+
+---
+
+# 263. FINAL UI/UX DEFINITION
+
+The finished Vepari AI application should feel like:
+
+> **A premium mobile business operating system where the owner enters securely, Vepari AI awakens, understands the business, explains what happened, surfaces what matters, and provides an immediate path from insight to action.**
+
+It combines:
+
+**AI OS + Business Operations + Finance + Inventory + CRM + Documents + Analytics + Voice + Memory + Automation + Offline Capability + Integrations**
+
+without forcing the user to understand the underlying technical complexity.
+
+---
+
+# 264. UI/UX COMPLETION STATUS
+
+| Area | Status |
+|---|---|
+| Brand direction | ✅ Defined |
+| Official color usage | ✅ Defined |
+| Lora typography | ✅ Defined |
+| Multilingual typography | ✅ Defined |
+| 23-language UX | ✅ Defined |
+| Mobile-first UX | ✅ Defined |
+| Launch | ✅ Defined |
+| Security | ✅ Defined |
+| AI OS | ✅ Defined |
+| AI OS animation | ✅ Defined |
+| Physics/motion | ✅ Defined |
+| AI briefing | ✅ Defined |
+| AI insights | ✅ Defined |
+| AI evidence | ✅ Defined |
+| AI actions | ✅ Defined |
+| Voice | ✅ Defined |
+| Home | ✅ Defined |
+| Customers | ✅ Defined |
+| Suppliers | ✅ Defined |
+| Products | ✅ Defined |
+| Inventory | ✅ Defined |
+| Sales | ✅ Defined |
+| Expenses | ✅ Defined |
+| Purchases | ✅ Defined |
+| Payments | ✅ Defined |
+| Returns/refunds | ✅ Defined |
+| Finance | ✅ Defined |
+| Operations | ✅ Defined |
+| Documents | ✅ Defined |
+| Reports | ✅ Defined |
+| Analytics | ✅ Defined |
+| Search | ✅ Defined |
+| Notifications | ✅ Defined |
+| Alerts | ✅ Defined |
+| Team | ✅ Defined |
+| Permissions | ✅ Defined |
+| Automation | ✅ Defined |
+| Offline UX | ✅ Defined |
+| Sync UX | ✅ Defined |
+| Conflict UX | ✅ Defined |
+| Connection Portfolio | ✅ Defined |
+| Settings | ✅ Defined |
+| Accessibility | ✅ Defined |
+| Micro → Enterprise UX | ✅ Defined |
+| iOS-ready principles | ✅ Defined |
+| Component architecture | ✅ Defined |
+| Screen-state architecture | ✅ Defined |
+| Implementation order | ✅ Defined |
+
+---
+
+# FINAL CONCLUSION
+
+**The Vepari AI Master UI/UX specification is now consolidated.**
+
+The complete interface direction is:
+
+> **Secure → Awaken → Understand → Brief → Operate → Remember → Analyze → Recommend → Act.**
+
+The visual identity remains locked to the **official Vepari AI color palette and typography system, with Lora as the main English display/brand font and approved multilingual typography for all 23 Indian languages.**
+
+The AI OS remains the signature experience: **security first, then a cinematic spatial awakening, followed by a business-aware briefing and an intelligent path from information to action.**
+
+The UI is designed for the **full MSME spectrum**, with deeper Micro-sector usability and progressive disclosure for Small, Medium and Enterprise businesses.
+
+The complete specification now provides the design and behavioral foundation for the React Native implementation.

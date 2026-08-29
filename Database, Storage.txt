@@ -1,0 +1,2795 @@
+# VEPARI AI
+# MASTER DATABASE · STORAGE · MEMORY · LOGS · CLOUD DOCUMENT
+
+**Document Type:** Consolidated Data & Infrastructure Source of Truth  
+**Product:** Vepari AI  
+**Status:** Master Specification  
+**Primary Client:** Android React Native + Expo + TypeScript  
+**Future Client:** iOS  
+**Business Scope:** Micro → Small → Medium → Enterprise  
+**Language Scope:** 23 Indian languages  
+**Architecture:** Local-first · Offline-first · Cloud-synchronized · Secure · Multi-tenant  
+**AI:** Vepari AI OS + Voice + Memory + Intelligence  
+**Local Database:** SQLite  
+**Cloud Database:** Authoritative shared business database  
+**Cloud Storage:** Private object/file storage  
+**Memory:** User/business-scoped AI memory  
+**Observability:** Logs + Audit + Metrics + Traces  
+**Integrations:** Connection Portfolio  
+
+---
+
+# 1. PURPOSE
+
+This document defines how Vepari AI stores, protects, synchronizes, remembers, observes and serves data across the complete platform.
+
+The architecture is:
+
+```text
+                    VEPARI AI
+                        │
+          ┌─────────────┼─────────────┐
+          ↓             ↓             ↓
+       DEVICE         CLOUD           AI
+          │             │             │
+       SQLite       Database        Memory
+          │             │             │
+       Files        Object Store   Context
+          │             │             │
+          └─────────────┼─────────────┘
+                        ↓
+                     SYNC
+                        ↓
+                 SHARED BUSINESS
+                     STATE
+                        │
+             ┌──────────┼──────────┐
+             ↓          ↓          ↓
+           AUDIT       LOGS      EVENTS
+```
+
+---
+
+# 2. CORE DATA PRINCIPLE
+
+Vepari AI has **two different kinds of persistence**:
+
+### Local
+
+Designed for:
+
+- offline operation
+- fast UI
+- device continuity
+- local business access
+- AI context where appropriate
+
+### Cloud
+
+Designed for:
+
+- shared business state
+- multi-device synchronization
+- team collaboration
+- authoritative records
+- backups
+- integrations
+- cross-device AI context
+
+---
+
+# 3. SOURCE OF TRUTH MODEL
+
+The most important distinction is:
+
+```text
+Local SQLite
+    ↓
+Local operational state
+
+Cloud database
+    ↓
+Authoritative shared business state
+```
+
+The local database is not an independent competing business system.
+
+---
+
+# 4. DATA ARCHITECTURE
+
+```text
+                    DATA PLATFORM
+                         │
+       ┌─────────────────┼─────────────────┐
+       ↓                 ↓                 ↓
+   Operational         AI Data          System Data
+       │                 │                 │
+       ↓                 ↓                 ↓
+ Business DB          Memory           Audit/Logs
+       │                 │                 │
+       └─────────────────┼─────────────────┘
+                         ↓
+                      Storage
+```
+
+---
+
+# 5. DATA CLASSIFICATION
+
+Every stored object should belong to an appropriate category.
+
+```text
+1. Identity
+2. Business
+3. Operational
+4. Financial
+5. Documents
+6. AI Context
+7. AI Memory
+8. Sync Metadata
+9. Audit
+10. Technical Logs
+11. Configuration
+12. Integration Data
+```
+
+---
+
+# 6. IDENTITY DATA
+
+Includes:
+
+- users
+- sessions
+- devices
+- authentication metadata
+- memberships
+- roles
+- permissions
+
+---
+
+# 7. BUSINESS DATA
+
+Includes:
+
+- businesses
+- branches
+- teams
+- business settings
+- business preferences
+
+---
+
+# 8. OPERATIONAL DATA
+
+Includes:
+
+- customers
+- suppliers
+- products
+- inventory
+- sales
+- purchases
+- expenses
+- payments
+- returns
+- refunds
+- orders
+- tasks
+
+---
+
+# 9. FINANCIAL DATA
+
+Includes:
+
+- financial transactions
+- balances
+- receivables
+- payables
+- ledger data
+- accounting records
+- financial summaries
+
+Financial records require stronger integrity controls.
+
+---
+
+# 10. DOCUMENT DATA
+
+Includes:
+
+- invoices
+- receipts
+- bills
+- quotations
+- purchase orders
+- generated reports
+- uploaded files
+
+---
+
+# 11. AI DATA
+
+AI-related data is separated conceptually into:
+
+```text
+AI Conversation
+AI Context
+AI Memory
+AI Insights
+AI Actions
+AI Usage
+```
+
+---
+
+# 12. SYNC DATA
+
+Sync metadata includes:
+
+- operation ID
+- device ID
+- entity version
+- sync cursor
+- queue state
+- conflict state
+- timestamps
+
+---
+
+# 13. AUDIT DATA
+
+Audit answers:
+
+> Who changed what, where, when and how?
+
+---
+
+# 14. TECHNICAL LOG DATA
+
+Logs answer:
+
+> What happened inside the software?
+
+These must remain separate from business audit records.
+
+---
+
+# 15. TENANT DATA MODEL
+
+The fundamental hierarchy is:
+
+```text
+User
+ ↓
+Membership
+ ↓
+Business
+ ↓
+Branch
+ ↓
+Resources
+```
+
+---
+
+# 16. USER MODEL
+
+Conceptually:
+
+```text
+User
+├── Identity
+├── Preferences
+├── Sessions
+├── Devices
+└── Memberships
+```
+
+---
+
+# 17. BUSINESS MODEL
+
+```text
+Business
+├── Profile
+├── Settings
+├── Branches
+├── Members
+├── Customers
+├── Suppliers
+├── Products
+├── Transactions
+└── AI Context
+```
+
+---
+
+# 18. BUSINESS SIZE
+
+The same database architecture supports:
+
+```text
+Micro
+Small
+Medium
+Enterprise
+```
+
+No separate database product is required simply because the business becomes larger.
+
+---
+
+# 19. BRANCH MODEL
+
+```text
+Business
+├── Branch A
+├── Branch B
+└── Branch C
+```
+
+Each relevant resource carries appropriate business/branch scope.
+
+---
+
+# 20. TENANT ISOLATION
+
+Every tenant-owned record must be isolated.
+
+Conceptually:
+
+```text
+business_id
+branch_id
+```
+
+where applicable.
+
+---
+
+# 21. DATABASE RELATIONSHIP MODEL
+
+```text
+Business
+ │
+ ├── Users/Members
+ │
+ ├── Customers
+ │
+ ├── Suppliers
+ │
+ ├── Products
+ │
+ ├── Inventory
+ │
+ ├── Sales
+ │     ├── Items
+ │     └── Payments
+ │
+ ├── Purchases
+ │     └── Items
+ │
+ ├── Expenses
+ │
+ └── Finance
+```
+
+---
+
+# 22. CUSTOMER DATA
+
+Customer records can contain:
+
+```text
+Identity
+Contact
+Business relationship
+Status
+Balance references
+Metadata
+Timestamps
+```
+
+---
+
+# 23. SUPPLIER DATA
+
+Supplier records can contain:
+
+```text
+Identity
+Contact
+Business relationship
+Status
+Balance references
+Metadata
+Timestamps
+```
+
+---
+
+# 24. PRODUCT DATA
+
+Product records can contain:
+
+```text
+Name
+SKU
+Barcode
+Category
+Pricing
+Tax configuration
+Status
+Metadata
+```
+
+---
+
+# 25. INVENTORY DATA
+
+Inventory must represent:
+
+```text
+Product
+Location
+Quantity
+Reserved quantity
+Available quantity
+Version
+```
+
+where applicable.
+
+---
+
+# 26. INVENTORY MOVEMENT
+
+Inventory history should preserve:
+
+```text
+Previous state
+Change
+Resulting state
+Reason
+Actor
+Timestamp
+Operation
+```
+
+---
+
+# 27. SALES DATA
+
+A sale contains relationships to:
+
+```text
+Business
+Branch
+Customer
+Items
+Payments
+Financial effects
+```
+
+---
+
+# 28. SALE ITEMS
+
+Each sale item should preserve the transactional values required for historical accuracy.
+
+Product changes later must not rewrite historical sale facts.
+
+---
+
+# 29. PURCHASE DATA
+
+Purchases connect:
+
+```text
+Supplier
+Items
+Inventory
+Payment
+Finance
+```
+
+---
+
+# 30. EXPENSE DATA
+
+Expenses contain:
+
+```text
+Amount
+Category
+Date
+Business/branch
+Description
+Attachment references
+Actor
+```
+
+---
+
+# 31. PAYMENT DATA
+
+Payment records preserve:
+
+```text
+Amount
+Method
+Reference
+Related transaction
+Allocation
+Status
+Timestamp
+```
+
+---
+
+# 32. RETURN DATA
+
+Returns reference the original transaction.
+
+This avoids treating a return as an unrelated sale.
+
+---
+
+# 33. REFUND DATA
+
+Refunds reference:
+
+```text
+Original transaction
+Return
+Payment
+Refund amount
+Status
+```
+
+---
+
+# 34. FINANCIAL DATA INTEGRITY
+
+Money must be stored using exact decimal-safe representations.
+
+Do not use binary floating-point as the authoritative financial representation.
+
+---
+
+# 35. FINANCIAL TRANSACTIONS
+
+Financial mutations should be atomic.
+
+Example:
+
+```text
+Sale
+ ├── Sale record
+ ├── Inventory change
+ ├── Payment
+ ├── Customer balance
+ └── Accounting effects
+```
+
+---
+
+# 36. DATABASE TRANSACTIONS
+
+These related operations must commit together where domain rules require atomicity.
+
+---
+
+# 37. ACCOUNTING HISTORY
+
+Accounting corrections should preserve history rather than silently destroying prior financial truth.
+
+---
+
+# 38. IMMUTABLE RECORDS
+
+Certain records should be append-oriented or protected from ordinary destructive modification, particularly:
+
+- financial history
+- audit history
+- security events
+
+---
+
+# 39. DATABASE INDEXING
+
+Important indexes should cover:
+
+```text
+business_id
+branch_id
+created_at
+updated_at
+foreign keys
+search fields
+sync versions
+```
+
+---
+
+# 40. DATABASE CONSTRAINTS
+
+The database should enforce appropriate:
+
+- foreign keys
+- unique constraints
+- non-null constraints
+- valid relationships
+- domain invariants
+
+---
+
+# 41. CLOUD DATABASE
+
+The cloud database is the authoritative shared database.
+
+Conceptually:
+
+```text
+Mobile A
+   ↓
+ Cloud DB
+   ↑
+Mobile B
+   ↑
+Mobile C
+```
+
+---
+
+# 42. LOCAL SQLITE DATABASE
+
+Each mobile device has its own local database.
+
+```text
+Device A → SQLite A
+Device B → SQLite B
+Device C → SQLite C
+```
+
+---
+
+# 43. LOCAL DATABASE PURPOSE
+
+SQLite provides:
+
+- offline access
+- fast reads
+- local mutations
+- drafts
+- sync queue
+- cached business state
+
+---
+
+# 44. LOCAL SCHEMA
+
+The mobile database should mirror only the domain data needed by the client.
+
+It does not need to duplicate every server table.
+
+---
+
+# 45. LOCAL DATABASE LAYERS
+
+```text
+SQLite
+├── Business Data
+├── Cached Reference Data
+├── Pending Operations
+├── Sync Metadata
+├── Drafts
+└── Local Preferences
+```
+
+---
+
+# 46. LOCAL DATABASE SECURITY
+
+Sensitive local data should be protected according to the mobile security architecture.
+
+Credentials/secrets should not simply be placed in SQLite.
+
+---
+
+# 47. SECURE STORAGE
+
+Use platform secure storage for:
+
+- session secrets
+- refresh credentials where applicable
+- cryptographic material
+- other sensitive authentication data
+
+---
+
+# 48. SQLITE + SECURE STORAGE
+
+The distinction is:
+
+```text
+Secure Storage
+→ secrets
+
+SQLite
+→ business/application data
+```
+
+---
+
+# 49. LOCAL DATABASE MIGRATIONS
+
+Every schema evolution must have a migration.
+
+```text
+Local DB v1
+ ↓
+Migration
+ ↓
+Local DB v2
+```
+
+---
+
+# 50. MIGRATION SAFETY
+
+Migrations must preserve user data and be tested against realistic upgrade paths.
+
+---
+
+# 51. LOCAL WRITE MODEL
+
+```text
+User action
+ ↓
+Validation
+ ↓
+SQLite transaction
+ ↓
+UI update
+ ↓
+Sync queue
+```
+
+---
+
+# 52. LOCAL READ MODEL
+
+```text
+Screen
+ ↓
+Repository
+ ↓
+SQLite
+ ↓
+State
+ ↓
+UI
+```
+
+---
+
+# 53. CLOUD SYNC MODEL
+
+```text
+Local
+ ↓
+Push mutations
+ ↓
+Cloud
+ ↓
+Validate
+ ↓
+Commit
+ ↓
+Return authoritative state
+```
+
+---
+
+# 54. PULL MODEL
+
+```text
+Cloud changes
+ ↓
+Sync cursor
+ ↓
+Mobile
+ ↓
+SQLite
+ ↓
+UI
+```
+
+---
+
+# 55. SYNC CURSOR
+
+Each device maintains a position in the cloud change stream.
+
+Conceptually:
+
+```text
+sync_cursor
+```
+
+---
+
+# 56. OPERATION QUEUE
+
+Local mutations are stored until successfully synchronized.
+
+Example:
+
+```text
+operation_id
+entity_type
+entity_id
+operation_type
+payload
+created_at
+status
+retry_count
+```
+
+---
+
+# 57. SYNC STATES
+
+```text
+PENDING
+SYNCING
+SYNCED
+FAILED
+CONFLICT
+REJECTED
+```
+
+---
+
+# 58. IDEMPOTENCY
+
+Each sync mutation should have a stable operation identifier.
+
+This prevents:
+
+```text
+Retry
+ ↓
+Duplicate transaction
+```
+
+---
+
+# 59. VERSIONING
+
+Entities that can be concurrently changed should have version information.
+
+Conceptually:
+
+```text
+version = 5
+```
+
+---
+
+# 60. OPTIMISTIC CONCURRENCY
+
+The server can detect:
+
+```text
+Client version ≠ current server version
+```
+
+and return a conflict instead of silently overwriting data.
+
+---
+
+# 61. CONFLICT DATA
+
+A conflict can contain:
+
+```text
+Local version
+Server version
+Base version
+Conflict fields
+```
+
+---
+
+# 62. FINANCIAL CONFLICTS
+
+Financial conflicts require strict handling.
+
+Never silently merge two contradictory financial transactions.
+
+---
+
+# 63. MULTI-DEVICE SYNCHRONIZATION
+
+```text
+Device A
+ ↓
+Cloud
+ ↓
+Change event
+ ↓
+Device B
+ ↓
+SQLite
+ ↓
+UI
+```
+
+---
+
+# 64. REALTIME
+
+Realtime can reduce synchronization latency but does not replace durable synchronization.
+
+---
+
+# 65. REALTIME DATA FLOW
+
+```text
+Mutation
+ ↓
+Cloud commit
+ ↓
+Event
+ ↓
+Realtime channel
+ ↓
+Authorized devices
+```
+
+---
+
+# 66. OFFLINE-FIRST GUARANTEE
+
+The application should not make network connectivity a prerequisite for supported local operations.
+
+---
+
+# 67. NETWORK STATES
+
+```text
+ONLINE
+OFFLINE
+UNSTABLE
+```
+
+---
+
+# 68. SYNC VS NETWORK
+
+These are different.
+
+```text
+Network = Can we communicate?
+
+Sync = Is local state reconciled?
+```
+
+---
+
+# 69. OFFLINE UI
+
+The frontend can display:
+
+```text
+Saved locally
+Queued for sync
+Syncing
+Synced
+Needs attention
+```
+
+---
+
+# 70. CLOUD STORAGE
+
+Private object storage should handle large binary data:
+
+```text
+Images
+PDFs
+Receipts
+Invoices
+Reports
+Attachments
+Generated documents
+```
+
+---
+
+# 71. OBJECT STORAGE MODEL
+
+Relational database:
+
+```text
+document_id
+business_id
+file_id
+metadata
+```
+
+Object storage:
+
+```text
+actual file
+```
+
+---
+
+# 72. FILE METADATA
+
+Store:
+
+```text
+File ID
+Business ID
+Owner/reference
+Filename
+MIME type
+Size
+Storage key
+Created at
+```
+
+---
+
+# 73. PRIVATE FILES
+
+Business files must not be globally public.
+
+---
+
+# 74. FILE ACCESS
+
+The backend authorizes access and provides controlled access to the file.
+
+---
+
+# 75. FILE UPLOAD
+
+```text
+Mobile
+ ↓
+Authentication
+ ↓
+Authorization
+ ↓
+Upload
+ ↓
+Storage
+ ↓
+Metadata
+ ↓
+Business record
+```
+
+---
+
+# 76. FILE DOWNLOAD
+
+```text
+Request
+ ↓
+Authorization
+ ↓
+Secure access
+ ↓
+Object storage
+```
+
+---
+
+# 77. FILE DELETION
+
+Deletion must verify:
+
+- ownership
+- authorization
+- record dependencies
+- retention requirements
+
+---
+
+# 78. DOCUMENT GENERATION
+
+```text
+Business Data
+ ↓
+Template
+ ↓
+Document Service
+ ↓
+Generated File
+ ↓
+Object Storage
+ ↓
+Document Record
+```
+
+---
+
+# 79. REPORT STORAGE
+
+Large reports may be generated asynchronously and stored as private files.
+
+---
+
+# 80. AI MEMORY
+
+AI memory is a dedicated layer.
+
+It is not the same as the business database.
+
+---
+
+# 81. MEMORY PURPOSE
+
+Memory allows Vepari AI to understand relevant long-term context without treating every conversation as a blank session.
+
+---
+
+# 82. MEMORY HIERARCHY
+
+Conceptually:
+
+```text
+User Memory
+      │
+Business Memory
+      │
+Operational Context
+      │
+Conversation Context
+```
+
+---
+
+# 83. USER MEMORY
+
+May contain appropriate user preferences and interaction preferences.
+
+---
+
+# 84. BUSINESS MEMORY
+
+May contain durable business context useful to AI.
+
+Examples:
+
+```text
+Business preferences
+Operating patterns
+Known priorities
+Important recurring context
+```
+
+---
+
+# 85. OPERATIONAL CONTEXT
+
+Recent business information can be retrieved dynamically rather than permanently stored as memory.
+
+---
+
+# 86. MEMORY VS DATABASE
+
+Critical distinction:
+
+```text
+Database
+→ authoritative fact
+
+Memory
+→ contextual knowledge
+```
+
+If memory says something different from an authoritative transaction:
+
+**the database wins.**
+
+---
+
+# 87. MEMORY ISOLATION
+
+```text
+Business A Memory
+≠
+Business B Memory
+```
+
+---
+
+# 88. MEMORY ACCESS
+
+AI memory must follow the same authorization boundaries as business data.
+
+---
+
+# 89. MEMORY STORAGE
+
+Memory can be represented through structured records and/or semantic representations depending on implementation.
+
+The exact storage mechanism can evolve without changing the product-level memory contract.
+
+---
+
+# 90. MEMORY LIFECYCLE
+
+```text
+Capture
+ ↓
+Validate
+ ↓
+Classify
+ ↓
+Store
+ ↓
+Retrieve
+ ↓
+Use
+ ↓
+Update
+ ↓
+Expire/Delete
+```
+
+---
+
+# 91. MEMORY QUALITY
+
+Not everything a user says should automatically become permanent memory.
+
+Memory must be selective.
+
+---
+
+# 92. MEMORY CONFIDENCE
+
+Where applicable, memory can carry metadata indicating confidence/source/freshness.
+
+---
+
+# 93. MEMORY FRESHNESS
+
+Some contextual information becomes obsolete.
+
+Memory retrieval should consider freshness.
+
+---
+
+# 94. MEMORY DELETION
+
+Users should have appropriate controls over stored AI memory.
+
+---
+
+# 95. CONVERSATION STORAGE
+
+If conversations are retained:
+
+```text
+Conversation
+ ↓
+Business/User scope
+ ↓
+Retention policy
+```
+
+---
+
+# 96. AI CONTEXT STORAGE
+
+The system should avoid storing enormous repeated context unnecessarily.
+
+Retrieve relevant data when needed.
+
+---
+
+# 97. AI DATA FLOW
+
+```text
+Question
+ ↓
+Authorization
+ ↓
+Context retrieval
+ ↓
+Relevant business data
+ ↓
+Memory retrieval
+ ↓
+AI provider
+ ↓
+Response
+```
+
+---
+
+# 98. AI DATA MINIMIZATION
+
+Do not send the complete business database to the AI provider for every request.
+
+---
+
+# 99. AI PROVIDER BOUNDARY
+
+```text
+Vepari Backend
+ ↓
+AI Gateway
+ ↓
+Provider
+```
+
+Provider credentials stay server-side.
+
+---
+
+# 100. SARVAM DATA BOUNDARY
+
+Sarvam AI integration should remain behind the AI gateway.
+
+This allows:
+
+- centralized controls
+- usage monitoring
+- provider abstraction
+- privacy enforcement
+- future provider changes
+
+---
+
+# 101. AI MEMORY SECURITY
+
+Memory cannot become a side channel around authorization.
+
+---
+
+# 102. AI ACTION DATA
+
+When AI proposes an action, the action is treated as untrusted input until validated.
+
+---
+
+# 103. AI ACTION STORAGE
+
+Approved/executed AI actions can have:
+
+```text
+Action ID
+User
+Business
+AI request
+Approval
+Result
+Timestamp
+```
+
+---
+
+# 104. AI USAGE DATA
+
+Track appropriate usage metrics for:
+
+- operational monitoring
+- plan limits
+- enterprise usage
+- cost management
+
+---
+
+# 105. LOGGING ARCHITECTURE
+
+Logs are technical records.
+
+```text
+Application
+ ↓
+Logger
+ ↓
+Log aggregation
+ ↓
+Monitoring
+```
+
+---
+
+# 106. LOG LEVELS
+
+Use appropriate levels such as:
+
+```text
+DEBUG
+INFO
+WARN
+ERROR
+```
+
+Production logging should avoid unnecessary DEBUG noise.
+
+---
+
+# 107. STRUCTURED LOGGING
+
+Prefer structured logs:
+
+```text
+timestamp
+level
+service
+requestId
+message
+metadata
+```
+
+---
+
+# 108. REQUEST CORRELATION
+
+A request ID connects:
+
+```text
+Mobile
+ ↓
+API
+ ↓
+Service
+ ↓
+Database
+ ↓
+Event
+```
+
+---
+
+# 109. TRACE CORRELATION
+
+Where distributed tracing is used:
+
+```text
+Trace
+ ├── API span
+ ├── Database span
+ ├── AI span
+ └── Queue span
+```
+
+---
+
+# 110. LOG PRIVACY
+
+Never log:
+
+- passwords
+- raw tokens
+- provider secrets
+- unnecessary personal data
+- unnecessary financial details
+
+---
+
+# 111. AUDIT LOGS
+
+Audit records are separate.
+
+They record meaningful business/security actions.
+
+---
+
+# 112. AUDIT EXAMPLE
+
+```text
+User
+ ↓
+Updated Product
+ ↓
+Business
+ ↓
+Timestamp
+ ↓
+Device
+ ↓
+Request ID
+```
+
+---
+
+# 113. SECURITY AUDIT
+
+Security events can include:
+
+```text
+Login
+Failed login
+Session creation
+Device registration
+Device revocation
+Permission changes
+Sensitive operations
+```
+
+---
+
+# 114. BUSINESS AUDIT
+
+Business events can include:
+
+```text
+Sale created
+Payment recorded
+Inventory adjusted
+Purchase created
+Expense created
+Return processed
+```
+
+---
+
+# 115. AUDIT IMMUTABILITY
+
+Ordinary users should not be able to edit audit history.
+
+---
+
+# 116. EVENT STORE
+
+Domain events are useful for asynchronous processing.
+
+```text
+Transaction
+ ↓
+Event
+ ↓
+Consumers
+```
+
+---
+
+# 117. EVENT CONSUMERS
+
+Events can drive:
+
+```text
+Notifications
+Analytics
+AI context
+Automation
+Realtime
+Integrations
+```
+
+---
+
+# 118. EVENT RELIABILITY
+
+Important events should not disappear silently.
+
+Use appropriate durable event/queue mechanisms.
+
+---
+
+# 119. JOB STORAGE
+
+Background jobs need:
+
+```text
+Job ID
+Type
+Status
+Attempts
+Created
+Updated
+Error
+```
+
+---
+
+# 120. JOB STATES
+
+```text
+QUEUED
+PROCESSING
+COMPLETED
+FAILED
+RETRYING
+```
+
+---
+
+# 121. DEAD-LETTER HANDLING
+
+Repeatedly failed jobs require a controlled failure state for investigation/recovery.
+
+---
+
+# 122. NOTIFICATION DATA
+
+Notification records can include:
+
+```text
+Recipient
+Business
+Type
+Title
+Content/reference
+Read state
+Created time
+```
+
+---
+
+# 123. NOTIFICATION DELIVERY
+
+The database stores notification state; delivery infrastructure handles push/email/etc. as configured.
+
+---
+
+# 124. AUTOMATION DATA
+
+Automation records contain:
+
+```text
+Trigger
+Conditions
+Actions
+Schedule
+Status
+Owner
+Execution history
+```
+
+---
+
+# 125. AUTOMATION HISTORY
+
+Each execution should be traceable.
+
+```text
+Automation
+ ↓
+Execution
+ ↓
+Action
+ ↓
+Result
+```
+
+---
+
+# 126. CONNECTION PORTFOLIO DATA
+
+Connection records should include:
+
+```text
+Business
+Provider
+Status
+Scopes/permissions
+Last sync
+Health
+Metadata
+```
+
+---
+
+# 127. CONNECTION SECRETS
+
+Credentials/tokens belong in protected server-side secret storage, not normal business tables or mobile storage.
+
+---
+
+# 128. INTEGRATION DATA
+
+External records should be mapped using:
+
+```text
+provider
+external_id
+internal_id
+```
+
+where appropriate.
+
+---
+
+# 129. WEBHOOK STORAGE
+
+Webhook processing should track provider event identifiers to prevent duplicate processing.
+
+---
+
+# 130. WEBHOOK FLOW
+
+```text
+Provider
+ ↓
+Webhook
+ ↓
+Verify signature
+ ↓
+Check duplicate
+ ↓
+Process
+ ↓
+Event
+ ↓
+Business state
+```
+
+---
+
+# 131. CLOUD SECURITY
+
+Cloud infrastructure must use:
+
+- encrypted transport
+- restricted database access
+- least privilege
+- secret management
+- private storage
+- network controls
+- monitoring
+
+---
+
+# 132. FIREWALL / NETWORK LAYER
+
+Cloud infrastructure should restrict unnecessary public access.
+
+Conceptually:
+
+```text
+Internet
+ ↓
+API Gateway / Load Balancer
+ ↓
+Application
+ ↓
+Private Database
+```
+
+---
+
+# 133. DATABASE NETWORK ACCESS
+
+The database should not be unnecessarily exposed directly to the public internet.
+
+---
+
+# 134. STORAGE NETWORK ACCESS
+
+Object storage should use private access controls.
+
+---
+
+# 135. SECRET MANAGEMENT
+
+Secrets include:
+
+```text
+Database credentials
+AI provider keys
+OAuth credentials
+Signing keys
+Storage credentials
+```
+
+These must be managed outside source code.
+
+---
+
+# 136. ENCRYPTION IN TRANSIT
+
+Client-to-cloud and relevant internal communication should use encrypted transport.
+
+---
+
+# 137. ENCRYPTION AT REST
+
+Sensitive cloud storage/database infrastructure should use encryption-at-rest mechanisms appropriate to the deployment.
+
+---
+
+# 138. LOCAL DATA PROTECTION
+
+Mobile local data must be protected against unauthorized access to the device.
+
+---
+
+# 139. BACKUPS
+
+Cloud database backups are mandatory for production resilience.
+
+---
+
+# 140. BACKUP SCOPE
+
+Backups should account for:
+
+```text
+Database
+Files
+Critical configuration
+```
+
+---
+
+# 141. BACKUP SECURITY
+
+Backups must receive access controls and protection comparable to production data.
+
+---
+
+# 142. RECOVERY
+
+Recovery must be tested rather than merely assumed.
+
+---
+
+# 143. RECOVERY MODEL
+
+```text
+Failure
+ ↓
+Detect
+ ↓
+Isolate
+ ↓
+Restore
+ ↓
+Validate
+ ↓
+Resume
+```
+
+---
+
+# 144. DISASTER RECOVERY
+
+Plan for:
+
+- database failure
+- storage failure
+- application failure
+- provider outage
+- regional infrastructure failure where applicable
+
+---
+
+# 145. CLOUD SCALING
+
+The architecture should scale independently across:
+
+```text
+API
+Database
+Workers
+AI
+Storage
+Realtime
+```
+
+where required.
+
+---
+
+# 146. ENTERPRISE SCALE
+
+Enterprise tenants may generate substantially larger datasets.
+
+Therefore:
+
+- indexes
+- pagination
+- partitioning/archival strategies
+- asynchronous processing
+- caching
+
+must be considered as scale grows.
+
+---
+
+# 147. DATA ARCHIVAL
+
+Historical data can eventually move into appropriate archival mechanisms without destroying required business accessibility.
+
+---
+
+# 148. CACHE
+
+Caching can be used for suitable read-heavy data.
+
+Do not allow stale caches to become authoritative financial truth.
+
+---
+
+# 149. CACHE INVALIDATION
+
+Business mutations should invalidate or update relevant cached data.
+
+---
+
+# 150. CLOUD API CACHE
+
+API caching must respect:
+
+```text
+Tenant
+User
+Permissions
+Branch
+Freshness
+```
+
+---
+
+# 151. DATABASE RETENTION
+
+Retention policies must differentiate between:
+
+```text
+Operational
+Financial
+Audit
+AI
+Temporary
+```
+
+data.
+
+---
+
+# 152. FINANCIAL RETENTION
+
+Financial records may require retention beyond ordinary user-facing deletion rules.
+
+The system must preserve required history.
+
+---
+
+# 153. AUDIT RETENTION
+
+Audit records require controlled retention and protection.
+
+---
+
+# 154. AI MEMORY RETENTION
+
+AI memory should have explicit retention/deletion behavior rather than remaining forever by default.
+
+---
+
+# 155. TEMPORARY DATA
+
+Temporary files/jobs/cache data can have shorter retention.
+
+---
+
+# 156. DATA EXPORT
+
+Users with appropriate permission should be able to export supported business data.
+
+---
+
+# 157. EXPORT ARCHITECTURE
+
+```text
+Export request
+ ↓
+Authorization
+ ↓
+Job
+ ↓
+Generate
+ ↓
+Secure storage
+ ↓
+Controlled access
+```
+
+---
+
+# 158. IMPORT
+
+Large imports should use a job-based process.
+
+```text
+Upload
+ ↓
+Validate
+ ↓
+Preview
+ ↓
+Confirm
+ ↓
+Process
+ ↓
+Audit
+```
+
+---
+
+# 159. IMPORT ERROR DATA
+
+Import results should identify:
+
+```text
+Successful
+Failed
+Skipped
+Reason
+```
+
+---
+
+# 160. DATA VALIDATION
+
+Validation exists at multiple levels:
+
+```text
+Client
+ ↓
+API
+ ↓
+Domain
+ ↓
+Database
+```
+
+Never rely on only one level.
+
+---
+
+# 161. DOMAIN AUTHORITY
+
+The domain service is responsible for business correctness.
+
+---
+
+# 162. DATABASE AUTHORITY
+
+The database protects structural integrity.
+
+---
+
+# 163. API AUTHORITY
+
+The API protects the external boundary.
+
+---
+
+# 164. LOCAL AUTHORITY
+
+The local database provides temporary/offline operational continuity.
+
+---
+
+# 165. CLOUD AUTHORITY
+
+The cloud database governs shared authoritative state.
+
+---
+
+# 166. MEMORY AUTHORITY
+
+Memory is contextual and subordinate to authoritative business data.
+
+---
+
+# 167. AUDIT AUTHORITY
+
+Audit history preserves accountability and should not be rewritten through normal workflows.
+
+---
+
+# 168. LOG AUTHORITY
+
+Technical logs provide diagnostics and are not substitutes for audit history.
+
+---
+
+# 169. OBSERVABILITY STACK
+
+Conceptually:
+
+```text
+Application
+ ├── Logs
+ ├── Metrics
+ └── Traces
+        ↓
+Observability Platform
+        ↓
+Alerts / Investigation
+```
+
+---
+
+# 170. KEY METRICS
+
+Monitor:
+
+```text
+API latency
+API error rate
+Database latency
+Database errors
+Sync failures
+Conflict rate
+Queue depth
+AI latency
+AI failures
+Integration failures
+Storage errors
+```
+
+---
+
+# 171. BUSINESS-SAFE OBSERVABILITY
+
+Technical telemetry should avoid unnecessarily capturing customer business content.
+
+---
+
+# 172. SECURITY MONITORING
+
+Monitor suspicious:
+
+- authentication failures
+- unusual API patterns
+- permission failures
+- integration anomalies
+- excessive AI requests
+
+---
+
+# 173. RATE-LIMIT DATA
+
+Rate-limit systems may maintain counters by:
+
+```text
+IP
+User
+Business
+Endpoint
+AI usage
+```
+
+---
+
+# 174. AI USAGE STORAGE
+
+Track appropriate usage metrics for billing/control/operations without unnecessarily storing sensitive prompt content.
+
+---
+
+# 175. CLOUD AI MEMORY INDEX
+
+If semantic retrieval is used, embeddings/vector representations must remain scoped to the correct user/business context.
+
+---
+
+# 176. VECTOR ISOLATION
+
+A semantic search query must never retrieve another tenant's memory.
+
+---
+
+# 177. MEMORY RETRIEVAL
+
+```text
+User query
+ ↓
+Business scope
+ ↓
+Memory scope
+ ↓
+Relevant memories
+ ↓
+AI context
+```
+
+---
+
+# 178. DOCUMENT AI
+
+If documents are analyzed by AI:
+
+```text
+Private document
+ ↓
+Authorized retrieval
+ ↓
+AI processing
+ ↓
+Insight
+```
+
+The document's authorization boundary remains intact.
+
+---
+
+# 179. DOCUMENT RETENTION
+
+Deleting a document must also consider derived AI data such as:
+
+- extracted text
+- embeddings
+- AI summaries
+- cached analysis
+
+where applicable.
+
+---
+
+# 180. CLOUD DATA FLOW
+
+```text
+MOBILE
+ ↓
+API
+ ↓
+AUTH
+ ↓
+TENANT
+ ↓
+DOMAIN
+ ↓
+DATABASE
+ ↓
+EVENTS
+ ├── AI
+ ├── Notifications
+ ├── Automation
+ ├── Analytics
+ └── Realtime
+```
+
+---
+
+# 181. COMPLETE DATA FLOW
+
+```text
+                  USER
+                    │
+                    ↓
+                MOBILE APP
+                    │
+              ┌─────┴─────┐
+              ↓           ↓
+           SQLite       Secure Store
+              │
+              ↓
+           Sync Queue
+              │
+              ↓
+             API
+              │
+        ┌─────┴─────┐
+        ↓           ↓
+   Authorization  Validation
+        │           │
+        └─────┬─────┘
+              ↓
+        DOMAIN SERVICE
+              │
+              ↓
+        DATABASE TX
+              │
+       ┌──────┼───────┐
+       ↓      ↓       ↓
+     AUDIT  EVENT   STORAGE
+              │
+       ┌──────┼──────────┐
+       ↓      ↓          ↓
+      AI    Notify    Automation
+       │
+    Memory
+       │
+    Provider
+```
+
+---
+
+# 182. COMPLETE OFFLINE DATA FLOW
+
+```text
+USER
+ ↓
+MOBILE
+ ↓
+LOCAL VALIDATION
+ ↓
+SQLITE TRANSACTION
+ ↓
+UI UPDATED
+ ↓
+SYNC QUEUE
+ ↓
+NETWORK
+ ↓
+API
+ ↓
+SERVER VALIDATION
+ ↓
+CLOUD TRANSACTION
+ ↓
+AUTHORITATIVE RESULT
+ ↓
+LOCAL RECONCILIATION
+ ↓
+SYNCED
+```
+
+---
+
+# 183. COMPLETE MEMORY FLOW
+
+```text
+User interaction
+ ↓
+Memory candidate
+ ↓
+Classification
+ ↓
+Authorization
+ ↓
+Memory storage
+ ↓
+Future query
+ ↓
+Relevant retrieval
+ ↓
+AI context
+ ↓
+Response
+```
+
+---
+
+# 184. COMPLETE AUDIT FLOW
+
+```text
+Business Action
+ ↓
+Domain Transaction
+ ↓
+Commit
+ ↓
+Audit Event
+ ↓
+Protected Audit Store
+ ↓
+Audit Viewer
+```
+
+---
+
+# 185. COMPLETE LOG FLOW
+
+```text
+Application
+ ↓
+Structured Log
+ ↓
+Log Aggregation
+ ↓
+Monitoring
+ ↓
+Alert
+ ↓
+Investigation
+```
+
+---
+
+# 186. COMPLETE FILE FLOW
+
+```text
+Mobile
+ ↓
+API authorization
+ ↓
+Upload
+ ↓
+Private Object Storage
+ ↓
+Metadata
+ ↓
+Business Record
+```
+
+---
+
+# 187. COMPLETE CONNECTION FLOW
+
+```text
+Connection Portfolio
+ ↓
+API
+ ↓
+Authorization
+ ↓
+Provider
+ ↓
+Encrypted Credentials
+ ↓
+External Data
+ ↓
+Normalization
+ ↓
+Business Database
+ ↓
+Audit
+ ↓
+Sync
+```
+
+---
+
+# 188. COMPLETE MULTI-DEVICE FLOW
+
+```text
+DEVICE A
+ ↓
+SQLite
+ ↓
+SYNC
+ ↓
+CLOUD DATABASE
+ ↓
+EVENT
+ ├───────────────┐
+ ↓               ↓
+DEVICE B       DEVICE C
+ ↓               ↓
+SQLite          SQLite
+ ↓               ↓
+UI              UI
+```
+
+---
+
+# 189. COMPLETE AI ACTION FLOW
+
+```text
+AI
+ ↓
+Proposal
+ ↓
+Memory/context
+ ↓
+User approval
+ ↓
+API command
+ ↓
+Authorization
+ ↓
+Domain validation
+ ↓
+Database transaction
+ ↓
+Audit
+ ↓
+Event
+ ↓
+Result
+```
+
+---
+
+# 190. DATA ISOLATION MATRIX
+
+| Data | User | Business | Branch | Device | Cloud |
+|---|---|---|---|---|---|
+| Identity | ✓ | — | — | ✓ | ✓ |
+| Membership | ✓ | ✓ | — | — | ✓ |
+| Customers | — | ✓ | ✓/optional | cached | ✓ |
+| Products | — | ✓ | ✓/optional | cached | ✓ |
+| Inventory | — | ✓ | ✓ | cached | ✓ |
+| Sales | — | ✓ | ✓ | cached | ✓ |
+| Finance | — | ✓ | ✓/optional | controlled cache | ✓ |
+| Audit | — | ✓ | ✓/optional | limited | ✓ |
+| AI Memory | ✓/✓ | ✓ | optional | cached where appropriate | ✓ |
+| Sessions | ✓ | — | — | ✓ | ✓ |
+| Files | — | ✓ | optional | cached | ✓ |
+| Connections | — | ✓ | optional | status only | ✓ |
+
+---
+
+# 191. SECURITY MATRIX
+
+| Layer | Protection |
+|---|---|
+| Mobile secrets | Secure storage |
+| Local database | Device/application protection |
+| API | Authentication + authorization |
+| Tenant | Isolation |
+| Branch | Scope enforcement |
+| Database | Access controls + constraints |
+| Files | Private storage |
+| AI | Gateway + authorization |
+| Memory | Scope isolation |
+| Logs | Sensitive-data filtering |
+| Audit | Protected append-oriented records |
+| Integrations | Encrypted credentials |
+| Backups | Restricted access |
+
+---
+
+# 192. DATABASE + STORAGE COMPLETION CRITERIA
+
+```text
+Cloud database ✓
+Local SQLite ✓
+Migrations ✓
+Transactions ✓
+Indexes ✓
+Tenant isolation ✓
+Branch isolation ✓
+Secure storage ✓
+Object storage ✓
+File metadata ✓
+Backups ✓
+Recovery ✓
+Retention ✓
+Export ✓
+Import ✓
+```
+
+---
+
+# 193. MEMORY COMPLETION CRITERIA
+
+```text
+User memory ✓
+Business memory ✓
+Context retrieval ✓
+Isolation ✓
+Freshness ✓
+Deletion ✓
+Authorization ✓
+AI integration ✓
+Provider boundary ✓
+```
+
+---
+
+# 194. SYNC COMPLETION CRITERIA
+
+```text
+Offline writes ✓
+Operation IDs ✓
+Queue ✓
+Push ✓
+Pull ✓
+Cursor ✓
+Versions ✓
+Conflict detection ✓
+Conflict resolution ✓
+Retry ✓
+Idempotency ✓
+Multi-device ✓
+Realtime ✓
+```
+
+---
+
+# 195. LOGGING COMPLETION CRITERIA
+
+```text
+Structured logs ✓
+Request IDs ✓
+Error logging ✓
+Performance metrics ✓
+Tracing ✓
+Sensitive-data filtering ✓
+Monitoring ✓
+Alerts ✓
+```
+
+---
+
+# 196. AUDIT COMPLETION CRITERIA
+
+```text
+Business actions ✓
+Security events ✓
+Actor ✓
+Business scope ✓
+Device ✓
+Timestamp ✓
+Request ID ✓
+Protected history ✓
+```
+
+---
+
+# 197. CLOUD COMPLETION CRITERIA
+
+```text
+Database ✓
+Object storage ✓
+Network security ✓
+Secrets ✓
+Backups ✓
+Recovery ✓
+Scaling ✓
+Monitoring ✓
+Queues ✓
+Realtime ✓
+AI gateway ✓
+Integration layer ✓
+```
+
+---
+
+# 198. MASTER DATA ARCHITECTURE
+
+```text
+                         VEPARI AI DATA
+                              │
+              ┌───────────────┼────────────────┐
+              ↓               ↓                ↓
+           DEVICE           CLOUD              AI
+              │               │                │
+          ┌───┴───┐       ┌───┴────┐       ┌───┴────┐
+          ↓       ↓       ↓        ↓       ↓        ↓
+       SQLite  Secure   Database  Storage Memory  Context
+          │    Store       │        │       │
+          └─────┬──────────┴────────┴───────┘
+                ↓
+              SYNC
+                ↓
+        SHARED BUSINESS STATE
+                │
+       ┌────────┼──────────┐
+       ↓        ↓          ↓
+     AUDIT    EVENTS     LOGS
+       │        │
+       │    ┌───┼────┬──────┐
+       │    ↓   ↓    ↓      ↓
+       │   AI  Sync Notify Automation
+       │
+       └──────────────→ OBSERVABILITY
+```
+
+---
+
+# 199. MASTER PRINCIPLE
+
+The complete Vepari AI data platform follows:
+
+> **Local for speed and continuity. Cloud for shared authority. Memory for intelligence. Storage for files. Audit for accountability. Logs for diagnostics. Events for coordination. Security across everything.**
+
+---
+
+# 200. FINAL ARCHITECTURE
+
+```text
+                         VEPARI AI
+                            │
+                     MOBILE APPLICATION
+                            │
+              ┌─────────────┴─────────────┐
+              ↓                           ↓
+          LOCAL DATA                  SECURE DATA
+              │                           │
+           SQLITE                    SECURE STORE
+              │
+        OFFLINE OPERATIONS
+              │
+          SYNC QUEUE
+              │
+              ↓
+           API LAYER
+              │
+       AUTH + TENANT + RBAC
+              │
+              ↓
+        DOMAIN SERVICES
+              │
+              ↓
+       CLOUD DATABASE
+              │
+     ┌────────┼─────────┐
+     ↓        ↓         ↓
+   AUDIT    EVENTS    OBJECT STORAGE
+              │
+     ┌────────┼──────────────┐
+     ↓        ↓              ↓
+    AI     AUTOMATION     NOTIFICATIONS
+     │
+   MEMORY
+     │
+ AI GATEWAY
+     │
+ SARVAM / APPROVED PROVIDERS
+              │
+              ↓
+        OTHER DEVICES
+```
+
+---
+
+# FINAL DEFINITION
+
+The Vepari AI data architecture is therefore:
+
+**Local-first** for speed and offline business continuity.
+
+**Cloud-authoritative** for shared business truth.
+
+**SQLite-backed** on every mobile device for operational continuity.
+
+**Secure-storage-backed** for credentials and secrets.
+
+**Object-storage-backed** for documents and files.
+
+**Memory-backed** for contextual AI intelligence.
+
+**Event-backed** for asynchronous business coordination.
+
+**Audit-backed** for accountability.
+
+**Log-backed** for engineering observability.
+
+**Sync-backed** for multi-device collaboration.
+
+**Tenant-isolated** for security.
+
+**Connection-Portfolio-ready** for external systems.
+
+And the fundamental data relationship remains:
+
+```text
+FACT
+ ↓
+DATABASE
+
+CONTEXT
+ ↓
+MEMORY
+
+FILE
+ ↓
+OBJECT STORAGE
+
+ACTION HISTORY
+ ↓
+AUDIT
+
+TECHNICAL ACTIVITY
+ ↓
+LOG
+
+CHANGE
+ ↓
+EVENT
+
+LOCAL CONTINUITY
+ ↓
+SQLITE
+
+SHARED AUTHORITY
+ ↓
+CLOUD
+```
+
+**This is the consolidated Master Database + Storage + Memory + Logs + Cloud specification for Vepari AI, and should be treated as the source of truth alongside the Master PRD, TRD, App Flow, UI/UX, Frontend, and Backend/API documents.**
