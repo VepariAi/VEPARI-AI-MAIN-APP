@@ -1,0 +1,972 @@
+# VEPARI AI — PROJECT MASTER INSTRUCTIONS
+
+## 1. PROJECT IDENTITY
+
+Project name: Vepari AI
+
+Vepari AI is the single product, identity, platform and source of truth for this project.
+
+Do not use, introduce, revive or substitute any other product name or concept unless explicitly instructed by the team.
+
+Vepari AI is an AI-powered, mobile-first business intelligence and operating platform for MSMEs across India.
+
+It serves the complete MSME ecosystem, from very small/micro businesses to more structured small and medium enterprises.
+
+Micro enterprises are an especially important segment, but Vepari AI is NOT limited to micro enterprises.
+
+The micro-business segment should have a significantly deeper and more specialized feature ecosystem because these businesses often have different workflows, technology adoption levels, language needs, operational constraints and business problems.
+
+---
+
+# 2. PRODUCT VISION
+
+Vepari AI is intended to become the:
+
+"AI Business Brain for MSMEs"
+
+Core philosophy:
+
+VOICE → MEMORY → INTELLIGENCE → ACTION
+
+The product should help businesses:
+
+- capture business activity
+- remember important business information
+- understand financial and operational reality
+- identify problems
+- discover opportunities
+- receive recommendations
+- make better decisions
+- take useful actions
+- build long-term business continuity
+
+Vepari AI should not be treated as merely:
+
+- a billing app
+- an accounting app
+- a ledger app
+- a chatbot
+- a voice assistant
+- a CRM
+- an ERP
+- a government-scheme portal
+
+It should unify these capabilities into an intelligent business platform.
+
+---
+
+# 3. BUSINESS SCOPE
+
+Vepari AI should support the broader MSME lifecycle, including where applicable:
+
+- business memory
+- sales
+- purchases
+- expenses
+- revenue
+- profit
+- cash flow
+- customers
+- suppliers
+- credit
+- collections
+- inventory
+- products
+- pricing
+- orders
+- business operations
+- employees
+- business documents
+- financial intelligence
+- business analytics
+- market intelligence
+- government schemes
+- compliance assistance
+- business knowledge
+- recommendations
+- growth opportunities
+- customer intelligence
+- supplier intelligence
+- digital access
+- AI decision support
+- automation
+- communication
+- voice interaction
+- multilingual interaction
+
+The feature ecosystem must be expandable.
+
+Do not artificially restrict Vepari AI to the initial MVP.
+
+---
+
+# 4. FOUR CORE AI ENGINES
+
+The platform is conceptually organized into four major engines.
+
+## Business Brain
+
+Responsible for:
+
+- business memory
+- context
+- decisions
+- insights
+- historical understanding
+- relationships
+- business continuity
+
+## Finance Engine
+
+Responsible for:
+
+- revenue
+- expenses
+- profit
+- transactions
+- credit
+- ledgers
+- financial intelligence
+- financial alerts
+
+## Growth Engine
+
+Responsible for:
+
+- market intelligence
+- customers
+- opportunities
+- government schemes
+- recommendations
+- growth planning
+- business opportunities
+
+## Access Engine
+
+Responsible for:
+
+- voice
+- multilingual access
+- knowledge access
+- digital assistance
+- conversational interaction
+- accessibility
+
+These engines should remain extensible.
+
+---
+
+# 5. INITIAL MVP
+
+The initial MVP is intentionally focused.
+
+Core MVP capabilities:
+
+1. Voice Input
+2. Indian-language Speech-to-Text
+3. Business Memory
+4. Sales Logging
+5. Profit Calculation
+6. Credit Tracking
+7. Supplier Ledger
+8. Daily Summary
+9. Loss Alerts
+10. Voice Reply
+
+The MVP is NOT the complete Vepari AI product.
+
+Future capabilities must be architecturally possible without requiring a complete rewrite.
+
+---
+
+# 6. MICRO-ENTERPRISE SPECIALIZATION
+
+Micro enterprises are a major focus.
+
+The micro-business experience should provide additional depth around:
+
+- zero/low typing workflows
+- voice-first operation
+- simple business recording
+- informal business memory
+- customer credit
+- supplier relationships
+- daily cash activity
+- quick profit understanding
+- reminders
+- business continuity
+- low digital literacy
+- low-end Android devices
+- unstable connectivity
+- regional languages
+- conversational business interaction
+- simplified dashboards
+
+Do not assume that a feature suitable for a larger MSME should automatically be presented identically to a micro business.
+
+Design different complexity levels where appropriate.
+
+---
+
+# 7. MULTILINGUAL INDIA-FIRST ARCHITECTURE
+
+Vepari AI is NOT Tamil-only.
+
+Tamil is an important flagship language and an important initial design/reference language, but the product must be designed as a multilingual Indian platform.
+
+The architecture must support Indian languages without requiring a redesign of the application.
+
+The current Sarvam AI speech stack provides coverage for 22 Indian languages plus English for relevant models such as Saaras v3/v4.
+
+Relevant language set includes:
+
+- Assamese
+- Bengali
+- Bodo
+- Dogri
+- Gujarati
+- Hindi
+- Kannada
+- Kashmiri
+- Konkani
+- Maithili
+- Malayalam
+- Manipuri
+- Marathi
+- Nepali
+- Odia
+- Punjabi
+- Sanskrit
+- Santali
+- Sindhi
+- Tamil
+- Telugu
+- Urdu
+- English
+
+Use language codes and model capabilities based on the actual Sarvam API documentation.
+
+IMPORTANT:
+
+Do not assume every Sarvam model supports every language.
+
+Language capabilities must be checked against the specific model being integrated.
+
+The application should support:
+
+- language selection
+- automatic language detection where appropriate
+- voice input
+- speech-to-text
+- AI understanding
+- AI response
+- text-to-speech where supported
+- multilingual UI
+- multilingual business records
+- code-mixed speech
+- transliteration where useful
+- language-specific formatting
+- language-specific accessibility
+
+The architecture must allow new languages to be added later.
+
+---
+
+# 8. LANGUAGE INDEPENDENCE
+
+Business data must never be structurally dependent on one language.
+
+For example:
+
+A customer record should not become a different customer merely because the user changes from Tamil to Hindi.
+
+Business entities, IDs, transactions and relationships must remain language-independent.
+
+The UI language is separate from the underlying business data model.
+
+The AI should understand multilingual and code-mixed business conversations where supported.
+
+---
+
+# 9. PRIMARY PRODUCT EXPERIENCE
+
+The central interaction should be:
+
+OPEN
+→ SPEAK
+→ UNDERSTAND
+→ CONFIRM
+→ REMEMBER
+→ ANALYZE
+→ ACT
+
+Example:
+
+A user speaks a business event.
+
+The system should:
+
+1. capture voice
+2. transcribe it
+3. identify language
+4. interpret intent
+5. extract business entities
+6. identify financial/business values
+7. determine required action
+8. show the user what was understood
+9. ask for confirmation when appropriate
+10. save structured business information
+11. update relevant business intelligence
+12. provide useful feedback
+
+The AI must not silently perform important financial actions without appropriate confirmation rules.
+
+---
+
+# 10. UI/UX IS THE CURRENT PRIORITY
+
+IMPORTANT:
+
+The project is currently in the UI/UX planning and design phase.
+
+Do NOT immediately jump into React Native implementation.
+
+The current priority is:
+
+1. UX architecture
+2. information architecture
+3. user journeys
+4. navigation
+5. screen inventory
+6. wireframes
+7. design system
+8. high-fidelity UI
+9. interactive prototype
+10. design validation
+11. developer handoff
+12. only then implementation
+
+Do not allow coding to dictate the UX.
+
+The approved design should become the source of truth for implementation.
+
+---
+
+# 11. UI/UX DESIGN PRINCIPLES
+
+The product should feel:
+
+- premium
+- modern
+- intelligent
+- trustworthy
+- calm
+- simple
+- accessible
+- distinctive
+- Indian
+- multilingual
+- voice-friendly
+
+Avoid making it look like a conventional accounting or ERP application.
+
+Avoid unnecessary complexity.
+
+The interface should communicate:
+
+"I can simply talk to Vepari AI and it understands my business."
+
+---
+
+# 12. ANDROID-FIRST, IOS-READY
+
+The first major mobile platform is Android.
+
+The architecture must nevertheless remain suitable for future iOS expansion.
+
+Do not create an Android-only architecture that requires a rewrite for iOS.
+
+Use React Native for shared application logic and UI where appropriate.
+
+Isolate genuinely platform-specific functionality.
+
+Consider:
+
+- Android permissions
+- Android navigation
+- Android system UI
+- low-end Android devices
+- different screen sizes
+- network instability
+- background behaviour
+- microphone permissions
+- notifications
+
+while maintaining future iOS compatibility.
+
+---
+
+# 13. DEVICE AND TEAM DEVELOPMENT ENVIRONMENT
+
+There are six team members.
+
+The same development project may be accessed from:
+
+- the primary developer's laptop
+- other team members' laptops
+- friends' laptops
+- Android development devices
+- potentially other computers used temporarily for development
+
+The project must therefore NEVER depend on one physical computer.
+
+The source code must live in a shared remote Git repository.
+
+The repository is the development source of truth.
+
+Claude Code sessions are NOT the source of truth.
+
+A Claude Code session may start and end on any device.
+
+A developer must be able to:
+
+1. clone the repository
+2. install dependencies
+3. configure permitted environment variables
+4. pull the latest branch
+5. work with Claude Code
+6. run tests/builds
+7. commit changes
+8. push changes
+9. continue from another machine later
+
+---
+
+# 14. TEAM ACCOUNT CONTEXT
+
+The team currently intends to use one shared Claude account for development.
+
+The development architecture must not rely on a particular Claude conversation or session remaining active.
+
+Project knowledge must be persisted in project files and repository documentation.
+
+IMPORTANT:
+
+Do not store secrets, API keys, passwords or private credentials in Claude Project instructions, source code or Git.
+
+Where possible, individual team members should use individual source-control identities and repository permissions even if the Claude account is shared.
+
+---
+
+# 15. MULTI-MACHINE DEVELOPMENT
+
+Assume developers may switch machines frequently.
+
+Every important project decision must be persisted in:
+
+- repository documentation
+- architecture documents
+- design documentation
+- decision logs
+- code
+- tests
+
+Do not rely on conversational memory.
+
+The repository should contain a persistent project instruction file such as:
+
+CLAUDE.md
+
+This file should eventually contain the project rules needed by Claude Code.
+
+---
+
+# 16. GIT / COLLABORATION PRINCIPLES
+
+The project must support six-person collaborative development.
+
+Do not assume all developers will work sequentially.
+
+Use:
+
+- main branch
+- feature branches
+- pull requests
+- code review
+- automated testing
+- controlled merges
+
+Avoid direct uncontrolled changes to main.
+
+Avoid large unrelated commits.
+
+Each change should have a clear purpose.
+
+Do not overwrite another developer's work.
+
+Before modifying an area, inspect current code and recent changes.
+
+---
+
+# 17. CLAUDE CODE BEHAVIOUR
+
+When Claude Code is eventually used:
+
+Always:
+
+1. inspect the repository first
+2. understand existing architecture
+3. identify relevant documentation
+4. inspect existing implementation
+5. plan changes
+6. make minimal appropriate changes
+7. preserve working functionality
+8. run relevant tests
+9. run type checking
+10. run linting
+11. review changes
+12. document important decisions
+
+Never:
+
+- blindly rewrite the project
+- delete working functionality
+- invent APIs
+- invent database tables
+- invent authentication behaviour
+- fabricate production integrations
+- expose secrets
+- remove tests to make builds pass
+- silently change business logic
+
+If something is uncertain, explicitly identify the uncertainty.
+
+---
+
+# 18. BACKEND SOURCE OF TRUTH
+
+The mobile application must not become the authoritative source for business-critical server data.
+
+The backend/database should remain authoritative where the existing architecture defines server-side authority.
+
+The mobile application may use:
+
+- local state
+- cache
+- offline storage
+- queued mutations
+
+but synchronization and conflict behaviour must be explicit.
+
+---
+
+# 19. OFFLINE-FIRST THINKING
+
+Vepari AI must account for real Indian connectivity conditions.
+
+Design for:
+
+- temporary offline operation
+- network failures
+- retry
+- synchronization
+- queued operations
+- stale data indicators
+- conflict handling
+- recovery
+
+The user should not lose important business information simply because connectivity temporarily disappears.
+
+---
+
+# 20. SECURITY
+
+Business data is sensitive.
+
+Protect:
+
+- customer data
+- supplier data
+- financial data
+- business conversations
+- business memory
+- authentication credentials
+- AI interactions
+
+Never place production secrets in:
+
+- React Native source
+- Git
+- documentation
+- screenshots
+- Claude instructions
+- client-side public configuration
+
+Use secure environment/secrets management.
+
+Sarvam API keys must remain server-side where appropriate.
+
+---
+
+# 21. AI SAFETY AND TRUST
+
+Financial and business AI output must be presented responsibly.
+
+The AI should distinguish between:
+
+- recorded facts
+- calculated values
+- inferred information
+- recommendations
+- uncertain interpretations
+
+When the AI is uncertain about a transaction or business event, the UX should make correction easy.
+
+Do not present uncertain AI inference as guaranteed fact.
+
+---
+
+# 22. FINANCIAL UX
+
+Financial information must be exceptionally clear.
+
+Important concepts include:
+
+- revenue
+- expenses
+- profit
+- cash flow
+- credit
+- receivables
+- payables
+- supplier dues
+- transaction history
+- financial trends
+- loss indicators
+
+Do not depend only on color to communicate financial meaning.
+
+Use labels, icons, numbers and clear language.
+
+---
+
+# 23. ACCESSIBILITY
+
+Design for:
+
+- readable text
+- dynamic font sizes
+- sufficient contrast
+- large touch targets
+- screen readers
+- simple navigation
+- clear states
+- non-color-dependent information
+- multilingual text expansion
+
+Tamil and other Indian-language strings may be significantly longer than English.
+
+Layouts must adapt.
+
+---
+
+# 24. PERFORMANCE
+
+The application must work well on low and mid-range Android devices.
+
+Consider:
+
+- startup time
+- memory
+- image loading
+- animations
+- transaction lists
+- voice processing
+- network latency
+- battery usage
+- background work
+
+Do not introduce heavy dependencies without justification.
+
+---
+
+# 25. TESTING
+
+Testing is mandatory.
+
+Important areas include:
+
+- authentication
+- onboarding
+- navigation
+- voice capture
+- speech processing
+- multilingual behaviour
+- AI interpretation
+- sales
+- expenses
+- profit calculations
+- credit
+- supplier ledger
+- business memory
+- synchronization
+- offline behaviour
+- notifications
+- security
+- accessibility
+
+Never remove tests simply to make a build pass.
+
+---
+
+# 26. PRODUCT EXPANSION
+
+The initial MVP is only the foundation.
+
+Future development may expand into:
+
+- advanced business intelligence
+- deeper finance
+- inventory
+- CRM
+- operations
+- market intelligence
+- government schemes
+- compliance assistance
+- business automation
+- AI agents
+- document intelligence
+- integrations
+- WhatsApp
+- notifications
+- external services
+- enterprise capabilities
+- analytics
+- advanced reporting
+
+New capabilities must fit the existing architecture rather than creating disconnected mini-products.
+
+---
+
+# 27. CONNECTION PORTFOLIO
+
+The Connection Portfolio is the FINAL major deliverable.
+
+Do NOT prioritize or build it before the product is substantially complete.
+
+It should document the actual finished Vepari AI product.
+
+It may eventually include:
+
+- product story
+- problem
+- research
+- solution
+- UX
+- UI
+- architecture
+- AI engines
+- feature ecosystem
+- technology
+- screenshots
+- workflows
+- business model
+- security
+- impact
+- roadmap
+- team
+- demo
+
+Never claim functionality in the portfolio that has not actually been implemented.
+
+---
+
+# 28. PROJECT DOCUMENTATION
+
+Important decisions must eventually be documented.
+
+Recommended structure:
+
+/docs
+    /product
+    /research
+    /ux
+    /ui
+    /design-system
+    /architecture
+    /api
+    /database
+    /development
+    /testing
+    /deployment
+    /decisions
+
+The exact structure may evolve.
+
+---
+
+# 29. DECISION LOG
+
+Important architectural and product decisions should be recorded.
+
+For significant decisions document:
+
+- decision
+- reason
+- alternatives considered
+- consequences
+- date/version where appropriate
+
+Do not repeatedly reconsider already-approved decisions without a real reason.
+
+---
+
+# 30. DEVELOPMENT PHASE ORDER
+
+The broad project order is:
+
+PHASE 1
+Research and product understanding
+
+PHASE 2
+UX architecture
+
+PHASE 3
+Information architecture and user journeys
+
+PHASE 4
+Wireframes
+
+PHASE 5
+Design system
+
+PHASE 6
+High-fidelity UI
+
+PHASE 7
+Interactive prototype
+
+PHASE 8
+Design validation
+
+PHASE 9
+React Native Android foundation
+
+PHASE 10
+Core MVP implementation
+
+PHASE 11
+AI and voice integration
+
+PHASE 12
+Finance and Business Brain
+
+PHASE 13
+Growth and Access capabilities
+
+PHASE 14
+Offline/synchronization
+
+PHASE 15
+Testing and security hardening
+
+PHASE 16
+Android release
+
+PHASE 17
+iOS expansion/readiness
+
+PHASE 18
+Broader MSME expansion
+
+PHASE 19
+Final product audit
+
+PHASE 20
+Connection Portfolio
+
+Do not skip directly from research to coding.
+
+---
+
+# 31. CURRENT PROJECT STATUS
+
+Current priority:
+
+UI/UX DESIGN
+
+Current objective:
+
+Define and approve the complete Vepari AI mobile experience before React Native implementation.
+
+Do not treat the current project as a coding-only project.
+
+The design must be solved first.
+
+---
+
+# 32. WORKING STYLE
+
+Be analytical and evidence-driven.
+
+Do not blindly agree with an idea if it creates a UX, technical, security or product problem.
+
+When appropriate:
+
+- identify risks
+- identify contradictions
+- propose alternatives
+- explain trade-offs
+- preserve the product vision
+- avoid unnecessary complexity
+
+Do not prematurely freeze the product scope.
+
+Vepari AI is an expanding platform.
+
+The MVP should be controlled, but the overall product vision remains expandable.
+
+---
+
+# 33. SOURCE OF TRUTH HIERARCHY
+
+When information conflicts, use this order:
+
+1. Explicit current team decision
+2. Approved Vepari AI product requirements
+3. Approved architecture/design documents
+4. Existing production implementation
+5. Existing research
+6. General assumptions
+
+Never invent missing requirements.
+
+If an important conflict exists, surface it clearly.
+
+---
+
+# 34. CORE PRINCIPLE
+
+Always remember:
+
+Vepari AI is not simply an app with AI added to it.
+
+It is intended to be an AI-native business platform for Indian MSMEs.
+
+The product should make business information:
+
+VISIBLE
+→ UNDERSTANDABLE
+→ MEMORABLE
+→ ACTIONABLE
+
+The ultimate goal is:
+
+A business should become less dependent on memory, notebooks, scattered messages and fragmented tools, while gaining a persistent AI-powered business brain.
+
+Build toward that vision without sacrificing simplicity, trust, security, usability or technical quality.
+
+The instructions now explicitly establish:
+One Vepari AI project → one shared repository → six developers → multiple laptops/devices → multiple Claude Code sessions → persistent documentation → Git-based collaboration.
+The Claude Project is for the project-level context, while the eventual Git repository + CLAUDE.md becomes the persistent engineering context for Claude Code.
+One thing I would not put in these custom instructions is your actual Google/Claude password, API keys, GitHub tokens, or other credentials. Those should never be stored there. Sarvam's own documentation likewise recommends keeping API keys in environment variables/secrets management and never committing them to version control.
