@@ -1,0 +1,781 @@
+PROJECT KNOWLEDGE INTERPRETATION & PRODUCT SCOPE
+
+
+VEPARI AI — PROJECT KNOWLEDGE INTERPRETATION & PRODUCT SCOPE
+
+The files uploaded to this Claude Project constitute the primary research and reference knowledge base for Vepari AI.
+
+There are currently 23 project-knowledge files, including:
+- the main Vepari AI presentation
+- problem-statement and solution research
+- competitor research
+- feature-package materials
+- supporting research documents
+- visual/image references
+- other Vepari AI project documents
+
+These files must be treated as the project's primary source material.
+
+==================================================
+1. HOW TO INTERPRET THE UPLOADED KNOWLEDGE
+==================================================
+
+The uploaded research is intentionally strongest around MICRO ENTERPRISES.
+
+This does NOT mean Vepari AI is a micro-enterprise-only product.
+
+The micro-enterprise research represents the deepest initial research foundation and the most specialized first product experience.
+
+Vepari AI itself is a broader MSME platform.
+
+Therefore:
+
+MICRO ENTERPRISES = DEEPLY SPECIALIZED PRIMARY PRODUCT SEGMENT
+
+MSMEs = COMPLETE PLATFORM MARKET
+
+Never redefine Vepari AI as a "micro-enterprise-only" application.
+
+When using the uploaded documents, distinguish between:
+
+A. Research depth
+B. Product scope
+C. Initial MVP scope
+D. Future platform scope
+
+The fact that a capability is researched primarily through micro-enterprise problems does not limit that capability to micro enterprises.
+
+==================================================
+2. OVERALL VEPARI AI SCOPE
+==================================================
+
+Vepari AI is an AI-powered business intelligence and business operating platform for MSMEs across India.
+
+It is designed to support businesses across different:
+
+- sizes
+- sectors
+- stages
+- operating models
+- levels of digital maturity
+- geographic regions
+- Indian languages
+
+The platform should eventually serve:
+
+- micro enterprises
+- small enterprises
+- medium enterprises
+- growing MSMEs
+- more structured businesses requiring advanced business intelligence
+
+The experience should scale in sophistication according to the needs of the business.
+
+Do not assume every MSME needs the same interface or the same feature depth.
+
+==================================================
+3. MICRO ENTERPRISES REMAIN A MAJOR SPECIALIZATION
+==================================================
+
+Micro enterprises remain extremely important to Vepari AI.
+
+The uploaded research contains extensive investigation into the problems faced by micro businesses.
+
+These include businesses that may depend heavily on:
+
+- memory
+- notebooks
+- paper
+- WhatsApp/messages
+- verbal communication
+- manual records
+- informal credit
+- manual calculations
+- fragmented information
+- low-cost Android devices
+- unstable connectivity
+- regional languages
+- limited digital systems
+
+Vepari AI should provide a much deeper and simpler experience for this segment.
+
+Important micro-enterprise principles include:
+
+- voice-first interaction
+- low/no typing
+- simple workflows
+- regional-language access
+- business memory
+- easy sales recording
+- easy expense recording
+- credit tracking
+- supplier tracking
+- simple profit understanding
+- daily summaries
+- loss alerts
+- reminders
+- business continuity
+- low-friction AI assistance
+
+The micro experience should NOT be treated as a reduced or inferior version of the product.
+
+It should be a deliberately optimized experience for that segment.
+
+==================================================
+4. FULL MSME EXPANSION
+==================================================
+
+Beyond the micro segment, Vepari AI must support broader MSME requirements.
+
+Future/full-platform capabilities may include:
+
+BUSINESS MANAGEMENT
+- business overview
+- business memory
+- workflows
+- operational intelligence
+- decision support
+- business continuity
+- business performance
+
+FINANCE
+- revenue
+- expenses
+- profit
+- cash flow
+- receivables
+- payables
+- credit
+- ledgers
+- financial analysis
+- financial forecasting
+- financial alerts
+
+SALES
+- sales tracking
+- customer sales
+- orders
+- quotations
+- invoicing-related workflows
+- sales analytics
+- sales forecasting
+- customer purchasing patterns
+
+CUSTOMERS
+- customer profiles
+- customer history
+- customer memory
+- customer segmentation
+- customer follow-ups
+- customer retention
+- customer intelligence
+- customer recommendations
+
+SUPPLIERS
+- supplier profiles
+- supplier history
+- supplier dues
+- purchasing history
+- supplier performance
+- supplier relationships
+
+INVENTORY
+- stock
+- products
+- low-stock detection
+- inventory intelligence
+- purchasing recommendations
+- stock movement
+- inventory forecasting
+
+OPERATIONS
+- business workflows
+- operational tasks
+- reminders
+- productivity
+- process intelligence
+- operational alerts
+- business automation
+
+MARKET INTELLIGENCE
+- market trends
+- pricing intelligence
+- competitor context
+- demand signals
+- opportunities
+- business recommendations
+
+GOVERNMENT & SCHEMES
+- government schemes
+- eligibility discovery
+- opportunity matching
+- application guidance
+- relevant MSME programs
+
+COMPLIANCE ASSISTANCE
+- compliance-related reminders
+- document assistance
+- regulatory knowledge
+- deadline awareness
+- guidance workflows
+
+GROWTH
+- growth recommendations
+- opportunity discovery
+- customer growth
+- market expansion
+- product opportunities
+- business planning
+- decision support
+
+KNOWLEDGE
+- business knowledge
+- conversational assistance
+- explanations
+- learning
+- contextual business guidance
+
+DIGITAL ACCESS
+- voice
+- multilingual interaction
+- digital assistance
+- conversational workflows
+- integrations
+- communication
+
+AI AUTOMATION
+- intelligent workflows
+- proactive alerts
+- recommendations
+- agentic capabilities where appropriate
+- automated business actions with appropriate confirmation
+
+These capabilities are part of the expandable Vepari AI vision and should not be incorrectly treated as all being part of the initial MVP.
+
+==================================================
+5. FOUR CORE ENGINES
+==================================================
+
+The uploaded research establishes four major conceptual engines.
+
+BUSINESS BRAIN
+- memory
+- context
+- decisions
+- insights
+- business continuity
+
+FINANCE ENGINE
+- revenue
+- expenses
+- profit
+- credit
+- ledgers
+- financial intelligence
+
+GROWTH ENGINE
+- market intelligence
+- customers
+- schemes
+- opportunities
+- recommendations
+- growth
+
+ACCESS ENGINE
+- voice
+- languages
+- knowledge
+- digital access
+- conversational interaction
+
+These engines form the high-level product architecture.
+
+Future features should be mapped to the appropriate engine rather than being treated as disconnected products.
+
+==================================================
+6. 220 PROBLEMS / 10 MASTER PROBLEMS
+==================================================
+
+The uploaded research groups the broad problem research into master problem areas.
+
+Use the research documents as the authoritative source for the exact problem taxonomy.
+
+The major areas include:
+
+- Memory
+- Finance
+- Profit Leaks
+- Credit
+- Schemes
+- Market
+- Decisions
+- Knowledge
+- Customers
+- Digital access
+
+The research framework should be preserved.
+
+Do not discard the original problem research merely because the platform expands beyond micro enterprises.
+
+Instead:
+
+MICRO RESEARCH
+→ identifies deep real-world problems
+
+MASTER PROBLEMS
+→ organize the problem ecosystem
+
+AI ENGINES
+→ organize product capabilities
+
+MSME EXPANSION
+→ extends those capabilities to larger and more sophisticated business needs
+
+==================================================
+7. 200+ FEATURES / FEATURE PACKAGES
+==================================================
+
+The uploaded feature-package documents represent a broader Vepari AI feature ecosystem.
+
+Do not reduce the product to the initial 10 MVP capabilities.
+
+At the same time, do not claim that every feature is already implemented.
+
+Always distinguish:
+
+RESEARCHED
+DESIGNED
+PLANNED
+MVP
+IN DEVELOPMENT
+IMPLEMENTED
+TESTED
+PRODUCTION
+
+Never confuse planned features with existing functionality.
+
+==================================================
+8. MVP VS COMPLETE PLATFORM
+==================================================
+
+The initial MVP is intentionally small.
+
+The current core MVP includes:
+
+1. Voice Input
+2. Indian-language Speech-to-Text
+3. Business Memory
+4. Sales Logger
+5. Profit Calculator
+6. Credit Tracker
+7. Supplier Ledger
+8. Daily Summary
+9. Loss Alerts
+10. Voice Reply
+
+These features prove the central product thesis.
+
+They do NOT define the complete Vepari AI platform.
+
+The broader platform should grow from this foundation.
+
+==================================================
+9. BUSINESS SIZE ADAPTATION
+==================================================
+
+Vepari AI should not force the same complexity on every business.
+
+The product should be capable of adapting to different MSME levels.
+
+Example conceptual progression:
+
+MICRO
+→ extremely simple
+→ voice-first
+→ minimal typing
+→ essential business intelligence
+→ simple financial understanding
+
+SMALL
+→ more structured workflows
+→ broader finance
+→ inventory
+→ customers
+→ suppliers
+→ operational intelligence
+→ analytics
+
+MEDIUM
+→ advanced business intelligence
+→ deeper operations
+→ advanced analytics
+→ workflow automation
+→ integrations
+→ larger-scale data
+→ more sophisticated controls
+
+This is a conceptual product direction.
+
+Do not invent rigid tier boundaries unless explicitly defined by the team.
+
+==================================================
+10. INDIA-FIRST PRODUCT
+==================================================
+
+Vepari AI is designed for India.
+
+The platform should account for:
+
+- Indian MSMEs
+- regional business practices
+- Indian financial terminology
+- local business workflows
+- regional languages
+- voice interaction
+- varying digital literacy
+- varying connectivity
+- low and mid-range devices
+- Indian government schemes
+- Indian market conditions
+
+Do not design the product as a generic Western SaaS platform and simply translate it into Indian languages.
+
+==================================================
+11. MULTILINGUAL ARCHITECTURE
+==================================================
+
+Vepari AI is NOT Tamil-only.
+
+Tamil is an important flagship language and a major initial design reference.
+
+However, the platform must support the Indian multilingual ecosystem.
+
+The architecture should support Indian languages supported by the selected AI/speech/translation models.
+
+Do not hard-code the product around Tamil.
+
+Language must be treated as a platform-level capability.
+
+The system should be capable of supporting:
+
+- multilingual UI
+- voice input
+- speech-to-text
+- AI understanding
+- AI responses
+- text-to-speech where supported
+- language detection
+- code-mixed speech
+- transliteration where useful
+- multilingual business records
+- multilingual notifications
+- language-specific accessibility
+
+Do not assume every AI model supports every Indian language.
+
+Always verify language capability against the actual model/service being used.
+
+Business entities and database records must remain language-independent.
+
+Changing the interface language must not create a new customer, supplier, transaction or business entity.
+
+==================================================
+12. VOICE-FIRST DOES NOT MEAN VOICE-ONLY
+==================================================
+
+Voice is a major differentiator, especially for micro businesses.
+
+However, Vepari AI should also support:
+
+- typing
+- tapping
+- forms where appropriate
+- visual dashboards
+- notifications
+- search
+- structured workflows
+
+Users should be able to choose the most appropriate interaction method.
+
+Voice should reduce friction rather than become a mandatory interaction.
+
+==================================================
+13. AI BUSINESS BRAIN
+==================================================
+
+The central intelligence principle is:
+
+Vepari AI should remember the business over time.
+
+It should connect:
+
+- customers
+- suppliers
+- transactions
+- products
+- prices
+- credit
+- expenses
+- sales
+- decisions
+- conversations
+- business events
+- insights
+
+The system should progressively build useful business context.
+
+The goal is not simply storing data.
+
+The goal is transforming business information into:
+
+MEMORY
+→ UNDERSTANDING
+→ INSIGHT
+→ RECOMMENDATION
+→ ACTION
+
+==================================================
+14. TRUST & AI TRANSPARENCY
+==================================================
+
+AI-generated information must be distinguishable from recorded facts.
+
+Where appropriate distinguish:
+
+- recorded data
+- calculated data
+- inferred information
+- AI recommendations
+- uncertain interpretation
+
+Important business/financial actions should use appropriate confirmation mechanisms.
+
+Do not allow the AI to silently make consequential changes without appropriate safeguards.
+
+==================================================
+15. DESIGN INTERPRETATION
+==================================================
+
+The uploaded images, presentations and design references should be treated as references for:
+
+- brand identity
+- product direction
+- visual language
+- feature concepts
+- user experience
+- product storytelling
+
+Do not assume a presentation slide is automatically the final mobile UI.
+
+The mobile product should receive a dedicated UX architecture and mobile-first design process.
+
+The final UI should be optimized for actual mobile use rather than simply reproducing PPT visuals.
+
+==================================================
+16. UX PRINCIPLES
+==================================================
+
+The mobile experience should be:
+
+- simple
+- premium
+- trustworthy
+- intelligent
+- accessible
+- fast
+- low-friction
+- multilingual
+- voice-friendly
+- understandable
+- scalable
+
+The interface should avoid unnecessary enterprise complexity for micro users while still supporting sophisticated MSME workflows.
+
+==================================================
+17. TECHNOLOGY DIRECTION
+==================================================
+
+The primary mobile application direction is:
+
+React Native
+
+Initial target:
+
+Android
+
+Future target:
+
+iOS
+
+The architecture must therefore be cross-platform from the beginning.
+
+The mobile application should integrate with the Vepari AI backend/API architecture rather than duplicating server-side business logic unnecessarily.
+
+==================================================
+18. MULTI-DEVELOPER / MULTI-DEVICE DEVELOPMENT
+==================================================
+
+The Vepari AI development team consists of six members.
+
+Development may occur from different:
+
+- laptops
+- computers
+- Android devices
+- development environments
+
+The source code must therefore remain independent of any individual computer or Claude Code session.
+
+The shared repository is the development source of truth.
+
+Claude conversations are not the source of truth.
+
+Important product and engineering decisions must be persisted in project files and repository documentation.
+
+==================================================
+19. CLAUDE CODE CONTEXT
+==================================================
+
+When Claude Code is eventually used, it should treat:
+
+- repository files
+- CLAUDE.md
+- architecture documents
+- UX documents
+- UI documents
+- API documentation
+- database documentation
+- decision logs
+
+as persistent project context.
+
+Do not rely on one Claude session remembering previous work.
+
+==================================================
+20. RESEARCH INTEGRITY
+==================================================
+
+The uploaded research must be preserved.
+
+Do not arbitrarily remove, simplify or contradict findings from the research.
+
+However, research findings must be interpreted according to their scope.
+
+If a document primarily studies micro enterprises:
+
+Treat it as strong evidence for micro-enterprise needs.
+
+Do NOT conclude:
+
+"Therefore Vepari AI only serves micro enterprises."
+
+Instead conclude:
+
+"This research deeply validates the micro-enterprise segment and provides a foundation for the broader MSME platform."
+
+==================================================
+21. DO NOT INVENT FACTS
+==================================================
+
+When information is not present in the uploaded knowledge:
+
+Do not fabricate it.
+
+Clearly distinguish:
+
+- documented fact
+- research finding
+- product decision
+- proposal
+- assumption
+- future possibility
+
+If a current decision conflicts with older documentation, prioritize the latest explicit team decision and record the conflict.
+
+==================================================
+22. PRODUCT EXPANSION PRINCIPLE
+==================================================
+
+Vepari AI should continuously expand based on real MSME needs.
+
+The architecture must allow future capabilities without requiring the product to be rebuilt from scratch.
+
+Do not prematurely freeze the overall product scope.
+
+The MVP scope can be controlled.
+
+The platform vision remains expandable.
+
+==================================================
+23. FINAL PRODUCT POSITIONING
+==================================================
+
+Always understand Vepari AI as:
+
+AN AI BUSINESS BRAIN AND BUSINESS OPERATING PLATFORM FOR INDIAN MSMEs
+
+with:
+
+A DEEPLY SPECIALIZED, VOICE-FIRST, MULTILINGUAL EXPERIENCE FOR MICRO ENTERPRISES
+
+The relationship is:
+
+FULL MSME PLATFORM
+        ↓
+MICRO-ENTERPRISE SPECIALIZATION
+        ↓
+DEEPER VOICE + MEMORY + SIMPLICITY
+        ↓
+EXPANDABLE AI BUSINESS INTELLIGENCE
+
+Never reverse this relationship.
+
+Do not describe Vepari AI as merely:
+
+"an AI app for micro businesses."
+
+The correct broader understanding is:
+
+"Vepari AI is an AI-powered business intelligence and operating platform for MSMEs, with a deeply specialized product experience and expanded feature ecosystem for micro enterprises."
+
+==================================================
+24. SOURCE PRIORITY
+==================================================
+
+When using project knowledge:
+
+1. Current explicit team decisions
+2. Approved Vepari AI product requirements
+3. Latest approved Vepari AI architecture/design documents
+4. Uploaded primary Vepari AI research
+5. Feature-package documents
+6. Supporting research
+7. General assumptions
+
+When a statement is not supported by the project knowledge, label it as a proposal rather than presenting it as an established Vepari AI fact.
+
+==================================================
+25. ULTIMATE PRODUCT PRINCIPLE
+==================================================
+
+Every major Vepari AI capability should contribute toward:
+
+CAPTURE
+→ REMEMBER
+→ UNDERSTAND
+→ PREDICT
+→ RECOMMEND
+→ ACT
+
+The ultimate goal is to give Indian MSMEs an intelligent, persistent, multilingual business brain that reduces operational blindness and turns fragmented business information into useful business intelligence and action.
+
+The product must remain:
+
+MSME-WIDE
+MICRO-DEEP
+INDIA-FIRST
+MULTILINGUAL
+VOICE-ENABLED
+AI-NATIVE
+SCALABLE
+TRUSTWORTHY
