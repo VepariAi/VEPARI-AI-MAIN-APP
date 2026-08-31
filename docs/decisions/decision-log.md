@@ -53,7 +53,7 @@ This created a direct conflict (DL-001, logged 2026-08-31) that blocked Phase 5 
 2. The 9 text spec documents were written with "Lora as primary typography" meaning the UI/content layer, not the wordmark layer — but this distinction was never made explicit in the text.
 3. Cinzel is architecturally limited to display use (no true lowercase, Latin-only) so Option C is technically impossible for an app with 23-language support and prose UI text.
 4. The two-tier approach makes both sources simultaneously correct at their respective layers. No Brand.png rebuild is required.
-5. **Nirmala UI** (Brand.png's Tamil specification) is a proprietary Microsoft font bundled with Windows — it is not licensable for Android/iOS app bundling without a commercial agreement. **Noto Serif Tamil** is free, open-source, ships natively on Android 7+, is high-quality, and is the natural serif pairing for Lora.
+5. **Nirmala UI** (Brand.png's Tamil specification) is a proprietary Microsoft font bundled with Windows — it is not licensable for Android/iOS app bundling without a commercial agreement. **Noto Serif Tamil** is free and open-source (SIL Open Font License), high-quality, and the natural serif pairing for Lora. It must be **bundled with the app** (via `@expo-google-fonts/noto-serif-tamil`), not relied upon as a system font: Android reliably ships *Noto Sans Tamil* as a system face, but *Noto Serif Tamil* system availability is not guaranteed across devices/OS versions. The SIL OFL license makes bundling safe. *Noto Sans Tamil* is the recommended system-available fallback if a bundled face fails to load.
 
 ### Consequences and Required Follow-Up
 
@@ -61,8 +61,8 @@ This created a direct conflict (DL-001, logged 2026-08-31) that blocked Phase 5 
 
 - [ ] **All 9 master spec documents** need their typography sections updated to add the two-tier distinction. The phrase "Lora is the primary English display/brand typography" must be revised to: "Cinzel Semibold is the wordmark/logo display typeface. Lora is the primary UI heading and body typeface."
 - [ ] **UI-UX.txt** §Typography is the most critical update — it governs all component token values.
-- [ ] **Prompt 0 §0.3.1** (external template, not a repo file) must be updated to replace "Lora (primary English display/brand)" with the two-tier definition and to replace "Nirmala UI" with "Noto Serif Tamil".
-- [ ] **knowledge-map.md** DL-001 entry updated to DECIDED status. ✓ (done in this commit)
+- [x] **Prompt 0 §0.3.1** amendment text persisted below (see "Amendment to Prompt 0 §0.3.1"). Prompt 0 is a conversational template, not a repo file; per Project Instructions §14–15 the repository is the source of truth, so the resolution is recorded here for the team to paste into their template. ✓
+- [x] **knowledge-map.md** DL-001 entry updated to DECIDED status. ✓ (done in commit 00871bb)
 
 #### Before Phase 5 implementation (font token work)
 
@@ -75,6 +75,14 @@ This created a direct conflict (DL-001, logged 2026-08-31) that blocked Phase 5 
 
 - Brand.png requires no changes. The existing Cinzel Semibold wordmark is now the canonical standard.
 - App Icon.png requires no changes.
+
+### Amendment to Prompt 0 §0.3.1
+
+The team's Prompt 0 template (Master Scope and Operating Contract) is maintained outside the repository. To reflect this resolution, replace the §0.3.1 typography-conflict entry with the following ratified text:
+
+> **§0.3.1 — Typography (RESOLVED 2026-08-31, DL-001).** Vepari AI uses a two-tier English type system: **Cinzel Semibold** for the wordmark/logo lockup and brand display only, and **Lora** for all UI headings, body text, and content. Tamil/Indic content uses **Noto Serif Tamil**, bundled with the app (SIL OFL), with **Noto Sans Tamil** as the system-available fallback. Nirmala UI (originally shown in Brand.png) is retired — it is a proprietary Windows font and not licensable for app bundling. This decision is closed; do not reopen without a superseding decision-log entry.
+
+Once the team pastes this into their Prompt 0, the former "Lora vs. Cinzel — OPEN" note in §0.3.1 and any "Nirmala UI" reference should be removed.
 
 ### References
 
