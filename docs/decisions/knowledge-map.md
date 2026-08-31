@@ -853,9 +853,10 @@ Each subsection below states the Prompt 0 claim, the primary source(s) checked, 
 
 **Claim:** 23-language support. Sarvam Saaras v3/v4 (STT), Bulbul v3 (TTS), Sarvam-105B (LLM). Provider-agnostic gateway.
 
-**Sources checked:** AI OS.txt §Voice, Backend.txt §AI-Gateway.
+**Sources checked (original):** AI OS.txt §Voice, Backend.txt §AI-Gateway.
+**Sources checked (Prompt 7 live verification):** `docs.sarvam.ai` endpoints fetched 2026-08-31 — see DL-009.
 
-**Result: CONFIRMED.** 23-language mandate, Sarvam model names, and provider-agnostic gateway are all confirmed. Backend.txt names Sarvam AI as primary and defines the gateway abstraction layer.
+**Result: PARTIALLY CORRECTED — DL-009 (2026-08-31).** The 23-language claim holds for **STT only** (Saaras v3/v4 covers all 23 in transcribe/codemix/translit/verbatim modes). **Bulbul v3 TTS covers only 11 languages** (Hindi, Bengali, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Punjabi, Odia, English). 12 languages have voice input but no TTS voice output in the current Sarvam stack: Assamese, Urdu, Nepali, Konkani, Kashmiri, Sindhi, Sanskrit, Santali, Manipuri, Bodo, Maithili, Dogri. `translate` mode on Saaras is also limited to the same 11 languages. Sarvam-105B and Mayura also document only 11-language coverage. Provider-agnostic gateway is confirmed in Backend.txt and is the architectural path to 23-language TTS. Odia uses `od-IN` for STT and `or-IN` for TTS — code discrepancy documented in DL-009. See DL-009 for full coverage table and Phase 13 implications.
 
 ---
 
@@ -988,6 +989,7 @@ All 6 design system hex values match Brand.png exactly. All 16 Screens.png layou
 | **DL-005** Apache 2.0 license not in governing docs | OPEN | Pre-distribution |
 | **DL-007** "Connection Portfolio" naming collision | **DECIDED 2026-08-31** — "Connection Portfolio" = integrations feature (unchanged); "Product Showcase Portfolio" = final showcase deliverable. `Project Instructions.txt §27` + Phase 20 updated. | No future docs may use "Connection Portfolio" to mean the showcase |
 | **DL-008** Gram-Disha exclusion audit | **AUDIT COMPLETE 2026-08-31** — Zero product contamination. District-urbanity dataset retained with neutral-label rules. SIH workbook content excluded. IP/licensing review required before geo-aware features ship. | IP review required pre-Phase 18 |
+| **DL-009** Sarvam AI endpoint language coverage | **RESEARCH COMPLETE 2026-08-31** — STT (Saaras v3): 23 languages ✅. TTS (Bulbul v3): 11 languages only ⚠️. 12 gap languages: STT-in, text-only reply. Translate mode: 11 langs only. Odia code discrepancy: `od-IN` (STT) vs `or-IN` (TTS). Phase 13 ceiling established. | Phase 13 design must include text-only reply fallback for 12 gap languages; TRD §AI-Voice needs correction |
 
 ---
 

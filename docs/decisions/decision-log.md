@@ -8,6 +8,153 @@ All entries that affect spec documents record which files need updating. No deci
 
 ---
 
+## DL-009 — Sarvam AI Endpoint Language Coverage (Research)
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-08-31 |
+| **Decision-ID** | DL-009 |
+| **Domain** | Research — Voice/Language Architecture |
+| **Status** | **RESEARCH COMPLETE — ACTION REQUIRED** |
+| **Researcher** | Engineering (Prompt 7 audit) |
+| **Researched during** | Prompt 7 (Phase 1 · Type: RESEARCH) |
+| **Source** | `docs.sarvam.ai` (fetched 2026-08-31) |
+
+### Objective
+
+Verify the exact language coverage of the two Sarvam AI endpoints Vepari AI will call — Saaras v3/v4 (STT) and Bulbul v3 (TTS) — against the 23-language mandate in Project Instructions §7. Identify any gap before Phase 13 (localization) design begins.
+
+### Endpoint Summary
+
+#### STT — `POST https://api.sarvam.ai/speech-to-text`
+
+| Parameter | Value |
+|---|---|
+| **Model** | `saaras:v3` (recommended) · `saaras:v4` (latest; adds Global English) |
+| **Auth** | `api-subscription-key` header |
+| **Input** | `file` (WAV, MP3, AAC, FLAC, OGG) — max **30 seconds** per request |
+| **Mode options** | `transcribe` (default), `translate`, `verbatim`, `translit`, `codemix` |
+| **Language detection** | Automatic when `language_code` omitted |
+| **Batch API** | Required for audio longer than 30 seconds |
+
+#### TTS — `POST https://api.sarvam.ai/text-to-speech`
+
+| Parameter | Value |
+|---|---|
+| **Model** | `bulbul:v3` |
+| **Auth** | `api-subscription-key` header |
+| **Input** | `text` (string) — max **2,500 characters** per request |
+| **Voices (v3)** | 37 total: 23 male (default: Shubh), 14 female (default: Ishita) |
+| **Pace control** | `pace` float 0.5–2.0 |
+| **Audio formats** | WAV (default), MP3, Linear16, Mulaw, Alaw, Opus, FLAC, AAC |
+| **Sample rates** | 8000 / 24000 (default) / 32000 / 44100 / 48000 Hz |
+
+### Language Coverage Table
+
+Sourced from `docs.sarvam.ai` on 2026-08-31. Language codes are as documented per endpoint — note the Odia code discrepancy flagged below.
+
+| # | Language | STT code (Saaras) | TTS code (Bulbul) | STT transcribe | STT translate | STT codemix | STT translit | TTS |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Hindi | `hi-IN` | `hi-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 2 | Bengali | `bn-IN` | `bn-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 3 | Tamil | `ta-IN` | `ta-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 4 | Telugu | `te-IN` | `te-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 5 | Kannada | `kn-IN` | `kn-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 6 | Malayalam | `ml-IN` | `ml-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 7 | Marathi | `mr-IN` | `mr-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 8 | Gujarati | `gu-IN` | `gu-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 9 | Punjabi | `pa-IN` | `pa-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 10 | Odia | `od-IN` ⚠️ | `or-IN` ⚠️ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| 11 | English | `en-IN` | `en-IN` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| — | *TTS ceiling (11 above)* | | | | | | | |
+| 12 | Assamese | `as-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 13 | Urdu | `ur-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 14 | Nepali | `ne-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 15 | Konkani | `kok-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 16 | Kashmiri | `ks-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 17 | Sindhi | `sd-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 18 | Sanskrit | `sa-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 19 | Santali | `sat-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 20 | Manipuri | `mni-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 21 | Bodo | `brx-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 22 | Maithili | `mai-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+| 23 | Dogri | `doi-IN` | — | ✅ | ❌ | ✅ | ✅ | ❌ |
+
+**STT mode coverage:**
+- `transcribe`, `verbatim`, `translit`, `codemix` — all 23 languages ✅
+- `translate` (to English) — **11 languages only** (same set as TTS) ⚠️
+- Codemix mode: English words in English, Indic words in native script — all 23 ✅
+- Translit mode: Latin-script romanization — all 23 ✅
+
+### Key Findings
+
+#### Finding 1 — TTS covers 11 languages, not 23
+
+Bulbul v3 supports 10 Indian languages + English. **12 of the 23 target languages have no TTS voice output** with the current Sarvam stack. This means the "23-language voice experience" claimed in Project Instructions §7 is partially aspirational — the voice input (STT) works for all 23, but voice reply (TTS) is limited to 11.
+
+**The 12 STT-only languages (no TTS):**
+Assamese, Urdu, Nepali, Konkani, Kashmiri, Sindhi, Sanskrit, Santali, Manipuri, Bodo, Maithili, Dogri.
+
+For these 12 languages, Vepari AI's response must be delivered as **text only** (or in a fallback language) unless a future Sarvam TTS update or an alternative TTS provider is integrated.
+
+#### Finding 2 — Translate mode also limited to 11 languages
+
+`mode=translate` in Saaras STT converts speech to English text — but this mode only works for the same 11 languages Bulbul supports. For the 12 STT-only languages, translate mode is unavailable; transcribe/codemix/translit still work fully.
+
+#### Finding 3 — Odia language code discrepancy
+
+Saaras STT documentation uses **`od-IN`** for Odia, while the Bulbul TTS REST API uses **`or-IN`** (the ISO 639-1 / BCP-47 standard code). Both refer to the Odia / Oriya language. Implementation must use the endpoint-specific code for each call — never assume they are interchangeable at the API level.
+
+#### Finding 4 — Sarvam-105B and Mayura also limit to 11 languages
+
+The LLM (`sarvam-105b`) and translation model (`mayura`) both document 11-language coverage — the same 11 as Bulbul TTS. This means the complete Sarvam pipeline (Voice → STT → LLM → TTS → Voice Reply) only operates end-to-end in 11 languages today. The provider-agnostic AI gateway in Backend.txt/AI OS.txt is therefore critical to the 23-language vision — a different LLM may need to handle the 12 STT-only languages.
+
+#### Finding 5 — Saaras v4 adds Global English, not more Indian languages
+
+Saaras v4 extends English to cover non-Indian accents ("Global English alongside Indian English"). The 22 Indian language list is unchanged between v3 and v4.
+
+### Phase 13 Localization Ceiling
+
+The real ceiling for Phase 13 (Growth & Access — voice/language build) is:
+
+| Tier | Languages | Voice-in | Voice-out | AI reply | Notes |
+|---|---|---|---|---|---|
+| **Full round-trip** | 11 | ✅ STT | ✅ TTS | ✅ Sarvam-105B | Complete voice experience |
+| **Voice-in, text-out** | 12 | ✅ STT | ❌ no TTS | ⚠️ May need alt LLM | User speaks; app replies in text |
+| **No coverage** | 0 | — | — | — | All 23 are covered by STT |
+
+For Phase 13 design: the 11-language full-round-trip set is the **current Sarvam ceiling for a complete voice experience**. Expanding to all 23 requires either a TTS provider other than Sarvam for the 12 gap languages, or waiting for Bulbul roadmap updates.
+
+### Action Items
+
+- [ ] **TRD §AI-Voice**: Add note that TTS coverage is 11 languages (Bulbul v3) as of 2026-08-31; the 23-language mandate applies to STT; Phase 13 must document the text-only fallback for the 12 gap languages.
+- [ ] **Phase 13 prompt**: Must reference this research. The AI/voice build must design a text-only reply fallback for Assamese, Urdu, Nepali, Konkani, Kashmiri, Sindhi, Sanskrit, Santali, Manipuri, Bodo, Maithili, Dogri.
+- [ ] **Implementation**: Odia code — use `od-IN` for Saaras STT calls, `or-IN` for Bulbul TTS calls. Test both before assuming compatibility.
+- [ ] **Provider-agnostic gateway** (Backend.txt §15): Confirm the gateway is designed to route TTS for gap languages to an alternate provider if/when one becomes available — this is the architectural escape hatch.
+- [ ] **Monitor Sarvam roadmap**: Bulbul TTS roadmap for additional Indian language coverage is not documented. Re-check before Phase 13 implementation begins.
+- [ ] **knowledge-map.md §0.11**: Updated to reflect corrected finding (done in same commit).
+
+### Amendment to Prompt 0 §0.11
+
+> **§0.11 — Voice and Language Architecture (CORRECTED 2026-08-31, DL-009).** The 23-language mandate applies to STT (Saaras v3/v4 covers all 23 languages in transcribe/codemix/translit/verbatim modes). TTS (Bulbul v3) covers **11 languages only** (Hindi, Bengali, Tamil, Telugu, Kannada, Malayalam, Marathi, Gujarati, Punjabi, Odia, English). The 12 gap languages (Assamese, Urdu, Nepali, Konkani, Kashmiri, Sindhi, Sanskrit, Santali, Manipuri, Bodo, Maithili, Dogri) have voice input but text-only output in the current Sarvam stack. `translate` mode on Saaras is also limited to the same 11 languages. Full round-trip voice experience is 11-language today; the provider-agnostic gateway is the architectural escape hatch for the 12 gap languages. Note: Odia uses code `od-IN` for STT and `or-IN` for TTS — do not substitute.
+
+### References
+
+- `docs.sarvam.ai/api/getting-started/models/saaras` (fetched 2026-08-31)
+- `docs.sarvam.ai/api/getting-started/models/bulbul` (fetched 2026-08-31)
+- `docs.sarvam.ai/api/getting-started/models` (model comparison, fetched 2026-08-31)
+- `docs.sarvam.ai/api/api-guides-tutorials/speech-to-text/rest-api` (fetched 2026-08-31)
+- `docs.sarvam.ai/api/api-guides-tutorials/text-to-speech/rest-api` (fetched 2026-08-31)
+- `docs.sarvam.ai/api/api-guides-tutorials/text-to-speech/voices` (fetched 2026-08-31)
+- `Project Instructions.txt §7` — 23-language mandate
+- `docs/decisions/knowledge-map.md §0.11` — prior CONFIRMED verdict (now corrected)
+
+---
+
+*End of DL-009 entry.*
+
+---
+
 ## DL-008 — Gram-Disha Exclusion Audit
 
 | Field | Value |
