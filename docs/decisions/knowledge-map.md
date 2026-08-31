@@ -32,7 +32,7 @@
 
 ## 1. Decision Log — Conflicts Found During Audit
 
-Entries follow the §0.3 format from the Master Scope and Operating Contract. **All entries are OPEN** unless explicitly marked DECIDED. No conflict is resolved silently in this document.
+Entries follow the §0.3 format from the Master Scope and Operating Contract. No conflict is resolved silently in this document. See `docs/decisions/decision-log.md` for full decision records.
 
 ---
 
@@ -43,26 +43,17 @@ Entries follow the §0.3 format from the Master Scope and Operating Contract. **
 | **Date** | 2026-08-31 |
 | **Decision-ID** | DL-001 |
 | **Domain** | Design System — Typography |
-| **Status** | OPEN |
-| **Blocks** | Phase 5 (Identity / brand typography rollout) |
+| **Status** | **DECIDED — 2026-08-31** |
+| **Was blocking** | Phase 5 (now unblocked) |
 
-**Title:** Primary English brand/display typeface is contradicted between visual asset and all text specifications.
+**Decision:** Two-tier typography system:
+- **Cinzel Semibold** — wordmark/logo lockup and brand display text only
+- **Lora** — all UI headings, body text, and content throughout the app
+- **Noto Serif Tamil** — all Tamil-script content (replaces Nirmala UI, which is not licensable for Android)
 
-**Conflict:**
-- All 9 master text documents (PRD, TRD, App Flow, UI-UX, Frontend, Backend, Database·Storage, AI OS, Implementation Plan) AND Readme.md state **Lora** as the primary English display/brand typography.
-- `Brand.png` typography specimen panel explicitly shows **"CINZEL SEMIBOLD"** for English and **"NIRMALA UI SEMIBOLD TAMIL"** for Tamil.
-- `App Icon.png` wordmark rendering appears to use a serif font closer to Cinzel than to Lora.
+**Full record:** See `docs/decisions/decision-log.md` entry DL-001.
 
-**Options:**
-1. Lock Cinzel Semibold as the brand/display face (match the visual asset). Update all 9 text docs.
-2. Lock Lora as the brand/display face (match the text docs). Reissue Brand.png specimen panel.
-3. Define a two-tier system: Cinzel for wordmark/logo lockup only; Lora for all UI text and headings.
-
-**Recommendation:** None. Team must decide. Option 3 may resolve both sources without contradiction.
-
-**Owner:** Brand design lead + product owner.
-
-**References:** `Brand.png` (specimen panel), `UI-UX.txt` (§Typography), all nine `.txt` spec files (typography sections), `App Icon.png`.
+**Required follow-up:** All 9 master spec documents need their typography sections updated to state the two-tier distinction. Prompt 0 §0.3.1 (external template) needs updating.
 
 ---
 
@@ -988,7 +979,7 @@ All 6 design system hex values match Brand.png exactly. All 16 Screens.png layou
 
 | Decision | Status | Blocking |
 |---|---|---|
-| **DL-001** Typography: Lora vs. Cinzel Semibold | OPEN | Phase 5 (Identity) |
+| **DL-001** Typography: Lora vs. Cinzel Semibold | **DECIDED 2026-08-31** — Two-tier: Cinzel (wordmark) + Lora (UI) + Noto Serif Tamil | Phase 5 unblocked; 9 spec docs need typography section update |
 | **DL-002** Data authority: Local-first vs. Cloud-authoritative | OPEN (synthesis exists) | Phase 7 (Sync) |
 | **DL-003** Engine slide numbering: 06 missing, 10 duplicated | OPEN | Not blocking dev |
 | **DL-004** PRD 40 modules vs. Prompt 0 24 modules | OPEN | Phase 4 scope planning |
