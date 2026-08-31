@@ -882,7 +882,7 @@ Each subsection below states the Prompt 0 claim, the primary source(s) checked, 
 
 See `decision-log.md` DL-007 for the full glossary.
 
-**Gram-Disha:** Confirmed that "Gram-Disha" appears as a brand name in both docx files and should not appear in user-facing Vepari product text. Depth of cleanup needed: review all Package 4 feature descriptions for any "Gram-Disha" references in user-facing copy.
+**Gram-Disha — AUDIT COMPLETE (DL-008, 2026-08-31):** Full search across all repo files for "Gram-Disha", "HBFS", "SIH26091" and related variants. Result: **zero product contamination** — none of these strings appear in any spec doc, code, or product-facing material. All knowledge-map references are audit/metadata only. District-urbanity dataset retained with canonical neutral-label rules established (see DL-008). SIH workbook content confirmed excluded from all Vepari specs. One open item: IP/licensing review required before any geo-aware feature ships.
 
 ---
 
@@ -974,7 +974,7 @@ All 6 design system hex values match Brand.png exactly. All 16 Screens.png layou
 | "Connection Portfolio has 2 meanings" | Had **4 uses** (3 integrations facets + 1 showcase deliverable) — **RESOLVED DL-007**: showcase deliverable renamed to "Product Showcase Portfolio"; integrations uses unchanged |
 | P-number catalog in Key Features Report | P-numbers sourced from **Package PDFs**, not Key Features Report |
 | Government schemes in Package 4 only | Also documented in **Problem Statement Report** |
-| Gram-Disha = minor cleanup | Cleanup scope is broader — all Package 4 user-facing feature text needs review |
+| Gram-Disha = minor cleanup | **AUDIT COMPLETE (DL-008)** — Zero contamination in all spec docs. District-urbanity data retained with neutral label rules. SIH workbook content excluded. One open IP/licensing item before geo-aware feature ships. |
 | "24 modules" | PRD lists **40 modules** total; 24 may be MVP subset — **DL-004** |
 
 ### New Conflicts Logged (!)
@@ -987,6 +987,7 @@ All 6 design system hex values match Brand.png exactly. All 16 Screens.png layou
 | **DL-004** PRD 40 modules vs. Prompt 0 24 modules | OPEN | Phase 4 scope planning |
 | **DL-005** Apache 2.0 license not in governing docs | OPEN | Pre-distribution |
 | **DL-007** "Connection Portfolio" naming collision | **DECIDED 2026-08-31** — "Connection Portfolio" = integrations feature (unchanged); "Product Showcase Portfolio" = final showcase deliverable. `Project Instructions.txt §27` + Phase 20 updated. | No future docs may use "Connection Portfolio" to mean the showcase |
+| **DL-008** Gram-Disha exclusion audit | **AUDIT COMPLETE 2026-08-31** — Zero product contamination. District-urbanity dataset retained with neutral-label rules. SIH workbook content excluded. IP/licensing review required before geo-aware features ship. | IP review required pre-Phase 18 |
 
 ---
 

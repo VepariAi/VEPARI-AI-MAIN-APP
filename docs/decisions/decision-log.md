@@ -8,6 +8,146 @@ All entries that affect spec documents record which files need updating. No deci
 
 ---
 
+## DL-008 — Gram-Disha Exclusion Audit
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-08-31 |
+| **Decision-ID** | DL-008 |
+| **Domain** | Audit — Intellectual Property / Naming |
+| **Status** | **AUDIT COMPLETE — CLEAN** |
+| **Decision maker** | Engineering (audit finding) |
+| **Decided during** | Prompt 6 (Phase 1 · Type: AUDIT) |
+
+### Objective
+
+Confirm that no Gram-Disha-specific product mechanics (HBFS scoring, rural-only framing, text-only MVP boundary, SIH26091 problem statement) appear anywhere in Vepari AI documentation, screen copy, or code. Confirm that the district-urbanity reference dataset is retained with a neutral Vepari label and the SIH workbook content is not adopted.
+
+### Audit Scope
+
+All files in the repository as of 2026-08-31. No implementation code exists yet — the repository is in the documentation phase. Files audited:
+
+- **Spec docs** (9 `.txt` files): PRD, TRD, App Flow, UI-UX, Frontend, Backend, Database·Storage, AI OS, Implementation Plan
+- **Project governance docs**: Project Instructions.txt, PROJECT KNOWLEDGE INTERPRETATION & PRODUCT SCOPE.txt
+- **Decision docs**: `docs/decisions/decision-log.md`, `docs/decisions/knowledge-map.md`
+- **Research/reference binary files**: 4 PDFs, package 1–4 PDFs, 2 docx files, Readme.md, LICENSE
+- **Excluded from text search** (binary): PNG images, PDF files (searched by Read tool separately for key PDFs)
+- **Code files**: zero exist
+
+### Search Terms Used
+
+- `"Gram-Disha"` (and variants: `"Gram Disha"`, `"GramDisha"`, case-insensitive)
+- `"HBFS"`
+- `"SIH26091"` (and `"SIH 26091"`)
+- Broader variants: `"SIH"`, `"Smart India Hackathon"`, `"urbanity score"`, `"rural score"`, `"text-only MVP"`, `"hackathon"`
+
+### Findings
+
+#### Spec docs (.txt files) — CLEAN
+
+| Search term | Matches in spec docs |
+|---|---|
+| Gram-Disha | **0** |
+| HBFS | **0** |
+| SIH26091 | **0** |
+| SIH / Smart India Hackathon | **0** |
+| urbanity score / rural score / district score | **0** |
+| text-only MVP / hackathon | **0** |
+
+**Result: Zero contamination.** No Gram-Disha mechanics, HBFS scoring, SIH26091 problem statement, rural-only framing, or text-only MVP boundary appear in any Vepari AI specification document.
+
+#### Decision documentation (.md files) — APPROPRIATE CONTEXT ONLY
+
+All "Gram-Disha" mentions in `knowledge-map.md` are confined to:
+
+1. **File catalog entries** for the two docx files themselves — their filenames, file types, and research purpose. These entries correctly identify the files as research references, not Vepari product documents.
+2. **§0.13 naming notes** — acknowledging the brand name exists in the source files and must not leak into product text.
+3. **Corrections table** — tracking the cleanup scope.
+
+"Smart India Hackathon" appears once in the knowledge-map file-type field for the SIH submission docx. This is correct attribution.
+
+**Result: All references are appropriate audit/metadata context. No product copy contamination.**
+
+#### Repository research files — STATUS CONFIRMED
+
+Two docx files exist in the repository root as research reference material:
+
+| File | Classification | Status |
+|---|---|---|
+| `Gram-Disha_India_District_Urbanity_Reference_With_UTs.docx` | **Retained** — geographic reference dataset | The district-level urbanity classification data for all Indian states + UTs is a reusable geographic reference. File remains in repo as research source. |
+| `Gram-Disha_SIH_Final_16Page.docx` | **Research-only** — SIH hackathon submission | Contains HBFS scoring, SIH26091 problem statement, rural-only framing, text-only MVP boundary. None of this content appears in any Vepari spec doc. File remains as background research only. |
+
+The district-urbanity data file is retained — it provides the geographic intelligence underpinning rural/urban feature differentiation. It is correctly labeled in the knowledge-map as "Market Reference — India District Urbanity Classification," not as a Vepari product asset.
+
+#### Code — NOT APPLICABLE (no code exists yet)
+
+The repository contains zero implementation code files as of this audit. Future code written against the district-urbanity dataset must use a neutral label (see below).
+
+### Canonical Rules Established by This Audit
+
+**1. Zero tolerance for these strings in product-facing material:**
+The following strings must never appear in any Vepari AI screen copy, feature name, API route, code comment, database field name, user-facing documentation, or marketing material:
+- `Gram-Disha` / `GramDisha`
+- `HBFS`
+- `SIH26091`
+- Any direct reference to the Smart India Hackathon as a Vepari product source
+
+They may appear only in:
+- Research file filenames (as they exist today)
+- Knowledge-map / decision-log audit entries (as metadata about those files)
+- Code comments that explicitly say `// source: Gram-Disha_India_District_Urbanity_Reference_With_UTs.docx` as a data provenance note — not as a product label
+
+**2. District-urbanity dataset: neutral label in all product and code contexts**
+
+When implementing geographic feature calibration using the district-urbanity data, the internal label must be neutral:
+
+| Use | Correct label | Prohibited label |
+|---|---|---|
+| Database table | `india_district_context` | `gram_disha_districts` |
+| Code variable | `districtContextData` | `gramDishaScore` |
+| Feature flag | `geo_context_enabled` | `gram_disha_mode` |
+| Product documentation | "India District Context Reference" | "Gram-Disha classification" |
+| API field | `district_urbanity_tier` | `hbfs_score` |
+
+**3. SIH workbook content is excluded entirely:**
+HBFS scoring, the SIH26091 problem-statement framing, the text-only MVP boundary, and the rural-only product scope definition from the SIH submission are not adopted into Vepari AI in any form. Vepari AI is explicitly a broader MSME platform — Project Instructions §1 and PROJECT KNOWLEDGE INTERPRETATION §1.
+
+### Open Item: IP/Licensing
+
+The knowledge-map flagged (file entry for `Gram-Disha_SIH_Final_16Page.docx`):
+
+> *"Extent to which Gram-Disha intellectual property (if any) has been licensed for use in Vepari AI — not addressed anywhere in the repository."*
+
+The district-urbanity classification data may contain analysis methodology that originated with the Gram-Disha project team. Before shipping any feature that uses that dataset, the team must confirm:
+
+- Whether the district data was derived from public government sources (Census, state gazettes) — in which case it is freely usable
+- Whether any proprietary classification methodology or scoring belongs to the Gram-Disha team — in which case explicit permission or a data-purchase agreement is needed
+
+**This is a legal/IP question for the product owner, not a technical question.** It does not block documentation or design work. It must be resolved before Phase 18 (Broader MSME Expansion) ships any geography-aware feature that depends on this dataset.
+
+### Consequences and Required Follow-Up
+
+- [x] Audit complete — zero product contamination confirmed. ✓
+- [x] District-urbanity dataset retained with canonical neutral-label rules. ✓
+- [x] SIH workbook content confirmed as excluded from all Vepari specs. ✓
+- [ ] **IP/licensing review** — team to confirm district data source before geo-aware feature ships (pre-Phase 18).
+- [ ] **Knowledge-map §0.13** updated to reflect audit completion (done in same commit).
+- [ ] Future code review: any PR that introduces `gram_disha`, `HBFS`, or `SIH` into product-facing code should be rejected at review.
+
+### References
+
+- `Gram-Disha_India_District_Urbanity_Reference_With_UTs.docx` — retained geographic reference dataset
+- `Gram-Disha_SIH_Final_16Page.docx` — research background only; SIH workbook content excluded
+- `docs/decisions/knowledge-map.md §0.13` — original naming note flagged in Prompt 1 audit
+- `Project Instructions.txt §1` — "Vepari AI is NOT limited to micro enterprises"
+- `PROJECT KNOWLEDGE INTERPRETATION & PRODUCT SCOPE.txt §1` — scope clarification
+
+---
+
+*End of DL-008 entry.*
+
+---
+
 ## DL-007 — Glossary: "Connection Portfolio" vs. "Product Showcase Portfolio"
 
 | Field | Value |
