@@ -8,6 +8,147 @@ All entries that affect spec documents record which files need updating. No deci
 
 ---
 
+## DL-010 — Android Font Strategy for Indic Scripts (Research)
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-08-31 |
+| **Decision-ID** | DL-010 |
+| **Domain** | Research — Typography / Design System |
+| **Status** | **RESEARCH COMPLETE — READY FOR PHASE 5** |
+| **Researcher** | Engineering (Prompt 8 audit) |
+| **Researched during** | Prompt 8 (Phase 1 · Type: RESEARCH) |
+| **Extends** | DL-001 (typography decision) |
+| **Source** | expo/google-fonts GitHub (verified 2026-08-31) |
+
+### Objective
+
+Resolve the Nirmala UI Android-availability caveat from DL-001 and Prompt 0 §0.3.1 with a complete font-per-script mapping across all 23 target languages. This table is the input for Phase 5 (design system) typography token work — specifically Prompt 44 (multilingual typography tokens).
+
+### Nirmala UI: Confirmed Unavailable for Android Bundling
+
+Nirmala UI is a Microsoft proprietary typeface bundled with Windows 8 / 8.1 / 10 / 11. Its status on Android and iOS:
+
+| Platform | Availability | Licensable for bundling? |
+|---|---|---|
+| Windows 8+ | System font | N/A (OS-bundled) |
+| Android | **Not present** — not part of AOSP or Google Fonts | **No** — Microsoft EULA prohibits redistribution without a commercial agreement |
+| iOS | **Not present** | **No** — same licensing restriction |
+| Google Fonts / open web | Not listed | N/A |
+
+**Conclusion:** Nirmala UI cannot appear in any Vepari AI build on any mobile platform. DL-001 correctly retired it. All Indic script rendering must use open-licensed alternatives.
+
+### Script Inventory for the 23 Target Languages
+
+The 23 languages span 9 distinct writing systems. Two additional scripts appear in "also written in" contexts but are not primary for any language in the target set.
+
+| Writing system | Primary languages in the 23 | Total languages |
+|---|---|---|
+| Devanagari | Hindi, Marathi, Sanskrit, Nepali, Konkani, Dogri, Bodo, Maithili | **8** |
+| Bengali | Bengali, Assamese | **2** |
+| Tamil | Tamil | 1 |
+| Telugu | Telugu | 1 |
+| Kannada | Kannada | 1 |
+| Malayalam | Malayalam | 1 |
+| Gujarati | Gujarati | 1 |
+| Gurmukhi | Punjabi | 1 |
+| Odia | Odia | 1 |
+| Arabic / Nastaliq | Urdu, Kashmiri, Sindhi | **3** |
+| Meitei Mayek | Manipuri | 1 |
+| Ol Chiki | Santali | 1 |
+| Latin | English (+ transliteration mode for all) | 1 |
+
+### Font-Per-Script Mapping Table
+
+All Noto fonts are licensed under **SIL Open Font License 1.1 (OFL)**. The `@expo-google-fonts/*` npm package wrappers are MIT-licensed. Both licenses permit commercial app bundling with no royalty.
+
+| # | Script | Languages | Primary font (bundle) | @expo-google-fonts package | Weights available | System fallback (Android AOSP) | Must bundle? | RTL? | Notes |
+|---|---|---|---|---|---|---|---|---|---|
+| 1 | **Latin** | English | `Lora` (UI), `Cinzel Semibold` (wordmark only) | `@expo-google-fonts/lora` · `@expo-google-fonts/cinzel` | Lora: 400/400i/600/700/700i · Cinzel: 400/500/600/700/800/900 | System Latin (Roboto) | **Yes — bundle** | No | DL-001; also covers Roman-script Konkani |
+| 2 | **Devanagari** | Hindi, Marathi, Sanskrit, Nepali, Konkani, Dogri, Bodo, Maithili | `Noto Serif Devanagari` | `@expo-google-fonts/noto-serif-devanagari` | 100–900 (9 weights) | `Noto Sans Devanagari` ✅ | **Yes — bundle serif** | No | Largest group: 8 languages; system AOSP carries Sans but not Serif; variable font file available for size savings |
+| 3 | **Bengali** | Bengali, Assamese | `Noto Serif Bengali` | `@expo-google-fonts/noto-serif-bengali` | 100–900 (9 weights) | `Noto Sans Bengali` ✅ | **Yes — bundle serif** | No | Same font family covers both languages |
+| 4 | **Tamil** | Tamil | `Noto Serif Tamil` | `@expo-google-fonts/noto-serif-tamil` | (confirmed in DL-001) | `Noto Sans Tamil` ✅ | **Yes — bundle serif** | No | Established in DL-001 |
+| 5 | **Telugu** | Telugu | `Noto Serif Telugu` | `@expo-google-fonts/noto-serif-telugu` | 100–900 (9 weights) | `Noto Sans Telugu` ✅ | **Yes — bundle serif** | No | |
+| 6 | **Kannada** | Kannada | `Noto Serif Kannada` | `@expo-google-fonts/noto-serif-kannada` | 100–900 (9 weights) | `Noto Sans Kannada` ✅ | **Yes — bundle serif** | No | |
+| 7 | **Malayalam** | Malayalam | `Noto Serif Malayalam` | `@expo-google-fonts/noto-serif-malayalam` | 100–900 (9 weights) | `Noto Sans Malayalam` ✅ | **Yes — bundle serif** | No | |
+| 8 | **Gujarati** | Gujarati | `Noto Serif Gujarati` | `@expo-google-fonts/noto-serif-gujarati` | 100–900 (9 weights) | `Noto Sans Gujarati` ✅ | **Yes — bundle serif** | No | |
+| 9 | **Gurmukhi** | Punjabi | `Noto Serif Gurmukhi` | `@expo-google-fonts/noto-serif-gurmukhi` | 100–900 (9 weights) | `Noto Sans Gurmukhi` ✅ | **Yes — bundle serif** | No | |
+| 10 | **Odia** | Odia | `Noto Serif Oriya` | `@expo-google-fonts/noto-serif-oriya` | 400/500/600/700 (4 weights) | `Noto Sans Oriya` ✅ | **Yes — bundle serif** | No | ⚠️ Package named "oriya" not "odia" (historical ISO name); only 4 weights available |
+| 11 | **Arabic / Nastaliq** | Urdu, Kashmiri, Sindhi | `Noto Nastaliq Urdu` | `@expo-google-fonts/noto-nastaliq-urdu` | 400/500/600/700 (4 weights) | Partially (`Noto Nastaliq Urdu` bundled in Android 5+ for Urdu system fonts) | **Yes — bundle** | **Yes (RTL)** | ⚠️ RTL: requires `I18nManager.forceRTL` or per-text `writingDirection`; covers Urdu, Kashmiri, Sindhi (all use Perso-Arabic/Nastaliq); no separate Serif variant exists — Nastaliq calligraphic style IS the standard display form |
+| 12 | **Meitei Mayek** | Manipuri | `Noto Sans Meetei Mayek` | `@expo-google-fonts/noto-sans-meetei-mayek` | 100–900 (9 weights) | Unreliable (OEM-dependent; Android 11+ on some devices) | **Yes — bundle** | No | ⚠️ No Serif variant exists for this script; Sans is the only option; official script since 2005 (alternate: Bengali script for Manipuri — covered by row 3) |
+| 13 | **Ol Chiki** | Santali | `Noto Sans Ol Chiki` | `@expo-google-fonts/noto-sans-ol-chiki` | 400/500/600/700 (4 weights) | Unreliable (few stock Android devices include this) | **Yes — bundle** | No | ⚠️ No Serif variant exists; Sans is the only option; alternate scripts (Devanagari, Bengali) are also used for Santali in practice |
+
+### Design Token Names (for Phase 5 reference)
+
+To be defined in the design system alongside the DL-001 tokens. Naming convention follows the pattern established in DL-001:
+
+```
+fontFamily.brand          = 'Cinzel_600SemiBold'       // wordmark/logo only
+fontFamily.ui             = 'Lora_400Regular'           // all English UI text
+fontFamily.devanagari     = 'NotoSerifDevanagari_400Regular'
+fontFamily.bengali        = 'NotoSerifBengali_400Regular'
+fontFamily.tamil          = 'NotoSerifTamil_400Regular' // DL-001
+fontFamily.telugu         = 'NotoSerifTelugu_400Regular'
+fontFamily.kannada        = 'NotoSerifKannada_400Regular'
+fontFamily.malayalam      = 'NotoSerifMalayalam_400Regular'
+fontFamily.gujarati       = 'NotoSerifGujarati_400Regular'
+fontFamily.gurmukhi       = 'NotoSerifGurmukhi_400Regular'
+fontFamily.odia           = 'NotoSerifOriya_400Regular'  // pkg: noto-serif-oriya
+fontFamily.nastaliq       = 'NotoNastaliqUrdu_400Regular' // Urdu, Kashmiri, Sindhi
+fontFamily.meeteiMayek    = 'NotoSansMeeteiMayek_400Regular'
+fontFamily.olChiki        = 'NotoSansOlChiki_400Regular'
+```
+
+Fallback stack for each: `[scriptFont, systemSansScript, system-ui, sans-serif]`
+
+### Bundling Strategy and APK Size
+
+The 23-language full bundle is large. Recommended phased approach:
+
+| Phase | Fonts bundled | Languages covered | Estimated add to APK |
+|---|---|---|---|
+| **MVP (Phase 9–10)** | Latin (Lora, Cinzel), Devanagari, Tamil | English, Hindi (+ 7 more Devanagari), Tamil | +6–8 MB |
+| **Phase 11–12** | + Bengali, Telugu, Kannada, Malayalam, Gujarati, Gurmukhi | Full TTS-11 language set | +8–12 MB additional |
+| **Phase 13** | + Odia, Nastaliq, Meetei Mayek, Ol Chiki | Remaining 12 languages | +4–6 MB additional |
+
+**APK size optimization:** Use Expo's font subsetting or load only the weights actually referenced in design tokens (typically 400 Regular, 500 Medium, 600 SemiBold, 700 Bold). Avoid bundling all 9 weights for every script in the MVP build. Variable font files (where available) cover all weights in a single file and are significantly more efficient.
+
+### RTL Implementation Note
+
+Three languages use Nastaliq (Urdu, Kashmiri, Sindhi) — all RTL. React Native RTL handling:
+
+- `I18nManager.isRTL` and `I18nManager.forceRTL(true)` to flip the layout direction.
+- Per-text RTL: wrap RTL text in a `<Text style={{writingDirection: 'rtl', textAlign: 'right'}}>` without forcing global RTL (safer for mixed-language screens).
+- React Native's layout system uses logical `start`/`end` instead of `left`/`right` when RTL is active — use `marginStart`/`marginEnd` and `paddingStart`/`paddingEnd` in components that may contain RTL text.
+- Business data fields may mix LTR (numbers, English) and RTL (Urdu) content on the same screen — use `unicodeBidi: 'embed'` or `bidiEmbedding` text blocks to isolate directionality.
+
+### Consequences and Required Follow-Up
+
+- [x] Nirmala UI confirmed unavailable for Android bundling. ✓
+- [x] All 13 scripts mapped to verified @expo-google-fonts packages. ✓
+- [x] Font token naming convention established. ✓
+- [x] Bundling strategy (phased by implementation phase) defined. ✓
+- [ ] **Phase 5 typography tokens**: Implement `fontFamily.*` tokens in the design system using this table. Do not invent new font names — use the exact package export names above.
+- [ ] **Package weight selection**: At Phase 9 (React Native foundation), confirm with design which weights are actually used before bundling all 9 weights per script.
+- [ ] **Odia font name**: Use package `@expo-google-fonts/noto-serif-oriya` — the name "oriya" is historical and the package will not be found under "odia."
+- [ ] **RTL layout**: Implement RTL support in the component system before Urdu/Kashmiri/Sindhi voice interface goes live (Phase 13).
+- [ ] **Variable fonts**: Check if `@expo-google-fonts/noto-serif-devanagari` supports variable font loading via expo-font for APK size reduction.
+- [ ] **knowledge-map.md §0.15**: Update with this research (done in same commit).
+
+### References
+
+- `docs.expo.dev` / `github.com/expo/google-fonts` — @expo-google-fonts package registry (verified 2026-08-31)
+- DL-001 — typography decision (Cinzel + Lora + Noto Serif Tamil)
+- `Project Instructions.txt §7` — 23-language mandate
+- `UI-UX.txt §Typography` — design token source document
+- Microsoft Nirmala UI EULA — confirms non-redistributable
+
+---
+
+*End of DL-010 entry.*
+
+---
+
 ## DL-009 — Sarvam AI Endpoint Language Coverage (Research)
 
 | Field | Value |

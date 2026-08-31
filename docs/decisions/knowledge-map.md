@@ -837,6 +837,8 @@ Each subsection below states the Prompt 0 claim, the primary source(s) checked, 
 
 **Open conflict on typography:** Prompt 0 states Lora as primary English display font. Brand.png says Cinzel Semibold. See **DL-001**.
 
+**Typography extended — RESEARCH COMPLETE (DL-010, 2026-08-31):** DL-001 retired Nirmala UI with a caveat (Android availability unresolved). DL-010 closes that caveat. Nirmala UI is confirmed unavailable on Android and non-redistributable under Microsoft EULA. All 23 target languages are mapped to verified `@expo-google-fonts/*` Noto packages (SIL OFL, commercial bundling permitted). 13 scripts covered: Devanagari (8 languages), Bengali (2), Tamil, Telugu, Kannada, Malayalam, Gujarati, Gurmukhi, Odia, Nastaliq/RTL (Urdu/Kashmiri/Sindhi), Meitei Mayek, Ol Chiki, Latin. Three scripts (Nastaliq, Meitei Mayek, Ol Chiki) have no Noto Serif variant — Sans is the only option. Odia package is named `noto-serif-oriya` (historical ISO name, not "odia"). 14 `fontFamily.*` design tokens defined for Phase 5. Phased APK bundling strategy established. RTL implementation guidance for Nastaliq scripts recorded. See `decision-log.md` DL-010 for the complete font-per-script table and token definitions.
+
 ---
 
 ### §0.10 — AI OS Architecture
@@ -990,7 +992,8 @@ All 6 design system hex values match Brand.png exactly. All 16 Screens.png layou
 | **DL-007** "Connection Portfolio" naming collision | **DECIDED 2026-08-31** — "Connection Portfolio" = integrations feature (unchanged); "Product Showcase Portfolio" = final showcase deliverable. `Project Instructions.txt §27` + Phase 20 updated. | No future docs may use "Connection Portfolio" to mean the showcase |
 | **DL-008** Gram-Disha exclusion audit | **AUDIT COMPLETE 2026-08-31** — Zero product contamination. District-urbanity dataset retained with neutral-label rules. SIH workbook content excluded. IP/licensing review required before geo-aware features ship. | IP review required pre-Phase 18 |
 | **DL-009** Sarvam AI endpoint language coverage | **RESEARCH COMPLETE 2026-08-31** — STT (Saaras v3): 23 languages ✅. TTS (Bulbul v3): 11 languages only ⚠️. 12 gap languages: STT-in, text-only reply. Translate mode: 11 langs only. Odia code discrepancy: `od-IN` (STT) vs `or-IN` (TTS). Phase 13 ceiling established. | Phase 13 design must include text-only reply fallback for 12 gap languages; TRD §AI-Voice needs correction |
+| **DL-010** Android font strategy for Indic scripts | **RESEARCH COMPLETE 2026-08-31** — Nirmala UI confirmed unavailable on Android and non-redistributable. All 23 target languages mapped to 13 scripts, each mapped to a verified `@expo-google-fonts/*` Noto package (SIL OFL). 14 `fontFamily.*` design tokens defined. Phased APK bundling strategy established (MVP: Latin + Devanagari + Tamil; Phase 11–12: TTS-11 full set; Phase 13: remaining 12). RTL guidance for Nastaliq scripts documented. 3 scripts (Nastaliq, Meitei Mayek, Ol Chiki) Sans-only — no Noto Serif variant exists. Odia package name is `noto-serif-oriya`, not "odia". | Phase 5 typography tokens must use exact token names from DL-010; Phase 9 must not reference or bundle Nirmala UI; Phase 13 RTL components required before Urdu/Kashmiri/Sindhi voice UI goes live |
 
 ---
 
-*End of knowledge map. Last updated: 2026-08-31. Next review: on any spec document update or at start of Phase 1.*
+*End of knowledge map. Last updated: 2026-08-31 (DL-010 added). Next review: on any spec document update or at start of Phase 1.*
