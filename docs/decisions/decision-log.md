@@ -8,6 +8,120 @@ All entries that affect spec documents record which files need updating. No deci
 
 ---
 
+## DL-002 — Data Authority: Core Business Sync vs. Consent-Based AI/Analytics Signals
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-08-31 |
+| **Decision-ID** | DL-002 |
+| **Domain** | Architecture — Data Authority and Sync |
+| **Status** | **DECIDED** |
+| **Decision maker** | Product owner |
+| **Decided during** | Prompt 4 (Phase 1 · Type: PRODUCT DECISION) |
+| **Supersedes** | The DL-002 "OPEN" entry in `knowledge-map.md` §Decision-Log |
+
+### Title
+
+Core business transactional data syncs to cloud by default; TRD §2's "consent-based, minimal cloud" applies only to optional AI/analytics signals — not to core business data.
+
+### Background
+
+Three governing documents described the cloud's role in conflicting terms:
+
+- **TRD §2** — *"Cloud: Minimal/optional, consent-based."* Read in isolation, this implies that cloud sync is an opt-in feature rather than a system default.
+- **PRD Principle 2** — *"Cloud is the authoritative source."* This treats cloud as the permanent system of record.
+- **Backend.txt** — Architecturally treats cloud PostgreSQL as authoritative for shared business truth.
+- **Database·Storage.txt** (synthesis definition) — *"Local-first for speed and offline business continuity. Cloud-authoritative for shared business truth."*
+
+If left unresolved, a backend engineer implementing the sync queue (Phase 14) cannot determine whether cloud sync is a default toggle or an opt-in feature — a cascade into conflicting API design, storage architecture, and onboarding UX decisions.
+
+### Interpretation Analysis
+
+TRD §2's key word is **"minimal"** — it describes the *amount* of data transmitted to cloud, not the *optionality* of core business sync. Reading TRD §2 against the rest of the document:
+
+- TRD §2 expresses a **privacy architecture principle**: the platform should not upload raw AI conversation content, voice recordings, or usage telemetry without user consent.
+- PRD Principle 2 + Backend.txt express a **data authority principle**: for business entities that must survive device loss or be accessible across devices, cloud is the authoritative store.
+
+These are two separate principles about two different categories of data, expressed in a single sentence that conflated them. They are not in genuine contradiction.
+
+### Decision
+
+**The canonical two-tier data authority model:**
+
+**Tier 1 — Core Business Data (always syncs to cloud by default)**
+
+All structured business transactional data syncs to cloud-authoritative PostgreSQL by default whenever connectivity is available; the device SQLite store is the local-first cache for offline speed and resilience; cloud is the system of record.
+
+Tier 1 includes:
+- Sales, expenses, revenue, and financial transactions
+- Customer profiles and credit records
+- Supplier profiles and ledger entries
+- Inventory events and product records
+- Business memory entries (facts and events)
+- Order and reconciliation records
+- User account and business profile data
+
+**Tier 2 — AI/Analytics Signals (consent-based, minimal, optional)**
+
+This is what TRD §2's "consent-based, minimal cloud" language was intended to describe. Tier 2 data is transmitted to cloud only with explicit user consent and in the minimum quantity required for the stated purpose.
+
+Tier 2 includes:
+- Voice interaction patterns used for model improvement (opt-in only)
+- Usage analytics and telemetry (opt-in only)
+- AI personalization signals not required for core function (opt-in only)
+- Raw voice recordings — never stored in cloud; processed server-side and discarded
+
+**The one implementable sentence:**
+
+> All core business transactional data (sales, expenses, credit, customers, suppliers, inventory, business memory) is synced to cloud-authoritative PostgreSQL by default on every connectivity window; local SQLite is the offline cache, not the system of record; only AI-improvement and analytics signals are consent-based and optional.
+
+### Optional Single-Device Mode
+
+A future product decision may introduce an explicit single-device/local-only mode for businesses that explicitly do not want cloud sync. If introduced, it must be:
+
+- An explicit, informed, opt-out choice at onboarding (not the default)
+- Documented with clear consequences (data loss on device loss; no multi-device access)
+- Implemented as a product feature with its own decision log entry
+
+**This decision establishes cloud sync on as the default.** Single-device mode, if ever introduced, is a deliberate exception that requires a separate decision log entry before implementation.
+
+### Required Correction to TRD §2
+
+TRD §2's phrase *"Cloud: Minimal/optional, consent-based"* must be updated before Phase 14 (sync) begins to prevent engineers from misreading the original phrasing. The corrected text:
+
+> **Cloud:** Core business transactional data syncs to cloud-authoritative PostgreSQL by default. AI/analytics signals are consent-based, minimal, and optional. Raw voice recordings are processed server-side and not retained in cloud storage.
+
+### Consequences and Required Follow-Up
+
+- [x] Canonical two-tier data authority model recorded (this entry). ✓
+- [x] One implementable sentence produced. ✓
+- [ ] **TRD §2** must be updated with the corrected cloud description above before Phase 14 begins.
+- [ ] **Phase 14 prompt** (offline/sync) must reference this decision and the DL-006 module structure for sync queue implementation.
+- [ ] **Onboarding UX** should communicate that core business data is cloud-synced by default (trust and transparency principle, PRD §21).
+- [ ] If single-device/local-only mode is introduced, record a new decision log entry before implementing it.
+
+### Amendment to Prompt 0 §0.3.2
+
+The team's Prompt 0 template is maintained outside the repository. To reflect this resolution:
+
+> **§0.3.2 — Data authority (RESOLVED 2026-08-31, DL-002).** Vepari AI uses a two-tier model: **core business transactional data** (sales, expenses, credit, customers, suppliers, inventory, business memory) syncs to cloud-authoritative PostgreSQL by default; **AI/analytics signals** are consent-based, minimal, and optional — this is what TRD §2's "consent-based, minimal cloud" refers to. Local SQLite is the offline cache. Cloud is the system of record. This decision is closed; do not reopen without a superseding decision-log entry.
+
+In **§0.4 (Open Decisions)**, mark the data-authority item **RESOLVED (DL-002)** and remove it from the open list.
+
+### References
+
+- `TRD.txt §2` — source of "Minimal/optional, consent-based" (must be corrected before Phase 14)
+- `PRD.txt Principle 2` — "Cloud is the authoritative source"
+- `Backend.txt` — PostgreSQL as cloud system of record
+- `Database·Storage.txt` — synthesis definition: "Local-first for speed and offline business continuity. Cloud-authoritative for shared business truth."
+- `docs/decisions/knowledge-map.md` DL-002 — original conflict log entry
+
+---
+
+*End of DL-002 entry.*
+
+---
+
 ## DL-006 — Engine Taxonomy: Canonical 3-Layer Hierarchy and Naming
 
 | Field | Value |

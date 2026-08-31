@@ -64,7 +64,7 @@ Entries follow the §0.3 format from the Master Scope and Operating Contract. No
 | **Date** | 2026-08-31 |
 | **Decision-ID** | DL-002 |
 | **Domain** | Architecture — Data Authority |
-| **Status** | OPEN — synthesis exists, needs ratification |
+| **Status** | **DECIDED 2026-08-31** — See `decision-log.md` DL-002 |
 | **Blocks** | Phase 7 (Sync architecture implementation) |
 
 **Title:** TRD §2 and Database·Storage.txt §closing give contradictory authority designations for cloud storage.
@@ -222,7 +222,7 @@ These 9 files are the primary sources of truth for all product decisions, ranked
 | **Key Features Documented** | Full technology stack (React Native + Expo, encrypted SQLite, PostgreSQL-class cloud, REST /api/v1/), 50-step implementation order, sync queue schema (operation_id, device_id, entity, base_version, status, retry_count), idempotent retry model, optimistic concurrency with version numbers, financial conflict strictest-handling rule, JWT auth, Cloudflare → NGINX/Caddy → Kong/Traefik edge, AI provider-agnostic gateway |
 | **Dependencies** | Governs: Frontend, Backend, Database·Storage. Informs: AI OS, Implementation Plan |
 | **Conflicts** | §2 "Cloud: Minimal/optional, consent-based" vs. PRD Principle 2 and Backend.txt → **DL-002** |
-| **Open Questions** | TRD §2 needs text update to adopt Database·Storage.txt synthesis once team ratifies it (DL-002). |
+| **Open Questions** | TRD §2 text must be updated (corrected wording in DL-002) before Phase 14 begins. |
 | **Status note** | Final section: *"Actual implementation: ⏳ Not yet complete."* |
 
 ---
@@ -302,7 +302,7 @@ These 9 files are the primary sources of truth for all product decisions, ranked
 | **Requirements Traceability** | Implements TRD data architecture decisions. Informs Backend schema design. Governs all data handling in Frontend. |
 | **Key Features Documented** | Data classification taxonomy (business fact, business event, user preference, conversation/derived-insight context), isolation matrix (per-business, per-user, per-device), security matrix, encrypted SQLite on-device, PostgreSQL-class cloud, sync queue schema, object storage with signed access, 4-type memory model tracing to AI OS, **closing definition: "Local-first for speed and offline business continuity. Cloud-authoritative for shared business truth."** |
 | **Dependencies** | Input from: TRD, Backend. Feeds: Frontend offline layer. Directly governs: AI OS memory storage |
-| **Conflicts** | Closing definition is the synthesis for **DL-002** — but has not been formally adopted as the resolution |
+| **Conflicts** | Closing definition is the synthesis adopted as the resolution for **DL-002** (DECIDED). |
 | **Open Questions** | Which specific SQLite encryption library is to be used (SQLCipher? Expo SecureStore integration?)? Not named in spec. |
 
 ---
@@ -980,7 +980,7 @@ All 6 design system hex values match Brand.png exactly. All 16 Screens.png layou
 | Decision | Status | Blocking |
 |---|---|---|
 | **DL-001** Typography: Lora vs. Cinzel Semibold | **DECIDED 2026-08-31** — Two-tier: Cinzel (wordmark) + Lora (UI) + Noto Serif Tamil | Phase 5 unblocked; 9 spec docs need typography section update |
-| **DL-002** Data authority: Local-first vs. Cloud-authoritative | OPEN (synthesis exists) | Phase 7 (Sync) |
+| **DL-002** Data authority: Local-first vs. Cloud-authoritative | **DECIDED 2026-08-31** — Two-tier: core business data syncs to cloud by default; TRD §2 "consent-based/minimal" = AI/analytics signals only. TRD §2 text update required before Phase 14. | Phase 14 (Sync) unblocked; TRD §2 needs correction |
 | **DL-003** Engine slide numbering: 06 missing, 10 duplicated | OPEN | Not blocking dev |
 | **DL-004** PRD 40 modules vs. Prompt 0 24 modules | OPEN | Phase 4 scope planning |
 | **DL-005** Apache 2.0 license not in governing docs | OPEN | Pre-distribution |
