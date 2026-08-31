@@ -8,6 +8,48 @@ All entries that affect spec documents record which files need updating. No deci
 
 ---
 
+## DL-007 — Glossary: "Connection Portfolio" vs. "Product Showcase Portfolio"
+
+| Field | Value |
+|---|---|
+| **Date** | 2026-08-31 |
+| **Decision-ID** | DL-007 |
+| **Domain** | Naming — Glossary |
+| **Status** | **DECIDED** |
+| **Decision maker** | Product owner |
+| **Decided during** | Prompt 5 (Phase 1 · Type: DOCUMENTATION) |
+
+### Canonical Definitions
+
+| Term | Meaning | Where it lives |
+|---|---|---|
+| **Connection Portfolio** | The in-product third-party integrations feature: provider adapters, OAuth/API connections, integration framework. A product capability built in Phase 12 of the Implementation Plan. | Code modules, API routes (`/api/v1/connections/`), all spec docs (TRD §102, PRD §89, Frontend §78, App Flow §75, UI-UX §90, Backend §204, Database·Storage, AI OS). |
+| **Product Showcase Portfolio** | The final external deliverable that documents and presents the finished Vepari AI product — produced in Phase 20 after the product is substantially complete. Never built before the product exists. | `Project Instructions.txt §27` and any future showcase/portfolio deliverable documentation. |
+
+**One-line rule for contributors:** *"Connection Portfolio" = the integrations feature inside the product; "Product Showcase Portfolio" = the final external showcase document — never use either term to mean the other.*
+
+### Background
+
+`Project Instructions.txt §27` used "Connection Portfolio" to name the final showcase deliverable (Phase 20). All 9 spec docs use "Connection Portfolio" to name the integrations feature. This created a collision where the same term appeared in two wholly unrelated contexts. The knowledge-map (`§0.13`) identified three distinct meanings all on the integrations side; the showcase-deliverable meaning was a fourth, from a different document.
+
+### Changes Made
+
+- `Project Instructions.txt §27` heading and body: renamed to **Product Showcase Portfolio**.
+- `Project Instructions.txt §30 Phase 20`: renamed to **Product Showcase Portfolio**.
+- All other uses of "Connection Portfolio" throughout the spec docs: **unchanged** — they correctly name the integrations feature.
+
+### Consequences
+
+- [ ] Any future showcase/portfolio documentation must use "Product Showcase Portfolio."
+- [ ] Code module names, API routes, and spec-doc references to the integrations feature keep "Connection Portfolio."
+- [ ] Prompt 0 §0.3.4 (if it named the showcase as "Connection Portfolio") should be updated to "Product Showcase Portfolio" in the external template.
+
+---
+
+*End of DL-007 entry.*
+
+---
+
 ## DL-002 — Data Authority: Core Business Sync vs. Consent-Based AI/Analytics Signals
 
 | Field | Value |

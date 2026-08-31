@@ -873,12 +873,14 @@ Each subsection below states the Prompt 0 claim, the primary source(s) checked, 
 
 **Claim:** "Connection Portfolio" has two meanings. Gram-Disha urban reference needs cleanup.
 
-**Sources checked:** Implementation Plan.txt §Phase 12, Package 4 features, Gram-Disha files.
+**Sources checked:** Implementation Plan.txt §Phase 12, Package 4 features, Gram-Disha files, Project Instructions.txt §27.
 
-**Result: CORRECTED — Connection Portfolio now has THREE meanings, not two:**
-1. The Phase 12 feature set in Implementation Plan
-2. A specific capability within the product (partner/supplier network management)
-3. An informal shorthand used by some prompt contexts for the overall connectivity layer
+**Result: RESOLVED — DL-007 (2026-08-31).** The term had four uses across the repository — three facets of the in-product integrations feature (Phase 12 feature set, provider/adapter capability, overall integration framework) plus one showcase-deliverable meaning in Project Instructions §27. The collision is resolved by renaming:
+
+- **"Connection Portfolio"** — canonical name for the in-product integrations feature (unchanged in all spec docs, code, and API routes).
+- **"Product Showcase Portfolio"** — new canonical name for the final external showcase deliverable (Phase 20). `Project Instructions.txt §27` and Phase 20 references updated.
+
+See `decision-log.md` DL-007 for the full glossary.
 
 **Gram-Disha:** Confirmed that "Gram-Disha" appears as a brand name in both docx files and should not appear in user-facing Vepari product text. Depth of cleanup needed: review all Package 4 feature descriptions for any "Gram-Disha" references in user-facing copy.
 
@@ -969,7 +971,7 @@ All 6 design system hex values match Brand.png exactly. All 16 Screens.png layou
 
 | Claim | Correction |
 |---|---|
-| "Connection Portfolio has 2 meanings" | Has **3 meanings** — see §0.13 above |
+| "Connection Portfolio has 2 meanings" | Had **4 uses** (3 integrations facets + 1 showcase deliverable) — **RESOLVED DL-007**: showcase deliverable renamed to "Product Showcase Portfolio"; integrations uses unchanged |
 | P-number catalog in Key Features Report | P-numbers sourced from **Package PDFs**, not Key Features Report |
 | Government schemes in Package 4 only | Also documented in **Problem Statement Report** |
 | Gram-Disha = minor cleanup | Cleanup scope is broader — all Package 4 user-facing feature text needs review |
@@ -984,6 +986,7 @@ All 6 design system hex values match Brand.png exactly. All 16 Screens.png layou
 | **DL-003** Engine slide numbering: 06 missing, 10 duplicated | OPEN | Not blocking dev |
 | **DL-004** PRD 40 modules vs. Prompt 0 24 modules | OPEN | Phase 4 scope planning |
 | **DL-005** Apache 2.0 license not in governing docs | OPEN | Pre-distribution |
+| **DL-007** "Connection Portfolio" naming collision | **DECIDED 2026-08-31** — "Connection Portfolio" = integrations feature (unchanged); "Product Showcase Portfolio" = final showcase deliverable. `Project Instructions.txt §27` + Phase 20 updated. | No future docs may use "Connection Portfolio" to mean the showcase |
 
 ---
 

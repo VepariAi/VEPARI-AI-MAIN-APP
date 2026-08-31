@@ -748,9 +748,9 @@ New capabilities must fit the existing architecture rather than creating disconn
 
 ---
 
-# 27. CONNECTION PORTFOLIO
+# 27. PRODUCT SHOWCASE PORTFOLIO
 
-The Connection Portfolio is the FINAL major deliverable.
+The Product Showcase Portfolio is the FINAL major deliverable.
 
 Do NOT prioritize or build it before the product is substantially complete.
 
@@ -777,7 +777,7 @@ It may eventually include:
 - team
 - demo
 
-Never claim functionality in the portfolio that has not actually been implemented.
+Never claim functionality in the Product Showcase Portfolio that has not actually been implemented.
 
 ---
 
@@ -883,7 +883,7 @@ PHASE 19
 Final product audit
 
 PHASE 20
-Connection Portfolio
+Product Showcase Portfolio
 
 Do not skip directly from research to coding.
 
