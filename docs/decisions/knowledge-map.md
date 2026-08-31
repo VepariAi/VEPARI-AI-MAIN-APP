@@ -527,7 +527,7 @@ All 10 engine PNG files share a common format: numbered pitch-deck slide with a 
 |---|---|---|---|---|---|
 | `Intelligence Engine.png` | Pitch Slide | 14 | Intelligence Engine — business analytics, pattern recognition | None | — |
 
-**Engine taxonomy note:** The 4 core AI engines in Prompt 0 §0.6 are Business Brain, Finance Engine, Growth Engine, and Access Engine. The 10 engine slides represent a marketing-facing capability decomposition (more granular) that does not map 1:1 to the 4 architectural AI engines. The slides are pitch/marketing material; the 4-engine taxonomy in the spec docs governs architecture. This is not a conflict but requires clarification in governing docs.
+**Engine taxonomy note (RESOLVED — see `decision-log.md` DL-006):** The 4 core AI engines (Business Brain, Finance, Growth, Access) are code namespaces; the 6 problem-led engines (Key Features Report) are feature domains; the 10 slides are flexible marketing icons. The canonical 3-layer mapping table — architectural → problem-led → representative features → icons — is recorded in **DL-006** and is the single source of truth for engine names in Phase 5/6/13. Access Engine is the cross-cutting delivery layer, not a problem-led engine.
 
 ---
 
@@ -799,7 +799,7 @@ Each subsection below states the Prompt 0 claim, the primary source(s) checked, 
 
 **Result: CONFIRMED.** All 4 engines confirmed in PRD and AI OS.txt with matching descriptions.
 
-**Clarification needed:** Engine pitch slides (10 PNGs) represent a marketing-facing decomposition of capabilities (10 engines) that does not map 1:1 to the 4 architectural AI engines. This is not a conflict — the slides are pitch material — but should be documented for new team members.
+**Clarification RESOLVED (DL-006):** The relationship between the 4 architectural engines, 6 problem-led engines, and 10 pitch icons is now locked in `decision-log.md` DL-006 with a single canonical mapping table. Phase 5/6/13 reference that table rather than re-deriving engine names.
 
 ---
 
