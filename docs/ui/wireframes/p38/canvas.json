@@ -1,0 +1,15 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",     "x": 0,   "y": 0,    "w": 390, "h": 844, "title": "Transactions List" },
+    { "file": "Customer.dc.html", "x": 470, "y": 0,    "w": 390, "h": 844, "title": "Add Sale: Step 1 — Customer" },
+    { "file": "Items.dc.html",    "x": 0,   "y": 924,  "w": 390, "h": 844, "title": "Add Sale: Step 2 — Items" },
+    { "file": "ItemAdd.dc.html",  "x": 470, "y": 924,  "w": 390, "h": 844, "title": "Add Item Sub-flow" },
+    { "file": "Pricing.dc.html",  "x": 0,   "y": 1848, "w": 390, "h": 844, "title": "Add Sale: Step 3 — Pricing" },
+    { "file": "Payment.dc.html",  "x": 470, "y": 1848, "w": 390, "h": 844, "title": "Add Sale: Step 4 — Payment" },
+    { "file": "Confirm.dc.html",  "x": 235, "y": 2772, "w": 390, "h": 844, "title": "Sale Confirmed" }
+  ],
+  "annotations": [
+    { "id": "p38-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 38 — Transactions list + Add Sale flow: Customer → Items (+ Add Item sub-flow) → Pricing → Payment (Cash/UPI/Card/Credit) → Confirm" }
+  ],
+  "launch": { "view": "canvas" }
+}

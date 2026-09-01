@@ -1,0 +1,14 @@
+{
+  "artboards": [
+    { "file": "Summary.dc.html",     "x": 0,   "y": 0,    "w": 390, "h": 844, "title": "Finance Summary (Level 1)" },
+    { "file": "Category.dc.html",    "x": 470, "y": 0,    "w": 390, "h": 844, "title": "Category Drill-down (Level 2)" },
+    { "file": "Account.dc.html",     "x": 0,   "y": 924,  "w": 390, "h": 844, "title": "Account Detail (Level 3)" },
+    { "file": "Transaction.dc.html", "x": 470, "y": 924,  "w": 390, "h": 844, "title": "Transaction Detail (Level 4)" },
+    { "file": "Source.dc.html",      "x": 0,   "y": 1848, "w": 390, "h": 844, "title": "Source Record (Level 5)" },
+    { "file": "Accounting.dc.html",  "x": 470, "y": 1848, "w": 390, "h": 844, "title": "Accounting Journal View" }
+  ],
+  "annotations": [
+    { "id": "p37-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 37 — Finance drill-down: 5 levels (Summary→Category→Account→Transaction→Source) + Accounting journal view (UI-UX §73-75)" }
+  ],
+  "launch": { "view": "canvas" }
+}

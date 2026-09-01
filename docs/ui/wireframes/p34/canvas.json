@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",      "x": 0,   "y": 0, "w": 390, "h": 844, "title": "AI OS Home Surface" },
+    { "file": "Decisions.dc.html", "x": 470, "y": 0, "w": 560, "h": 780, "title": "Progressive Disclosure Decisions" }
+  ],
+  "annotations": [
+    { "id": "p34-note", "x": 0, "y": -72, "w": 1030, "text": "Prompt 34 — AI OS home at mobile proportions. Left: what fits in 390×844. Right: rationale for above-fold vs. scroll vs. deferred." }
+  ],
+  "launch": { "view": "canvas" }
+}

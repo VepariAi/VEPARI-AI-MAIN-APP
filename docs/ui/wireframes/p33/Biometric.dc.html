@@ -1,0 +1,72 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #ffffff; color: #171717;
+  overflow: hidden;
+}
+body { display: flex; flex-direction: column; }
+.top-bar {
+  padding: 16px 20px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.back {
+  width: 32px; height: 32px;
+  border: 1px solid #e5e5e5; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; color: #737373;
+}
+.biz-name { font-size: 16px; font-weight: 600; }
+.content {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 32px 80px;
+}
+.bio-ring {
+  width: 128px; height: 128px; border-radius: 64px;
+  background: #f0f9ff; border: 3px solid #bae6fd;
+  display: flex; align-items: center; justify-content: center;
+}
+.bio-inner {
+  width: 100px; height: 100px; border-radius: 50px;
+  background: #e0f2fe; border: 2px dashed #7dd3fc;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 42px; color: #0284c7;
+}
+.bio-title {
+  margin-top: 28px;
+  font-size: 22px; font-weight: 700; text-align: center;
+}
+.bio-sub {
+  margin-top: 8px;
+  font-size: 15px; color: #737373; text-align: center;
+}
+.divider {
+  width: 100%; margin: 40px 0;
+  border: none; border-top: 1px solid #e5e5e5;
+}
+.pin-link {
+  font-size: 15px; color: #2563eb; font-weight: 500;
+}
+</style>
+
+<div class="top-bar">
+  <div class="back">←</div>
+  <div class="biz-name">[Business Name]</div>
+</div>
+
+<div class="content">
+  <div class="bio-ring">
+    <div class="bio-inner">☞</div>
+  </div>
+
+  <div class="bio-title">Unlock Vepari</div>
+  <div class="bio-sub">Touch sensor or look at camera</div>
+
+  <hr class="divider">
+
+  <div class="pin-link">Use PIN instead</div>
+</div>

@@ -1,0 +1,76 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #ffffff; color: #171717;
+  overflow: hidden;
+}
+body {
+  display: flex; flex-direction: column;
+  align-items: center;
+  padding: 80px 28px 48px;
+}
+.icon-ring {
+  width: 110px; height: 110px; border-radius: 55px;
+  background: #fef9ec; border: 3px solid #fcd34d;
+  display: flex; align-items: center; justify-content: center;
+}
+.icon-inner {
+  font-size: 46px;
+}
+.title {
+  margin-top: 24px;
+  font-size: 22px; font-weight: 700;
+}
+.sub {
+  margin-top: 8px;
+  font-size: 14px; color: #737373; text-align: center;
+}
+.countdown-ring {
+  margin-top: 36px;
+  width: 130px; height: 130px; border-radius: 65px;
+  background: #f5f5f5; border: 3px solid #e5e5e5;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.countdown-num {
+  font-size: 48px; font-weight: 700; color: #d97706;
+  line-height: 1;
+}
+.countdown-label {
+  font-size: 13px; color: #737373; margin-top: 2px;
+}
+.info {
+  margin-top: 28px; width: 100%;
+  padding: 12px 14px;
+  background: #fafafa; border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  font-size: 13px; color: #737373; line-height: 1.5; text-align: center;
+}
+.info strong { color: #404040; font-weight: 600; }
+.support {
+  margin-top: auto;
+  font-size: 14px; color: #2563eb; font-weight: 500;
+}
+</style>
+
+<div class="icon-ring">
+  <div class="icon-inner">⏱</div>
+</div>
+
+<div class="title">Too many attempts</div>
+<div class="sub">5 incorrect PINs entered</div>
+
+<div class="countdown-ring">
+  <div class="countdown-num">30</div>
+  <div class="countdown-label">seconds</div>
+</div>
+
+<div class="info">
+  Please wait before trying again.<br>
+  <strong>After 10 total incorrect attempts</strong><br>
+  your account will be locked.
+</div>
+
+<div class="support">Contact support</div>

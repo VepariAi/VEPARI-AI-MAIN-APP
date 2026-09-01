@@ -1,0 +1,65 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f5f5f5; color: #171717;
+  overflow: hidden;
+}
+body { display: flex; flex-direction: column; }
+.top-bar {
+  background: #fff; padding: 14px 16px 12px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.back { font-size: 14px; color: #2563eb; font-weight: 500; }
+.top-title { font-size: 16px; font-weight: 700; }
+.done-btn { font-size: 14px; color: #2563eb; font-weight: 600; }
+.content {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 32px 80px;
+}
+.icon-ring {
+  width: 100px; height: 100px; border-radius: 50px;
+  background: #f0fdf4; border: 3px solid #86efac;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 44px;
+}
+.title {
+  margin-top: 24px;
+  font-size: 22px; font-weight: 700; text-align: center;
+}
+.sub {
+  margin-top: 8px;
+  font-size: 15px; color: #737373; text-align: center; line-height: 1.5;
+}
+.go-btn {
+  margin-top: 36px; width: 100%;
+  padding: 15px;
+  background: #2563eb; border: none; border-radius: 12px;
+  font-size: 16px; font-weight: 600; color: #fff;
+  text-align: center;
+}
+.meta {
+  margin-top: 16px;
+  font-size: 13px; color: #a3a3a3; text-align: center;
+}
+</style>
+
+<div class="top-bar">
+  <div class="back">← Home</div>
+  <div class="top-title">Briefing</div>
+  <div class="done-btn">Done</div>
+</div>
+
+<div class="content">
+  <div class="icon-ring">✓</div>
+  <div class="title">All caught up</div>
+  <div class="sub">
+    No critical items or alerts since your last session.
+    Your business is running smoothly.
+  </div>
+  <div class="go-btn">Go to home</div>
+  <div class="meta">Away for 42 min · Tue, 1 Sep 2026</div>
+</div>
