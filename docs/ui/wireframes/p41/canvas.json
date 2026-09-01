@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",      "x": 0,   "y": 0,   "w": 390, "h": 844, "title": "Reports List and AI Insights 2x2 Grid" },
+    { "file": "PnLReport.dc.html", "x": 470, "y": 0,   "w": 390, "h": 844, "title": "P and L Report — summary, chart, table, drill-down, export, Ask AI" }
+  ],
+  "annotations": [
+    { "id": "p41-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 41 — Reports list (P+L, Sales, Expense, Cash Flow, Customer, Inventory) with AI Insights 2x2 grid. P+L report shows all UI-UX sec80 elements: summary, chart, table, drill-down hint, export, Ask AI." }
+  ],
+  "launch": { "view": "canvas" }
+}

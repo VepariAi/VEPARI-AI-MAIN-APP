@@ -105,4 +105,100 @@ Transactions list grouped by day and complete Add Sale flow with all 4 payment o
 
 ---
 
+---
+
+## Prompt 39 — Customers and Suppliers
+
+**Artifact:** https://claude.ai/code/artifact/f4a1af87-304c-4d32-ab1e-8d7c7a5a6297  
+**Source:** `p39/`
+
+Customer and supplier list/detail/edit screens. Credit-limit and due-balance on every row; AI insights inline on detail screens.
+
+| Artboard | Description |
+|---|---|
+| `CustomerList.dc.html` | Customer list — All/Credit/Active/Inactive tabs, credit mini-bar per row |
+| `SupplierList.dc.html` | Supplier list — All/Due/Active tabs, amount due with status badge |
+| `CustomerDetail.dc.html` | Customer detail — outstanding, credit bar, AI insights card (blue), transactions |
+| `SupplierDetail.dc.html` | Supplier detail — amount due, 3 amount cards, AI insights card (amber), transactions |
+| `CustomerEdit.dc.html` | Add/Edit customer — business info, credit settings, auto-reminders toggle |
+
+---
+
+## Prompt 40 — Inventory
+
+**Artifact:** https://claude.ai/code/artifact/7e2d35b4-c9b8-4581-a0c5-78249075e113  
+**Source:** `p40/`
+
+Inventory overview with Low/Out counters, product detail with stock movement history, and stock management forms.
+
+| Artboard | Description |
+|---|---|
+| `Main.dc.html` | Inventory overview — Total/Low/Out counters, 3-layer state distinction (icon bg + bar + badge) |
+| `ProductDetail.dc.html` | Product detail — stock level, reorder threshold, 30-day movement history |
+| `StockAdjust.dc.html` | Stock adjustment — add/remove/set exact, reason category, quantity stepper, preview |
+| `StockTransfer.dc.html` | Stock transfer — branch-to-branch, transfer preview with post-transfer stock shown |
+
+---
+
+## Prompt 41 — Reports
+
+**Artifact:** https://claude.ai/code/artifact/24fdbd45-2032-4dc3-b3f9-3ec7a905e59b  
+**Source:** `p41/`
+
+Reports list with AI Insights 2×2 grid, plus P&L report exemplar showing all UI-UX §80 elements.
+
+| Artboard | Description |
+|---|---|
+| `Main.dc.html` | Reports list — 2×2 AI insights grid, period selector, 6 report types with values |
+| `PnLReport.dc.html` | P&L report — 3-metric summary, 6-month bar chart, category table, drill-down hint, export, Ask AI |
+
+---
+
+## Prompt 42 — Alerts and AI Conversation
+
+**Artifact:** https://claude.ai/code/artifact/b1591ec0-153d-4e33-a5c6-4bf2ad5dfb99  
+**Source:** `p42/`
+
+Alerts center with actionable rows and full-screen AI conversation view with voice bar at bottom.
+
+| Artboard | Description |
+|---|---|
+| `Main.dc.html` | Alerts center — All/Important/Info tabs, 7 alert rows with action links |
+| `AIChat.dc.html` | AI conversation — chat bubbles, suggested replies, voice bar at bottom with hold-to-speak mic |
+
+---
+
+## Prompt 43 — Settings
+
+**Artifact:** https://claude.ai/code/artifact/c33b91cb-f55c-498f-ae83-29b6b8eec24d  
+**Source:** `p43/`
+
+Full Settings list (all UI-UX §94 rows) and Business Profile edit form.
+
+| Artboard | Description |
+|---|---|
+| `Main.dc.html` | Settings list — Business, Operations, App sections; toggle rows, new badge, delete row |
+| `BusinessProfile.dc.html` | Business Profile edit — logo, business type chips, GSTIN verification, GST filing, address |
+
+---
+
+## Prompt 44 — Reusable Component States
+
+**Artifact:** https://claude.ai/code/artifact/0a21a6ba-1487-4409-b7fe-0bd19ae74f5c  
+**Source:** `p44/`
+
+Six reusable component states. Every screen in Prompts 33–43 references these instead of per-screen redraw.
+
+| Artboard | Description |
+|---|---|
+| `Main.dc.html` | Overview — all 6 states with reference grid linking P33–P43 screens |
+| `EmptyState.dc.html` | Empty — icon, headline, one-line desc, CTA; 3 context variations; anatomy guide |
+| `ErrorState.dc.html` | Error — full-screen, inline, field-level validation; plain language + error code |
+| `LoadingState.dc.html` | Loading — list skeleton shimmer, banner+chart skeleton; anatomy rules |
+| `OfflineState.dc.html` | Offline — amber banner, cached data with stale label, write queue |
+| `ConflictState.dc.html` | Conflict — side-by-side diff, keep mine / keep theirs / merge actions |
+| `PermissionState.dc.html` | Permission Denied — role gate, plan gate with upgrade CTA, inline lock rows |
+
+---
+
 *Wireframe aesthetic: 390×844 px mobile, system-ui font, white/light-gray (#f5f5f5) backgrounds, blue (#2563eb) primary, red (#ef4444) error, green (#22c55e) success. No fake iOS chrome.*

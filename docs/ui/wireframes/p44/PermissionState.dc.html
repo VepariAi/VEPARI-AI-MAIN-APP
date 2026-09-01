@@ -1,0 +1,84 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e5e5e5; }
+.back { font-size: 14px; color: #737373; }
+.top-title { font-size: 14px; font-weight: 600; color: #737373; flex: 1; }
+.comp-lbl { background: #fff7ed; border: 1px solid #fed7aa; border-radius: 6px; font-size: 11px; font-weight: 600; color: #c2410c; padding: 3px 8px; }
+.content { flex: 1; display: flex; flex-direction: column; gap: 12px; padding: 14px; }
+.section { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden; }
+.sec-hdr { padding: 10px 14px; background: #f5f5f5; border-bottom: 1px solid #e5e5e5; font-size: 11px; font-weight: 700; color: #737373; text-transform: uppercase; letter-spacing: 0.4px; }
+.role-gate { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 28px 20px; gap: 10px; }
+.gate-icon { width: 56px; height: 56px; border-radius: 14px; background: #fff7ed; border: 1px solid #fed7aa; display: flex; align-items: center; justify-content: center; font-size: 24px; }
+.gate-title { font-size: 16px; font-weight: 700; color: #c2410c; }
+.gate-desc { font-size: 13px; color: #737373; line-height: 1.4; max-width: 260px; }
+.gate-role { font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 6px; background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; display: inline-block; }
+.upgrade-btn { background: #2563eb; color: #fff; border-radius: 10px; padding: 12px 24px; font-size: 14px; font-weight: 700; }
+.contact-link { font-size: 13px; color: #2563eb; }
+.plan-gate { display: flex; flex-direction: column; align-items: center; text-align: center; padding: 24px 20px; gap: 10px; }
+.plan-features { display: flex; flex-direction: column; gap: 6px; width: 100%; max-width: 240px; }
+.plan-feat { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.feat-check { color: #16a34a; font-weight: 700; font-size: 15px; }
+.inline-lock { display: flex; align-items: center; gap: 8px; padding: 11px 14px; border-bottom: 1px solid #f5f5f5; opacity: 0.5; }
+.inline-lock:last-child { border-bottom: none; }
+.lock-icon { font-size: 14px; }
+.lock-text { flex: 1; font-size: 13px; }
+.lock-badge { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+.anatomy { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.anat-row { display: flex; align-items: flex-start; gap: 8px; font-size: 13px; line-height: 1.4; }
+</style>
+<div class="top-bar">
+  <div class="back">Component</div>
+  <div class="top-title">Permission Denied</div>
+  <div class="comp-lbl">Reusable</div>
+</div>
+<div class="content">
+  <div class="section">
+    <div class="sec-hdr">Role-based restriction (staff cannot view reports)</div>
+    <div class="role-gate">
+      <div class="gate-icon">🔒</div>
+      <div class="gate-title">Access restricted</div>
+      <div class="gate-desc">Reports are only visible to the account owner and managers.</div>
+      <div class="gate-role">Your role: Staff</div>
+      <div class="gate-desc">Contact your owner to request access.</div>
+      <div class="contact-link">← Go back</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="sec-hdr">Plan-based — feature on paid plan</div>
+    <div class="plan-gate">
+      <div class="gate-icon">⭐</div>
+      <div class="gate-title">Upgrade to unlock</div>
+      <div class="gate-desc">Tally integration is available on Pro and above.</div>
+      <div class="plan-features">
+        <div class="plan-feat"><span class="feat-check">✓</span>Real-time Tally sync</div>
+        <div class="plan-feat"><span class="feat-check">✓</span>GST auto-filing</div>
+        <div class="plan-feat"><span class="feat-check">✓</span>Multi-branch reports</div>
+      </div>
+      <div class="upgrade-btn">Upgrade to Pro</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="sec-hdr">Inline lock — greyed rows</div>
+    <div class="inline-lock">
+      <div class="lock-icon">🔌</div>
+      <div class="lock-text">Tally Integration</div>
+      <div class="lock-badge">Pro only</div>
+    </div>
+    <div class="inline-lock">
+      <div class="lock-icon">📊</div>
+      <div class="lock-text">GST Auto-filing</div>
+      <div class="lock-badge">Pro only</div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="sec-hdr">Anatomy</div>
+    <div class="anatomy">
+      <div class="anat-row"><span>1️⃣</span> Full-screen: lock icon + clear reason + role/plan shown</div>
+      <div class="anat-row"><span>2️⃣</span> Role gate: "contact owner" link, no upgrade push</div>
+      <div class="anat-row"><span>3️⃣</span> Plan gate: show 3 features unlocked + upgrade CTA</div>
+      <div class="anat-row"><span>4️⃣</span> Inline: grey + badge, never hide the row entirely</div>
+    </div>
+  </div>
+</div>

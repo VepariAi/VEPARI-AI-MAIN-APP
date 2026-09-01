@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",   "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Alerts Center — All / Important / Info tabs" },
+    { "file": "AIChat.dc.html", "x": 470, "y": 0, "w": 390, "h": 844, "title": "AI Conversation — voice bar at bottom, suggested replies" }
+  ],
+  "annotations": [
+    { "id": "p42-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 42 — Alerts center (All/Important/Info tabs, actionable rows) and full-screen AI conversation view with voice bar at bottom." }
+  ],
+  "launch": { "view": "canvas" }
+}

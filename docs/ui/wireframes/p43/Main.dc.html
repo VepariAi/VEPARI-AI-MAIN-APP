@@ -1,0 +1,127 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e5e5; }
+.top-title { font-size: 18px; font-weight: 700; }
+.content { flex: 1; overflow: hidden; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.profile-card { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; padding: 14px; display: flex; align-items: center; gap: 12px; }
+.biz-avatar { width: 48px; height: 48px; border-radius: 12px; background: #eff6ff; border: 1px solid #bfdbfe; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.biz-info { flex: 1; }
+.biz-name { font-size: 16px; font-weight: 700; }
+.biz-sub { font-size: 12px; color: #737373; margin-top: 2px; }
+.edit-btn { font-size: 12px; font-weight: 600; color: #2563eb; padding: 6px 12px; border-radius: 7px; border: 1px solid #bfdbfe; background: #eff6ff; }
+.sec-lbl { font-size: 11px; font-weight: 700; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.5px; }
+.settings-card { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden; }
+.setting-row { display: flex; align-items: center; padding: 13px 14px; border-bottom: 1px solid #f5f5f5; gap: 12px; }
+.setting-row:last-child { border-bottom: none; }
+.setting-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.si-blue { background: #eff6ff; }
+.si-green { background: #f0fdf4; }
+.si-amber { background: #fef9ec; }
+.si-purple { background: #fdf4ff; }
+.si-red { background: #fef2f2; }
+.si-gray { background: #f5f5f5; border: 1px solid #e5e5e5; }
+.setting-info { flex: 1; }
+.setting-name { font-size: 14px; font-weight: 500; }
+.setting-sub { font-size: 12px; color: #a3a3a3; margin-top: 1px; }
+.setting-right { display: flex; align-items: center; gap: 6px; }
+.chev { font-size: 14px; color: #d4d4d4; }
+.toggle { width: 40px; height: 22px; border-radius: 11px; background: #2563eb; position: relative; flex-shrink: 0; }
+.toggle-knob { width: 18px; height: 18px; border-radius: 50%; background: #fff; position: absolute; top: 2px; right: 2px; }
+.toggle.off { background: #d4d4d4; }
+.toggle.off .toggle-knob { right: auto; left: 2px; }
+.badge-new { font-size: 10px; font-weight: 600; padding: 2px 6px; border-radius: 4px; background: #2563eb; color: #fff; }
+</style>
+<div class="top-bar">
+  <div class="top-title">Settings</div>
+</div>
+<div class="content">
+  <div class="profile-card">
+    <div class="biz-avatar">🏪</div>
+    <div class="biz-info">
+      <div class="biz-name">Sharma General Store</div>
+      <div class="biz-sub">GSTIN: 07AABCS1234A1Z5 · Mumbai</div>
+    </div>
+    <div class="edit-btn">Edit</div>
+  </div>
+  <div class="sec-lbl">Business</div>
+  <div class="settings-card">
+    <div class="setting-row">
+      <div class="setting-icon si-blue">🏪</div>
+      <div class="setting-info"><div class="setting-name">Business Profile</div><div class="setting-sub">Name, address, GSTIN, logo</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-blue">📋</div>
+      <div class="setting-info"><div class="setting-name">GST and Tax Settings</div><div class="setting-sub">GST slab, HSN codes, filing</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-blue">📄</div>
+      <div class="setting-info"><div class="setting-name">Invoice and Bill Design</div><div class="setting-sub">Template, logo, terms</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-blue">🏦</div>
+      <div class="setting-info"><div class="setting-name">Bank and UPI Accounts</div><div class="setting-sub">2 accounts linked</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-green">🏬</div>
+      <div class="setting-info"><div class="setting-name">Branches</div><div class="setting-sub">Main Store, Andheri Branch</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+  </div>
+  <div class="sec-lbl">Operations</div>
+  <div class="settings-card">
+    <div class="setting-row">
+      <div class="setting-icon si-amber">🔔</div>
+      <div class="setting-info"><div class="setting-name">Alerts and Reminders</div><div class="setting-sub">Low stock, dues, payments</div></div>
+      <div class="setting-right"><div class="toggle"><div class="toggle-knob"></div></div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-amber">💬</div>
+      <div class="setting-info"><div class="setting-name">WhatsApp Automation</div><div class="setting-sub">Invoices, reminders, receipts</div></div>
+      <div class="setting-right"><div class="toggle"><div class="toggle-knob"></div></div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-amber">💳</div>
+      <div class="setting-info"><div class="setting-name">Credit and Payment Terms</div><div class="setting-sub">Default limits, due days</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-green">🔌</div>
+      <div class="setting-info"><div class="setting-name">Integrations</div><div class="setting-sub">Tally, Razorpay, Zoho</div></div>
+      <div class="setting-right"><div class="badge-new">New</div><div class="chev">›</div></div>
+    </div>
+  </div>
+  <div class="sec-lbl">App</div>
+  <div class="settings-card">
+    <div class="setting-row">
+      <div class="setting-icon si-purple">✦</div>
+      <div class="setting-info"><div class="setting-name">AI Language</div><div class="setting-sub">Hindi / English / Marathi</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-gray">🔒</div>
+      <div class="setting-info"><div class="setting-name">Security and PIN</div><div class="setting-sub">App lock, biometrics</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-gray">🌐</div>
+      <div class="setting-info"><div class="setting-name">Offline Mode</div><div class="setting-sub">Auto-sync when online</div></div>
+      <div class="setting-right"><div class="toggle"><div class="toggle-knob"></div></div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-gray">📤</div>
+      <div class="setting-info"><div class="setting-name">Data Export and Backup</div><div class="setting-sub">Export all data as CSV or PDF</div></div>
+      <div class="setting-right"><div class="chev">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-icon si-red">🗑</div>
+      <div class="setting-info"><div class="setting-name" style="color:#dc2626">Delete Account</div><div class="setting-sub">Permanently remove all data</div></div>
+      <div class="setting-right"><div class="chev" style="color:#fca5a5">›</div></div>
+    </div>
+  </div>
+</div>

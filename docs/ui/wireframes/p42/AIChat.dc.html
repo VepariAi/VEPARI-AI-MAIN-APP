@@ -1,0 +1,83 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #e5e5e5; }
+.back { font-size: 14px; color: #2563eb; font-weight: 500; }
+.ai-avatar { width: 34px; height: 34px; border-radius: 10px; background: linear-gradient(135deg,#6d28d9,#2563eb); display: flex; align-items: center; justify-content: center; font-size: 16px; color: #fff; flex-shrink: 0; }
+.ai-name-block { flex: 1; }
+.ai-name { font-size: 15px; font-weight: 700; }
+.ai-status { font-size: 11px; color: #16a34a; }
+.icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e5e5e5; background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.chat-area { flex: 1; overflow: hidden; padding: 12px 14px; display: flex; flex-direction: column; gap: 12px; }
+.msg { display: flex; flex-direction: column; max-width: 80%; }
+.msg.ai { align-self: flex-start; }
+.msg.user { align-self: flex-end; }
+.bubble { padding: 10px 13px; border-radius: 14px; font-size: 14px; line-height: 1.45; }
+.bubble.ai { background: #fff; border: 1px solid #e5e5e5; color: #171717; border-top-left-radius: 4px; }
+.bubble.user { background: #2563eb; color: #fff; border-top-right-radius: 4px; }
+.msg-time { font-size: 10px; color: #a3a3a3; margin-top: 3px; }
+.msg.user .msg-time { text-align: right; }
+.insight-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.chip { padding: 6px 11px; border-radius: 20px; font-size: 12px; font-weight: 500; background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.suggested-row { display: flex; flex-direction: column; gap: 6px; }
+.suggested-btn { padding: 9px 12px; border-radius: 10px; background: #f5f5f5; border: 1px solid #e5e5e5; font-size: 13px; color: #404040; }
+.voice-bar { background: #fff; border-top: 1px solid #e5e5e5; padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 8px; }
+.input-row { display: flex; align-items: center; gap: 8px; }
+.input-field { flex: 1; background: #f5f5f5; border: 1px solid #e5e5e5; border-radius: 22px; padding: 10px 16px; font-size: 14px; color: #a3a3a3; display: flex; align-items: center; }
+.send-btn { width: 40px; height: 40px; border-radius: 50%; background: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; flex-shrink: 0; }
+.voice-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.voice-btn { width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg,#6d28d9,#2563eb); display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; box-shadow: 0 4px 14px rgba(37,99,235,0.4); flex-shrink: 0; }
+.voice-hint { font-size: 12px; color: #a3a3a3; }
+</style>
+<div class="top-bar">
+  <div class="back">← Alerts</div>
+  <div class="ai-avatar">✦</div>
+  <div class="ai-name-block">
+    <div class="ai-name">Vepari AI</div>
+    <div class="ai-status">● Online</div>
+  </div>
+  <div class="icon-btn">⋯</div>
+</div>
+<div class="chat-area">
+  <div class="msg ai">
+    <div class="bubble ai">Namaste! I noticed 3 urgent alerts today — a customer payment overdue, a supplier due, and an out-of-stock item. Want me to help you with any of these?</div>
+    <div class="msg-time">9:15 AM</div>
+    <div class="insight-chips">
+      <div class="chip">Priya's dues</div>
+      <div class="chip">Ram Traders bill</div>
+      <div class="chip">Butter reorder</div>
+    </div>
+  </div>
+  <div class="msg user">
+    <div class="bubble user">Which customer owes me the most right now?</div>
+    <div class="msg-time">9:16 AM</div>
+  </div>
+  <div class="msg ai">
+    <div class="bubble ai">Top 3 outstanding customers:<br><br><strong>1. Priya Textiles</strong> — ₹12,400 (5 days overdue)<br><strong>2. Meena Enterprises</strong> — ₹6,200 (due in 2 days)<br><strong>3. Gupta Brothers</strong> — ₹3,800 (due in 7 days)<br><br>Total outstanding: ₹22,400</div>
+    <div class="msg-time">9:16 AM</div>
+  </div>
+  <div class="msg user">
+    <div class="bubble user">Send a reminder to Priya</div>
+    <div class="msg-time">9:17 AM</div>
+  </div>
+  <div class="msg ai">
+    <div class="bubble ai">WhatsApp reminder sent to Priya Textiles (+91 98765 43210) for ₹12,400 due. I'll notify you when she responds.</div>
+    <div class="msg-time">9:17 AM</div>
+  </div>
+  <div class="suggested-row">
+    <div class="suggested-btn">📋 Show all overdue customers</div>
+    <div class="suggested-btn">📊 How was August for me?</div>
+  </div>
+</div>
+<div class="voice-bar">
+  <div class="input-row">
+    <div class="input-field">Type a message or tap mic…</div>
+    <div class="send-btn">↑</div>
+  </div>
+  <div class="voice-row">
+    <div class="voice-hint">Tap to speak in Hindi or English</div>
+    <div class="voice-btn">🎤</div>
+    <div class="voice-hint">Hold for voice</div>
+  </div>
+</div>
