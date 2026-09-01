@@ -1,0 +1,240 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 860px; font-family: system-ui, -apple-system, sans-serif; background: #faf7f2; color: #3b2f2a; }
+body { padding: 28px 32px 56px; }
+h1 { font-size: 22px; font-weight: 700; color: #3b2f2a; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #8a7060; margin-bottom: 24px; }
+h2 { font-size: 14px; font-weight: 700; color: #3b2f2a; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.6px; border-top: 1px solid #e8ddd0; padding-top: 16px; }
+h2:first-of-type { border-top: none; padding-top: 0; }
+.note { background: #fff8e8; border: 1px solid #c8a96b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #6b4f1a; margin-bottom: 20px; line-height: 1.6; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e8ddd0; margin-bottom: 24px; }
+thead { background: #f2e8d6; }
+th { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 12px; text-align: left; border-bottom: 1px solid #e8ddd0; }
+td { padding: 9px 12px; border-bottom: 1px solid #f2e8d6; font-size: 12px; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.token { font-family: monospace; font-size: 11px; color: #5a6b4f; background: #f0f4ee; padding: 1px 4px; border-radius: 3px; }
+.usage { color: #8a7060; }
+.icon-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+.icon-cell { background: #fff; border: 1px solid #e8ddd0; border-radius: 8px; padding: 12px 8px; text-align: center; }
+.icon-glyph { width: 32px; height: 32px; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; }
+.icon-name { font-size: 10px; color: #8a7060; line-height: 1.3; }
+.icon-module { font-size: 10px; font-weight: 600; color: #3b2f2a; }
+/* SVG icon proxies — geometric stand-ins matching the described style */
+svg { display: block; }
+.engine-card { background: #fff; border: 1px solid #e8ddd0; border-radius: 10px; margin-bottom: 12px; overflow: hidden; }
+.engine-header { background: #f2e8d6; padding: 9px 14px; display: flex; align-items: center; gap: 10px; }
+.engine-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+.engine-name { font-size: 13px; font-weight: 700; color: #3b2f2a; }
+.engine-body { padding: 10px 14px; font-size: 12px; color: #8a7060; line-height: 1.5; }
+.spec-block { background: #fff; border: 1px solid #e8ddd0; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
+.spec-row { display: flex; gap: 12px; margin-bottom: 8px; align-items: baseline; }
+.spec-row:last-child { margin-bottom: 0; }
+.spec-label { font-size: 11px; font-weight: 600; color: #8a7060; width: 120px; flex-shrink: 0; }
+.spec-val { font-size: 13px; color: #3b2f2a; flex: 1; }
+</style>
+<h1>P50 — Icon Set Specification</h1>
+<div class="meta">Prompt 50 · Phase 5 · Depends on Prompt 3 — engine icon mapping, nav icons, module icons, line weight, corner treatment, label-pairing rule per UI-UX §194</div>
+
+<div class="note">
+  <strong>Icon source (Prompt 3 decision):</strong> The app uses a custom icon set built on a <strong>24dp × 24dp grid</strong>, 2dp stroke weight, rounded line caps and joins (cap: round, join: round), minimum interior corner radius 2dp. Icons are delivered as SVG — rendered as React Native SVG components in the app. The 10 AI Engine icons (Voice Engine, Finance Engine, Customer Engine, Inventory Engine, Intelligence Engine, Memory Engine, Vision Engine, Growth Engine, Market Engine, Automation Engine) exist as pre-confirmed brand assets (PNG files in the repo). These are pixel-perfect references — the SVG versions must match them exactly in silhouette.
+</div>
+
+<!-- ═══════════════ SPEC ═══════════════ -->
+<h2>Construction Rules</h2>
+<div class="spec-block">
+  <div class="spec-row"><div class="spec-label">Grid</div><div class="spec-val">24 × 24dp artboard. Safe area: 20 × 20dp (2dp bleed each side). Key line grid: circle 20dp, square 20dp, rounded-rect 18×20dp, wide 20×16dp.</div></div>
+  <div class="spec-row"><div class="spec-label">Stroke weight</div><div class="spec-val">2dp uniform. No variation within one icon (no hairlines). Exception: AI engine icons use 1.5dp for inner detail elements to preserve legibility at 24dp.</div></div>
+  <div class="spec-row"><div class="spec-label">Line cap</div><div class="spec-val">Round (SVG: stroke-linecap="round")</div></div>
+  <div class="spec-row"><div class="spec-label">Line join</div><div class="spec-val">Round (SVG: stroke-linejoin="round")</div></div>
+  <div class="spec-row"><div class="spec-label">Corner radius</div><div class="spec-val">Rectangular shapes: 2dp interior radius. Organic/circular shapes follow natural curve. Never sharp (0dp) corners on any filled shape.</div></div>
+  <div class="spec-row"><div class="spec-label">Fill style</div><div class="spec-val">Outline-only (stroke, no fill) for all standard UI icons. Filled variant (stroke + matching fill) exists for active/selected states only (e.g. active nav tab). Engine icons use a dual-layer approach: colored outer shape filled, inner motif stroked white.</div></div>
+  <div class="spec-row"><div class="spec-label">Pixel snap</div><div class="spec-val">All anchor points on 0.5dp or whole-dp positions. No sub-pixel paths. Optical adjustments allowed: a circle may be 19.5dp if it looks visually equivalent to a 20dp square.</div></div>
+  <div class="spec-row"><div class="spec-label">Export</div><div class="spec-val">SVG with viewBox="0 0 24 24". currentColor for stroke/fill — color injected at render time via CSS or prop. No hardcoded color values inside SVG source.</div></div>
+</div>
+
+<!-- ═══════════════ LABEL RULE ═══════════════ -->
+<h2>Label-Pairing Rule (UI-UX §194)</h2>
+<div class="note">
+  <strong>Icons NEVER stand alone where ambiguous.</strong> Rule: if removing the label would leave a reasonable user unsure of the icon's action or meaning, the label is mandatory. Exceptions where icons may stand alone: universally understood glyphs (× close, ✓ confirm, ‹ back, ≡ hamburger menu, magnifier search) AND there is adjacent context that makes the action obvious. Navigation icons always paired with labels (tab bar + labels per P36 NavSpec). Engine card icons paired with engine name in all Home screen layouts. Badge-only icons (status dot, notification dot) require tooltip on long-press.
+</div>
+<table>
+  <thead>
+    <tr><th>Context</th><th>Icon size</th><th>Label requirement</th><th>Label style</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Bottom nav tab</td><td>24dp</td><td>Always — mandatory</td><td class="usage">--type-label (11sp 600), gap 4dp below icon, centered</td></tr>
+    <tr><td>Engine card (Home)</td><td>40dp in 64dp container</td><td>Always — mandatory</td><td class="usage">--type-label-lg (12sp 600) below card, centered</td></tr>
+    <tr><td>Quick Action button (Home)</td><td>24dp</td><td>Always — mandatory</td><td class="usage">--type-caption below icon</td></tr>
+    <tr><td>Top-bar action (trailing)</td><td>24dp</td><td>Never — contextual icon only</td><td class="usage">Tooltip on long-press (accessibility only)</td></tr>
+    <tr><td>List row leading icon</td><td>24dp</td><td>Never — row label is the pairing</td><td class="usage">Row primary text serves as the label</td></tr>
+    <tr><td>Badge / status dot</td><td>8–16dp</td><td>Long-press tooltip only</td><td class="usage">--type-caption in popover</td></tr>
+    <tr><td>Empty state icon</td><td>48dp</td><td>Always — EmptyState headline below</td><td class="usage">--type-title-md below, gap 16dp</td></tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════ NAVIGATION ICONS ═══════════════ -->
+<h2>Navigation Icons — Bottom Tab Bar</h2>
+<table>
+  <thead>
+    <tr><th>Tab</th><th>Icon name</th><th>Outline (inactive)</th><th>Filled (active)</th><th>Label</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Home</td>
+      <td>home</td>
+      <td class="usage">House outline — pitched roof, open doorway arc, 2dp stroke</td>
+      <td class="usage">Filled house body, white doorway cutout, stroke outline same</td>
+      <td class="usage">"Home" --type-label <span class="token">--color-primary</span> active / <span class="token">--color-text-secondary</span> inactive</td>
+    </tr>
+    <tr>
+      <td>Transactions</td>
+      <td>transactions</td>
+      <td class="usage">Two horizontal arrows (up-right, down-left) overlapping — represents buy/sell flow. Circle container optional.</td>
+      <td class="usage">Arrows filled in primary color</td>
+      <td class="usage">"Txns"</td>
+    </tr>
+    <tr>
+      <td>Voice (center, elevated)</td>
+      <td>voice-mic</td>
+      <td class="usage">Microphone outline (capsule body + stand arc + base line) centered in 56dp circular FAB. This tab is NEVER inactive — it is always active (elevated 10dp, 3dp white ring per P36 NavSpec).</td>
+      <td class="usage">FAB: <span class="token">--color-primary</span> fill. Icon: white stroke mic. AI Core glow ring animates on active listening.</td>
+      <td class="usage">No label (center FAB, positionally unambiguous)</td>
+    </tr>
+    <tr>
+      <td>Reports</td>
+      <td>reports</td>
+      <td class="usage">Bar chart: 3 vertical bars of different heights, ascending right. 2dp stroke bars, rounded caps.</td>
+      <td class="usage">Bars filled, same outline</td>
+      <td class="usage">"Reports"</td>
+    </tr>
+    <tr>
+      <td>More</td>
+      <td>more-grid</td>
+      <td class="usage">2×2 grid of 4 rounded squares (4dp each, 2dp gap, 2dp radius) — represents additional modules.</td>
+      <td class="usage">Top-left square filled, rest outlined</td>
+      <td class="usage">"More"</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════ ENGINE ICONS ═══════════════ -->
+<h2>AI Engine Icons — 10 Confirmed Assets</h2>
+<div class="note">
+  These 10 icons are confirmed brand assets (PNG source files in repo root). Each has a distinctive colored outer shape and a white inner motif. The SVG versions must reproduce the same silhouette, using <span class="token">--color-secondary</span> (Heritage Gold) as the outer fill for all engines unless the PNG shows a different confirmed color. Below each icon's description, the exact color from the PNG is noted.
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#C8A96B"></div><div class="engine-name">Voice Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: mic + waveform arc or sound waves. Represents voice input, Sarvam AI STT/TTS pipeline. Nav: Voice (center FAB). Home card label: "Voice". PNG color: Heritage Gold (#C8A96B) dominant.</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#5A6B4F"></div><div class="engine-name">Finance Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: rupee symbol (₹) or coin stack or upward trend line. Represents accounting, P&L, GST, payments. Nav: Transactions tab (also Finance sub-screen). Home card label: "Finance". PNG color: Olive Green (#5A6B4F).</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#3B2F2A"></div><div class="engine-name">Customer Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: person outline or two-person group silhouette. Represents customers, suppliers, ledger. Nav: accessed via More tab. Home card label: "Customers". PNG color: Deep Brown (#3B2F2A).</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#B45B4A"></div><div class="engine-name">Inventory Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: box/crate outline or shelves. Represents products, stock, warehouse. Nav: Inventory via More tab. Home card label: "Inventory". PNG color: Terracotta (#B45B4A).</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#4A3D6B"></div><div class="engine-name">Intelligence Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: brain outline or neural-network node dots. Represents the AI analytics, Gemini/GPT reasoning layer. Nav: accessed via AI Core / Reports. Home card label: "Intelligence". PNG color: AI Indigo (#4A3D6B).</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#C8A96B"></div><div class="engine-name">Memory Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: database cylinders or bookmark/bookmark-stack. Represents entity memory, vector DB, Firestore. Nav: accessed via More. Home card label: "Memory". PNG color: Heritage Gold variant.</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#5A6B4F"></div><div class="engine-name">Vision Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: camera lens or eye outline. Represents receipt scanning, image recognition (Google Vision API). Nav: accessed via Camera quick action. Home card label: "Vision". PNG color: Olive Green variant.</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#C8A96B"></div><div class="engine-name">Growth Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: upward arrow with bar chart or plant/seedling. Represents predictive analytics, growth recommendations. Nav: Reports > AI Insights. Home card label: "Growth". PNG color: Heritage Gold.</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#3B2F2A"></div><div class="engine-name">Market Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: storefront or market stall outline or price tag. Represents market intelligence, competitor pricing. Nav: accessed via More. Home card label: "Market". PNG color: Deep Brown variant.</div>
+</div>
+
+<div class="engine-card">
+  <div class="engine-header"><div class="engine-dot" style="background:#B45B4A"></div><div class="engine-name">Automation Engine</div></div>
+  <div class="engine-body">Outer shape: rounded square. Inner motif: gear/cog or lightning bolt or robot arm. Represents workflow automation, scheduled tasks, triggers. Nav: Settings > Integrations. Home card label: "Automation". PNG color: Terracotta variant.</div>
+</div>
+
+<!-- ═══════════════ MODULE ICONS ═══════════════ -->
+<h2>Module and Action Icons — Full Set</h2>
+<table>
+  <thead>
+    <tr><th>Category</th><th>Icon name</th><th>Used in</th><th>Motif description</th></tr>
+  </thead>
+  <tbody>
+    <tr><td rowspan="6" style="font-weight:600;vertical-align:top;padding-top:12px">Navigation / General</td>
+      <td>search</td><td class="usage">All list screens, top-bar</td><td class="usage">Magnifier circle 16dp + handle 6dp diagonal, 45° angle. Universal icon — stands alone.</td></tr>
+    <tr><td>back / chevron-left</td><td class="usage">All top-bars</td><td class="usage">Single &lt; chevron, 16dp height, 2dp stroke. Stands alone.</td></tr>
+    <tr><td>close / x</td><td class="usage">Modals, sheets, dismissals</td><td class="usage">× two 14dp lines crossing at center, 2dp stroke. Stands alone.</td></tr>
+    <tr><td>more-vertical</td><td class="usage">Row overflow menus</td><td class="usage">3 vertically stacked dots, 4dp each, 4dp gap. Stands alone.</td></tr>
+    <tr><td>chevron-right</td><td class="usage">List items with drill-down</td><td class="usage">Single › chevron, 10dp height. Trailing indicator.</td></tr>
+    <tr><td>chevron-down</td><td class="usage">Select / Accordion / collapsed</td><td class="usage">Single ∨ chevron, 10dp height. Rotates 180° on expand.</td></tr>
+    <tr><td rowspan="5" style="font-weight:600;vertical-align:top;padding-top:12px">Finance</td>
+      <td>rupee</td><td class="usage">Finance screen, amounts</td><td class="usage">₹ character rendered as path, 18dp, 2dp stroke. Paired with values always.</td></tr>
+    <tr><td>invoice</td><td class="usage">Transaction rows, source records</td><td class="usage">Document with top-right fold, 3 text lines, staple mark.</td></tr>
+    <tr><td>receipt</td><td class="usage">Add Sale confirm, Vision scan</td><td class="usage">Scrolled paper with torn bottom edge, 2 text lines.</td></tr>
+    <tr><td>payment-upi</td><td class="usage">Payment step (P38)</td><td class="usage">QR code corner marks (4 corners, open squares). Label "UPI" required.</td></tr>
+    <tr><td>credit-due</td><td class="usage">Customer/Supplier due badge</td><td class="usage">Clock with rupee symbol inside. Always with due amount label.</td></tr>
+    <tr><td rowspan="4" style="font-weight:600;vertical-align:top;padding-top:12px">Inventory</td>
+      <td>box</td><td class="usage">Inventory, stock adjustment</td><td class="usage">Isometric box outline, 2dp stroke, no perspective distortion (flat 2D front-facing variant). Label required.</td></tr>
+    <tr><td>stock-adjust</td><td class="usage">StockAdjust screen (P40)</td><td class="usage">Box with ↑↓ arrows. Paired with "Adjust Stock" label.</td></tr>
+    <tr><td>transfer</td><td class="usage">StockTransfer screen (P40)</td><td class="usage">Box with → arrow pointing to second box. Paired with "Transfer" label.</td></tr>
+    <tr><td>barcode</td><td class="usage">Product scan, Vision Engine</td><td class="usage">Classic barcode lines + scan reticle corners. Stands alone when scan action obvious (full-screen camera).</td></tr>
+    <tr><td rowspan="4" style="font-weight:600;vertical-align:top;padding-top:12px">Status and Alerts</td>
+      <td>alert-triangle</td><td class="usage">Warning, error banners, conflict</td><td class="usage">Equilateral triangle with ! inside, 2dp stroke, rounded corners. Stands alone in banner context.</td></tr>
+    <tr><td>info-circle</td><td class="usage">Info alerts, help tooltips</td><td class="usage">Circle with i inside, 2dp stroke. Stands alone in banner context.</td></tr>
+    <tr><td>check-circle</td><td class="usage">Success state, paid badge</td><td class="usage">Circle with ✓ checkmark, 2dp stroke. Stands alone in confirmation context.</td></tr>
+    <tr><td>offline-cloud</td><td class="usage">Offline banner (P44)</td><td class="usage">Cloud outline with X inside or wifi-off slash. Stands alone in banner context.</td></tr>
+    <tr><td rowspan="4" style="font-weight:600;vertical-align:top;padding-top:12px">AI</td>
+      <td>ai-diamond</td><td class="usage">AI surfaces, AI Core, AI avatar</td><td class="usage">Diamond shape (square rotated 45°), 14×14dp, 2dp radius corners. The Vepari AI brand mark. Color: <span class="token">--color-ai</span>. Stands alone only within explicitly AI-branded surfaces.</td></tr>
+    <tr><td>ai-spark</td><td class="usage">AI insight trigger, AI action chip</td><td class="usage">4-point star / sparkle, 16dp. Color: <span class="token">--color-secondary</span>. Always paired with action label.</td></tr>
+    <tr><td>mic</td><td class="usage">Voice Engine, Voice bar, Voice tab</td><td class="usage">Capsule microphone body + stand arc + base line. Stand-alone in Voice-specific surfaces (mic button in chat bar).</td></tr>
+    <tr><td>waveform</td><td class="usage">AI Voice waveform (P42)</td><td class="usage">5 vertical bars of varying height. Decorative — never interactive. See P49 AI Voice Waveform spec.</td></tr>
+    <tr><td rowspan="4" style="font-weight:600;vertical-align:top;padding-top:12px">Settings and Account</td>
+      <td>settings-gear</td><td class="usage">Settings tab, Settings list</td><td class="usage">Gear with 8 teeth, center circle 8dp. Paired with "Settings" label in nav context.</td></tr>
+    <tr><td>profile-person</td><td class="usage">Business Profile, Customer edit</td><td class="usage">Head circle 10dp + shoulder arc. Paired with name label in list context.</td></tr>
+    <tr><td>security-shield</td><td class="usage">Security settings, biometric prompt</td><td class="usage">Shield outline with lock icon inside. Paired with "Security" label.</td></tr>
+    <tr><td>toggle-switch</td><td class="usage">Settings rows (not an icon — it IS the Switch component)</td><td class="usage">Rendered as Switch component (P48), not an icon glyph.</td></tr>
+    <tr><td rowspan="3" style="font-weight:600;vertical-align:top;padding-top:12px">Actions</td>
+      <td>share</td><td class="usage">WhatsApp share (P38), export</td><td class="usage">Upload arrow (box + up arrow). Paired with "Share" or "WhatsApp" label.</td></tr>
+    <tr><td>print</td><td class="usage">Print receipt (P38)</td><td class="usage">Printer outline with paper emerging. Paired with "Print" label.</td></tr>
+    <tr><td>camera</td><td class="usage">Vision Engine quick action, logo upload</td><td class="usage">Camera outline (body + lens circle + flash corner). Paired with label unless full-screen camera context.</td></tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════ SIZE SCALE ═══════════════ -->
+<h2>Icon Size Tokens (from P47)</h2>
+<table>
+  <thead>
+    <tr><th>Token</th><th>Size</th><th>Usage</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="token">--icon-size-sm</span></td><td>16dp</td><td class="usage">Inline icons within text labels, badge icons, chip leading icons, trailing chevrons</td></tr>
+    <tr><td><span class="token">--icon-size</span></td><td>24dp</td><td class="usage">Standard action icons, nav bar icons, list row leading/trailing icons</td></tr>
+    <tr><td><span class="token">--icon-size-lg</span></td><td>32dp</td><td class="usage">Card leading icons, section header icons, alert banner icons</td></tr>
+    <tr><td>(EmptyState)</td><td>48dp</td><td class="usage">EmptyState and ErrorState centered icons — not a token, set inline</td></tr>
+    <tr><td>(Engine card)</td><td>40dp inside 64dp container</td><td class="usage">Engine icon within its colored rounded-square card background on Home screen</td></tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Color injection rule:</strong> All SVG icons use <code>currentColor</code> for stroke and fill. The rendering component sets the color via CSS or a prop — the icon SVG source contains no hardcoded hex. Context colors: nav inactive = <span class="token">--color-text-secondary</span>; nav active = <span class="token">--color-primary</span>; action icons = <span class="token">--color-text-primary</span>; AI icons = <span class="token">--color-ai</span>; status icons use the semantic color matching their state (success/warning/error/info tokens). Engine icons are the sole exception — their outer shape fill is a hardcoded brand hex baked into the SVG since they are decorative brand assets, not functional UI icons.
+</div>

@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "SpacingElevation.dc.html", "x": 0, "y": 0, "w": 860, "h": 1400, "title": "Spacing Scale, Corner Radius and Elevation — 12 space tokens, 7 radius levels, 6 elevation layers" }
+  ],
+  "annotations": [
+    { "id": "p47-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 47 — Spacing, corner radius and elevation tokens. Base unit 4dp. 5 radius levels from xs(4) to xl(20) plus AI(24) and full(9999). 6 elevation layers: Base/Surface/Elevated/Floating/AI Overlay/Modal with warm-brown shadows." }
+  ],
+  "launch": { "view": "canvas" }
+}

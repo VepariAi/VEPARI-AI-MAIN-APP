@@ -1,0 +1,193 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 860px; font-family: system-ui, -apple-system, sans-serif; background: #faf7f2; color: #3b2f2a; }
+body { padding: 28px 32px 40px; }
+h1 { font-size: 22px; font-weight: 700; color: #3b2f2a; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #8a7060; margin-bottom: 24px; }
+h2 { font-size: 14px; font-weight: 700; color: #3b2f2a; margin: 20px 0 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+.font-stack { background: #fff; border: 1px solid #e8ddd0; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
+.fs-row { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+.fs-row:last-child { margin-bottom: 0; }
+.fs-label { font-size: 11px; font-weight: 600; color: #8a7060; width: 80px; flex-shrink: 0; }
+.fs-val { font-size: 13px; color: #3b2f2a; flex: 1; font-family: monospace; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e8ddd0; margin-bottom: 20px; }
+thead { background: #f2e8d6; }
+th { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 12px; text-align: left; border-bottom: 1px solid #e8ddd0; }
+td { padding: 10px 12px; border-bottom: 1px solid #f2e8d6; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.token { font-family: monospace; font-size: 12px; color: #5a6b4f; background: #f0f4ee; padding: 2px 5px; border-radius: 3px; }
+.specimen { color: #3b2f2a; line-height: 1; }
+.badge-en { font-size: 10px; font-weight: 600; padding: 2px 5px; border-radius: 3px; background: #eff6ff; color: #2563eb; }
+.badge-hi { font-size: 10px; font-weight: 600; padding: 2px 5px; border-radius: 3px; background: #fef9ec; color: #92400e; }
+.usage { font-size: 12px; color: #8a7060; }
+.note { background: #fff8e8; border: 1px solid #e8c96b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #6b4f1a; margin-bottom: 20px; line-height: 1.5; }
+</style>
+<h1>P45 — Typography Tokens</h1>
+<div class="meta">Prompt 45 · Phase 5 · Depends on Prompts 2, 8 — type scale, Indic pairing, fallbacks</div>
+
+<div class="note">
+  <strong>Font decisions (from Prompt 2 + 8):</strong> English — <strong>Inter</strong> (variable, wght 400–700). Indic — <strong>Noto Sans Devanagari</strong> for Hindi/Marathi; <strong>Noto Sans Tamil</strong> / <strong>Noto Sans Telugu</strong> / <strong>Noto Sans Kannada</strong> for South Indian scripts. System-ui fallback for any unresolved script. No inline @font-face in production — fonts loaded via the app bundle.
+</div>
+
+<div class="font-stack">
+  <div class="fs-row"><div class="fs-label">--font-en</div><div class="fs-val">'Inter Variable', 'Inter', system-ui, -apple-system, sans-serif</div></div>
+  <div class="fs-row"><div class="fs-label">--font-hi</div><div class="fs-val">'Noto Sans Devanagari', 'Kohinoor Devanagari', 'Mangal', sans-serif</div></div>
+  <div class="fs-row"><div class="fs-label">--font-ta</div><div class="fs-val">'Noto Sans Tamil', 'Latha', sans-serif</div></div>
+  <div class="fs-row"><div class="fs-label">--font-te</div><div class="fs-val">'Noto Sans Telugu', 'Gautami', sans-serif</div></div>
+  <div class="fs-row"><div class="fs-label">--font-kn</div><div class="fs-val">'Noto Sans Kannada', sans-serif</div></div>
+  <div class="fs-row"><div class="fs-label">--font-body</div><div class="fs-val">var(--font-hi), var(--font-en) — Hindi-first; swap to var(--font-en), var(--font-hi) when locale = en</div></div>
+</div>
+
+<h2>Type Scale — All Tokens</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Token</th>
+      <th>Size / Weight</th>
+      <th>Line-H (en)</th>
+      <th>Line-H (hi)</th>
+      <th>Letter-sp</th>
+      <th>Specimen (English)</th>
+      <th>Used in wireframes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="token">--type-display-xl</span></td>
+      <td>28sp / 700</td>
+      <td>1.2</td>
+      <td>1.4</td>
+      <td>−0.5px</td>
+      <td><span class="specimen" style="font-size:28px;font-weight:700">₹48,200</span></td>
+      <td class="usage">Stock values (P40), large KPI numbers</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-display</span></td>
+      <td>22sp / 700</td>
+      <td>1.2</td>
+      <td>1.4</td>
+      <td>−0.3px</td>
+      <td><span class="specimen" style="font-size:22px;font-weight:700">0 units</span></td>
+      <td class="usage">Stock qty (P40), qty stepper, large counters</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-title-xl</span></td>
+      <td>20sp / 700</td>
+      <td>1.25</td>
+      <td>1.45</td>
+      <td>−0.2px</td>
+      <td><span class="specimen" style="font-size:20px;font-weight:700">Ram Traders</span></td>
+      <td class="usage">Detail screen name (P39), modal titles</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-title-lg</span></td>
+      <td>18sp / 700</td>
+      <td>1.3</td>
+      <td>1.5</td>
+      <td>−0.1px</td>
+      <td><span class="specimen" style="font-size:18px;font-weight:700">Inventory</span></td>
+      <td class="usage">Top-bar titles (P40–P43), section headers</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-title-md</span></td>
+      <td>16sp / 700</td>
+      <td>1.35</td>
+      <td>1.55</td>
+      <td>0</td>
+      <td><span class="specimen" style="font-size:16px;font-weight:700">Profit and Loss</span></td>
+      <td class="usage">Detail top-bar (P39, P41), card section headers</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-title-sm</span></td>
+      <td>15sp / 600</td>
+      <td>1.4</td>
+      <td>1.6</td>
+      <td>0</td>
+      <td><span class="specimen" style="font-size:15px;font-weight:600">Vepari AI</span></td>
+      <td class="usage">AI chat name (P42), list item names (P39)</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-body-lg</span></td>
+      <td>14sp / 500</td>
+      <td>1.4</td>
+      <td>1.6</td>
+      <td>0</td>
+      <td><span class="specimen" style="font-size:14px;font-weight:500">Amul Butter 500g</span></td>
+      <td class="usage">Product names (P40), list primary text, form values</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-body</span></td>
+      <td>14sp / 400</td>
+      <td>1.45</td>
+      <td>1.65</td>
+      <td>0</td>
+      <td><span class="specimen" style="font-size:14px;font-weight:400">Search products…</span></td>
+      <td class="usage">Search placeholders, input text, body copy</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-body-sm</span></td>
+      <td>13sp / 400</td>
+      <td>1.45</td>
+      <td>1.65</td>
+      <td>0</td>
+      <td><span class="specimen" style="font-size:13px;font-weight:400">Collect payment</span></td>
+      <td class="usage">Action buttons (P39), AI insight text, transaction sub</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-label-lg</span></td>
+      <td>12sp / 600</td>
+      <td>1.35</td>
+      <td>1.5</td>
+      <td>+0.1px</td>
+      <td><span class="specimen" style="font-size:12px;font-weight:600">Low Stock (18)</span></td>
+      <td class="usage">Filter tabs, period chips, nav labels, sub info</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-label</span></td>
+      <td>11sp / 600</td>
+      <td>1.3</td>
+      <td>1.5</td>
+      <td>+0.3px</td>
+      <td><span class="specimen" style="font-size:11px;font-weight:600">TOTAL SKUs</span></td>
+      <td class="usage">Counter labels (P40), section labels, timestamps</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-caption</span></td>
+      <td>11sp / 400</td>
+      <td>1.4</td>
+      <td>1.6</td>
+      <td>+0.2px</td>
+      <td><span class="specimen" style="font-size:11px;font-weight:400">Last purchase: 27 Aug</span></td>
+      <td class="usage">Metadata, timestamps, secondary sub-labels</td>
+    </tr>
+    <tr>
+      <td><span class="token">--type-overline</span></td>
+      <td>10sp / 700 ALL CAPS</td>
+      <td>1.3</td>
+      <td>1.5</td>
+      <td>+0.8px</td>
+      <td><span class="specimen" style="font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase">Out of Stock</span></td>
+      <td class="usage">State badges (P40), stock-bar labels, pill badges</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Weight Map — Indic Fallback</h2>
+<table>
+  <thead>
+    <tr><th>Requested weight</th><th>Inter (en) — exact</th><th>Noto Sans Devanagari (hi) — nearest bundled</th><th>Fallback rule</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>400 Regular</td><td>400</td><td>400 ✓</td><td>Direct match</td></tr>
+    <tr><td>500 Medium</td><td>500</td><td>→ 400 (no 500 bundled)</td><td>Use 400; do NOT synthesize bold</td></tr>
+    <tr><td>600 SemiBold</td><td>600</td><td>→ 700 (nearest)</td><td>Use 700; label weight is heavier in Indic — acceptable</td></tr>
+    <tr><td>700 Bold</td><td>700</td><td>700 ✓</td><td>Direct match</td></tr>
+  </tbody>
+</table>
+
+<h2>Line-height Rationale</h2>
+<div class="font-stack">
+  <div class="fs-row"><div class="fs-label">English</div><div class="fs-val">1.2–1.45 × font-size. Tighter at display sizes, looser at body. Standard Latin ascender/descender geometry.</div></div>
+  <div class="fs-row"><div class="fs-label">Devanagari</div><div class="fs-val">+0.2 added to every English ratio. Matra (vowel mark) extends above the headline; without extra leading, matras clip on adjacent lines.</div></div>
+  <div class="fs-row"><div class="fs-label">Rule</div><div class="fs-val">Apply line-height via CSS custom property per locale: [lang="hi"] { --lh-body: 1.65; } [lang="en"] { --lh-body: 1.45; }</div></div>
+</div>

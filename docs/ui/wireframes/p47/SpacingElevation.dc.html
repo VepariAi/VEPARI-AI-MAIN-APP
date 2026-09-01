@@ -1,0 +1,284 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 860px; font-family: system-ui, -apple-system, sans-serif; background: #faf7f2; color: #3b2f2a; }
+body { padding: 28px 32px 48px; }
+h1 { font-size: 22px; font-weight: 700; color: #3b2f2a; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #8a7060; margin-bottom: 24px; }
+h2 { font-size: 14px; font-weight: 700; color: #3b2f2a; margin: 28px 0 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e8ddd0; margin-bottom: 24px; }
+thead { background: #f2e8d6; }
+th { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 12px; text-align: left; border-bottom: 1px solid #e8ddd0; }
+td { padding: 9px 12px; border-bottom: 1px solid #f2e8d6; font-size: 13px; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.token { font-family: monospace; font-size: 12px; color: #5a6b4f; background: #f0f4ee; padding: 2px 5px; border-radius: 3px; }
+.val { font-family: monospace; font-size: 12px; color: #8a7060; }
+.usage { font-size: 12px; color: #8a7060; }
+.bar-cell { vertical-align: middle; }
+.sp-bar { display: inline-block; height: 14px; background: #c8a96b; border-radius: 2px; vertical-align: middle; }
+.radius-demo { display: inline-block; width: 48px; height: 24px; background: #f2e8d6; border: 1.5px solid #c8a96b; vertical-align: middle; }
+.note { background: #fff8e8; border: 1px solid #c8a96b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #6b4f1a; margin-bottom: 20px; line-height: 1.5; }
+.elev-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; }
+.elev-card { border-radius: 10px; background: #fff; padding: 14px 18px; min-width: 180px; flex: 1; }
+.elev-label { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.elev-token { font-family: monospace; font-size: 11px; color: #5a6b4f; margin-bottom: 6px; }
+.elev-val { font-family: monospace; font-size: 11px; color: #8a7060; margin-bottom: 4px; }
+.elev-usage { font-size: 11px; color: #a38070; }
+.section-rule { border: none; border-top: 1px solid #e8ddd0; margin: 8px 0 24px; }
+</style>
+<h1>P47 — Spacing, Corner Radius and Elevation</h1>
+<div class="meta">Prompt 47 · Phase 5 · Depends on Prompt 46 — spacing scale, 5 radius levels, 6 elevation layers</div>
+
+<h2>Spacing Scale</h2>
+<div class="note">
+  Base unit: <strong>4dp</strong>. All spacing tokens are multiples of 4. Screens.png proportions verified: card padding is ~16dp, list-item vertical padding is ~12dp, icon-to-label gap is ~6dp, FAB margin is ~20dp, bottom-nav height is 56dp (Voice tab elevated to 72dp footprint). Smallest interactive target: 44dp min touch area per iOS/Material guidance.
+</div>
+<table>
+  <thead>
+    <tr><th>Token</th><th>Value</th><th>Visual bar</th><th>Usage examples</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="token">--space-1</span></td>
+      <td class="val">4dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:4px"></span></td>
+      <td class="usage">Icon inner padding, micro gap between badge dot and label, input field border-width</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-2</span></td>
+      <td class="val">8dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:8px"></span></td>
+      <td class="usage">Chip horizontal padding, badge padding, icon-to-text gap in labels, row internal gap</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-3</span></td>
+      <td class="val">12dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:12px"></span></td>
+      <td class="usage">List item vertical padding, button vertical padding, filter tab padding, chip row gap</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-4</span></td>
+      <td class="val">16dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:16px"></span></td>
+      <td class="usage">Card horizontal padding, form field internal padding, section gap, modal padding sides</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-5</span></td>
+      <td class="val">20dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:20px"></span></td>
+      <td class="usage">Screen horizontal margin (20dp each side on 390dp canvas), FAB bottom offset</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-6</span></td>
+      <td class="val">24dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:24px"></span></td>
+      <td class="usage">Section header top margin, card-to-card vertical gap, modal top padding</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-8</span></td>
+      <td class="val">32dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:32px"></span></td>
+      <td class="usage">Top-bar height (56dp = nav; 44dp safe area + 12dp is a common partition); large section gap</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-10</span></td>
+      <td class="val">40dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:40px"></span></td>
+      <td class="usage">Bottom sheet handle-to-title gap, AI Core ring diameter (40dp inner ring)</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-12</span></td>
+      <td class="val">48dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:48px"></span></td>
+      <td class="usage">Standard button height, standard input height, list row min-height for dense lists</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-14</span></td>
+      <td class="val">56dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:56px"></span></td>
+      <td class="usage">Bottom nav bar height, top app-bar height, Voice tab button size</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-16</span></td>
+      <td class="val">64dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:64px"></span></td>
+      <td class="usage">Large avatar size (customer/supplier detail), AI Core outer ring diameter</td>
+    </tr>
+    <tr>
+      <td><span class="token">--space-20</span></td>
+      <td class="val">80dp</td>
+      <td class="bar-cell"><span class="sp-bar" style="width:80px"></span></td>
+      <td class="usage">AI Core display ring total footprint (ring + glow = 80dp), hero icon containers</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Semantic Spacing Aliases</h2>
+<table>
+  <thead>
+    <tr><th>Alias token</th><th>Resolves to</th><th>Role</th></tr>
+  </thead>
+  <tbody>
+    <tr><td><span class="token">--screen-margin</span></td><td class="val">var(--space-5) = 20dp</td><td class="usage">Left/right screen edge inset — every scrolling list and form respects this</td></tr>
+    <tr><td><span class="token">--card-padding</span></td><td class="val">var(--space-4) = 16dp</td><td class="usage">Card content inset (horizontal and vertical)</td></tr>
+    <tr><td><span class="token">--list-row-padding-v</span></td><td class="val">var(--space-3) = 12dp</td><td class="usage">List row vertical padding (each side)</td></tr>
+    <tr><td><span class="token">--list-row-padding-h</span></td><td class="val">var(--screen-margin)</td><td class="usage">List row left/right aligns with screen margin</td></tr>
+    <tr><td><span class="token">--section-gap</span></td><td class="val">var(--space-6) = 24dp</td><td class="usage">Gap between major sections on a screen</td></tr>
+    <tr><td><span class="token">--button-height</span></td><td class="val">var(--space-12) = 48dp</td><td class="usage">All full-width and standard primary buttons</td></tr>
+    <tr><td><span class="token">--input-height</span></td><td class="val">var(--space-12) = 48dp</td><td class="usage">Text fields, search bars, select fields</td></tr>
+    <tr><td><span class="token">--chip-height</span></td><td class="val">32dp</td><td class="usage">Filter tabs, period chips, tag chips (not on 4dp grid — 32dp is 8×4)</td></tr>
+    <tr><td><span class="token">--icon-size-sm</span></td><td class="val">16dp</td><td class="usage">Inline icons next to text labels</td></tr>
+    <tr><td><span class="token">--icon-size</span></td><td class="val">24dp</td><td class="usage">Standard action icons, nav icons</td></tr>
+    <tr><td><span class="token">--icon-size-lg</span></td><td class="val">32dp</td><td class="usage">Card leading icons, badge icons</td></tr>
+  </tbody>
+</table>
+
+<h2>Corner Radius Scale</h2>
+<div class="note">
+  Derived from Screens.png: small controls (buttons, chips, badges) have tight radii ~8dp; cards have ~12dp; sheets and drawers have ~20dp top corners only; dialogs have ~16dp; AI Core and AI surfaces use a larger ~24dp radius for a softer, premium feel (UI-UX §12).
+</div>
+<table>
+  <thead>
+    <tr><th>Token</th><th>Value</th><th>Demo</th><th>Components</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="token">--radius-xs</span></td>
+      <td class="val">4dp</td>
+      <td><span class="radius-demo" style="border-radius:4px"></span></td>
+      <td class="usage">Badge, pill label, table cell highlight, code token background</td>
+    </tr>
+    <tr>
+      <td><span class="token">--radius-sm</span></td>
+      <td class="val">8dp</td>
+      <td><span class="radius-demo" style="border-radius:8px"></span></td>
+      <td class="usage">Button (all sizes), chip, filter tab, text field, search bar, icon button</td>
+    </tr>
+    <tr>
+      <td><span class="token">--radius-md</span></td>
+      <td class="val">12dp</td>
+      <td><span class="radius-demo" style="border-radius:12px"></span></td>
+      <td class="usage">Card, MetricCard, ListItem card, document preview, alert banner, toast</td>
+    </tr>
+    <tr>
+      <td><span class="token">--radius-lg</span></td>
+      <td class="val">16dp</td>
+      <td><span class="radius-demo" style="border-radius:16px"></span></td>
+      <td class="usage">Dialog, modal container, bottom sheet inner handle area, large CTA card</td>
+    </tr>
+    <tr>
+      <td><span class="token">--radius-xl</span></td>
+      <td class="val">20dp</td>
+      <td><span class="radius-demo" style="border-radius:20px 20px 0 0"></span></td>
+      <td class="usage">Bottom sheet top corners, drawer top corners, full-screen modal top corners</td>
+    </tr>
+    <tr>
+      <td><span class="token">--radius-ai</span></td>
+      <td class="val">24dp</td>
+      <td><span class="radius-demo" style="border-radius:24px; border-color:#4a3d6b; background:#f0edf8"></span></td>
+      <td class="usage">AI Briefing card, AI Insight card, AI chat bubble (own side), AI surface containers</td>
+    </tr>
+    <tr>
+      <td><span class="token">--radius-full</span></td>
+      <td class="val">9999dp</td>
+      <td><span class="radius-demo" style="border-radius:9999px; width:32px; height:32px"></span></td>
+      <td class="usage">Avatar, circular icon button, Voice FAB, progress indicator track, toggle thumb</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Elevation Layers</h2>
+<div class="note">
+  Shadows use Deep Brown (#3B2F2A) at low opacity — no pure black shadows — to stay warm and on-brand. AI Overlay uses AI Indigo (#4A3D6B) tinted shadow. Six semantic layers per UI-UX §13.
+</div>
+<div class="elev-row">
+  <div class="elev-card" style="box-shadow:none; border:1px solid #e8ddd0;">
+    <div class="elev-label">Base</div>
+    <div class="elev-token">--elevation-0</div>
+    <div class="elev-val">none</div>
+    <div class="elev-usage">Screen canvas, list backgrounds, body — no shadow</div>
+  </div>
+  <div class="elev-card" style="box-shadow:0 1px 3px rgba(59,47,42,0.10), 0 1px 2px rgba(59,47,42,0.06);">
+    <div class="elev-label">Surface</div>
+    <div class="elev-token">--elevation-1</div>
+    <div class="elev-val">0 1px 3px rgba(59,47,42,.10),<br>0 1px 2px rgba(59,47,42,.06)</div>
+    <div class="elev-usage">Cards, MetricCards, list containers, input fields</div>
+  </div>
+  <div class="elev-card" style="box-shadow:0 4px 8px rgba(59,47,42,0.10), 0 2px 4px rgba(59,47,42,0.06);">
+    <div class="elev-label">Elevated</div>
+    <div class="elev-token">--elevation-2</div>
+    <div class="elev-val">0 4px 8px rgba(59,47,42,.10),<br>0 2px 4px rgba(59,47,42,.06)</div>
+    <div class="elev-usage">Dropdowns, menus, autocomplete panels, sticky headers</div>
+  </div>
+  <div class="elev-card" style="box-shadow:0 8px 16px rgba(59,47,42,0.12), 0 4px 8px rgba(59,47,42,0.08);">
+    <div class="elev-label">Floating</div>
+    <div class="elev-token">--elevation-3</div>
+    <div class="elev-val">0 8px 16px rgba(59,47,42,.12),<br>0 4px 8px rgba(59,47,42,.08)</div>
+    <div class="elev-usage">FAB (Voice button), bottom sheet, toast, snackbar, floating action panel</div>
+  </div>
+  <div class="elev-card" style="box-shadow:0 8px 24px rgba(74,61,107,0.20), 0 4px 12px rgba(74,61,107,0.12);">
+    <div class="elev-label">AI Overlay</div>
+    <div class="elev-token">--elevation-ai</div>
+    <div class="elev-val">0 8px 24px rgba(74,61,107,.20),<br>0 4px 12px rgba(74,61,107,.12)</div>
+    <div class="elev-usage">AI Core ring glow, AI Briefing card, AI Insight panel, AI chat bubble</div>
+  </div>
+  <div class="elev-card" style="box-shadow:0 16px 32px rgba(59,47,42,0.16), 0 8px 16px rgba(59,47,42,0.10);">
+    <div class="elev-label">Modal</div>
+    <div class="elev-token">--elevation-modal</div>
+    <div class="elev-val">0 16px 32px rgba(59,47,42,.16),<br>0 8px 16px rgba(59,47,42,.10)</div>
+    <div class="elev-usage">Bottom sheet modal, full-screen overlay dialogs, confirmation dialogs</div>
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr><th>Token</th><th>Layer name</th><th>z-index band</th><th>Backdrop</th><th>Usage</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="token">--elevation-0</span></td>
+      <td>Base</td>
+      <td class="val">0</td>
+      <td>none</td>
+      <td class="usage">Body canvas, screen background</td>
+    </tr>
+    <tr>
+      <td><span class="token">--elevation-1</span></td>
+      <td>Surface</td>
+      <td class="val">1–9</td>
+      <td>none</td>
+      <td class="usage">Cards, list containers, form inputs</td>
+    </tr>
+    <tr>
+      <td><span class="token">--elevation-2</span></td>
+      <td>Elevated</td>
+      <td class="val">10–49</td>
+      <td>none</td>
+      <td class="usage">Dropdowns, menus, sticky elements</td>
+    </tr>
+    <tr>
+      <td><span class="token">--elevation-3</span></td>
+      <td>Floating</td>
+      <td class="val">50–99</td>
+      <td>none</td>
+      <td class="usage">FAB, bottom sheet, toasts</td>
+    </tr>
+    <tr>
+      <td><span class="token">--elevation-ai</span></td>
+      <td>AI Overlay</td>
+      <td class="val">100–149</td>
+      <td>rgba(74,61,107,.04) subtle indigo tint</td>
+      <td class="usage">AI surfaces — AI Core, briefing, insight cards</td>
+    </tr>
+    <tr>
+      <td><span class="token">--elevation-modal</span></td>
+      <td>Modal</td>
+      <td class="val">150+</td>
+      <td>rgba(59,47,42,.50) scrim</td>
+      <td class="usage">Modal dialogs, full-screen sheets, confirmation prompts</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Scrim token:</strong> <span style="font-family:monospace;font-size:12px;background:#f0f4ee;padding:2px 4px;border-radius:3px">--scrim</span> = rgba(59,47,42,.50) — used exclusively behind <code>--elevation-modal</code>. The AI Overlay layer uses a very light <span style="font-family:monospace;font-size:12px;background:#f0f4ee;padding:2px 4px;border-radius:3px">--scrim-ai</span> = rgba(74,61,107,.04) as an ambient tint, not a blocking scrim.
+</div>

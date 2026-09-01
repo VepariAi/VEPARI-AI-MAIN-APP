@@ -201,4 +201,84 @@ Six reusable component states. Every screen in Prompts 33–43 references these 
 
 ---
 
-*Wireframe aesthetic: 390×844 px mobile, system-ui font, white/light-gray (#f5f5f5) backgrounds, blue (#2563eb) primary, red (#ef4444) error, green (#22c55e) success. No fake iOS chrome.*
+## Prompt 45 — Typography Tokens
+
+**Artifact:** https://claude.ai/code/artifact/316583a7-a26f-48bc-850b-5b737e5e84b9
+**Source:** `p45/`
+
+13-step type scale covering every text style in Prompts 33–44 wireframes. Inter (variable) for English, Noto Sans Devanagari for Hindi/Marathi, Indic weight fallback map, line-height rationale.
+
+| Artboard | Description |
+|---|---|
+| `TypeScale.dc.html` | Font stacks, 13-token type scale (display-xl to overline), Indic weight map, line-height rationale |
+
+---
+
+## Prompt 46 — Brand Color Tokens
+
+**Artifact:** https://claude.ai/code/artifact/bc9a3966-6af4-4ff1-988d-2c8b9e10cfd0
+**Source:** `p46/`
+
+6 confirmed brand colors as 21 semantic tokens. Teal accent seen in Screens.png resolved: dropped (conflicts with warm palette, no unmet semantic role).
+
+| Artboard | Description |
+|---|---|
+| `ColorTokens.dc.html` | Brand palette swatches, teal resolution, 21 semantic token map (primary/secondary/accent/success/warning/error/info/ai/background/surface/text/border) |
+
+---
+
+## Prompt 47 — Spacing, Corner Radius and Elevation
+
+**Artifact:** https://claude.ai/code/artifact/01d55378-d6e5-4f8a-9b32-bac857cffce0
+**Source:** `p47/`
+
+4dp-base spacing scale, semantic spacing aliases, 7 corner-radius levels, 6 elevation layers with warm-brown shadows.
+
+| Artboard | Description |
+|---|---|
+| `SpacingElevation.dc.html` | 12 space tokens, semantic aliases (--screen-margin/--card-padding/etc.), 7 radius levels (xs 4dp to full 9999dp plus AI 24dp), 6 elevation layers (Base/Surface/Elevated/Floating/AI Overlay/Modal) |
+
+---
+
+## Prompt 48 — Component Spec
+
+**Artifact:** https://claude.ai/code/artifact/94261d9a-4e04-4b61-9209-8e1bbfe0157a
+**Source:** `p48/`
+
+Full spec for 26 components across Actions, Inputs, Containers, Identity, Overlays, Feedback, and Data Visualization groups. Every state per UI-UX §197–198.
+
+| Artboard | Description |
+|---|---|
+| `ComponentSpec.dc.html` | Button, IconButton, TextField, SearchField, Select, Checkbox, Switch, Card, MetricCard, ListItem, Avatar, Badge, Chip, Tabs, BottomSheet, Modal/Dialog, Toast, Banner, Progress, Skeleton, EmptyState, ErrorState, Chart, Table, DocumentPreview — all states |
+
+---
+
+## Prompt 49 — AI Visual Components
+
+**Artifact:** https://claude.ai/code/artifact/6c544cd6-6265-4b6e-b5f9-ae392e1e7256
+**Source:** `p49/`
+
+AI Core layered-rings motif with 6 physics/motion states (Idle/Listening/Processing/Speaking/Error/Offline), plus all AI UI components from UI-UX §199.
+
+| Artboard | Description |
+|---|---|
+| `AIVisuals.dc.html` | AI Core (ring anatomy + 6 motion states with animation physics), AI Status Pill, AI Briefing Card (4 priority tiers), AI Insight Card, AI Evidence Panel, AI Recommendation Card, AI Action Card, AI Approval, AI Result, AI Voice Waveform, AI Conversation Bubble |
+
+---
+
+## Prompt 50 — Icon Set Specification
+
+**Artifact:** https://claude.ai/code/artifact/5cd84b6b-cb9a-418f-9e1a-8dd34c86e08c
+**Source:** `p50/`
+
+Complete icon set specification: construction rules, 10 AI Engine brand icons, 5 nav icons, 30+ module and action icons, label-pairing rule.
+
+| Artboard | Description |
+|---|---|
+| `IconSpec.dc.html` | 24dp grid spec (2dp stroke, round cap/join, 2dp corner radius), engine icon mapping for all 10 confirmed engines, nav icons, module/action icon catalog, size token reference, label-pairing rule per UI-UX §194 |
+
+---
+
+*Phase 4 wireframe aesthetic: 390×844 px mobile, system-ui font, white/light-gray (#f5f5f5) backgrounds, blue (#2563eb) primary, red (#ef4444) error, green (#22c55e) success. No fake iOS chrome.*
+
+*Phase 5 token spec aesthetic: 860px wide reference documents, brand background #FAF7F2 (Ivory White), text #3B2F2A (Deep Brown). All color and spacing values use the semantic token set defined in Prompts 45–47.*
