@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "DarkMode.dc.html", "x": 0, "y": 0, "w": 860, "h": 2600, "title": "Dark Mode Decision — IN SCOPE, tokens defined Phase 5, implementation deferred Phase 7" }
+  ],
+  "annotations": [
+    { "id": "p56-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 56 — Dark mode product decision. RESOLVED: in scope. 12 warm dm- tokens added to P46. Semantic alias table: 14 slots, light+dark. Gold text still restricted on most dark surfaces (3.6-4.0:1). Toggle implementation deferred to Phase 7." }
+  ],
+  "launch": { "view": "canvas" }
+}

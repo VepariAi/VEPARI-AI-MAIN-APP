@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "TextLocale.dc.html", "x": 0, "y": 0, "w": 860, "h": 1800, "title": "Text Expansion and Localization — button growth rules, script line-heights, currency/date/number formats" }
+  ],
+  "annotations": [
+    { "id": "p52-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 52 — Text expansion, line-height variance and localization. Buttons grow, never truncate. Real Hindi/Tamil expansion samples. Devanagari +0.2 line-height, Telugu +0.25. Indian rupee lakh/crore formatting. Always Latin digits." }
+  ],
+  "launch": { "view": "canvas" }
+}

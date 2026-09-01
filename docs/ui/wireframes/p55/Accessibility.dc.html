@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Accessibility Spec — Contrast, Touch Targets, Dynamic Type — P55</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 860px;
+    background: #FAF7F2;
+    color: #3B2F2A;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 40px;
+  }
+
+  .page-header { margin-bottom: 40px; border-bottom: 2px solid #C8A96B; padding-bottom: 20px; }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: #3B2F2A; }
+  .page-header .meta { font-size: 12px; color: #7A6A60; margin-top: 4px; }
+  .page-header .dep { font-size: 12px; color: #5A6B4F; font-weight: 600; margin-top: 2px; }
+
+  .section { margin-bottom: 48px; }
+  .section-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #7A6A60; margin-bottom: 16px;
+    padding-bottom: 6px; border-bottom: 1px solid #E8DDD0;
+  }
+  .note {
+    background: #F2E8D6; border-left: 3px solid #C8A96B;
+    padding: 10px 14px; border-radius: 4px; font-size: 12px;
+    color: #3B2F2A; margin-bottom: 16px; line-height: 1.6;
+  }
+  .critical {
+    background: #FFF0EF; border-left: 3px solid #B45B4A;
+    padding: 10px 14px; border-radius: 4px; font-size: 12px;
+    color: #3B2F2A; margin-bottom: 16px; line-height: 1.6;
+  }
+  .success-box {
+    background: #F0F8F0; border-left: 3px solid #5A6B4F;
+    padding: 10px 14px; border-radius: 4px; font-size: 12px;
+    color: #3B2F2A; margin-bottom: 16px; line-height: 1.6;
+  }
+
+  /* ── Contrast table ── */
+  .ct-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+  .ct-table th {
+    background: #F2E8D6; font-weight: 700; text-align: left;
+    padding: 8px 10px; border: 1px solid #E0D4C4; color: #3B2F2A;
+  }
+  .ct-table td {
+    padding: 6px 10px; border: 1px solid #EDE5DC; vertical-align: middle;
+  }
+  .ct-table tr:nth-child(even) td { background: #FAF7F2; }
+
+  .ratio-pass   { font-weight: 700; color: #5A6B4F; }
+  .ratio-large  { font-weight: 700; color: #C8A96B; }
+  .ratio-fail   { font-weight: 700; color: #B45B4A; }
+
+  .badge-pass   { display:inline-block;background:#5A6B4F;color:#fff;font-size:9px;font-weight:700;border-radius:3px;padding:1px 5px;vertical-align:middle; }
+  .badge-large  { display:inline-block;background:#C8A96B;color:#3B2F2A;font-size:9px;font-weight:700;border-radius:3px;padding:1px 5px;vertical-align:middle; }
+  .badge-fail   { display:inline-block;background:#B45B4A;color:#fff;font-size:9px;font-weight:700;border-radius:3px;padding:1px 5px;vertical-align:middle; }
+
+  /* Swatch pairs */
+  .swatch-pair {
+    display: inline-flex; align-items: center; gap: 3px; vertical-align: middle;
+  }
+  .sw {
+    width: 16px; height: 16px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.15);
+    display: inline-block; flex-shrink: 0;
+  }
+  .sw-text {
+    font-size: 10px; color: #7A6A60;
+  }
+
+  /* Token code */
+  .tok { font-family: 'Courier New', monospace; font-size: 10px; color: #5A6B4F; }
+
+  /* ── Touch target demo ── */
+  .touch-demo { display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-end; margin-bottom: 16px; }
+  .touch-item { text-align: center; }
+  .touch-item .t-label { font-size: 10px; color: #7A6A60; margin-bottom: 6px; }
+
+  /* ── Type scale table ── */
+  .type-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 16px; }
+  .type-table th {
+    background: #F2E8D6; font-weight: 700; text-align: left;
+    padding: 8px 10px; border: 1px solid #E0D4C4; color: #3B2F2A;
+  }
+  .type-table td {
+    padding: 7px 10px; border: 1px solid #EDE5DC; vertical-align: middle; line-height: 1.5;
+  }
+  .type-table tr:nth-child(even) td { background: #FAF7F2; }
+
+  /* Flagged alternative */
+  .alt-row td { background: #FFF8E7 !important; }
+
+  /* ── Separator ── */
+  .subsection-title {
+    font-size: 12px; font-weight: 700; color: #3B2F2A; margin-bottom: 10px; margin-top: 20px;
+  }
+
+  /* Rule list */
+  .rule-list { list-style: none; padding: 0; margin: 0; }
+  .rule-list li {
+    padding: 6px 0 6px 20px; position: relative; font-size: 12px;
+    border-bottom: 1px solid #EDE5DC; line-height: 1.5;
+  }
+  .rule-list li:last-child { border-bottom: none; }
+  .rule-list li::before { content: "▶"; position: absolute; left: 0; color: #C8A96B; font-size: 9px; top: 9px; }
+</style>
+</head>
+<body>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <h1>Accessibility Specification — Contrast, Touch Targets, Dynamic Type</h1>
+  <div class="meta">Prompt 55 · Phase 5 · Accessibility Spec · 860 px reference document</div>
+  <div class="dep">Depends on: Prompt 18 (accessible design principles), Prompt 46 (color tokens). Checks: every token pair from P46 against WCAG 2.1 AA.</div>
+</div>
+
+<div class="note">
+  WCAG 2.1 AA thresholds: <strong>normal text ≥ 4.5:1</strong> (text &lt;18pt regular / &lt;14pt bold); <strong>large text ≥ 3.0:1</strong> (text ≥18pt / ≥14pt bold); <strong>UI components ≥ 3.0:1</strong>. All contrast ratios were calculated programmatically against the confirmed P46 brand hex values. Relative luminance per WCAG 2.1 §1.4.3 using the standard IEC 61966-2-1 gamma curve.
+</div>
+
+<!-- ── SECTION 1: FULL CONTRAST AUDIT ── -->
+<div class="section">
+  <div class="section-title">1 · Complete Contrast Ratio Audit — All P46 Token Pairs</div>
+
+  <div class="critical">
+    <strong>Critical finding — Heritage Gold (#C8A96B):</strong> This color FAILS WCAG AA as text on every light background (2.10:1 on Ivory White, 1.85:1 on Warm Beige, 2.25:1 on White). Heritage Gold must NEVER be used as body/label/heading text on light backgrounds. It passes only on Deep Brown (#3B2F2A) at 5.75:1. Use Heritage Gold as a decorative accent — borders, active dots, icon fills — not as text on light surfaces.
+  </div>
+
+  <!-- Text on backgrounds -->
+  <div class="subsection-title">A. Text colors on page/surface backgrounds</div>
+  <table class="ct-table">
+    <tr>
+      <th>Foreground text</th>
+      <th>Background</th>
+      <th>Ratio</th>
+      <th>Normal text</th>
+      <th>Large text / UI</th>
+      <th>Usage rule</th>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#3B2F2A;"></span></span> Deep Brown #3B2F2A</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FAF7F2;border:1px solid #ccc;"></span></span> Ivory White #FAF7F2</td>
+      <td class="ratio-pass">12.09:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Primary text — use freely</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#3B2F2A;"></span></span> Deep Brown #3B2F2A</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#F2E8D6;"></span></span> Warm Beige #F2E8D6</td>
+      <td class="ratio-pass">10.63:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Primary text on card bg — use freely</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#3B2F2A;"></span></span> Deep Brown #3B2F2A</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FFFFFF;border:1px solid #ccc;"></span></span> White #FFFFFF</td>
+      <td class="ratio-pass">12.92:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Primary text on modal/sheet — use freely</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#7A6A60;"></span></span> Text Secondary #7A6A60</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FAF7F2;border:1px solid #ccc;"></span></span> Ivory White #FAF7F2</td>
+      <td class="ratio-pass">4.84:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Secondary text on page bg — use freely</td>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#7A6A60;"></span></span> Text Secondary #7A6A60</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#F2E8D6;"></span></span> Warm Beige #F2E8D6</td>
+      <td class="ratio-large">4.26:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><strong>⚠ Flagged:</strong> Only for captions ≥18pt, or use Deep Brown for normal text on beige</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#7A6A60;"></span></span> Text Secondary #7A6A60</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FFFFFF;border:1px solid #ccc;"></span></span> White #FFFFFF</td>
+      <td class="ratio-pass">5.17:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Secondary text on modal bg — use freely</td>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#9A8A82;"></span></span> Text Tertiary #9A8A82</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FAF7F2;border:1px solid #ccc;"></span></span> Ivory White #FAF7F2</td>
+      <td class="ratio-large">3.10:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-large">LARGE ONLY</span></td>
+      <td><strong>⚠ Flagged:</strong> Decorative/placeholder only. Never for reading-critical content at &lt;18pt.</td>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#9A8A82;"></span></span> Text Tertiary #9A8A82</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FFFFFF;border:1px solid #ccc;"></span></span> White #FFFFFF</td>
+      <td class="ratio-large">3.32:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-large">LARGE ONLY</span></td>
+      <td><strong>⚠ Flagged:</strong> Same — placeholder text, input hints, decorative labels only.</td>
+    </tr>
+  </table>
+
+  <!-- Brand colors as text -->
+  <div class="subsection-title">B. Brand accent colors as text — critical Heritage Gold findings</div>
+  <table class="ct-table">
+    <tr>
+      <th>Foreground</th><th>Background</th><th>Ratio</th><th>Normal</th><th>Large/UI</th><th>Rule</th>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#C8A96B;"></span></span> Heritage Gold #C8A96B</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FAF7F2;border:1px solid #ccc;"></span></span> Ivory White #FAF7F2</td>
+      <td class="ratio-fail">2.10:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><strong>NEVER use as text on light bg.</strong> Decorative accent only.</td>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#C8A96B;"></span></span> Heritage Gold #C8A96B</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#F2E8D6;"></span></span> Warm Beige #F2E8D6</td>
+      <td class="ratio-fail">1.85:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><strong>NEVER use as text on beige bg.</strong> Worst pairing in palette.</td>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#C8A96B;"></span></span> Heritage Gold #C8A96B</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FFFFFF;border:1px solid #ccc;"></span></span> White #FFFFFF</td>
+      <td class="ratio-fail">2.25:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><strong>NEVER use as text on white bg.</strong></td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#C8A96B;"></span></span> Heritage Gold #C8A96B</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#3B2F2A;"></span></span> Deep Brown #3B2F2A</td>
+      <td class="ratio-pass">5.75:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Gold text on dark bg: active nav labels, AI surface labels. OK.</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#5A6B4F;"></span></span> Olive Green #5A6B4F</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FAF7F2;border:1px solid #ccc;"></span></span> Ivory White #FAF7F2</td>
+      <td class="ratio-pass">5.38:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Success text on page bg. Use freely.</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#5A6B4F;"></span></span> Olive Green #5A6B4F</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#F2E8D6;"></span></span> Warm Beige #F2E8D6</td>
+      <td class="ratio-pass">4.74:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Success text on card bg. Use freely.</td>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#B45B4A;"></span></span> Terracotta #B45B4A</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FAF7F2;border:1px solid #ccc;"></span></span> Ivory White #FAF7F2</td>
+      <td class="ratio-large">4.33:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><strong>⚠ Flagged:</strong> Error text on page bg borderline. Use on #FFFFFF (4.63:1) for all normal text.</td>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#B45B4A;"></span></span> Terracotta #B45B4A</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#F2E8D6;"></span></span> Warm Beige #F2E8D6</td>
+      <td class="ratio-large">3.81:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><strong>⚠ Flagged:</strong> Error text on beige: large text only. Pair with icon for normal size.</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#B45B4A;"></span></span> Terracotta #B45B4A</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FFFFFF;border:1px solid #ccc;"></span></span> White #FFFFFF</td>
+      <td class="ratio-pass">4.63:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Error text on modal/sheet white bg. Use freely.</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#4A3D6B;"></span></span> AI Indigo #4A3D6B</td>
+      <td><span class="swatch-pair"><span class="sw" style="background:#FAF7F2;border:1px solid #ccc;"></span></span> Ivory White #FAF7F2</td>
+      <td class="ratio-pass">9.05:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>AI labels on page bg. Use freely.</td>
+    </tr>
+  </table>
+
+  <!-- White on brand colors -->
+  <div class="subsection-title">C. White text on brand color backgrounds (buttons, badges, chips)</div>
+  <table class="ct-table">
+    <tr><th>White text on…</th><th>Ratio</th><th>Normal</th><th>Large/UI</th><th>Rule</th></tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#3B2F2A;"></span></span> Deep Brown #3B2F2A</td>
+      <td class="ratio-pass">12.92:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Primary action button. Use freely.</td>
+    </tr>
+    <tr class="alt-row">
+      <td><span class="swatch-pair"><span class="sw" style="background:#C8A96B;"></span></span> Heritage Gold #C8A96B</td>
+      <td class="ratio-fail">2.25:1</td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><span class="badge-fail">FAIL</span></td>
+      <td><strong>NEVER white text on Heritage Gold.</strong> Use Deep Brown (#3B2F2A) text on gold bg instead (5.75:1).</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#5A6B4F;"></span></span> Olive Green #5A6B4F</td>
+      <td class="ratio-pass">5.75:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Success badge. Use freely.</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#B45B4A;"></span></span> Terracotta #B45B4A</td>
+      <td class="ratio-pass">4.63:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>Error badge / destructive button. Use freely.</td>
+    </tr>
+    <tr>
+      <td><span class="swatch-pair"><span class="sw" style="background:#4A3D6B;"></span></span> AI Indigo #4A3D6B</td>
+      <td class="ratio-pass">9.67:1</td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td><span class="badge-pass">PASS</span></td>
+      <td>AI chips, AI header. Use freely.</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ── SECTION 2: FLAGGED PAIRS AND ALTERNATIVES ── -->
+<div class="section">
+  <div class="section-title">2 · Flagged Pairs — Compliant Alternatives</div>
+
+  <table class="ct-table">
+    <tr>
+      <th>Flagged use</th>
+      <th>Ratio</th>
+      <th>Compliant alternative</th>
+      <th>Alt ratio</th>
+    </tr>
+    <tr>
+      <td>Heritage Gold text on any light bg</td>
+      <td class="ratio-fail">1.85–2.25:1</td>
+      <td>Use Deep Brown (#3B2F2A) text instead; Heritage Gold as decorative dot/border only</td>
+      <td class="ratio-pass">10.63–12.92:1</td>
+    </tr>
+    <tr>
+      <td>White text on Heritage Gold bg</td>
+      <td class="ratio-fail">2.25:1</td>
+      <td>Use Deep Brown (#3B2F2A) text on Heritage Gold background</td>
+      <td class="ratio-pass">5.75:1</td>
+    </tr>
+    <tr>
+      <td>Terracotta text on Ivory White (error messages, inline validation)</td>
+      <td class="ratio-large">4.33:1</td>
+      <td>Place error text on White (#FFFFFF) surface (card/modal bg) — use FDECEA surface for inline error containers</td>
+      <td class="ratio-pass">4.63:1</td>
+    </tr>
+    <tr>
+      <td>Terracotta text on Warm Beige</td>
+      <td class="ratio-large">3.81:1</td>
+      <td>Pair error label with Terracotta icon: icon cue compensates for text contrast at normal size; or use Deep Brown (#3B2F2A) error text</td>
+      <td class="ratio-pass">10.63:1</td>
+    </tr>
+    <tr>
+      <td>Text Tertiary (#9A8A82) for reading-critical content</td>
+      <td class="ratio-large">3.10–3.32:1</td>
+      <td>Upgrade to Text Secondary (#7A6A60, 4.84–5.17:1) for any user-critical label; keep tertiary for decorative/placeholder only</td>
+      <td class="ratio-pass">4.84–5.17:1</td>
+    </tr>
+    <tr>
+      <td>Text Secondary (#7A6A60) on Warm Beige for normal-size text</td>
+      <td class="ratio-large">4.26:1</td>
+      <td>Use on Ivory White or White background for normal text; or upgrade to Deep Brown on beige surfaces</td>
+      <td class="ratio-pass">4.84:1 / 5.17:1</td>
+    </tr>
+  </table>
+
+  <div class="success-box">
+    <strong>Safe usage summary:</strong> For any readable text on light backgrounds (#FAF7F2, #F2E8D6, #FFFFFF), use only Deep Brown (#3B2F2A), Text Secondary (#7A6A60 on white/ivory), Olive Green (#5A6B4F), or AI Indigo (#4A3D6B). Heritage Gold is decoration only — never text on light. Error text must be on white (#FFFFFF) surfaces.
+  </div>
+</div>
+
+<!-- ── SECTION 3: MINIMUM TOUCH TARGETS ── -->
+<div class="section">
+  <div class="section-title">3 · Minimum Touch Target Sizes</div>
+  <div class="note">
+    Apple HIG minimum: <strong>44 × 44 dp</strong>. Android Material: recommended <strong>48 × 48 dp</strong>. WCAG 2.5.5 (AAA): <strong>44 × 44 CSS px</strong>. Vepari AI adopts <strong>44 dp minimum</strong> for all interactive elements, with the preferred size of 48 dp where layout allows. Physical element may be smaller when <code>hitSlop</code> extends the tap zone.
+  </div>
+
+  <!-- Visual demo -->
+  <div class="touch-demo">
+    <div class="touch-item">
+      <div class="t-label">Icon button (24dp icon)</div>
+      <div style="position:relative;width:48px;height:48px;">
+        <!-- Tap zone -->
+        <div style="position:absolute;inset:0;border:2px dashed #C8A96B;border-radius:8px;background:rgba(200,169,107,0.08);"></div>
+        <!-- Actual element -->
+        <div style="position:absolute;top:12px;left:12px;width:24px;height:24px;background:#3B2F2A;border-radius:4px;display:flex;align-items:center;justify-content:center;">
+          <svg width="14" height="14" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="7" x2="12" y2="7"/><line x1="7" y1="2" x2="7" y2="12"/></svg>
+        </div>
+        <div style="position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:9px;color:#C8A96B;white-space:nowrap;">48dp tap zone</div>
+      </div>
+    </div>
+
+    <div class="touch-item" style="margin-left:20px;">
+      <div class="t-label">Small chip (20dp height)</div>
+      <div style="position:relative;height:44px;display:flex;align-items:center;">
+        <div style="position:absolute;top:0;bottom:0;left:-8px;right:-8px;border:2px dashed #C8A96B;border-radius:6px;background:rgba(200,169,107,0.08);"></div>
+        <div style="background:#F2E8D6;border:1px solid #C8A96B;border-radius:10px;padding:3px 10px;font-size:11px;font-weight:600;color:#3B2F2A;white-space:nowrap;position:relative;">Active</div>
+        <div style="position:absolute;bottom:-16px;left:50%;transform:translateX(-50%);font-size:9px;color:#C8A96B;white-space:nowrap;">44dp via hitSlop</div>
+      </div>
+    </div>
+
+    <div class="touch-item" style="margin-left:20px;">
+      <div class="t-label">Nav tab (full slot)</div>
+      <div style="width:78px;height:60px;border:2px dashed #C8A96B;border-radius:6px;background:rgba(200,169,107,0.08);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;">
+        <svg width="20" height="20" fill="none" stroke="#3B2F2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 8L10 2l7 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z"/>
+          <path d="M7 18V9h4v9"/>
+        </svg>
+        <span style="font-size:8px;color:#3B2F2A;font-weight:700;">Home</span>
+        <div style="font-size:8px;color:#C8A96B;">78dp ✓</div>
+      </div>
+    </div>
+
+    <div class="touch-item" style="margin-left:20px;">
+      <div class="t-label">Voice FAB</div>
+      <div style="width:62px;height:62px;border:2px dashed #C8A96B;border-radius:50%;background:rgba(200,169,107,0.08);display:flex;align-items:center;justify-content:center;">
+        <div style="width:56px;height:56px;border-radius:50%;background:#3B2F2A;display:flex;align-items:center;justify-content:center;outline:2px solid #fff;outline-offset:1px;">
+          <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M10 1a2.5 2.5 0 0 0-2.5 2.5v7a2.5 2.5 0 0 0 5 0V3.5A2.5 2.5 0 0 0 10 1z"/>
+            <path d="M16 8v2a6 6 0 0 1-12 0V8"/>
+          </svg>
+        </div>
+      </div>
+      <div style="font-size:9px;color:#C8A96B;text-align:center;margin-top:2px;">62dp ring ✓</div>
+    </div>
+  </div>
+
+  <table class="ct-table" style="margin-top:24px;">
+    <tr><th>Component</th><th>Visual size</th><th>Tap zone</th><th>Method</th><th>Pass?</th></tr>
+    <tr>
+      <td>Icon button (toolbar, close)</td>
+      <td>24 dp icon</td>
+      <td>44–48 dp</td>
+      <td><span class="tok">hitSlop: {top:12, bottom:12, left:12, right:12}</span></td>
+      <td class="ratio-pass">✓</td>
+    </tr>
+    <tr>
+      <td>Text button / link</td>
+      <td>Variable height</td>
+      <td>44 dp min height</td>
+      <td>Enforce min height on Pressable; don't rely on text line height</td>
+      <td class="ratio-pass">✓</td>
+    </tr>
+    <tr>
+      <td>Chip (filter, tab)</td>
+      <td>28–32 dp</td>
+      <td>44 dp</td>
+      <td><span class="tok">hitSlop</span> extends vertical tap zone</td>
+      <td class="ratio-pass">✓</td>
+    </tr>
+    <tr>
+      <td>Bottom nav tab</td>
+      <td>Full slot ~78 × 60 dp</td>
+      <td>78 × 60 dp</td>
+      <td>Full slot is tappable — no hitSlop needed</td>
+      <td class="ratio-pass">✓</td>
+    </tr>
+    <tr>
+      <td>Voice FAB</td>
+      <td>56 dp + 3 dp ring</td>
+      <td>62 dp diameter</td>
+      <td>Ring wrapper is the touch target</td>
+      <td class="ratio-pass">✓</td>
+    </tr>
+    <tr>
+      <td>List row (transaction, customer)</td>
+      <td>Variable height</td>
+      <td>≥56 dp</td>
+      <td>Standard list rows exceed minimum; use padding, not height constraint</td>
+      <td class="ratio-pass">✓</td>
+    </tr>
+    <tr>
+      <td>Switch / checkbox</td>
+      <td>36 dp track</td>
+      <td>44 × 44 dp</td>
+      <td>Pressable wrapper with explicit min 44dp</td>
+      <td class="ratio-pass">✓</td>
+    </tr>
+    <tr>
+      <td>Pin dot (6-dot PIN entry)</td>
+      <td>16 dp visual</td>
+      <td>44 dp keypad key</td>
+      <td>Each number key is a 44dp square, dots are non-interactive</td>
+      <td class="ratio-pass">✓</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ── SECTION 4: DYNAMIC TYPE SCALING ── -->
+<div class="section">
+  <div class="section-title">4 · Dynamic Type Scaling</div>
+  <div class="note">
+    iOS Dynamic Type maps user accessibility text-size settings to a multiplier. React Native's <strong>allowFontScaling</strong> prop (default true) applies this. Vepari AI adopts a <strong>clamp strategy</strong>: scale up to a capped maximum rather than letting text scale unboundedly (which breaks fixed-width layouts). Minimum type size is never reduced below 12sp. Indic scripts need additional line-height headroom at all sizes — see the Indic multipliers.
+  </div>
+
+  <table class="type-table">
+    <tr>
+      <th>Token</th>
+      <th>Base (sp)</th>
+      <th>xS (0.82×)</th>
+      <th>S (0.91×)</th>
+      <th>Base (1×)</th>
+      <th>L (1.12×)</th>
+      <th>xL (1.24×)</th>
+      <th>xxL (1.40×)</th>
+      <th>Caps / notes</th>
+    </tr>
+    <tr>
+      <td>display-xl</td>
+      <td>36sp</td>
+      <td>—</td>
+      <td>—</td>
+      <td>36</td>
+      <td>40</td>
+      <td>44</td>
+      <td class="ratio-large">48 (cap)</td>
+      <td>Never scale below 32sp</td>
+    </tr>
+    <tr>
+      <td>display-lg</td>
+      <td>30sp</td>
+      <td>—</td>
+      <td>—</td>
+      <td>30</td>
+      <td>34</td>
+      <td>37</td>
+      <td class="ratio-large">42 (cap)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>display-sm (stat values)</td>
+      <td>24sp</td>
+      <td>—</td>
+      <td>22</td>
+      <td>24</td>
+      <td>27</td>
+      <td>30</td>
+      <td class="ratio-large">34 (cap)</td>
+      <td>Stat card values — cap at 34sp</td>
+    </tr>
+    <tr>
+      <td>heading</td>
+      <td>20sp</td>
+      <td>—</td>
+      <td>18</td>
+      <td>20</td>
+      <td>22</td>
+      <td>25</td>
+      <td class="ratio-large">28 (cap)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>subheading</td>
+      <td>17sp</td>
+      <td>—</td>
+      <td>15</td>
+      <td>17</td>
+      <td>19</td>
+      <td>21</td>
+      <td class="ratio-large">24 (cap)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>body (default text)</td>
+      <td>14sp</td>
+      <td>—</td>
+      <td>13</td>
+      <td>14</td>
+      <td>16</td>
+      <td>17</td>
+      <td class="ratio-large">20 (cap)</td>
+      <td>Dominant text size — scale always allowed</td>
+    </tr>
+    <tr>
+      <td>body-sm</td>
+      <td>13sp</td>
+      <td>—</td>
+      <td>12</td>
+      <td>13</td>
+      <td>15</td>
+      <td>16</td>
+      <td class="ratio-large">18 (cap)</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>label</td>
+      <td>12sp</td>
+      <td>12 (floor)</td>
+      <td>12</td>
+      <td>12</td>
+      <td>13</td>
+      <td>15</td>
+      <td class="ratio-large">16 (cap)</td>
+      <td>Floor: never below 12sp</td>
+    </tr>
+    <tr>
+      <td>caption</td>
+      <td>11sp</td>
+      <td>12 (floor)</td>
+      <td>12</td>
+      <td>11</td>
+      <td>12</td>
+      <td>13</td>
+      <td class="ratio-large">15 (cap)</td>
+      <td>Floor: 12sp minimum even at base size</td>
+    </tr>
+    <tr>
+      <td>overline (tab labels, meta)</td>
+      <td>11sp</td>
+      <td>12 (floor)</td>
+      <td>12</td>
+      <td>11</td>
+      <td>12</td>
+      <td>13</td>
+      <td class="ratio-large">13 (strict cap)</td>
+      <td>Nav labels max 13sp — beyond that, label wraps</td>
+    </tr>
+    <tr>
+      <td>micro (badge counts)</td>
+      <td>9sp</td>
+      <td>9 (no scale)</td>
+      <td>9</td>
+      <td>9</td>
+      <td>9</td>
+      <td>9</td>
+      <td>9 (fixed)</td>
+      <td>Badge always 9sp — badge container resizes instead</td>
+    </tr>
+  </table>
+
+  <!-- Indic line-height scaling -->
+  <div class="subsection-title">Indic script line-height at each text scale step</div>
+  <div class="note">
+    Line-height multipliers must scale with font size. The additive Indic overhead (P52) is: Devanagari +0.2, Tamil +0.15/+0.20, Telugu +0.25, Kannada +0.20. At xxL text size, line-height increases are proportionally larger — containers must remain flexible-height.
+  </div>
+
+  <table class="type-table">
+    <tr>
+      <th>Script</th>
+      <th>Base line-height (body 14sp)</th>
+      <th>Base (1×)</th>
+      <th>L (1.12×)</th>
+      <th>xL (1.24×)</th>
+      <th>xxL (1.40×)</th>
+    </tr>
+    <tr>
+      <td>English / Latin</td>
+      <td>1.45 (EN standard)</td>
+      <td>1.45</td>
+      <td>1.45</td>
+      <td>1.45</td>
+      <td>1.45</td>
+    </tr>
+    <tr>
+      <td>Devanagari (Hindi/Marathi)</td>
+      <td>+0.20 → 1.65</td>
+      <td>1.65</td>
+      <td>1.65</td>
+      <td>1.65</td>
+      <td>1.70</td>
+    </tr>
+    <tr>
+      <td>Tamil</td>
+      <td>+0.20 → 1.65</td>
+      <td>1.65</td>
+      <td>1.65</td>
+      <td>1.68</td>
+      <td>1.72</td>
+    </tr>
+    <tr>
+      <td>Telugu</td>
+      <td>+0.25 → 1.70</td>
+      <td>1.70</td>
+      <td>1.72</td>
+      <td>1.75</td>
+      <td>1.80</td>
+    </tr>
+    <tr>
+      <td>Kannada</td>
+      <td>+0.20 → 1.65</td>
+      <td>1.65</td>
+      <td>1.65</td>
+      <td>1.68</td>
+      <td>1.72</td>
+    </tr>
+  </table>
+
+  <div class="note">
+    <strong>Implementation pattern:</strong> Use <span class="tok">allowFontScaling={true}</span> (default) on all Text nodes. Cap via <span class="tok">maxFontSizeMultiplier={1.4}</span> on navigation labels, badge text, and dense table cells. Never set <span class="tok">allowFontScaling={false}</span> unless the element is a decorative graphic (icon, chart axis label). Flex containers use <span class="tok">minHeight</span> instead of fixed <span class="tok">height</span> on rows containing text.
+  </div>
+</div>
+
+<!-- ── SECTION 5: QUICK REFERENCE RULES ── -->
+<div class="section">
+  <div class="section-title">5 · Quick Reference Rules</div>
+  <ul class="rule-list">
+    <li><strong>Heritage Gold is NOT a text color on light backgrounds</strong> — use as dot, border, active indicator, decorative stripe only. Text on Deep Brown: 5.75:1 ✓ only valid text use.</li>
+    <li><strong>Error text must land on white (#FFFFFF)</strong> — Terracotta on Ivory White (#FAF7F2) is 4.33:1, marginal. Error containers (FDECEA background) should have Deep Brown text for body copy, Terracotta for the icon and heading only.</li>
+    <li><strong>Text Tertiary (#9A8A82) is decorative only</strong> — placeholder text, skeleton labels, very secondary meta info at sizes ≥18pt. Never for key data, values, actions, or reading-critical copy.</li>
+    <li><strong>Text Secondary (#7A6A60) is safe on Ivory White (#FAF7F2) and White (#FFFFFF)</strong> — not on Warm Beige (#F2E8D6) at normal text sizes (4.26:1 fails).</li>
+    <li><strong>All interactive touch targets ≥ 44 dp</strong> — use <span class="tok">hitSlop</span> when visual element is smaller. Never use <span class="tok">pointerEvents: 'none'</span> on elements the user needs to interact with.</li>
+    <li><strong>No fixed height on text containers in Indic locales</strong> — Telugu diacritics extend 25% above line, requiring extra clearance at all scale steps. Use <span class="tok">minHeight</span>.</li>
+    <li><strong>Badge text at 9sp is exempt from dynamic type scaling</strong> — the badge container grows instead. Cap nav label scaling at 1.18× (13sp max) so the label never wraps.</li>
+    <li><strong>Icons are UI components, not text</strong> — they need 3.0:1 against their background (not 4.5:1). All stroke icons on their confirmed backgrounds pass at ≥3.0:1.</li>
+  </ul>
+</div>
+
+</body>
+</html>

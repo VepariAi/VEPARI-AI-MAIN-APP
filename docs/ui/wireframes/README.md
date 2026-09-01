@@ -279,6 +279,92 @@ Complete icon set specification: construction rules, 10 AI Engine brand icons, 5
 
 ---
 
+---
+
+## Prompt 51 — Motion and Haptics
+
+**Artifact:** https://claude.ai/code/artifact/15c6f6a2-e8f2-4b05-86b8-cf0e4826f7ae  
+**Source:** `p51/`
+
+AI OS physics language (spring presets, depth/inertia/blur/scale/parallax), haptics map (4 patterns), and reduced-motion fallbacks for every animated state.
+
+| Artboard | Description |
+|---|---|
+| `MotionHaptics.dc.html` | 4 spring presets with parameters, 7 motion properties, haptics event map (16 events × 4 patterns), reduced-motion equivalents for every state |
+
+---
+
+## Prompt 52 — Text Expansion and Localization
+
+**Artifact:** https://claude.ai/code/artifact/a185a3ba-5980-4ae1-9c7e-dd47dfde50f3  
+**Source:** `p52/`
+
+Component-level rules for text expansion (buttons grow, never truncate), line-height variance across scripts, and number/date/currency localization display.
+
+| Artboard | Description |
+|---|---|
+| `TextLocale.dc.html` | Button expansion rules, Hindi/Tamil real-string expansion demos, Devanagari/Telugu line-height variance, Indian rupee lakh/crore formatting, always-Latin-digits rule |
+
+---
+
+## Prompt 53 — 5-Tab Bottom Navigation
+
+**Artifact:** https://claude.ai/code/artifact/6fc6de14-a191-4c6b-bd5c-acac2b6380a4  
+**Source:** `p53/`
+
+5-tab bottom navigation component with elevated Voice FAB, all active/inactive states, and the transition sequence when Voice is tapped.
+
+| Artboard | Description |
+|---|---|
+| `BottomNav.dc.html` | Full anatomy reference, 4 phone-frame state renders, Voice FAB precision spec (56dp, elevation 10dp, 3dp white ring), Voice-tap → AI transition (5 steps), Hindi/Marathi label validation (all ≤6 chars) |
+
+---
+
+## Prompt 54 — Stat Card with Trend Indicator
+
+**Artifact:** https://claude.ai/code/artifact/037d1d4f-d3ee-4964-b809-9e8a80637330  
+**Source:** `p54/`
+
+Stat card component for Revenue/Expenses/Profit with color-blind-accessible trend indicators. Status is never color-only — icon + percentage + label = 3 independent cues.
+
+| Artboard | Description |
+|---|---|
+| `StatCard.dc.html` | 6 full-color variants, grayscale test section (CSS filter), anatomy callout, trend logic table (all direction/valence combos), React Native `StatCardProps` interface |
+
+---
+
+## Prompt 55 — Accessibility Specification
+
+**Artifact:** https://claude.ai/code/artifact/39b62d92-ed41-4c2c-bff6-f33546e22f33  
+**Source:** `p55/`
+
+WCAG 2.1 AA contrast audit for all P46 token pairs, touch target minimums (44dp), and dynamic type scaling with Indic line-height rules.
+
+| Artboard | Description |
+|---|---|
+| `Accessibility.dc.html` | Programmatically-verified contrast ratios for 25 token pairs, Heritage Gold failures flagged (1.85–2.25:1 on light backgrounds), Terracotta borderline noted, touch target component table, dynamic type scaling (11 tokens × 6 scale steps), Indic line-height per scale step |
+
+---
+
+## Prompt 56 — Dark Mode Decision
+
+**Artifact:** https://claude.ai/code/artifact/0ab1347b-b7dd-4748-b3d6-b3ce0d80d0ec  
+**Source:** `p56/`
+
+Product decision: dark mode is **in scope**. Triggered by "Theme: Light" row on Settings screen in Screens.png. Warm dark-palette tokens defined; React Native implementation deferred to Phase 7.
+
+| Artboard | Description |
+|---|---|
+| `DarkMode.dc.html` | Decision record (DEC-014), trigger evidence, 12 dm- token extensions to P46, semantic alias table (14 slots × light/dark), side-by-side phone preview, Gold-on-dark contrast rules, decision log entry |
+
+**Decision summary:**  
+- Dark mode is in scope — tokens defined now to prevent Phase 6 retrofit  
+- 12 new `dm-` tokens use warm brown-black grounds (#1E1810) not generic dark-slate  
+- Gold accent remains decorative on most dark surfaces (3.6:1 on dm-Surface); only passes body text on dm-Background (7.8:1)  
+- Phase 7 work items: `useColorScheme()` wiring, Settings toggle, screen-by-screen dark QA, Sarvam AI surface dark adaptation
+
+---
+
 *Phase 4 wireframe aesthetic: 390×844 px mobile, system-ui font, white/light-gray (#f5f5f5) backgrounds, blue (#2563eb) primary, red (#ef4444) error, green (#22c55e) success. No fake iOS chrome.*
 
 *Phase 5 token spec aesthetic: 860px wide reference documents, brand background #FAF7F2 (Ivory White), text #3B2F2A (Deep Brown). All color and spacing values use the semantic token set defined in Prompts 45–47.*

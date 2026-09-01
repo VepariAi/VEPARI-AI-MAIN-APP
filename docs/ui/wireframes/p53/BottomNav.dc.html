@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bottom Navigation Component — P53</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 860px;
+    background: #FAF7F2;
+    color: #3B2F2A;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 40px;
+  }
+
+  /* ── Page header ── */
+  .page-header { margin-bottom: 40px; border-bottom: 2px solid #C8A96B; padding-bottom: 20px; }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: #3B2F2A; }
+  .page-header .meta { font-size: 12px; color: #7A6A60; margin-top: 4px; }
+  .page-header .dep { font-size: 12px; color: #5A6B4F; font-weight: 600; margin-top: 2px; }
+
+  /* ── Section headers ── */
+  .section { margin-bottom: 48px; }
+  .section-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #7A6A60; margin-bottom: 16px;
+    padding-bottom: 6px; border-bottom: 1px solid #E8DDD0;
+  }
+  .note {
+    background: #F2E8D6; border-left: 3px solid #C8A96B;
+    padding: 10px 14px; border-radius: 4px; font-size: 12px;
+    color: #3B2F2A; margin-bottom: 16px; line-height: 1.6;
+  }
+
+  /* ── Phone frame ── */
+  .phone-canvas {
+    display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 16px;
+    align-items: flex-end;
+  }
+  .phone-frame {
+    background: #fff;
+    border-radius: 28px;
+    border: 2px solid #D5C8BC;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(59,47,42,0.12);
+  }
+  .phone-label {
+    font-size: 11px; font-weight: 600; color: #7A6A60;
+    text-align: center; margin-bottom: 6px; text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+  .phone-screen {
+    width: 220px; height: 100px;
+    background: #F5F0E8;
+    display: flex; align-items: center; justify-content: center;
+    color: #AAA; font-size: 11px;
+  }
+
+  /* ── Nav bar itself ── */
+  .nav-bar {
+    display: flex; align-items: flex-end; justify-content: space-around;
+    background: #FFFFFF;
+    border-top: 1px solid #EDE5DC;
+    padding: 0 8px;
+    height: 80px;
+    width: 220px;
+    position: relative;
+    box-shadow: 0 -2px 12px rgba(59,47,42,0.08);
+  }
+  .nav-tab {
+    display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    padding-bottom: 10px;
+    width: 44px;
+    gap: 3px;
+    cursor: pointer;
+    flex: 1;
+  }
+  .nav-tab .icon {
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .nav-tab .label {
+    font-size: 9px; font-weight: 500; line-height: 1;
+    color: #9A8A82;
+  }
+  .nav-tab.active .label { color: #3B2F2A; font-weight: 700; }
+  .nav-tab .dot {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: #C8A96B; margin-top: 1px;
+  }
+  /* Voice center tab */
+  .nav-voice-wrapper {
+    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+    padding-bottom: 6px; position: relative;
+  }
+  .nav-voice-btn {
+    width: 48px; height: 48px; border-radius: 50%;
+    background: #3B2F2A;
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+    /* Elevation: drop shadow to simulate 10dp elevation */
+    box-shadow:
+      0 4px 10px rgba(59,47,42,0.35),
+      0 2px 4px rgba(59,47,42,0.20);
+    /* White ring: 3dp outer ring */
+    outline: 3px solid #FFFFFF;
+    outline-offset: 1px;
+    z-index: 2;
+  }
+  .nav-voice-btn.active {
+    background: #C8A96B;
+    box-shadow:
+      0 4px 10px rgba(200,169,107,0.45),
+      0 2px 4px rgba(200,169,107,0.25);
+    outline: 3px solid #FFFFFF;
+  }
+  .nav-voice-btn svg { display: block; }
+  .nav-voice-label {
+    font-size: 9px; font-weight: 500; color: #9A8A82; margin-top: 3px;
+  }
+  .nav-voice-wrapper.active .nav-voice-label { color: #3B2F2A; font-weight: 700; }
+
+  /* SVG icons (inline) */
+  svg { overflow: visible; }
+
+  /* ── Spec table ── */
+  .spec-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
+  .spec-table th {
+    background: #F2E8D6; font-weight: 700; text-align: left;
+    padding: 8px 12px; border: 1px solid #E0D4C4; color: #3B2F2A;
+  }
+  .spec-table td {
+    padding: 7px 12px; border: 1px solid #EDE5DC;
+    vertical-align: top; line-height: 1.5;
+  }
+  .spec-table tr:nth-child(even) td { background: #FAF7F2; }
+  .token { font-family: 'Courier New', monospace; font-size: 11px; color: #5A6B4F; }
+  .val { font-weight: 600; color: #3B2F2A; }
+  .dim { color: #9A8A82; font-size: 11px; }
+
+  /* ── Color swatch inline ── */
+  .swatch {
+    display: inline-block; width: 12px; height: 12px; border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.15); vertical-align: middle; margin-right: 4px;
+  }
+
+  /* ── State grid ── */
+  .state-grid { display: flex; gap: 32px; flex-wrap: wrap; margin-bottom: 20px; }
+  .state-card {
+    background: #fff; border: 1px solid #E0D4C4; border-radius: 10px;
+    padding: 16px; min-width: 180px;
+  }
+  .state-card .state-label {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: #7A6A60; margin-bottom: 12px;
+  }
+
+  /* ── Transition flow ── */
+  .flow { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .flow-step {
+    background: #fff; border: 1px solid #E0D4C4; border-radius: 8px;
+    padding: 12px 16px; font-size: 12px; min-width: 140px;
+  }
+  .flow-step .step-num {
+    font-size: 10px; font-weight: 700; color: #C8A96B; text-transform: uppercase;
+    letter-spacing: 0.06em; margin-bottom: 4px;
+  }
+  .flow-step .step-title { font-weight: 700; color: #3B2F2A; margin-bottom: 2px; }
+  .flow-step .step-detail { color: #7A6A60; font-size: 11px; }
+  .flow-arrow { font-size: 18px; color: #C8A96B; font-weight: 700; }
+
+  /* ── Anatomy callout ── */
+  .anatomy-wrap { display: flex; gap: 32px; align-items: flex-start; margin-bottom: 16px; }
+  .callout-list { list-style: none; margin: 0; padding: 0; font-size: 12px; }
+  .callout-list li { margin-bottom: 8px; padding-left: 16px; position: relative; }
+  .callout-list li::before { content: "→"; position: absolute; left: 0; color: #C8A96B; font-weight: 700; }
+
+  /* Larger phone for anatomy */
+  .anatomy-phone { position: relative; }
+  .anatomy-phone .nav-bar { width: 280px; }
+  .anatomy-phone .nav-voice-btn { width: 52px; height: 52px; }
+
+  /* ── Rule box ── */
+  .rule-box {
+    background: #fff; border: 1px solid #E0D4C4; border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 12px; font-size: 12px;
+  }
+  .rule-box .rule-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.06em; color: #7A6A60; margin-bottom: 6px;
+  }
+  .rule-box ul { padding-left: 16px; margin: 0; }
+  .rule-box li { margin-bottom: 4px; line-height: 1.5; }
+
+  /* ── Do/Don't ── */
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .do-box { background: #F0F8F0; border: 1px solid #5A6B4F; border-radius: 8px; padding: 14px; }
+  .dont-box { background: #FFF0EF; border: 1px solid #B45B4A; border-radius: 8px; padding: 14px; }
+  .do-box .box-label { font-size: 11px; font-weight: 700; color: #5A6B4F; margin-bottom: 8px; }
+  .dont-box .box-label { font-size: 11px; font-weight: 700; color: #B45B4A; margin-bottom: 8px; }
+  .do-box li, .dont-box li { font-size: 12px; margin-bottom: 4px; }
+
+</style>
+</head>
+<body>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <h1>5-Tab Bottom Navigation Component</h1>
+  <div class="meta">Prompt 53 · Phase 5 · Design Spec · 860 px reference document</div>
+  <div class="dep">Depends on: Prompt 12 (screens reference), Prompt 36 (nav spec), Prompt 46 (color tokens), Prompt 47 (elevation), Prompt 48 (component spec)</div>
+</div>
+
+<!-- ── SECTION 1: ANATOMY ── -->
+<div class="section">
+  <div class="section-title">1 · Component Anatomy</div>
+  <div class="note">
+    The bottom navigation bar contains 5 tabs. The centre tab is the <strong>Voice FAB</strong> — a 56 dp circular button raised above the bar surface. Tapping Voice enters the AI conversation surface. All other tabs navigate between content sections.
+  </div>
+
+  <!-- Anatomy reference nav bar at larger size -->
+  <div style="margin-bottom: 16px; display: flex; gap: 40px; align-items: flex-end;">
+    <!-- Full-width anatomy bar -->
+    <div>
+      <div class="phone-label">Anatomy Reference (inactive state)</div>
+      <div style="position:relative; width:390px;">
+        <!-- Bar -->
+        <div style="display:flex; align-items:flex-end; justify-content:space-around; background:#fff; border-top:1px solid #EDE5DC; padding:0 4px; height:84px; width:390px; box-shadow:0 -2px 12px rgba(59,47,42,0.08); border-radius:0 0 4px 4px; position:relative;">
+          <!-- Home -->
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:12px;gap:3px;flex:1;">
+            <svg width="24" height="24" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/>
+              <path d="M9 21V12h6v9"/>
+            </svg>
+            <span style="font-size:9px;color:#9A8A82;font-weight:500;">Home</span>
+          </div>
+          <!-- Finance -->
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:12px;gap:3px;flex:1;">
+            <svg width="24" height="24" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="5" width="20" height="14" rx="2"/>
+              <path d="M2 10h20"/>
+            </svg>
+            <span style="font-size:9px;color:#9A8A82;font-weight:500;">Finance</span>
+          </div>
+          <!-- Voice center FAB -->
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:8px;position:relative;">
+            <!-- FAB rises above bar -->
+            <div style="width:56px;height:56px;border-radius:50%;background:#3B2F2A;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(59,47,42,0.38),0 2px 5px rgba(59,47,42,0.22);outline:3px solid #FFFFFF;outline-offset:1px;position:relative;bottom:4px;">
+              <svg width="24" height="24" fill="none" stroke="#FFFFFF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" y1="19" x2="12" y2="23"/>
+                <line x1="8" y1="23" x2="16" y2="23"/>
+              </svg>
+            </div>
+            <span style="font-size:9px;color:#9A8A82;font-weight:500;margin-top:1px;">Voice</span>
+          </div>
+          <!-- Alerts -->
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:12px;gap:3px;flex:1;">
+            <svg width="24" height="24" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span style="font-size:9px;color:#9A8A82;font-weight:500;">Alerts</span>
+          </div>
+          <!-- Settings -->
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:12px;gap:3px;flex:1;">
+            <svg width="24" height="24" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            <span style="font-size:9px;color:#9A8A82;font-weight:500;">Settings</span>
+          </div>
+        </div>
+        <!-- Annotation arrows (text callouts) -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Callout list -->
+  <ul class="callout-list">
+    <li><strong>Bar surface:</strong> 390 dp wide × 84 dp tall (80 dp visible + 4 dp for Voice FAB overhang). Background #FFFFFF. Top border 1 dp solid #EDE5DC. Shadow 0 −2 12 rgba(59,47,42,0.08) upward.</li>
+    <li><strong>Normal tab slot:</strong> flex-1 (≈78 dp wide), 24 dp icon, 9 sp label below, 12 dp bottom padding. Touch target 44×44 dp centred on icon+label.</li>
+    <li><strong>Voice FAB:</strong> 56 dp × 56 dp circle. Bottom edge sits 8 dp above bar bottom — FAB is raised 4 dp above bar surface. White outline ring: 3 dp stroke, 1 dp offset (effective: FAB occupies 62 dp diameter zone).</li>
+    <li><strong>Bottom safe area:</strong> Bar sits directly above the device safe-area inset (handled by <span class="token">safeAreaInsets.bottom</span>). On devices without a notch the 84 dp is the full bar height.</li>
+  </ul>
+</div>
+
+<!-- ── SECTION 2: STATES ── -->
+<div class="section">
+  <div class="section-title">2 · Tab States</div>
+
+  <div class="phone-canvas">
+    <!-- State 1: Home active -->
+    <div>
+      <div class="phone-label">Home — Active</div>
+      <div style="width:220px;">
+        <div style="height:60px;background:#F5F0E8;display:flex;align-items:center;justify-content:center;color:#AAA;font-size:10px;border-radius:8px 8px 0 0;border:1px solid #D5C8BC;border-bottom:none;">App content</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-around;background:#fff;border-top:1px solid #EDE5DC;padding:0 4px;height:72px;width:220px;box-shadow:0 -2px 8px rgba(59,47,42,0.08);border-radius:0 0 8px 8px;">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#3B2F2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8L10 2l7 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z"/>
+              <path d="M7 18V9h4v9"/>
+            </svg>
+            <span style="font-size:8px;color:#3B2F2A;font-weight:700;">Home</span>
+            <div style="width:4px;height:4px;border-radius:50%;background:#C8A96B;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="18" height="12" rx="2"/><path d="M1 9h18"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Finance</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#3B2F2A;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(59,47,42,0.35),0 2px 4px rgba(59,47,42,0.2);outline:3px solid #fff;outline-offset:1px;position:relative;bottom:2px;">
+              <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 1a2.5 2.5 0 0 0-2.5 2.5v7a2.5 2.5 0 0 0 5 0V3.5A2.5 2.5 0 0 0 10 1z"/>
+                <path d="M16 8v2a6 6 0 0 1-12 0V8"/>
+                <line x1="10" y1="16" x2="10" y2="19"/>
+                <line x1="7" y1="19" x2="13" y2="19"/>
+              </svg>
+            </div>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;margin-top:2px;">Voice</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 7A5 5 0 0 0 5 7c0 6-2.5 7.5-2.5 7.5h15S15 13 15 7"/>
+              <path d="M11.4 18a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Alerts</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="10" r="2.5"/>
+              <path d="M16.2 12.5a1.4 1.4 0 0 0 .28 1.52l.05.05a1.7 1.7 0 0 1-2.4 2.4l-.05-.05a1.4 1.4 0 0 0-1.52-.28 1.4 1.4 0 0 0-.85 1.28V18a1.7 1.7 0 0 1-3.4 0v-.08a1.4 1.4 0 0 0-.85-1.28 1.4 1.4 0 0 0-1.52.28l-.05.05a1.7 1.7 0 0 1-2.4-2.4l.05-.05a1.4 1.4 0 0 0 .28-1.52 1.4 1.4 0 0 0-1.28-.85H3a1.7 1.7 0 0 1 0-3.4h.08a1.4 1.4 0 0 0 1.28-.85 1.4 1.4 0 0 0-.28-1.52l-.05-.05a1.7 1.7 0 0 1 2.4-2.4l.05.05a1.4 1.4 0 0 0 1.52.28h.06a1.4 1.4 0 0 0 .85-1.28V3a1.7 1.7 0 0 1 3.4 0v.08a1.4 1.4 0 0 0 .85 1.28h.06a1.4 1.4 0 0 0 1.52-.28l.05-.05a1.7 1.7 0 0 1 2.4 2.4l-.05.05a1.4 1.4 0 0 0-.28 1.52v.06a1.4 1.4 0 0 0 1.28.85H18a1.7 1.7 0 0 1 0 3.4h-.08a1.4 1.4 0 0 0-1.28.85z"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- State 2: Finance active -->
+    <div>
+      <div class="phone-label">Finance — Active</div>
+      <div style="width:220px;">
+        <div style="height:60px;background:#F5F0E8;display:flex;align-items:center;justify-content:center;color:#AAA;font-size:10px;border-radius:8px 8px 0 0;border:1px solid #D5C8BC;border-bottom:none;">App content</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-around;background:#fff;border-top:1px solid #EDE5DC;padding:0 4px;height:72px;width:220px;box-shadow:0 -2px 8px rgba(59,47,42,0.08);border-radius:0 0 8px 8px;">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8L10 2l7 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z"/>
+              <path d="M7 18V9h4v9"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Home</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#3B2F2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="18" height="12" rx="2"/><path d="M1 9h18"/>
+            </svg>
+            <span style="font-size:8px;color:#3B2F2A;font-weight:700;">Finance</span>
+            <div style="width:4px;height:4px;border-radius:50%;background:#C8A96B;"></div>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#3B2F2A;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(59,47,42,0.35),0 2px 4px rgba(59,47,42,0.2);outline:3px solid #fff;outline-offset:1px;position:relative;bottom:2px;">
+              <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 1a2.5 2.5 0 0 0-2.5 2.5v7a2.5 2.5 0 0 0 5 0V3.5A2.5 2.5 0 0 0 10 1z"/>
+                <path d="M16 8v2a6 6 0 0 1-12 0V8"/>
+                <line x1="10" y1="16" x2="10" y2="19"/>
+                <line x1="7" y1="19" x2="13" y2="19"/>
+              </svg>
+            </div>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;margin-top:2px;">Voice</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 7A5 5 0 0 0 5 7c0 6-2.5 7.5-2.5 7.5h15S15 13 15 7"/>
+              <path d="M11.4 18a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Alerts</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="10" r="2.5"/>
+              <path d="M16.2 12.5a1.4 1.4 0 0 0 .28 1.52l.05.05a1.7 1.7 0 0 1-2.4 2.4l-.05-.05a1.4 1.4 0 0 0-1.52-.28 1.4 1.4 0 0 0-.85 1.28V18a1.7 1.7 0 0 1-3.4 0v-.08a1.4 1.4 0 0 0-.85-1.28 1.4 1.4 0 0 0-1.52.28l-.05.05a1.7 1.7 0 0 1-2.4-2.4l.05-.05a1.4 1.4 0 0 0 .28-1.52 1.4 1.4 0 0 0-1.28-.85H3a1.7 1.7 0 0 1 0-3.4h.08a1.4 1.4 0 0 0 1.28-.85 1.4 1.4 0 0 0-.28-1.52l-.05-.05a1.7 1.7 0 0 1 2.4-2.4l.05.05a1.4 1.4 0 0 0 1.52.28h.06a1.4 1.4 0 0 0 .85-1.28V3a1.7 1.7 0 0 1 3.4 0v.08a1.4 1.4 0 0 0 .85 1.28h.06a1.4 1.4 0 0 0 1.52-.28l.05-.05a1.7 1.7 0 0 1 2.4 2.4l-.05.05a1.4 1.4 0 0 0-.28 1.52v.06a1.4 1.4 0 0 0 1.28.85H18a1.7 1.7 0 0 1 0 3.4h-.08a1.4 1.4 0 0 0-1.28.85z"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- State 3: Voice active -->
+    <div>
+      <div class="phone-label">Voice — Active/Listening</div>
+      <div style="width:220px;">
+        <div style="height:60px;background:#3B2F2A;display:flex;align-items:center;justify-content:center;color:#C8A96B;font-size:10px;border-radius:8px 8px 0 0;border:1px solid #3B2F2A;border-bottom:none;">AI conversation surface</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-around;background:#3B2F2A;border-top:1px solid #5A4F47;padding:0 4px;height:72px;width:220px;box-shadow:0 -2px 8px rgba(0,0,0,0.25);border-radius:0 0 8px 8px;">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#7A6A60" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8L10 2l7 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z"/>
+              <path d="M7 18V9h4v9"/>
+            </svg>
+            <span style="font-size:8px;color:#7A6A60;font-weight:500;">Home</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#7A6A60" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="18" height="12" rx="2"/><path d="M1 9h18"/>
+            </svg>
+            <span style="font-size:8px;color:#7A6A60;font-weight:500;">Finance</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;">
+            <!-- Voice FAB active = gold -->
+            <div style="width:44px;height:44px;border-radius:50%;background:#C8A96B;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(200,169,107,0.5),0 2px 4px rgba(200,169,107,0.3);outline:3px solid #3B2F2A;outline-offset:1px;position:relative;bottom:2px;">
+              <svg width="20" height="20" fill="none" stroke="#3B2F2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 1a2.5 2.5 0 0 0-2.5 2.5v7a2.5 2.5 0 0 0 5 0V3.5A2.5 2.5 0 0 0 10 1z"/>
+                <path d="M16 8v2a6 6 0 0 1-12 0V8"/>
+                <line x1="10" y1="16" x2="10" y2="19"/>
+                <line x1="7" y1="19" x2="13" y2="19"/>
+              </svg>
+            </div>
+            <span style="font-size:8px;color:#C8A96B;font-weight:700;margin-top:2px;">Voice</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#7A6A60" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 7A5 5 0 0 0 5 7c0 6-2.5 7.5-2.5 7.5h15S15 13 15 7"/>
+              <path d="M11.4 18a2 2 0 0 1-3.46 0"/>
+            </svg>
+            <span style="font-size:8px;color:#7A6A60;font-weight:500;">Alerts</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#7A6A60" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="10" r="2.5"/>
+              <path d="M16.2 12.5a1.4 1.4 0 0 0 .28 1.52l.05.05a1.7 1.7 0 0 1-2.4 2.4l-.05-.05a1.4 1.4 0 0 0-1.52-.28 1.4 1.4 0 0 0-.85 1.28V18a1.7 1.7 0 0 1-3.4 0v-.08a1.4 1.4 0 0 0-.85-1.28 1.4 1.4 0 0 0-1.52.28l-.05.05a1.7 1.7 0 0 1-2.4-2.4l.05-.05a1.4 1.4 0 0 0 .28-1.52 1.4 1.4 0 0 0-1.28-.85H3a1.7 1.7 0 0 1 0-3.4h.08a1.4 1.4 0 0 0 1.28-.85 1.4 1.4 0 0 0-.28-1.52l-.05-.05a1.7 1.7 0 0 1 2.4-2.4l.05.05a1.4 1.4 0 0 0 1.52.28h.06a1.4 1.4 0 0 0 .85-1.28V3a1.7 1.7 0 0 1 3.4 0v.08a1.4 1.4 0 0 0 .85 1.28h.06a1.4 1.4 0 0 0 1.52-.28l.05-.05a1.7 1.7 0 0 1 2.4 2.4l-.05.05a1.4 1.4 0 0 0-.28 1.52v.06a1.4 1.4 0 0 0 1.28.85H18a1.7 1.7 0 0 1 0 3.4h-.08a1.4 1.4 0 0 0-1.28.85z"/>
+            </svg>
+            <span style="font-size:8px;color:#7A6A60;font-weight:500;">Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- State 4: Alerts badge -->
+    <div>
+      <div class="phone-label">Alerts — Badge</div>
+      <div style="width:220px;">
+        <div style="height:60px;background:#F5F0E8;display:flex;align-items:center;justify-content:center;color:#AAA;font-size:10px;border-radius:8px 8px 0 0;border:1px solid #D5C8BC;border-bottom:none;">App content</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-around;background:#fff;border-top:1px solid #EDE5DC;padding:0 4px;height:72px;width:220px;box-shadow:0 -2px 8px rgba(59,47,42,0.08);border-radius:0 0 8px 8px;">
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 8L10 2l7 6v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8z"/>
+              <path d="M7 18V9h4v9"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Home</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="1" y="4" width="18" height="12" rx="2"/><path d="M1 9h18"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Finance</span>
+          </div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:6px;">
+            <div style="width:44px;height:44px;border-radius:50%;background:#3B2F2A;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 10px rgba(59,47,42,0.35),0 2px 4px rgba(59,47,42,0.2);outline:3px solid #fff;outline-offset:1px;position:relative;bottom:2px;">
+              <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10 1a2.5 2.5 0 0 0-2.5 2.5v7a2.5 2.5 0 0 0 5 0V3.5A2.5 2.5 0 0 0 10 1z"/>
+                <path d="M16 8v2a6 6 0 0 1-12 0V8"/>
+                <line x1="10" y1="16" x2="10" y2="19"/>
+                <line x1="7" y1="19" x2="13" y2="19"/>
+              </svg>
+            </div>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;margin-top:2px;">Voice</span>
+          </div>
+          <!-- Alerts with badge -->
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;position:relative;">
+            <div style="position:relative;display:inline-block;">
+              <svg width="20" height="20" fill="none" stroke="#3B2F2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15 7A5 5 0 0 0 5 7c0 6-2.5 7.5-2.5 7.5h15S15 13 15 7"/>
+                <path d="M11.4 18a2 2 0 0 1-3.46 0"/>
+              </svg>
+              <div style="position:absolute;top:-4px;right:-5px;width:16px;height:16px;border-radius:50%;background:#B45B4A;border:2px solid #fff;display:flex;align-items:center;justify-content:center;">
+                <span style="font-size:7px;color:#fff;font-weight:700;line-height:1;">3</span>
+              </div>
+            </div>
+            <span style="font-size:8px;color:#3B2F2A;font-weight:700;">Alerts</span>
+            <div style="width:4px;height:4px;border-radius:50%;background:#C8A96B;"></div>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-bottom:10px;gap:2px;flex:1;">
+            <svg width="20" height="20" fill="none" stroke="#9A8A82" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="10" cy="10" r="2.5"/>
+              <path d="M16.2 12.5a1.4 1.4 0 0 0 .28 1.52l.05.05a1.7 1.7 0 0 1-2.4 2.4l-.05-.05a1.4 1.4 0 0 0-1.52-.28 1.4 1.4 0 0 0-.85 1.28V18a1.7 1.7 0 0 1-3.4 0v-.08a1.4 1.4 0 0 0-.85-1.28 1.4 1.4 0 0 0-1.52.28l-.05.05a1.7 1.7 0 0 1-2.4-2.4l.05-.05a1.4 1.4 0 0 0 .28-1.52 1.4 1.4 0 0 0-1.28-.85H3a1.7 1.7 0 0 1 0-3.4h.08a1.4 1.4 0 0 0 1.28-.85 1.4 1.4 0 0 0-.28-1.52l-.05-.05a1.7 1.7 0 0 1 2.4-2.4l.05.05a1.4 1.4 0 0 0 1.52.28h.06a1.4 1.4 0 0 0 .85-1.28V3a1.7 1.7 0 0 1 3.4 0v.08a1.4 1.4 0 0 0 .85 1.28h.06a1.4 1.4 0 0 0 1.52-.28l.05-.05a1.7 1.7 0 0 1 2.4 2.4l-.05.05a1.4 1.4 0 0 0-.28 1.52v.06a1.4 1.4 0 0 0 1.28.85H18a1.7 1.7 0 0 1 0 3.4h-.08a1.4 1.4 0 0 0-1.28.85z"/>
+            </svg>
+            <span style="font-size:8px;color:#9A8A82;font-weight:500;">Settings</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- State table -->
+  <table class="spec-table">
+    <tr>
+      <th>State</th><th>Icon stroke</th><th>Label color/weight</th><th>Indicator</th><th>Badge</th>
+    </tr>
+    <tr>
+      <td>Inactive (default)</td>
+      <td><span class="token">#9A8A82</span> · 1.8dp stroke</td>
+      <td><span class="token">#9A8A82</span> · 500</td>
+      <td>—</td><td>—</td>
+    </tr>
+    <tr>
+      <td>Active (non-Voice tab)</td>
+      <td><span class="token">#3B2F2A</span> · 2dp stroke</td>
+      <td><span class="token">#3B2F2A</span> · 700</td>
+      <td>4dp dot · <span class="token">#C8A96B</span></td><td>—</td>
+    </tr>
+    <tr>
+      <td>Pressed (non-Voice)</td>
+      <td><span class="token">#3B2F2A</span> · 2dp</td>
+      <td><span class="token">#3B2F2A</span> · 700</td>
+      <td>scale 0.92 · Spring Snappy</td><td>—</td>
+    </tr>
+    <tr>
+      <td>Voice FAB — inactive</td>
+      <td>White on <span class="token">#3B2F2A</span></td>
+      <td><span class="token">#9A8A82</span> · 500</td>
+      <td>—</td><td>—</td>
+    </tr>
+    <tr>
+      <td>Voice FAB — active/listening</td>
+      <td>Deep Brown on <span class="token">#C8A96B</span></td>
+      <td><span class="token">#C8A96B</span> · 700</td>
+      <td>Gold glow pulse (AI Breath spring)</td><td>—</td>
+    </tr>
+    <tr>
+      <td>Alert badge</td>
+      <td>Same as active state</td>
+      <td>Same as active state</td>
+      <td>Active dot</td>
+      <td>16dp circle · <span class="token">#B45B4A</span> · white text 7sp 700 · 2dp white border</td>
+    </tr>
+    <tr>
+      <td>Badge: count &gt; 99</td>
+      <td>Same</td><td>Same</td><td>Same</td>
+      <td>"99+" in badge</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ── SECTION 3: VOICE FAB PRECISION SPEC ── -->
+<div class="section">
+  <div class="section-title">3 · Voice FAB Precision Spec</div>
+  <div class="note">
+    The Voice FAB is the most distinctively specified element. These values must be followed exactly — implementer-adjusted elevation or ring thickness breaks the visual hierarchy.
+  </div>
+  <table class="spec-table">
+    <tr><th>Property</th><th>Value</th><th>Token / Note</th></tr>
+    <tr>
+      <td>FAB diameter</td>
+      <td class="val">56 dp</td>
+      <td>React Native: <span class="token">width: 56, height: 56, borderRadius: 28</span></td>
+    </tr>
+    <tr>
+      <td>FAB elevation (inactive)</td>
+      <td class="val">10 dp</td>
+      <td>RN shadow: <span class="token">elevation: 10</span> (Android) / iOS shadow offset + radius below</td>
+    </tr>
+    <tr>
+      <td>iOS shadow (inactive)</td>
+      <td class="val">offset {0, 4}, radius 10, opacity 0.35, color #3B2F2A</td>
+      <td>+ secondary: offset {0, 2}, radius 4, opacity 0.20</td>
+    </tr>
+    <tr>
+      <td>White ring</td>
+      <td class="val">3 dp border · #FFFFFF · 1 dp offset outward</td>
+      <td>RN: <span class="token">borderWidth: 3, borderColor: '#FFFFFF'</span> on a 62dp wrapper View</td>
+    </tr>
+    <tr>
+      <td>Ring gap</td>
+      <td class="val">1 dp transparent gap between FAB edge and white ring</td>
+      <td>Achieved via wrapper: 62dp diameter with 3dp border. Inner FAB sits centred.</td>
+    </tr>
+    <tr>
+      <td>FAB rise above bar</td>
+      <td class="val">FAB bottom edge = 8 dp above bar bottom; top edge protrudes 4 dp above bar top</td>
+      <td><span class="token">marginBottom: 8</span> on FAB wrapper; bar must not clip overflow</td>
+    </tr>
+    <tr>
+      <td>Icon size</td>
+      <td class="val">24 dp × 24 dp microphone SVG</td>
+      <td>White icon on inactive; Deep Brown icon on active</td>
+    </tr>
+    <tr>
+      <td>Background — inactive</td>
+      <td><span class="swatch" style="background:#3B2F2A;"></span><span class="val">#3B2F2A</span> Deep Brown</td>
+      <td><span class="token">--color-text-primary</span></td>
+    </tr>
+    <tr>
+      <td>Background — active/listening</td>
+      <td><span class="swatch" style="background:#C8A96B;"></span><span class="val">#C8A96B</span> Heritage Gold</td>
+      <td><span class="token">--color-primary</span></td>
+    </tr>
+    <tr>
+      <td>Glow pulse (active)</td>
+      <td class="val">Outer glow: 0 0 16 rgba(200,169,107,0.45) oscillating</td>
+      <td>AI Breath spring (stiffness 80, damping 12, mass 1) — see P51</td>
+    </tr>
+    <tr>
+      <td>Press feedback</td>
+      <td class="val">scale 0.90 → 1.0 · Spring Snappy · Impact Medium haptic</td>
+      <td>Stiffness 400, damping 40, mass 1</td>
+    </tr>
+    <tr>
+      <td>Touch target</td>
+      <td class="val">62 dp (including ring), min 44 dp core</td>
+      <td>62 dp wrapper is sufficient touch target</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ── SECTION 4: TRANSITION TO AI SURFACE ── -->
+<div class="section">
+  <div class="section-title">4 · Voice Tap → AI Conversation Transition</div>
+  <div class="note">
+    Tapping Voice does not navigate to a new screen in the traditional sense — the AI conversation surface rises as a modal sheet, overlaying the current content. The nav bar persists beneath it with the Voice FAB turning gold.
+  </div>
+
+  <div class="flow">
+    <div class="flow-step">
+      <div class="step-num">Step 1 · 0 ms</div>
+      <div class="step-title">Voice tap</div>
+      <div class="step-detail">Impact Medium haptic fires. FAB scale 0.90 (Spring Snappy).</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Step 2 · 30–150 ms</div>
+      <div class="step-title">FAB transitions</div>
+      <div class="step-detail">FAB background: #3B2F2A → #C8A96B (Spring Gentle ~320ms). Icon stroke: white → Deep Brown. Label color: #9A8A82 → #C8A96B.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Step 3 · 0–320 ms</div>
+      <div class="step-title">Sheet rises</div>
+      <div class="step-detail">AI conversation bottom sheet slides up from screen bottom. translateY: screenHeight → 0. Spring Gentle (stiffness 200, damping 28). Bar background: #FFFFFF → #3B2F2A simultaneously.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Step 4 · 320 ms+</div>
+      <div class="step-title">AI Listening</div>
+      <div class="step-detail">AI Core pulse begins (AI Breath spring). Gold glow oscillates on FAB. Impact Light haptic signals listening start.</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">
+      <div class="step-num">Dismiss</div>
+      <div class="step-title">Sheet descends</div>
+      <div class="step-detail">Sheet translateY 0 → screenHeight (Spring Gentle). Nav bar reverts. FAB back to #3B2F2A.</div>
+    </div>
+  </div>
+
+  <div class="rule-box">
+    <div class="rule-label">Bar behavior during AI conversation</div>
+    <ul>
+      <li>Bar background transitions to <strong>#3B2F2A</strong> (Deep Brown) — same as the AI conversation surface, creating a unified dark zone at the bottom.</li>
+      <li>All four non-Voice tab icons and labels use muted color <strong>#7A6A60</strong> — they remain tappable to dismiss AI and jump to that section.</li>
+      <li>Voice FAB ring becomes <strong>3dp #3B2F2A</strong> outline (matches bar background) — FAB still visually "floats" via shadow, ring acts as a separator.</li>
+      <li>Tapping any non-Voice tab while AI sheet is open: sheet dismisses (Spring Gentle) simultaneously with tab navigation.</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── SECTION 5: PRECISE MEASUREMENTS ── -->
+<div class="section">
+  <div class="section-title">5 · Measurements and Token Reference</div>
+  <table class="spec-table">
+    <tr><th>Dimension</th><th>Value</th><th>Note</th></tr>
+    <tr><td>Bar total height</td><td class="val">84 dp</td><td>80 dp visible bar + 4 dp FAB protrusion zone</td></tr>
+    <tr><td>Bar background</td><td><span class="swatch" style="background:#ffffff;border:1px solid #ccc;"></span> <span class="val">#FFFFFF</span></td><td><span class="token">--color-surface</span></td></tr>
+    <tr><td>Bar top border</td><td class="val">1 dp · <span class="swatch" style="background:#EDE5DC;"></span> #EDE5DC</td><td><span class="token">--color-border</span></td></tr>
+    <tr><td>Bar shadow</td><td class="val">0 −2 12 rgba(59,47,42,0.08) upward</td><td>iOS shadowOffset {0, -2}</td></tr>
+    <tr><td>Tab slot width</td><td class="val">flex-1 (~78 dp on 390dp screen)</td><td>Voice slot same flex weight — FAB overflows both directions</td></tr>
+    <tr><td>Tab bottom padding</td><td class="val">12 dp</td><td>Icon+label group sits 12dp above bar bottom</td></tr>
+    <tr><td>Tab icon size</td><td class="val">24 × 24 dp</td><td>2dp stroke weight, round cap/join</td></tr>
+    <tr><td>Tab label size</td><td class="val">9 sp</td><td>Inter 500 (inactive) / Inter 700 (active)</td></tr>
+    <tr><td>Active indicator dot</td><td class="val">4 × 4 dp · border-radius 2 · <span class="swatch" style="background:#C8A96B;"></span> #C8A96B</td><td>Sits below label text, 2dp gap</td></tr>
+    <tr><td>Tab touch target</td><td class="val">44 × 44 dp minimum (centred)</td><td>Extend tap zone with hitSlop if slot is narrow</td></tr>
+    <tr><td>Safe area</td><td class="val">Bar bottom = top of safe area inset</td><td><span class="token">useSafeAreaInsets().bottom</span> — add to bar height on notched devices</td></tr>
+    <tr><td>FAB diameter</td><td class="val">56 dp</td><td>See section 3</td></tr>
+    <tr><td>FAB ring outer diameter</td><td class="val">62 dp (56 + 3 ring + 1 gap each side × ~1.5)</td><td>Implemented as outer wrapper View</td></tr>
+    <tr><td>FAB protrusion</td><td class="val">−4 dp above bar top edge</td><td><span class="token">marginTop: -4</span> on FAB wrapper or absolute positioning</td></tr>
+    <tr><td>Badge diameter</td><td class="val">16 dp</td><td>Max: 18dp if "99+" fits at 7sp</td></tr>
+    <tr><td>Badge position</td><td class="val">Top-right of icon, offset −4dp top, −4dp right</td><td>Absolute positioned over icon container</td></tr>
+    <tr><td>Badge border</td><td class="val">2dp solid #FFFFFF</td><td>Separates badge from icon when icon is dark</td></tr>
+  </table>
+</div>
+
+<!-- ── SECTION 6: DO/DON'T ── -->
+<div class="section">
+  <div class="section-title">6 · Implementation Rules</div>
+  <div class="do-dont">
+    <div class="do-box">
+      <div class="box-label">✓ Do</div>
+      <ul>
+        <li>Use <code>overflow: 'visible'</code> on the nav bar View so FAB is not clipped</li>
+        <li>Add <code>useSafeAreaInsets().bottom</code> to bar height on notched devices</li>
+        <li>Use Spring Snappy (stiffness 400, damping 40) for all tab press animations</li>
+        <li>Keep nav labels to ≤6 characters per locale (including Hindi/Marathi)</li>
+        <li>Gold dot indicator on active tab — visible on both light and AI-dark bar</li>
+        <li>FAB always 56dp; ring always 3dp; never scale these for density</li>
+        <li>Fire Impact Medium haptic on Voice tap; Impact Light on dismiss</li>
+      </ul>
+    </div>
+    <div class="dont-box">
+      <div class="box-label">✗ Don't</div>
+      <ul>
+        <li>Don't clip the FAB — never <code>overflow: 'hidden'</code> on the bar container</li>
+        <li>Don't place the nav bar inside a ScrollView — it must stay fixed</li>
+        <li>Don't animate tab label text — only icon and dot transition</li>
+        <li>Don't stack label below dot — dot is always last element in column</li>
+        <li>Don't use a full navigation push for Voice — it's a bottom sheet modal</li>
+        <li>Don't reduce FAB diameter on small screens — it's a fixed 56dp</li>
+        <li>Don't show more than 1 badge per tab — one tab, one count</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Hindi nav labels -->
+  <div class="rule-box">
+    <div class="rule-label">Hindi/Marathi label max-length rule</div>
+    <table class="spec-table" style="margin:0;">
+      <tr><th>Tab</th><th>English</th><th>Hindi</th><th>Marathi</th><th>Char check</th></tr>
+      <tr><td>Home</td><td>Home</td><td>होम</td><td>होम</td><td class="val">≤6 ✓</td></tr>
+      <tr><td>Finance</td><td>Finance</td><td>वित्त</td><td>वित्त</td><td class="val">≤6 ✓</td></tr>
+      <tr><td>Voice</td><td>Voice</td><td>आवाज़</td><td>आवाज</td><td class="val">≤6 ✓</td></tr>
+      <tr><td>Alerts</td><td>Alerts</td><td>सूचनाएं</td><td>सूचना</td><td class="val">≤6 ✓</td></tr>
+      <tr><td>Settings</td><td>Settings</td><td>सेटिंग</td><td>सेटिंग</td><td class="val">≤6 ✓</td></tr>
+    </table>
+  </div>
+</div>
+
+</body>
+</html>

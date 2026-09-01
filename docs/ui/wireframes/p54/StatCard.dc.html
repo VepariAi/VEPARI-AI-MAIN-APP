@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stat Card with Trend Indicator — P54</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 860px;
+    background: #FAF7F2;
+    color: #3B2F2A;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    padding: 40px;
+  }
+
+  .page-header { margin-bottom: 40px; border-bottom: 2px solid #C8A96B; padding-bottom: 20px; }
+  .page-header h1 { font-size: 22px; font-weight: 700; color: #3B2F2A; }
+  .page-header .meta { font-size: 12px; color: #7A6A60; margin-top: 4px; }
+  .page-header .dep { font-size: 12px; color: #5A6B4F; font-weight: 600; margin-top: 2px; }
+
+  .section { margin-bottom: 48px; }
+  .section-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #7A6A60; margin-bottom: 16px;
+    padding-bottom: 6px; border-bottom: 1px solid #E8DDD0;
+  }
+  .note {
+    background: #F2E8D6; border-left: 3px solid #C8A96B;
+    padding: 10px 14px; border-radius: 4px; font-size: 12px;
+    color: #3B2F2A; margin-bottom: 16px; line-height: 1.6;
+  }
+  .warn {
+    background: #FFF8E7; border-left: 3px solid #B45B4A;
+    padding: 10px 14px; border-radius: 4px; font-size: 12px;
+    color: #3B2F2A; margin-bottom: 16px; line-height: 1.6;
+  }
+
+  /* ── Stat cards ── */
+  .card-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+
+  .stat-card {
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E8DDD0;
+    padding: 16px 18px;
+    width: 230px;
+    box-shadow: 0 2px 8px rgba(59,47,42,0.07);
+  }
+  .stat-card .card-label {
+    font-size: 11px; font-weight: 600; color: #7A6A60;
+    text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px;
+  }
+  .stat-card .card-value {
+    font-size: 24px; font-weight: 700; color: #3B2F2A;
+    letter-spacing: -0.02em; margin-bottom: 8px; line-height: 1;
+  }
+  .stat-card .card-trend {
+    display: flex; align-items: center; gap: 5px;
+    font-size: 12px; font-weight: 600;
+  }
+  .trend-icon {
+    width: 16px; height: 16px; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: 4px; flex-shrink: 0;
+  }
+  .trend-up { color: #5A6B4F; }
+  .trend-down { color: #B45B4A; }
+  .trend-neutral { color: #7A6A60; }
+  .trend-label { font-size: 11px; }
+  .trend-period { font-size: 11px; color: #9A8A82; margin-left: 2px; }
+
+  /* ── Grayscale simulation ── */
+  .grayscale-row { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 16px; }
+  .grayscale-card {
+    filter: grayscale(100%);
+    background: #FFFFFF;
+    border-radius: 12px;
+    border: 1px solid #E8DDD0;
+    padding: 16px 18px;
+    width: 230px;
+    box-shadow: 0 2px 8px rgba(59,47,42,0.07);
+  }
+  .grayscale-label {
+    font-size: 11px; color: #9A8A82; font-style: italic; margin-bottom: 8px;
+    text-align: center;
+  }
+
+  /* ── Spec table ── */
+  .spec-table { width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 12px; }
+  .spec-table th {
+    background: #F2E8D6; font-weight: 700; text-align: left;
+    padding: 8px 12px; border: 1px solid #E0D4C4; color: #3B2F2A;
+  }
+  .spec-table td {
+    padding: 7px 12px; border: 1px solid #EDE5DC;
+    vertical-align: top; line-height: 1.5;
+  }
+  .spec-table tr:nth-child(even) td { background: #FAF7F2; }
+  .token { font-family: 'Courier New', monospace; font-size: 11px; color: #5A6B4F; }
+  .val { font-weight: 600; color: #3B2F2A; }
+
+  .swatch {
+    display: inline-block; width: 12px; height: 12px; border-radius: 2px;
+    border: 1px solid rgba(0,0,0,0.15); vertical-align: middle; margin-right: 4px;
+  }
+
+  /* ── Anatomy labels ── */
+  .anatomy-wrap { display: flex; gap: 40px; align-items: flex-start; margin-bottom: 20px; }
+  .callout-list { list-style: none; margin: 0; padding: 0; font-size: 12px; flex: 1; }
+  .callout-list li { margin-bottom: 8px; padding-left: 16px; position: relative; }
+  .callout-list li::before { content: "→"; position: absolute; left: 0; color: #C8A96B; font-weight: 700; }
+
+  /* Do/Don't */
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .do-box { background: #F0F8F0; border: 1px solid #5A6B4F; border-radius: 8px; padding: 14px; }
+  .dont-box { background: #FFF0EF; border: 1px solid #B45B4A; border-radius: 8px; padding: 14px; }
+  .do-box .box-label { font-size: 11px; font-weight: 700; color: #5A6B4F; margin-bottom: 8px; }
+  .dont-box .box-label { font-size: 11px; font-weight: 700; color: #B45B4A; margin-bottom: 8px; }
+  .do-box li, .dont-box li { font-size: 12px; margin-bottom: 4px; }
+
+  /* Accessibility badge */
+  .a11y-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: #5A6B4F; color: #fff; font-size: 10px; font-weight: 700;
+    border-radius: 4px; padding: 2px 7px; vertical-align: middle;
+  }
+
+  /* Compact state card for variant grid */
+  .variant-grid { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+  .variant-cell { text-align: center; }
+  .variant-cell .v-label { font-size: 10px; color: #7A6A60; margin-bottom: 6px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+</style>
+</head>
+<body>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <h1>Stat Card with Trend Indicator <span class="a11y-badge">WCAG AA Accessible</span></h1>
+  <div class="meta">Prompt 54 · Phase 5 · Design Spec · 860 px reference document</div>
+  <div class="dep">Depends on: Prompt 46 (color tokens), Prompt 47 (spacing/elevation), Prompt 48 (component spec). References: Master §22, UI-UX §146–147.</div>
+</div>
+
+<div class="note">
+  <strong>Core accessibility rule:</strong> Status is never conveyed by color alone. Every up/down indicator pairs three independent cues — (1) a directional icon, (2) a percentage/absolute change label, and (3) a text label. The card passes a grayscale test: meaning is fully clear with all color removed.
+</div>
+
+<!-- ── SECTION 1: THREE VARIANTS FULL COLOR ── -->
+<div class="section">
+  <div class="section-title">1 · Component Variants — Full Color</div>
+  <div class="card-row">
+
+    <!-- Revenue — Up -->
+    <div>
+      <div style="font-size:10px;color:#7A6A60;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-align:center;margin-bottom:6px;">Revenue — Up</div>
+      <div class="stat-card">
+        <div class="card-label">Revenue</div>
+        <div class="card-value">₹8.4L</div>
+        <div class="card-trend trend-up">
+          <!-- Up arrow icon -->
+          <div class="trend-icon" style="background:#EAF2E8;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 8V2M5 2L2 5M5 2L8 5" stroke="#5A6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="color:#5A6B4F;">+12.4%</span>
+          <span class="trend-period">vs last month</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Expenses — Down (unfavorable) -->
+    <div>
+      <div style="font-size:10px;color:#7A6A60;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-align:center;margin-bottom:6px;">Expenses — Down</div>
+      <div class="stat-card">
+        <div class="card-label">Expenses</div>
+        <div class="card-value">₹3.2L</div>
+        <div class="card-trend trend-down">
+          <div class="trend-icon" style="background:#FDECEA;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 2V8M5 8L2 5M5 8L8 5" stroke="#B45B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="color:#B45B4A;">+8.1%</span>
+          <span class="trend-period">vs last month</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profit — Up (favorable) -->
+    <div>
+      <div style="font-size:10px;color:#7A6A60;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-align:center;margin-bottom:6px;">Profit — Up</div>
+      <div class="stat-card">
+        <div class="card-label">Net Profit</div>
+        <div class="card-value">₹5.2L</div>
+        <div class="card-trend trend-up">
+          <div class="trend-icon" style="background:#EAF2E8;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 8V2M5 2L2 5M5 2L8 5" stroke="#5A6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="color:#5A6B4F;">+18.3%</span>
+          <span class="trend-period">vs last month</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="card-row">
+    <!-- Expenses — Down (favorable — costs went down) -->
+    <div>
+      <div style="font-size:10px;color:#7A6A60;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-align:center;margin-bottom:6px;">Expenses — Down (favorable)</div>
+      <div class="stat-card">
+        <div class="card-label">Expenses</div>
+        <div class="card-value">₹2.8L</div>
+        <div class="card-trend trend-up">
+          <div class="trend-icon" style="background:#EAF2E8;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 2V8M5 8L2 5M5 8L8 5" stroke="#5A6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="color:#5A6B4F;">−11.5%</span>
+          <span class="trend-period">vs last month</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Revenue — No change -->
+    <div>
+      <div style="font-size:10px;color:#7A6A60;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-align:center;margin-bottom:6px;">Revenue — No change</div>
+      <div class="stat-card">
+        <div class="card-label">Revenue</div>
+        <div class="card-value">₹7.5L</div>
+        <div class="card-trend trend-neutral">
+          <div class="trend-icon" style="background:#F2E8D6;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M2 5h6" stroke="#7A6A60" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <span style="color:#7A6A60;">0.0%</span>
+          <span class="trend-period">vs last month</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profit — Down -->
+    <div>
+      <div style="font-size:10px;color:#7A6A60;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;text-align:center;margin-bottom:6px;">Profit — Down</div>
+      <div class="stat-card">
+        <div class="card-label">Net Profit</div>
+        <div class="card-value">₹4.1L</div>
+        <div class="card-trend trend-down">
+          <div class="trend-icon" style="background:#FDECEA;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 2V8M5 8L2 5M5 8L8 5" stroke="#B45B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span style="color:#B45B4A;">−21.2%</span>
+          <span class="trend-period">vs last month</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 2: GRAYSCALE TEST ── -->
+<div class="section">
+  <div class="section-title">2 · Grayscale Test — Color Removed</div>
+  <div class="warn">
+    <strong>Accessibility requirement (Master §22, UI-UX §146):</strong> These are the same three cards with <code>filter: grayscale(100%)</code> applied. An implementer looking only at this row must be able to distinguish Revenue up, Expenses up (unfavorable), and Profit up without any color information. The icon direction, percentage sign, and label provide three independent cues.
+  </div>
+
+  <div class="grayscale-row">
+    <div>
+      <div class="grayscale-label">Revenue — Up (grayscale)</div>
+      <div class="grayscale-card">
+        <div style="font-size:11px;font-weight:600;color:#7A6A60;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Revenue</div>
+        <div style="font-size:24px;font-weight:700;color:#3B2F2A;letter-spacing:-0.02em;margin-bottom:8px;line-height:1;">₹8.4L</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#5A6B4F;">
+          <div style="width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;background:#EAF2E8;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 8V2M5 2L2 5M5 2L8 5" stroke="#5A6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span>+12.4%</span>
+          <span style="font-size:11px;color:#9A8A82;">vs last month</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="grayscale-label">Expenses — Up (grayscale)</div>
+      <div class="grayscale-card">
+        <div style="font-size:11px;font-weight:600;color:#7A6A60;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Expenses</div>
+        <div style="font-size:24px;font-weight:700;color:#3B2F2A;letter-spacing:-0.02em;margin-bottom:8px;line-height:1;">₹3.2L</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#B45B4A;">
+          <div style="width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;background:#FDECEA;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 2V8M5 8L2 5M5 8L8 5" stroke="#B45B4A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span>+8.1%</span>
+          <span style="font-size:11px;color:#9A8A82;">vs last month</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="grayscale-label">Profit — Up (grayscale)</div>
+      <div class="grayscale-card">
+        <div style="font-size:11px;font-weight:600;color:#7A6A60;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Net Profit</div>
+        <div style="font-size:24px;font-weight:700;color:#3B2F2A;letter-spacing:-0.02em;margin-bottom:8px;line-height:1;">₹5.2L</div>
+        <div style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:600;color:#5A6B4F;">
+          <div style="width:16px;height:16px;display:inline-flex;align-items:center;justify-content:center;border-radius:4px;background:#EAF2E8;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <path d="M5 8V2M5 2L2 5M5 2L8 5" stroke="#5A6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span>+18.3%</span>
+          <span style="font-size:11px;color:#9A8A82;">vs last month</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note">
+    <strong>Grayscale result:</strong> The arrow direction (↑ vs ↓), plus-or-minus sign on the percentage, and the card label (Revenue / Expenses / Net Profit) together distinguish all six states without any color information. The icon background box desaturates to light gray vs. slightly lighter gray — sufficient contrast still exists between icon background and icon stroke. <strong>Test passes.</strong>
+  </div>
+</div>
+
+<!-- ── SECTION 3: ANATOMY AND SPEC ── -->
+<div class="section">
+  <div class="section-title">3 · Component Anatomy</div>
+
+  <div class="anatomy-wrap">
+    <!-- Annotated card -->
+    <div>
+      <div style="position:relative;display:inline-block;">
+        <div class="stat-card" style="width:240px;position:relative;">
+          <div class="card-label">Revenue</div>
+          <div class="card-value">₹8.4L</div>
+          <div class="card-trend trend-up">
+            <div class="trend-icon" style="background:#EAF2E8;">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                <path d="M5 8V2M5 2L2 5M5 2L8 5" stroke="#5A6B4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <span style="color:#5A6B4F;">+12.4%</span>
+            <span class="trend-period">vs last month</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ul class="callout-list">
+      <li><strong>A — Card container:</strong> 230dp wide (mobile: flex-1 in 3-col row). 12dp border-radius. 16/18dp padding. 1dp border #E8DDD0. Shadow 0 2 8 rgba(59,47,42,0.07). Background #FFFFFF.</li>
+      <li><strong>B — Metric label:</strong> 11sp · 600 weight · #7A6A60 · uppercase · letter-spacing 0.05em. Contextual name of the KPI.</li>
+      <li><strong>C — Value:</strong> 24sp · 700 weight · #3B2F2A · letter-spacing −0.02em. Indian rupee format — lakh (L) / crore (Cr) abbreviation per P52 rules.</li>
+      <li><strong>D — Trend row:</strong> flex row, 5dp gap, center-aligned. Contains icon badge + percentage label + period.</li>
+      <li><strong>E — Icon badge:</strong> 16×16dp · 4dp border-radius · tinted background (up: #EAF2E8, down: #FDECEA, neutral: #F2E8D6). 10×10dp directional arrow SVG inside. 1.5dp stroke, round caps.</li>
+      <li><strong>F — Percentage label:</strong> 12sp · 600 weight · directional color (up: #5A6B4F, down: #B45B4A, neutral: #7A6A60). Sign always explicit: +/− prefix. Negative uses U+2212 (−).</li>
+      <li><strong>G — Period label:</strong> 11sp · 400 weight · #9A8A82. "vs last month" / "vs last year" / "vs last week".</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ── SECTION 4: TREND LOGIC TABLE ── -->
+<div class="section">
+  <div class="section-title">4 · Trend Color and Icon Logic</div>
+
+  <div class="note">
+    The trend indicator encodes <em>two</em> independently varying things: (1) <strong>direction</strong> (value went up or down) and (2) <strong>valence</strong> (is this good or bad?). For Revenue and Profit, up=good. For Expenses, down=good. The component uses the same icon direction as the actual movement — it does NOT flip the arrow to represent "good/bad". Color encodes valence (green=favorable, red=unfavorable) and the label text adds a semantic layer.
+  </div>
+
+  <table class="spec-table">
+    <tr>
+      <th>Metric</th>
+      <th>Direction</th>
+      <th>Valence</th>
+      <th>Icon</th>
+      <th>Icon bg</th>
+      <th>Text color</th>
+      <th>Example label</th>
+    </tr>
+    <tr>
+      <td>Revenue</td>
+      <td>↑ Up</td>
+      <td>Favorable</td>
+      <td>↑ Arrow</td>
+      <td><span class="swatch" style="background:#EAF2E8;"></span>#EAF2E8</td>
+      <td><span class="swatch" style="background:#5A6B4F;"></span>#5A6B4F Olive</td>
+      <td>+12.4% vs last month</td>
+    </tr>
+    <tr>
+      <td>Revenue</td>
+      <td>↓ Down</td>
+      <td>Unfavorable</td>
+      <td>↓ Arrow</td>
+      <td><span class="swatch" style="background:#FDECEA;"></span>#FDECEA</td>
+      <td><span class="swatch" style="background:#B45B4A;"></span>#B45B4A Terracotta</td>
+      <td>−8.2% vs last month</td>
+    </tr>
+    <tr>
+      <td>Expenses</td>
+      <td>↑ Up (costs rose)</td>
+      <td>Unfavorable</td>
+      <td>↑ Arrow</td>
+      <td><span class="swatch" style="background:#FDECEA;"></span>#FDECEA</td>
+      <td><span class="swatch" style="background:#B45B4A;"></span>#B45B4A Terracotta</td>
+      <td>+8.1% vs last month</td>
+    </tr>
+    <tr>
+      <td>Expenses</td>
+      <td>↓ Down (costs fell)</td>
+      <td>Favorable</td>
+      <td>↓ Arrow</td>
+      <td><span class="swatch" style="background:#EAF2E8;"></span>#EAF2E8</td>
+      <td><span class="swatch" style="background:#5A6B4F;"></span>#5A6B4F Olive</td>
+      <td>−11.5% vs last month</td>
+    </tr>
+    <tr>
+      <td>Profit</td>
+      <td>↑ Up</td>
+      <td>Favorable</td>
+      <td>↑ Arrow</td>
+      <td><span class="swatch" style="background:#EAF2E8;"></span>#EAF2E8</td>
+      <td><span class="swatch" style="background:#5A6B4F;"></span>#5A6B4F Olive</td>
+      <td>+18.3% vs last month</td>
+    </tr>
+    <tr>
+      <td>Profit</td>
+      <td>↓ Down</td>
+      <td>Unfavorable</td>
+      <td>↓ Arrow</td>
+      <td><span class="swatch" style="background:#FDECEA;"></span>#FDECEA</td>
+      <td><span class="swatch" style="background:#B45B4A;"></span>#B45B4A Terracotta</td>
+      <td>−21.2% vs last month</td>
+    </tr>
+    <tr>
+      <td>Any</td>
+      <td>→ No change</td>
+      <td>Neutral</td>
+      <td>— Dash</td>
+      <td><span class="swatch" style="background:#F2E8D6;"></span>#F2E8D6</td>
+      <td><span class="swatch" style="background:#7A6A60;"></span>#7A6A60</td>
+      <td>0.0% vs last month</td>
+    </tr>
+  </table>
+
+  <div class="note">
+    <strong>Expenses valence logic:</strong> Expenses going up is unfavorable (red). Expenses going down is favorable (green). The component receives a <code>direction</code> ("up"/"down"/"neutral") and a <code>valence</code> ("favorable"/"unfavorable"/"neutral") as separate props — never infer valence from direction alone, since it differs by metric type. The caller (e.g. Finance screen) supplies both based on business context.
+  </div>
+</div>
+
+<!-- ── SECTION 5: TOKEN REFERENCE ── -->
+<div class="section">
+  <div class="section-title">5 · Token and Implementation Reference</div>
+  <table class="spec-table">
+    <tr><th>Property</th><th>Value</th><th>Token</th></tr>
+    <tr><td>Card background</td><td><span class="swatch" style="background:#fff;border:1px solid #ccc;"></span>#FFFFFF</td><td><span class="token">--color-surface</span></td></tr>
+    <tr><td>Card border</td><td>1dp · #E8DDD0</td><td><span class="token">--color-border</span></td></tr>
+    <tr><td>Card border-radius</td><td>12dp</td><td><span class="token">--radius-lg</span></td></tr>
+    <tr><td>Card shadow</td><td>0 2 8 rgba(59,47,42,0.07)</td><td>Elevation Surface (P47)</td></tr>
+    <tr><td>Card padding</td><td>16dp vertical · 18dp horizontal</td><td><span class="token">--card-padding</span></td></tr>
+    <tr><td>Metric label</td><td>11sp · 600 · #7A6A60 · uppercase</td><td><span class="token">--type-overline</span></td></tr>
+    <tr><td>Value text</td><td>24sp · 700 · #3B2F2A · kern −0.02em</td><td><span class="token">--type-display-sm</span></td></tr>
+    <tr><td>Percentage text</td><td>12sp · 600</td><td><span class="token">--type-label</span></td></tr>
+    <tr><td>Period text</td><td>11sp · 400 · #9A8A82</td><td><span class="token">--type-caption</span></td></tr>
+    <tr><td>Up color</td><td><span class="swatch" style="background:#5A6B4F;"></span>#5A6B4F</td><td><span class="token">--color-success</span> (Olive Green)</td></tr>
+    <tr><td>Down (unfavorable) color</td><td><span class="swatch" style="background:#B45B4A;"></span>#B45B4A</td><td><span class="token">--color-error</span> (Terracotta)</td></tr>
+    <tr><td>Neutral color</td><td><span class="swatch" style="background:#7A6A60;"></span>#7A6A60</td><td><span class="token">--color-text-secondary</span></td></tr>
+    <tr><td>Favorable icon bg</td><td><span class="swatch" style="background:#EAF2E8;"></span>#EAF2E8</td><td><span class="token">--color-success-surface</span></td></tr>
+    <tr><td>Unfavorable icon bg</td><td><span class="swatch" style="background:#FDECEA;"></span>#FDECEA</td><td><span class="token">--color-error-surface</span></td></tr>
+    <tr><td>Neutral icon bg</td><td><span class="swatch" style="background:#F2E8D6;"></span>#F2E8D6</td><td><span class="token">--color-warning-surface</span> (Warm Beige)</td></tr>
+    <tr><td>Icon badge size</td><td>16 × 16dp · border-radius 4dp</td><td>Compact badge — not the standard Badge component</td></tr>
+    <tr><td>Icon SVG size</td><td>10 × 10dp · 1.5dp stroke · round cap/join</td><td>Directional arrow (↑/↓) or dash (—)</td></tr>
+    <tr><td>Screen layout</td><td>3 cards in a row on Finance Overview, flex equal width</td><td>Horizontal scroll if screen &lt;360dp</td></tr>
+  </table>
+</div>
+
+<!-- ── SECTION 6: DO/DON'T ── -->
+<div class="section">
+  <div class="section-title">6 · Implementation Rules</div>
+  <div class="do-dont">
+    <div class="do-box">
+      <div class="box-label">✓ Do</div>
+      <ul>
+        <li>Always include the directional icon — never percentage label alone</li>
+        <li>Always include the percentage/amount change — never icon alone</li>
+        <li>Use explicit +/− prefix on percentage (never rely on color for sign)</li>
+        <li>Receive <code>direction</code> and <code>valence</code> as separate props</li>
+        <li>Show "vs last month" period label — user must know the comparison period</li>
+        <li>Format value in lakh/crore abbreviations per P52: ₹8.4L, ₹1.2Cr</li>
+        <li>Use U+2212 (−) for minus, not ASCII hyphen-minus (−)</li>
+        <li>Test each new card variant in grayscale before shipping</li>
+      </ul>
+    </div>
+    <div class="dont-box">
+      <div class="box-label">✗ Don't</div>
+      <ul>
+        <li>Don't use color as the only indicator of trend direction</li>
+        <li>Don't infer valence from direction — Expenses down is favorable</li>
+        <li>Don't truncate the metric value — resize font before truncating (min 16sp)</li>
+        <li>Don't use green/red without the icon and label (fails grayscale)</li>
+        <li>Don't show a plain percentage without the +/− sign</li>
+        <li>Don't display Devanagari digits for the value — always Latin 0–9</li>
+        <li>Don't use a filled arrow icon — outline/stroke arrows only (less aggressive)</li>
+        <li>Don't omit the period label — "12.4%" alone is ambiguous</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ── SECTION 7: REACT NATIVE PROPS INTERFACE ── -->
+<div class="section">
+  <div class="section-title">7 · Component Props Interface (Reference)</div>
+  <div style="background:#fff;border:1px solid #E0D4C4;border-radius:8px;padding:16px;font-family:'Courier New',monospace;font-size:12px;line-height:1.7;overflow-x:auto;">
+<pre style="margin:0;white-space:pre;">interface StatCardProps {
+  label: string;           // "Revenue" | "Expenses" | "Net Profit"
+  value: string;           // Pre-formatted: "₹8.4L", "₹1.2Cr"
+  direction: 'up' | 'down' | 'neutral';  // Actual movement
+  valence: 'favorable' | 'unfavorable' | 'neutral'; // Context meaning
+  changePercent: number;   // e.g. 12.4 (negative = decrease)
+  period: string;          // "vs last month" | "vs last year" | "vs last week"
+  onPress?: () => void;    // Navigate to Finance drill-down
+}
+
+// Derived in component:
+// iconBg = valence === 'favorable' ? '#EAF2E8'
+//        : valence === 'unfavorable' ? '#FDECEA' : '#F2E8D6'
+// textColor = valence === 'favorable' ? '#5A6B4F'
+//           : valence === 'unfavorable' ? '#B45B4A' : '#7A6A60'
+// sign = changePercent > 0 ? '+' : changePercent < 0 ? '−' : ''</pre>
+  </div>
+</div>
+
+</body>
+</html>
