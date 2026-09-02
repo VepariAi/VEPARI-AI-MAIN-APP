@@ -371,6 +371,131 @@ html,body{
 #srp .rname{font-size:13px;font-weight:500;color:var(--brown);}
 #srp .rmeta{font-size:11px;color:var(--muted);margin-top:2px;}
 #srp .rarr{font-size:16px;color:var(--dim);}
+
+/* ══════════════════════════════
+   SCREEN 12: RETURNING USER LOCK
+══════════════════════════════ */
+#srl{background:var(--brown);color:var(--ivory);}
+#srl .sb{color:rgba(250,247,242,.5);}
+#srl .rl-welcome{text-align:center;padding:32px 20px 16px;font-size:22px;font-weight:700;color:var(--ivory);}
+#srl .rl-sub{text-align:center;font-size:13px;color:rgba(250,247,242,.5);margin-bottom:32px;}
+#srl .rl-pin-dots{display:flex;gap:16px;justify-content:center;margin-bottom:40px;}
+#srl .rl-pd{width:18px;height:18px;border-radius:50%;border:2px solid rgba(250,247,242,.3);background:transparent;}
+#srl .rl-pd.filled{background:var(--gold);border-color:var(--gold);}
+#srl .rl-numpad{width:100%;max-width:320px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px;margin-bottom:20px;}
+#srl .rl-nk{height:70px;background:rgba(250,247,242,.07);border:1.5px solid rgba(250,247,242,.12);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;}
+#srl .rl-nk .digit{font-size:24px;font-weight:600;color:var(--ivory);line-height:1;}
+#srl .rl-nk .letters{font-size:9px;letter-spacing:1px;color:rgba(250,247,242,.4);margin-top:2px;}
+#srl .rl-nk.empty{background:transparent;border:none;}
+#srl .rl-nk.del{background:transparent;border:1.5px solid transparent;}
+#srl .rl-nk.del .digit{font-size:18px;color:rgba(250,247,242,.5);}
+#srl .rl-bio{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px;color:rgba(250,247,242,.4);padding-bottom:20px;cursor:pointer;}
+
+/* ══════════════════════════════
+   SCREEN 13: AI OS AWAKENING
+══════════════════════════════ */
+#sao{background:var(--ivory);}
+#sao .aw-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;}
+#sao .aw-ring{width:200px;height:200px;margin-bottom:24px;}
+#sao .aw-title{font-size:20px;font-weight:700;color:var(--brown);margin-bottom:8px;text-align:center;}
+#sao .aw-sub{font-size:13px;color:var(--muted);margin-bottom:28px;text-align:center;}
+#sao .aw-dots{display:flex;gap:8px;align-items:center;}
+#sao .aw-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
+@keyframes awPulse{0%,100%{opacity:.3;transform:scale(.95)}50%{opacity:.9;transform:scale(1.03)}}
+#sao .aw-ring svg{animation:awPulse 1.8s ease-in-out infinite;}
+
+/* ══════════════════════════════
+   SCREEN 14: VOICE OFFLINE
+══════════════════════════════ */
+#svo .vo-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;text-align:center;}
+#svo .vo-icon{font-size:64px;margin-bottom:20px;}
+#svo .vo-title{font-size:22px;font-weight:700;color:var(--brown);margin-bottom:8px;}
+#svo .vo-sub{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:28px;}
+#svo .vo-input{width:100%;height:48px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:0 16px;font-size:14px;color:var(--muted);display:flex;align-items:center;margin-bottom:20px;gap:8px;}
+#svo .vo-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+#svo .vo-chip{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:7px 12px;font-size:12px;color:var(--muted);}
+
+/* ══════════════════════════════
+   SCREEN 15: AI CHAT / ANSWER
+══════════════════════════════ */
+#schat .chat-body{flex:1;overflow:hidden;padding:16px 20px;display:flex;flex-direction:column;gap:16px;}
+#schat .user-bubble{align-self:flex-end;background:var(--brown);color:var(--ivory);border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:14px;max-width:80%;line-height:1.4;}
+#schat .ai-card{background:linear-gradient(135deg,#3B2F2A 0%,#4A3D6B 100%);border-radius:16px;padding:16px;}
+#schat .ai-ey{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+#schat .ai-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+#schat .ai-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(200,169,107,.8);}
+#schat .stat-row{display:flex;gap:10px;margin-bottom:12px;}
+#schat .stat-tile{flex:1;background:rgba(250,247,242,.08);border-radius:10px;padding:10px;}
+#schat .stat-val{font-size:18px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
+#schat .stat-lbl{font-size:10px;color:rgba(250,247,242,.6);margin-top:2px;}
+#schat .stat-chg{font-size:10px;font-weight:600;color:rgba(90,107,79,.9);margin-top:2px;}
+#schat .ai-bullets{display:flex;flex-direction:column;gap:6px;}
+#schat .ai-bi{display:flex;gap:8px;align-items:flex-start;}
+#schat .ai-bico{color:var(--gold);font-size:11px;font-weight:700;margin-top:1px;}
+#schat .ai-bt{font-size:12px;color:rgba(250,247,242,.8);line-height:1.4;}
+#schat .ai-bt strong{color:var(--ivory);}
+#schat .chat-actions{display:flex;gap:10px;padding:0 20px 20px;}
+#schat .ca-ghost{flex:1;height:48px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+#schat .ca-gold{flex:1.4;height:48px;background:var(--gold);border-radius:10px;font-size:13px;font-weight:700;color:var(--brown);display:flex;align-items:center;justify-content:center;cursor:pointer;gap:6px;}
+
+/* ══════════════════════════════
+   SCREEN 16: ACTION APPROVAL
+══════════════════════════════ */
+#sapc .apc-body{flex:1;overflow:hidden;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+#sapc .apc-card{background:linear-gradient(135deg,#3B2F2A 0%,#4A3D6B 100%);border-radius:16px;padding:18px;}
+#sapc .apc-ey{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+#sapc .apc-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+#sapc .apc-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(200,169,107,.8);}
+#sapc .apc-action{font-size:16px;font-weight:700;color:var(--ivory);line-height:1.3;margin-bottom:6px;}
+#sapc .apc-detail{font-size:13px;color:rgba(250,247,242,.6);}
+#sapc .apc-records{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;}
+#sapc .apc-rec-hdr{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+#sapc .apc-rec{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #F5EFE6;}
+#sapc .apc-rec:last-child{border-bottom:none;padding-bottom:0;}
+#sapc .apc-ri{width:28px;height:28px;background:rgba(200,169,107,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+#sapc .apc-rname{font-size:13px;font-weight:500;color:var(--brown);}
+#sapc .apc-rmeta{font-size:11px;color:var(--muted);margin-top:1px;}
+#sapc .apc-impact{background:rgba(90,107,79,.08);border:1px solid rgba(90,107,79,.25);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+#sapc .apc-impact-ico{font-size:18px;}
+#sapc .apc-impact-txt{font-size:12px;color:var(--olive);line-height:1.4;}
+#sapc .apc-impact-txt strong{font-weight:700;}
+#sapc .apc-btns{display:flex;flex-direction:column;gap:8px;padding:0 20px 20px;}
+#sapc .approve-btn{height:52px;background:var(--gold);border-radius:12px;font-size:15px;font-weight:700;color:var(--brown);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;}
+#sapc .decline-btn{height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* ══════════════════════════════
+   SCREEN 17: ACTION CONFIRMED
+══════════════════════════════ */
+#sack{background:var(--ivory);}
+#sack .ack-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px 40px;text-align:center;}
+#sack .ack-ring{width:120px;height:120px;margin-bottom:24px;}
+#sack .ack-title{font-size:24px;font-weight:700;color:var(--brown);margin-bottom:8px;}
+#sack .ack-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5;}
+#sack .ack-summary{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:16px;text-align:left;margin-bottom:28px;}
+#sack .ack-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px solid #F5EFE6;}
+#sack .ack-row:last-child{border-bottom:none;}
+#sack .ack-k{color:var(--muted);}
+#sack .ack-v{font-weight:600;color:var(--brown);}
+#sack .ack-btn{width:100%;height:52px;background:var(--brown);color:var(--ivory);border-radius:12px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* ══════════════════════════════
+   SCREEN 18: SYNC CONFLICT
+══════════════════════════════ */
+#sconf .conf-body{flex:1;overflow:hidden;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+#sconf .conf-warn{background:rgba(180,91,74,.08);border:1px solid rgba(180,91,74,.3);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;}
+#sconf .conf-warn-ico{font-size:20px;}
+#sconf .conf-warn-txt{font-size:13px;font-weight:600;color:var(--terra);line-height:1.4;}
+#sconf .conf-ver{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;border-left:4px solid var(--terra);}
+#sconf .conf-ver.srv{border-left-color:var(--olive);}
+#sconf .conf-ver-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+#sconf .conf-ver-ttl{font-size:12px;font-weight:700;color:var(--brown);}
+#sconf .conf-ver-ts{font-size:10px;color:var(--muted);}
+#sconf .conf-ver-val{font-size:14px;color:var(--muted);line-height:1.4;}
+#sconf .conf-ver-val strong{color:var(--brown);}
+#sconf .conf-btns{padding:0 20px 20px;display:flex;flex-direction:column;gap:8px;}
+#sconf .conf-keep{height:52px;background:var(--gold);border-radius:12px;font-size:15px;font-weight:700;color:var(--brown);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+#sconf .conf-srv{height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+#sconf .conf-link{text-align:center;font-size:12px;color:var(--dim);padding-bottom:8px;cursor:pointer;}
 </style>
 
 <!-- ════════════════════════════════════════════
@@ -378,8 +503,9 @@ html,body{
 ════════════════════════════════════════════ -->
 <div class="proto-bar">
   <div class="proto-label">VEPARI AI</div>
-  <div class="proto-badge">P76 · Interactive Prototype</div>
-  <div class="proto-label">Phase 7</div>
+  <div class="proto-badge" style="cursor:pointer;border-color:rgba(200,169,107,.5);" onclick="go('ss')">New User</div>
+  <div class="proto-badge">P76 · Phase 7</div>
+  <div class="proto-badge" style="cursor:pointer;border-color:rgba(200,169,107,.5);" onclick="go('srl')">Returning User</div>
 </div>
 
 <div class="phone-frame">
@@ -671,6 +797,7 @@ html,body{
     <div class="gr-text">Good morning, Sharma ji 🙏</div>
     <div class="notif-btn">🔔</div>
   </div>
+  <div style="margin:6px 20px 0;background:rgba(180,91,74,.1);border:1px solid rgba(180,91,74,.3);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--terra);font-weight:600;cursor:pointer;flex-shrink:0;" onclick="go('sconf')">⚠ Sync conflict detected — tap to resolve ›</div>
   <div class="core-hero">
     <div class="core-ring-outer">
       <svg width="260" height="260" viewBox="0 0 260 260" fill="none">
@@ -731,7 +858,7 @@ html,body{
         <div class="cval">3</div>
         <div class="sparkline"><div class="sb2 d" style="height:10px;"></div><div class="sb2 d" style="height:8px;"></div><div class="sb2 g" style="height:12px;"></div><div class="sb2 g" style="height:14px;"></div><div class="sb2 d" style="height:9px;"></div><div class="sb2 g" style="height:13px;"></div><div class="sb2 g" style="height:15px;"></div><div class="sb2 g" style="height:16px;"></div></div>
       </div>
-      <div class="ec insight" onclick="go('srp')">
+      <div class="ec insight" onclick="go('schat')">
         <div class="ct"><div class="ci indigo">✨</div><div style="text-align:right;"><div class="clbl">Insights</div><div class="cchg">4 new</div></div></div>
         <div class="cval">4</div>
         <div class="sparkline"><div class="sb2 d" style="height:5px;"></div><div class="sb2 d" style="height:7px;"></div><div class="sb2 g" style="height:10px;"></div><div class="sb2 d" style="height:8px;"></div><div class="sb2 g" style="height:12px;"></div><div class="sb2 g" style="height:14px;"></div><div class="sb2 g" style="height:16px;"></div><div class="sb2 g" style="height:18px;"></div></div>
@@ -808,7 +935,7 @@ html,body{
       <div class="qc">Kitna bachat hua?</div>
       <div class="qc">Customer list dikho</div>
       <div class="qc">Briefing sunao</div>
-      <div class="qc">Stock check karo</div>
+      <div class="qc" onclick="go('svo')">No connection? ›</div>
     </div>
   </div>
   <div class="vbar" onclick="go('sh')">
@@ -855,7 +982,7 @@ html,body{
     </div>
     <div class="sec-hdr2">Key Updates</div>
     <div class="secs">
-      <div class="sc">
+      <div class="sc" style="cursor:pointer;" onclick="go('schat')">
         <div class="sc-hd"><div class="sc-ic fin">💰</div><div class="sc-tr"><div class="sc-ttl">Finance</div><div class="sc-meta">Yesterday's summary</div></div><div class="sc-val">₹24,850</div></div>
         <div class="blist">
           <div class="bi"><div class="bico">✦</div><div class="bt">Revenue <strong class="up">₹24,850</strong> — <span class="up">▲ 12%</span> vs Monday</div></div>
@@ -921,33 +1048,266 @@ html,body{
   </div>
 </div>
 
+<!-- ════ SCREEN 12: RETURNING USER LOCK ════ -->
+<div class="screen" id="srl">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span style="color:rgba(250,247,242,.5);">▲▲▲ WiFi 🔋</span></div></div>
+  <div class="rl-welcome">Welcome back,<br>Sharma ji 🙏</div>
+  <div class="rl-sub">Enter your PIN to continue</div>
+  <div class="rl-pin-dots" id="rl-pin-dots">
+    <div class="rl-pd"></div><div class="rl-pd"></div><div class="rl-pd"></div>
+    <div class="rl-pd"></div><div class="rl-pd"></div><div class="rl-pd"></div>
+  </div>
+  <div style="display:flex;justify-content:center;">
+    <div class="rl-numpad">
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">1</div><div class="letters"></div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">2</div><div class="letters">ABC</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">3</div><div class="letters">DEF</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">4</div><div class="letters">GHI</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">5</div><div class="letters">JKL</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">6</div><div class="letters">MNO</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">7</div><div class="letters">PQRS</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">8</div><div class="letters">TUV</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">9</div><div class="letters">WXYZ</div></div>
+      <div class="rl-nk empty"></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">0</div></div>
+      <div class="rl-nk del" onclick="rlPinDel()"><div class="digit">⌫</div></div>
+    </div>
+  </div>
+  <div class="rl-bio"><span style="font-size:20px;">👆</span><span>Or use fingerprint / Face ID</span></div>
+</div>
+
+<!-- ════ SCREEN 13: AI OS AWAKENING ════ -->
+<div class="screen" id="sao">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="aw-hero">
+    <div class="aw-ring">
+      <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+        <circle cx="100" cy="100" r="97" stroke="#C8A96B" stroke-width=".5" stroke-dasharray="3 6" opacity=".3"/>
+        <circle cx="100" cy="100" r="84" stroke="#C8A96B" stroke-width="14" fill="none" opacity=".85"/>
+        <circle cx="100" cy="100" r="67" stroke="#C8A96B" stroke-width="1.5" fill="none" opacity=".25"/>
+        <circle cx="100" cy="100" r="56" fill="url(#awGrad)"/>
+        <path d="M100 56C110 68 110 80 100 84C90 80 90 68 100 56" fill="#C8A96B" opacity=".9"/>
+        <path d="M144 100C132 110 120 110 116 100C120 90 132 90 144 100" fill="#C8A96B" opacity=".9"/>
+        <path d="M100 144C90 132 90 120 100 116C110 120 110 132 100 144" fill="#C8A96B" opacity=".9"/>
+        <path d="M56 100C68 90 80 90 84 100C80 110 68 110 56 100" fill="#C8A96B" opacity=".9"/>
+        <circle cx="100" cy="100" r="14" fill="#C8A96B"/>
+        <circle cx="100" cy="100" r="8" fill="#FAF7F2"/>
+        <circle cx="100" cy="100" r="4" fill="#C8A96B"/>
+        <defs><radialGradient id="awGrad" cx="50%" cy="38%" r="65%"><stop offset="0%" stop-color="#FFF"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient></defs>
+      </svg>
+    </div>
+    <div class="aw-title">Vepari AI is waking up…</div>
+    <div class="aw-sub">Syncing your engines</div>
+    <div class="aw-dots">
+      <div class="aw-dot" style="animation:awPulse 1.2s ease-in-out infinite;"></div>
+      <div class="aw-dot" style="animation:awPulse 1.2s ease-in-out .3s infinite;"></div>
+      <div class="aw-dot" style="animation:awPulse 1.2s ease-in-out .6s infinite;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 14: VOICE OFFLINE ════ -->
+<div class="screen" id="svo">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="greeting" style="padding:4px 20px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);">Good morning, Sharma ji 🙏</div>
+    <div style="font-size:16px;color:var(--gold);cursor:pointer;" onclick="go('sv')">‹ Back</div>
+  </div>
+  <div class="vo-hero">
+    <div class="vo-icon">📡</div>
+    <div class="vo-title">Voice needs connection</div>
+    <div class="vo-sub">No internet detected. You can type your query below and we'll process it when you're back online.</div>
+    <div class="vo-input"><span style="font-size:16px;">⌨️</span><span>Type your query here…</span></div>
+    <div class="vo-chips">
+      <div class="vo-chip">Kitna sale hua?</div>
+      <div class="vo-chip">Customer list</div>
+      <div class="vo-chip">Stock status</div>
+      <div class="vo-chip">Aaj ki briefing</div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="vfab-wrap"><div class="vfab" style="opacity:.4;cursor:default;">🎙️</div></div>
+    <div class="ni on" onclick="go('sh')"><div class="ni-icon">🏠</div><div class="ni-lbl">Home</div><div class="ni-dot"></div></div>
+    <div class="ni"><div class="ni-icon">📊</div><div class="ni-lbl">Engines</div></div>
+    <div class="ni" style="flex:1.2;"></div>
+    <div class="ni" onclick="go('sdb')"><div class="ni-icon">📋</div><div class="ni-lbl">Briefing</div></div>
+    <div class="ni"><div class="ni-icon">⚙️</div><div class="ni-lbl">Settings</div></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 15: AI CHAT / ANSWER ════ -->
+<div class="screen" id="schat">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="shdr">
+    <div class="shdr-back" onclick="go('sh')">‹</div>
+    <div class="shdr-title">AI Insights</div>
+    <div class="shdr-action">⋯</div>
+  </div>
+  <div class="chat-body">
+    <div style="display:flex;justify-content:flex-end;">
+      <div class="user-bubble">"Aaj kitna sale hua?"</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-ey"><div class="ai-dot"></div><div class="ai-lbl">AI Answer</div></div>
+      <div class="stat-row">
+        <div class="stat-tile">
+          <div class="stat-val">₹24,850</div>
+          <div class="stat-lbl">Revenue Today</div>
+          <div class="stat-chg">▲ 12% vs yesterday</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-val">12</div>
+          <div class="stat-lbl">Customers</div>
+          <div class="stat-chg">▲ 3 new</div>
+        </div>
+      </div>
+      <div class="ai-bullets">
+        <div class="ai-bi"><div class="ai-bico">✦</div><div class="ai-bt">Top item sold: <strong>Basmati 5kg</strong> — 18 units</div></div>
+        <div class="ai-bi"><div class="ai-bico">✦</div><div class="ai-bt">UPI payments: <strong>₹9,400</strong> · Cash: <strong>₹12,200</strong></div></div>
+        <div class="ai-bi"><div class="ai-bico">✦</div><div class="ai-bt">Pending order from <strong>Meena Traders</strong> — create PO?</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-actions">
+    <div class="ca-ghost" onclick="go('sh')">OK thanks</div>
+    <div class="ca-gold" onclick="go('sapc')">Take action <span>›</span></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 16: ACTION APPROVAL ════ -->
+<div class="screen" id="sapc">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="shdr">
+    <div class="shdr-back" onclick="go('schat')">‹</div>
+    <div class="shdr-title">AI Action</div>
+    <div class="shdr-action"></div>
+  </div>
+  <div class="apc-body">
+    <div class="apc-card">
+      <div class="apc-ey"><div class="apc-dot"></div><div class="apc-lbl">Proposed Action</div></div>
+      <div class="apc-action">Create purchase order</div>
+      <div class="apc-detail">Meena Traders · ₹45,000 · This week's stock replenishment</div>
+    </div>
+    <div class="apc-records">
+      <div class="apc-rec-hdr">Records affected</div>
+      <div class="apc-rec">
+        <div class="apc-ri">🏭</div>
+        <div><div class="apc-rname">Meena Traders</div><div class="apc-rmeta">Supplier · Outstanding ₹0</div></div>
+      </div>
+      <div class="apc-rec">
+        <div class="apc-ri">📦</div>
+        <div><div class="apc-rname">Purchase Order #PO-2026-089</div><div class="apc-rmeta">New record will be created</div></div>
+      </div>
+    </div>
+    <div class="apc-impact">
+      <div class="apc-impact-ico">📈</div>
+      <div class="apc-impact-txt">Estimated impact: <strong>Replenishes Basmati 5kg stock for ~14 days.</strong> Cash impact: ₹45,000 outflow.</div>
+    </div>
+  </div>
+  <div class="apc-btns">
+    <div class="approve-btn" onclick="go('sack')">✓ Approve &amp; Execute</div>
+    <div class="decline-btn" onclick="go('sh')">Decline</div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 17: ACTION CONFIRMED ════ -->
+<div class="screen" id="sack">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="ack-content">
+    <div class="ack-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+        <circle cx="60" cy="60" r="57" stroke="#C8A96B" stroke-width=".5" stroke-dasharray="4 8" opacity=".25"/>
+        <circle cx="60" cy="60" r="48" stroke="#C8A96B" stroke-width="8" fill="none" opacity=".85"/>
+        <circle cx="60" cy="60" r="36" fill="url(#ackGrad)"/>
+        <path d="M60 36C66 43 66 50 60 53C54 50 54 43 60 36" fill="#C8A96B" opacity=".7"/>
+        <path d="M84 60C77 66 70 66 67 60C70 54 77 54 84 60" fill="#C8A96B" opacity=".7"/>
+        <path d="M60 84C54 77 54 70 60 67C66 70 66 77 60 84" fill="#C8A96B" opacity=".7"/>
+        <path d="M36 60C43 54 50 54 53 60C50 66 43 66 36 60" fill="#C8A96B" opacity=".7"/>
+        <circle cx="60" cy="60" r="14" fill="#5A6B4F"/>
+        <path d="M54 60L59 65L67 54" stroke="#FAF7F2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><radialGradient id="ackGrad" cx="50%" cy="35%" r="65%"><stop offset="0%" stop-color="#FFF"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient></defs>
+      </svg>
+    </div>
+    <div class="ack-title">Order Created ✓</div>
+    <div class="ack-sub">Your purchase order has been created and sent to Meena Traders.</div>
+    <div class="ack-summary">
+      <div class="ack-row"><span class="ack-k">Supplier</span><span class="ack-v">Meena Traders</span></div>
+      <div class="ack-row"><span class="ack-k">PO Number</span><span class="ack-v">PO-2026-089</span></div>
+      <div class="ack-row"><span class="ack-k">Amount</span><span class="ack-v">₹45,000</span></div>
+      <div class="ack-row"><span class="ack-k">Status</span><span class="ack-v" style="color:var(--olive);">Sent ✓</span></div>
+    </div>
+    <div class="ack-btn" onclick="go('sh')">Back to Home</div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 18: SYNC CONFLICT ════ -->
+<div class="screen" id="sconf">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="shdr">
+    <div class="shdr-back" onclick="go('sh')">‹</div>
+    <div class="shdr-title">Sync Conflict</div>
+    <div class="shdr-action"></div>
+  </div>
+  <div class="conf-body">
+    <div class="conf-warn">
+      <div class="conf-warn-ico">⚠️</div>
+      <div class="conf-warn-txt">Data conflict detected — 2 versions found for Sharma Kirana Store inventory.</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);padding:0 2px;">Choose which version to keep. The other will be discarded.</div>
+    <div class="conf-ver">
+      <div class="conf-ver-hdr">
+        <div class="conf-ver-ttl">Your version (local)</div>
+        <div class="conf-ver-ts">Today, 9:38 AM</div>
+      </div>
+      <div class="conf-ver-val">Basmati 5kg: <strong>3 units</strong> · Toor Dal 1kg: <strong>12 units</strong></div>
+    </div>
+    <div class="conf-ver srv">
+      <div class="conf-ver-hdr">
+        <div class="conf-ver-ttl">Server version</div>
+        <div class="conf-ver-ts">Today, 9:35 AM</div>
+      </div>
+      <div class="conf-ver-val">Basmati 5kg: <strong>5 units</strong> · Toor Dal 1kg: <strong>10 units</strong></div>
+    </div>
+  </div>
+  <div class="conf-btns">
+    <div class="conf-keep" onclick="go('sh');showToast('Local version kept')">Keep my version</div>
+    <div class="conf-srv" onclick="go('sh');showToast('Server version applied')">Use server version</div>
+    <div class="conf-link">Review both side-by-side ›</div>
+  </div>
+</div>
+
 <!-- Toast notification -->
 <div id="toast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:#3B2F2A;color:#FAF7F2;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;transition:transform .3s;pointer-events:none;z-index:9999;white-space:nowrap;"></div>
 
 </div><!-- /phone-frame -->
 
 <div class="proto-hint">
-  <strong>Onboarding:</strong> Tap anywhere on Splash · Continue buttons advance the flow<br>
-  <strong>Home:</strong> Tap the 🎙️ FAB for Voice · 📋 Briefing · 📊 Engines · Engine cards<br>
-  <strong>Voice:</strong> Tap the bar or 🎙️ to return home
+  <strong>New User:</strong> Tap Splash → Continue through onboarding → Home<br>
+  <strong>Returning User:</strong> Tap badge above → PIN → AI awakening → Briefing<br>
+  <strong>Voice:</strong> 🎙️ FAB → Voice Active → "No connection?" chip → Offline<br>
+  <strong>Action:</strong> Home Insights card → AI Answer → Take action → Approve → Confirmed<br>
+  <strong>Conflict:</strong> Home sync banner → Resolve conflict
 </div>
 
 <script>
 let current = 'ss';
+let awakeTimer;
 
 function go(id) {
   document.getElementById(current).classList.remove('active');
   document.getElementById(id).classList.add('active');
   current = id;
+  if (id === 'sao') {
+    clearTimeout(awakeTimer);
+    awakeTimer = setTimeout(function(){ if (current === 'sao') go('sdb'); }, 2500);
+  }
 }
 
-// Language card selection
 function selectLang(el) {
-  document.querySelectorAll('#sl .lc').forEach(c => c.classList.remove('sel'));
+  document.querySelectorAll('#sl .lc').forEach(function(c){ c.classList.remove('sel'); });
   el.classList.add('sel');
 }
 
-// PIN logic
 let pinCount = 0;
 function pinKey() {
   const dots = document.querySelectorAll('#pin-dots .pd');
@@ -956,28 +1316,37 @@ function pinKey() {
     if (pinCount === 5) dots[5].classList.add('gold');
     pinCount++;
     if (pinCount === 6) {
-      setTimeout(() => { pinCount = 0; dots.forEach(d => d.classList.remove('filled','gold')); go('sai'); }, 400);
+      setTimeout(function(){ pinCount = 0; dots.forEach(function(d){ d.classList.remove('filled','gold'); }); go('sai'); }, 400);
     }
   }
 }
 function pinDel() {
-  if (pinCount > 0) {
-    pinCount--;
-    const dots = document.querySelectorAll('#pin-dots .pd');
-    dots[pinCount].classList.remove('filled','gold');
-  }
+  if (pinCount > 0) { pinCount--; document.querySelectorAll('#pin-dots .pd')[pinCount].classList.remove('filled','gold'); }
 }
 
-// Toast
+let rlPinCount = 0;
+function rlPinKey() {
+  const dots = document.querySelectorAll('#rl-pin-dots .rl-pd');
+  if (rlPinCount < 6) {
+    dots[rlPinCount].classList.add('filled');
+    rlPinCount++;
+    if (rlPinCount === 6) {
+      setTimeout(function(){ rlPinCount = 0; dots.forEach(function(d){ d.classList.remove('filled'); }); go('sao'); }, 400);
+    }
+  }
+}
+function rlPinDel() {
+  if (rlPinCount > 0) { rlPinCount--; document.querySelectorAll('#rl-pin-dots .rl-pd')[rlPinCount].classList.remove('filled'); }
+}
+
 let toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg;
   t.style.transform = 'translateX(-50%) translateY(0)';
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { t.style.transform = 'translateX(-50%) translateY(80px)'; }, 2000);
+  toastTimer = setTimeout(function(){ t.style.transform = 'translateX(-50%) translateY(80px)'; }, 2000);
 }
 
-// Splash auto-advance
-setTimeout(() => { if (current === 'ss') go('sl'); }, 2500);
+setTimeout(function(){ if (current === 'ss') go('sl'); }, 2500);
 </script>
