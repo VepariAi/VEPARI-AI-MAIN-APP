@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Settings</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.back-btn { font-size: 20px; color: #C8A96B; width: 32px; }
+.header-title { font-size: 16px; font-weight: 700; }
+.header-action { width: 32px; }
+
+/* Profile hero */
+.profile-hero { display: flex; align-items: center; gap: 14px; padding: 16px 20px; border-bottom: 1px solid #EDE5D8; }
+.avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #3B2F2A 0%, #4A3D6B 100%); display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #C8A96B; flex-shrink: 0; }
+.profile-info { flex: 1; }
+.biz-name { font-size: 15px; font-weight: 700; color: #3B2F2A; }
+.biz-sub { font-size: 12px; color: #8A7060; margin-top: 2px; }
+.plan-badge { padding: 3px 8px; border-radius: 8px; background: rgba(200,169,107,0.15); font-size: 10px; font-weight: 700; color: #C8A96B; margin-top: 4px; display: inline-block; }
+.edit-btn { font-size: 12px; font-weight: 600; color: #C8A96B; }
+
+/* Scrollable section content */
+.scroll-area { flex: 1; overflow: hidden; }
+
+/* Section label */
+.sec-label { padding: 14px 20px 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #8A7060; }
+
+/* Settings row */
+.settings-group { background: #FFFFFF; border-top: 1px solid #EDE5D8; border-bottom: 1px solid #EDE5D8; }
+.setting-row { display: flex; align-items: center; padding: 13px 20px; border-bottom: 1px solid #F5EFE6; gap: 12px; }
+.setting-row:last-child { border-bottom: none; }
+.sr-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.sr-icon.brown { background: rgba(59,47,42,0.08); }
+.sr-icon.gold { background: rgba(200,169,107,0.12); }
+.sr-icon.olive { background: rgba(90,107,79,0.1); }
+.sr-icon.terra { background: rgba(180,91,74,0.1); }
+.sr-icon.indigo { background: rgba(74,61,107,0.1); }
+.sr-info { flex: 1; }
+.sr-label { font-size: 13px; font-weight: 500; color: #3B2F2A; }
+.sr-sub { font-size: 11px; color: #8A7060; margin-top: 2px; }
+.sr-end { display: flex; align-items: center; gap: 6px; }
+.sr-arrow { font-size: 16px; color: #C0AFA5; }
+.sr-value { font-size: 12px; color: #8A7060; }
+
+/* Toggle switch */
+.toggle { width: 40px; height: 24px; border-radius: 12px; background: #5A6B4F; position: relative; flex-shrink: 0; }
+.toggle.off { background: #E0D5CC; }
+.toggle::after { content: ''; position: absolute; top: 3px; right: 3px; width: 18px; height: 18px; border-radius: 50%; background: #FFFFFF; transition: right 0.2s; }
+.toggle.off::after { right: auto; left: 3px; }
+
+/* AI Engines section chip */
+.engines-row { display: flex; gap: 6px; padding: 10px 20px 4px; flex-wrap: wrap; }
+.eng-chip { padding: 5px 10px; border-radius: 10px; background: rgba(200,169,107,0.12); font-size: 11px; font-weight: 600; color: #8A7060; display: flex; align-items: center; gap: 4px; }
+.eng-chip .dot { width: 5px; height: 5px; border-radius: 50%; background: #5A6B4F; }
+
+/* Danger zone */
+.danger-row { display: flex; align-items: center; padding: 13px 20px; border-bottom: 1px solid #F5EFE6; gap: 12px; }
+.danger-row:last-child { border-bottom: none; }
+.dr-icon { width: 34px; height: 34px; border-radius: 9px; background: rgba(180,91,74,0.1); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.dr-label { flex: 1; font-size: 13px; font-weight: 500; color: #B45B4A; }
+.dr-arrow { font-size: 16px; color: #C0AFA5; }
+
+/* Bottom nav */
+.bottom-nav { height: 80px; flex-shrink: 0; background: #FFFFFF; border-top: 1px solid #EDE5D8; display: flex; align-items: flex-start; padding-top: 8px; position: relative; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 4px; }
+.nav-icon { font-size: 20px; }
+.nav-label { font-size: 9px; font-weight: 600; color: #C0AFA5; }
+.nav-item.active .nav-label { color: #3B2F2A; }
+.nav-active-dot { width: 4px; height: 4px; border-radius: 50%; background: #C8A96B; margin-top: 1px; }
+.voice-fab-wrap { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); }
+.voice-fab { width: 48px; height: 48px; border-radius: 50%; background: #3B2F2A; box-shadow: 0 0 0 3px #FFFFFF, 0 4px 14px rgba(59,47,42,0.25); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="back-btn"></div>
+  <div class="header-title">Settings</div>
+  <div class="header-action"></div>
+</div>
+
+<!-- Profile hero -->
+<div class="profile-hero">
+  <div class="avatar">RS</div>
+  <div class="profile-info">
+    <div class="biz-name">Ramesh Kirana Store</div>
+    <div class="biz-sub">vepariai@gmail.com · GST: 07XXXXX1234Z1</div>
+    <div class="plan-badge">⚡ Pro Plan · Active</div>
+  </div>
+  <div class="edit-btn">Edit ›</div>
+</div>
+
+<div class="scroll-area">
+
+  <!-- Business -->
+  <div class="sec-label">Business</div>
+  <div class="settings-group">
+    <div class="setting-row">
+      <div class="sr-icon brown">🏪</div>
+      <div class="sr-info"><div class="sr-label">Business Profile</div><div class="sr-sub">Name, address, GSTIN</div></div>
+      <div class="sr-end"><div class="sr-arrow">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-icon gold">🧾</div>
+      <div class="sr-info"><div class="sr-label">Invoice Settings</div><div class="sr-sub">Template, prefix, terms</div></div>
+      <div class="sr-end"><div class="sr-arrow">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-icon olive">💰</div>
+      <div class="sr-info"><div class="sr-label">Tax & GST</div><div class="sr-sub">Rates, GSTIN, filing period</div></div>
+      <div class="sr-end"><div class="sr-value">18%</div><div class="sr-arrow">›</div></div>
+    </div>
+  </div>
+
+  <!-- Vepari AI -->
+  <div class="sec-label">Vepari AI</div>
+  <div class="settings-group">
+    <div class="setting-row">
+      <div class="sr-icon indigo">🧠</div>
+      <div class="sr-info"><div class="sr-label">AI Engines</div><div class="sr-sub">7 of 7 active</div></div>
+      <div class="sr-end"><div class="sr-arrow">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-icon gold">🎙️</div>
+      <div class="sr-info"><div class="sr-label">Voice Language</div><div class="sr-sub">Hindi + English (Hinglish)</div></div>
+      <div class="sr-end"><div class="sr-value">Hinglish</div><div class="sr-arrow">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-icon olive">📊</div>
+      <div class="sr-info"><div class="sr-label">Daily Briefing</div><div class="sr-sub">7:00 AM every morning</div></div>
+      <div class="sr-end"><div class="toggle"></div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-icon brown">🔔</div>
+      <div class="sr-info"><div class="sr-label">AI Alerts</div><div class="sr-sub">Low stock, due payments</div></div>
+      <div class="sr-end"><div class="toggle"></div></div>
+    </div>
+  </div>
+
+  <!-- Account -->
+  <div class="sec-label">Account</div>
+  <div class="settings-group">
+    <div class="setting-row">
+      <div class="sr-icon gold">📱</div>
+      <div class="sr-info"><div class="sr-label">Phone & WhatsApp</div><div class="sr-sub">+91 98765 43210 · Verified</div></div>
+      <div class="sr-end"><div class="sr-arrow">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-icon olive">🔐</div>
+      <div class="sr-info"><div class="sr-label">Security & PIN</div><div class="sr-sub">App lock enabled</div></div>
+      <div class="sr-end"><div class="toggle"></div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-icon indigo">☁️</div>
+      <div class="sr-info"><div class="sr-label">Backup & Sync</div><div class="sr-sub">Last synced: today 9:40 AM</div></div>
+      <div class="sr-end"><div class="sr-value" style="color:#5A6B4F;">✓ Synced</div><div class="sr-arrow">›</div></div>
+    </div>
+    <div class="setting-row">
+      <div class="sr-icon terra">🚪</div>
+      <div class="sr-info"><div class="sr-label" style="color:#B45B4A;">Sign Out</div></div>
+      <div class="sr-end"><div class="sr-arrow">›</div></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="bottom-nav">
+  <div class="voice-fab-wrap"><div class="voice-fab">🎙️</div></div>
+  <div class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+  <div class="nav-item"><div class="nav-icon">📊</div><div class="nav-label">Engines</div></div>
+  <div class="nav-item" style="flex:1.2;"></div>
+  <div class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">Briefing</div></div>
+  <div class="nav-item active"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div><div class="nav-active-dot"></div></div>
+</div>
+
+</body>
+</html>

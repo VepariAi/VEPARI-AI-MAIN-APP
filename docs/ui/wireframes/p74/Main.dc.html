@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Shared Components</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.header-title { font-size: 16px; font-weight: 700; }
+.header-sub { font-size: 11px; color: #8A7060; }
+
+/* Component gallery layout */
+.gallery { flex: 1; overflow: hidden; padding: 12px 16px; display: flex; flex-direction: column; gap: 14px; }
+
+/* Section header */
+.comp-section { font-size: 9px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #C0AFA5; margin-bottom: 6px; }
+
+/* === BUTTONS === */
+.btn-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.btn { display: flex; align-items: center; justify-content: center; border-radius: 12px; font-size: 13px; font-weight: 600; padding: 0 16px; }
+.btn-primary { height: 44px; background: #3B2F2A; color: #FAF7F2; }
+.btn-secondary { height: 44px; background: #FFFFFF; border: 1.5px solid #E8DDD0; color: #3B2F2A; }
+.btn-cta-olive { height: 44px; background: #5A6B4F; color: #FAF7F2; }
+.btn-cta-terra { height: 44px; background: #B45B4A; color: #FAF7F2; }
+.btn-sm { height: 34px; font-size: 12px; padding: 0 12px; border-radius: 10px; background: rgba(200,169,107,0.12); color: #8A7060; }
+.btn-ghost { height: 34px; font-size: 12px; padding: 0 12px; border-radius: 10px; background: transparent; color: #C8A96B; font-weight: 600; }
+
+/* === BADGES === */
+.badge-row { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.badge { padding: 3px 8px; border-radius: 8px; font-size: 10px; font-weight: 700; }
+.badge-olive { background: rgba(90,107,79,0.12); color: #5A6B4F; }
+.badge-terra { background: rgba(180,91,74,0.12); color: #B45B4A; }
+.badge-gold { background: rgba(200,169,107,0.15); color: #8A7060; }
+.badge-indigo { background: rgba(74,61,107,0.1); color: #4A3D6B; }
+.badge-brown { background: rgba(59,47,42,0.08); color: #3B2F2A; }
+
+/* === INPUT FIELD === */
+.input-demo { background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; height: 44px; padding: 0 14px; display: flex; align-items: center; gap: 10px; }
+.input-demo.focused { border-color: #C8A96B; background: #FFFCF5; }
+.input-demo.error { border-color: #B45B4A; }
+.input-icon { font-size: 16px; color: #C0AFA5; }
+.input-text { flex: 1; font-size: 13px; color: #3B2F2A; }
+.input-placeholder { flex: 1; font-size: 13px; color: #C0AFA5; }
+.input-suffix { font-size: 12px; color: #8A7060; }
+
+/* === TOAST === */
+.toast-row { display: flex; flex-direction: column; gap: 6px; }
+.toast { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 12px; }
+.toast-success { background: rgba(90,107,79,0.12); border: 1px solid rgba(90,107,79,0.2); }
+.toast-error { background: rgba(180,91,74,0.10); border: 1px solid rgba(180,91,74,0.2); }
+.toast-info { background: rgba(200,169,107,0.12); border: 1px solid rgba(200,169,107,0.2); }
+.toast-icon { font-size: 16px; }
+.toast-text { font-size: 12px; font-weight: 500; color: #3B2F2A; flex: 1; }
+.toast-dismiss { font-size: 12px; color: #8A7060; }
+
+/* === KPI TILE === */
+.kpi-row { display: flex; gap: 8px; }
+.kpi-tile { flex: 1; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 10px; position: relative; overflow: hidden; }
+.kpi-tile::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 12px 12px 0 0; }
+.kpi-tile.g::before { background: #5A6B4F; }
+.kpi-tile.r::before { background: #B45B4A; }
+.kpi-tile.y::before { background: #C8A96B; }
+.kpi-label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #8A7060; margin-bottom: 4px; }
+.kpi-value { font-size: 16px; font-weight: 700; color: #3B2F2A; font-variant-numeric: tabular-nums; }
+.kpi-change { font-size: 10px; font-weight: 600; margin-top: 2px; }
+.up { color: #5A6B4F; }
+.down { color: #B45B4A; }
+
+/* === EMPTY STATE === */
+.empty-state { display: flex; flex-direction: column; align-items: center; padding: 16px; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 14px; gap: 6px; }
+.empty-icon { font-size: 28px; }
+.empty-title { font-size: 13px; font-weight: 700; color: #3B2F2A; }
+.empty-sub { font-size: 11px; color: #8A7060; text-align: center; line-height: 1.5; }
+
+/* === FAB === */
+.fab-demo { width: 52px; height: 52px; border-radius: 16px; background: #3B2F2A; display: flex; align-items: center; justify-content: center; font-size: 22px; box-shadow: 0 4px 14px rgba(59,47,42,0.25); }
+
+/* === AI INSIGHT CARD === */
+.ai-card { border-radius: 14px; padding: 12px 14px; background: linear-gradient(135deg, #3B2F2A 0%, #4A3D6B 100%); }
+.ai-card-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.ai-dot { width: 6px; height: 6px; border-radius: 50%; background: #C8A96B; }
+.ai-label { font-size: 10px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: #C8A96B; }
+.ai-card-text { font-size: 12px; color: rgba(250,247,242,0.9); line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="header-title">Shared Components</div>
+  <div class="header-sub">Design System · P44</div>
+</div>
+
+<div class="gallery">
+
+  <!-- Buttons -->
+  <div>
+    <div class="comp-section">Buttons</div>
+    <div class="btn-row">
+      <div class="btn btn-primary">Primary</div>
+      <div class="btn btn-secondary">Secondary</div>
+      <div class="btn btn-sm">Chip</div>
+      <div class="btn btn-ghost">Ghost</div>
+    </div>
+    <div class="btn-row" style="margin-top:6px;">
+      <div class="btn btn-cta-olive" style="flex:1;">✓ Confirm</div>
+      <div class="btn btn-cta-terra" style="flex:1;">Pay Now</div>
+    </div>
+  </div>
+
+  <!-- Badges -->
+  <div>
+    <div class="comp-section">Status Badges</div>
+    <div class="badge-row">
+      <div class="badge badge-olive">✓ Paid</div>
+      <div class="badge badge-terra">⚠ Overdue</div>
+      <div class="badge badge-terra" style="background:rgba(180,91,74,0.12);">LOW</div>
+      <div class="badge badge-olive">OK</div>
+      <div class="badge badge-gold">Pending</div>
+      <div class="badge badge-indigo">AI</div>
+      <div class="badge badge-brown">New</div>
+    </div>
+  </div>
+
+  <!-- Inputs -->
+  <div>
+    <div class="comp-section">Inputs</div>
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <div class="input-demo">
+        <div class="input-icon">🔍</div>
+        <div class="input-placeholder">Search customers…</div>
+      </div>
+      <div class="input-demo focused">
+        <div class="input-text">Ravi Kumar</div>
+        <div class="input-suffix">✓</div>
+      </div>
+      <div class="input-demo error">
+        <div class="input-placeholder">Amount</div>
+        <div class="input-suffix" style="color:#B45B4A;">Required</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI Tiles + Toast in one row -->
+  <div>
+    <div class="comp-section">KPI Tiles</div>
+    <div class="kpi-row">
+      <div class="kpi-tile g"><div class="kpi-label">Revenue</div><div class="kpi-value">₹1.84L</div><div class="kpi-change up">▲ 14%</div></div>
+      <div class="kpi-tile r"><div class="kpi-label">Expenses</div><div class="kpi-value">₹1.12L</div><div class="kpi-change down">▲ 8%</div></div>
+      <div class="kpi-tile y"><div class="kpi-label">Profit</div><div class="kpi-value">₹72K</div><div class="kpi-change up">▲ 24%</div></div>
+    </div>
+  </div>
+
+  <!-- Toast + Empty State + FAB + AI card side by side -->
+  <div style="display:flex;gap:10px;align-items:flex-start;">
+    <div style="flex:1;display:flex;flex-direction:column;gap:6px;">
+      <div class="comp-section">Toasts</div>
+      <div class="toast toast-success"><div class="toast-icon">✓</div><div class="toast-text">Sale recorded</div><div class="toast-dismiss">✕</div></div>
+      <div class="toast toast-error"><div class="toast-icon">⚠</div><div class="toast-text">Payment overdue</div><div class="toast-dismiss">✕</div></div>
+      <div class="toast toast-info"><div class="toast-icon">💡</div><div class="toast-text">AI insight ready</div><div class="toast-dismiss">✕</div></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
+      <div class="comp-section" style="align-self:flex-start;">FAB</div>
+      <div class="fab-demo">+</div>
+      <div class="fab-demo" style="background:linear-gradient(135deg,#3B2F2A,#4A3D6B);border-radius:50%;font-size:18px;">🎙️</div>
+    </div>
+  </div>
+
+  <!-- AI Insight Card -->
+  <div>
+    <div class="comp-section">AI Insight Card</div>
+    <div class="ai-card">
+      <div class="ai-card-header"><div class="ai-dot"></div><div class="ai-label">Vepari AI</div></div>
+      <div class="ai-card-text">Ravi Kumar Ji visits every Tuesday and Friday. Average basket is <strong style="color:#C8A96B;">₹1,240</strong> — 18% above store average.</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

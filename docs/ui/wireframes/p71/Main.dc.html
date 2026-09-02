@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI Chat</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.back-btn { font-size: 20px; color: #C8A96B; width: 32px; }
+.header-center { display: flex; flex-direction: column; align-items: center; }
+.header-title { font-size: 15px; font-weight: 700; }
+.header-sub { font-size: 10px; color: #5A6B4F; font-weight: 600; }
+.header-action { font-size: 16px; color: #C8A96B; width: 32px; text-align: right; }
+
+/* Chat area */
+.chat-area { flex: 1; overflow: hidden; padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* Suggestion chips at top (fresh state) */
+.suggestions { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+.sug-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #C0AFA5; margin-bottom: 2px; }
+.sug-chip { padding: 8px 12px; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 10px; font-size: 12px; color: #3B2F2A; display: flex; align-items: center; gap: 8px; }
+.sug-chip-icon { font-size: 14px; }
+
+/* User bubble */
+.bubble-user { align-self: flex-end; background: #3B2F2A; color: #FAF7F2; border-radius: 16px 16px 4px 16px; padding: 10px 14px; max-width: 240px; font-size: 13px; line-height: 1.5; }
+.bubble-user .hindi { font-size: 13px; margin-bottom: 2px; }
+.bubble-user .transliteration { font-size: 10px; color: rgba(250,247,242,0.6); }
+
+/* AI bubble */
+.bubble-ai { align-self: flex-start; max-width: 290px; }
+.ai-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.ai-dot { width: 6px; height: 6px; border-radius: 50%; background: #C8A96B; }
+.ai-name { font-size: 10px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: #C8A96B; }
+.ai-card { background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 4px 16px 16px 16px; padding: 12px 14px; }
+.ai-text { font-size: 13px; color: #3B2F2A; line-height: 1.6; margin-bottom: 10px; }
+.ai-text strong { color: #5A6B4F; }
+
+/* Data table inside AI response */
+.data-table { border-top: 1px solid #F0EAE0; padding-top: 8px; }
+.dt-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 12px; }
+.dt-label { color: #8A7060; }
+.dt-value { font-weight: 600; color: #3B2F2A; font-variant-numeric: tabular-nums; }
+.dt-value.highlight { color: #5A6B4F; }
+
+.ai-actions { display: flex; gap: 6px; margin-top: 8px; }
+.ai-action-chip { padding: 5px 10px; border-radius: 10px; background: rgba(200,169,107,0.12); font-size: 11px; font-weight: 600; color: #8A7060; }
+
+/* Input bar */
+.input-bar { height: 64px; flex-shrink: 0; background: #FFFFFF; border-top: 1px solid #EDE5D8; padding: 10px 16px; display: flex; align-items: center; gap: 10px; }
+.input-field { flex: 1; height: 40px; background: #FAF7F2; border: 1.5px solid #EDE5D8; border-radius: 20px; padding: 0 14px; font-size: 13px; color: #3B2F2A; display: flex; align-items: center; }
+.input-placeholder { font-size: 13px; color: #C0AFA5; }
+.mic-btn { width: 40px; height: 40px; border-radius: 50%; background: #3B2F2A; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="back-btn">‹</div>
+  <div class="header-center">
+    <div class="header-title">Ask Vepari AI</div>
+    <div class="header-sub">● Live · 7 engines active</div>
+  </div>
+  <div class="header-action">🕐</div>
+</div>
+
+<div class="chat-area">
+
+  <!-- Quick suggestions -->
+  <div class="suggestions">
+    <div class="sug-label">Suggested questions</div>
+    <div class="sug-chip"><div class="sug-chip-icon">💰</div>Aaj kitna profit hua?</div>
+    <div class="sug-chip"><div class="sug-chip-icon">👥</div>Top customers this month</div>
+    <div class="sug-chip"><div class="sug-chip-icon">📦</div>Low stock items</div>
+  </div>
+
+  <!-- User message (Hindi) -->
+  <div class="bubble-user">
+    <div class="hindi">Aaj ka total sale kitna hua?</div>
+    <div class="transliteration">How much was today's total sale?</div>
+  </div>
+
+  <!-- AI response with data -->
+  <div class="bubble-ai">
+    <div class="ai-header"><div class="ai-dot"></div><div class="ai-name">Vepari AI</div></div>
+    <div class="ai-card">
+      <div class="ai-text">Aaj <strong>₹8,420</strong> ki sales hui — August ke isi din se <strong>+18%</strong> zyada. 4 transactions mein se 3 UPI the.</div>
+      <div class="data-table">
+        <div class="dt-row"><div class="dt-label">Total Sales</div><div class="dt-value highlight">₹8,420</div></div>
+        <div class="dt-row"><div class="dt-label">Transactions</div><div class="dt-value">4</div></div>
+        <div class="dt-row"><div class="dt-label">UPI / Cash</div><div class="dt-value">₹7,160 / ₹1,260</div></div>
+        <div class="dt-row"><div class="dt-label">Expenses</div><div class="dt-value">₹2,140</div></div>
+        <div class="dt-row"><div class="dt-label">Net</div><div class="dt-value highlight">₹6,280</div></div>
+      </div>
+      <div class="ai-actions">
+        <div class="ai-action-chip">📊 Full Report</div>
+        <div class="ai-action-chip">📤 Share</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Input bar -->
+<div class="input-bar">
+  <div class="input-field"><div class="input-placeholder">Type or speak your question…</div></div>
+  <div class="mic-btn">🎙️</div>
+</div>
+
+</body>
+</html>
