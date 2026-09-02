@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Daily Briefing</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2;
+  color: #3B2F2A;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+/* Status bar */
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+
+/* Header */
+.screen-header {
+  height: 56px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  background: #FAF7F2;
+  border-bottom: 1px solid #EDE5D8;
+}
+.back-btn { font-size: 20px; color: #C8A96B; cursor: pointer; width: 32px; }
+.header-title { font-size: 16px; font-weight: 700; color: #3B2F2A; letter-spacing: 0.2px; }
+.header-action { font-size: 20px; color: #C8A96B; cursor: pointer; width: 32px; text-align: right; }
+
+/* Scrollable content */
+.content {
+  flex: 1;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+/* Date banner */
+.date-banner {
+  flex-shrink: 0;
+  padding: 16px 20px 12px;
+  background: #FAF7F2;
+}
+.date-row { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 4px; }
+.date-main { font-size: 22px; font-weight: 700; color: #3B2F2A; }
+.date-day { font-size: 12px; color: #8A7060; }
+.date-sub { font-size: 11px; color: #C0AFA5; }
+
+/* AI summary card */
+.summary-card {
+  margin: 0 20px 12px;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #3B2F2A 0%, #4A3D6B 100%);
+  border-radius: 16px;
+  padding: 18px;
+}
+.summary-eyebrow {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 10px;
+}
+.summary-dot { width: 6px; height: 6px; border-radius: 50%; background: #C8A96B; }
+.summary-label { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(200,169,107,0.8); }
+.summary-text { font-size: 14px; color: rgba(250,247,242,0.9); line-height: 1.6; }
+.summary-text strong { color: #C8A96B; font-weight: 600; }
+
+/* Voice playback row */
+.voice-playback {
+  flex-shrink: 0;
+  margin: 0 20px 12px;
+  background: #FFFFFF;
+  border: 1.5px solid #EDE5D8;
+  border-radius: 12px;
+  padding: 12px 16px;
+  display: flex; align-items: center; gap: 12px;
+}
+.play-btn {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: #3B2F2A;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.voice-waveform { flex: 1; display: flex; align-items: center; gap: 2px; height: 28px; }
+.v-bar { width: 3px; border-radius: 1.5px; background: #E8DDD0; }
+.v-bar.played { background: #C8A96B; }
+.voice-duration { font-size: 11px; color: #8A7060; font-variant-numeric: tabular-nums; }
+
+/* Section divider */
+.section-header {
+  flex-shrink: 0;
+  padding: 8px 20px 6px;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #8A7060;
+}
+
+/* Section cards area */
+.sections { flex: 1; overflow: hidden; padding: 0 20px; display: flex; flex-direction: column; gap: 10px; }
+
+.section-card {
+  background: #FFFFFF;
+  border: 1.5px solid #EDE5D8;
+  border-radius: 14px;
+  padding: 14px 16px;
+  flex-shrink: 0;
+}
+.sc-head {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+}
+.sc-icon {
+  width: 32px; height: 32px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px;
+  flex-shrink: 0;
+}
+.sc-icon.finance { background: rgba(200,169,107,0.15); }
+.sc-icon.ops { background: rgba(180,91,74,0.1); }
+.sc-icon.customers { background: rgba(90,107,79,0.1); }
+.sc-title-row { flex: 1; }
+.sc-title { font-size: 13px; font-weight: 600; color: #3B2F2A; }
+.sc-meta { font-size: 10px; color: #8A7060; }
+.sc-value { font-size: 13px; font-weight: 700; color: #3B2F2A; font-variant-numeric: tabular-nums; }
+
+.bullet-list { display: flex; flex-direction: column; gap: 6px; }
+.bullet-item { display: flex; gap: 10px; align-items: flex-start; }
+.bullet-icon { font-size: 12px; flex-shrink: 0; margin-top: 1px; color: #C8A96B; font-weight: 700; }
+.bullet-text { font-size: 12px; color: #5A4A40; line-height: 1.4; }
+.bullet-text strong { color: #3B2F2A; font-weight: 600; }
+.bullet-text .up { color: #5A6B4F; }
+.bullet-text .down { color: #B45B4A; }
+
+/* Bottom nav */
+.bottom-nav {
+  height: 80px; flex-shrink: 0;
+  background: #FFFFFF;
+  border-top: 1px solid #EDE5D8;
+  display: flex; align-items: flex-start;
+  padding-top: 8px; position: relative;
+}
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 4px; }
+.nav-icon { font-size: 20px; }
+.nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.3px; color: #C0AFA5; }
+.nav-item.active .nav-label { color: #3B2F2A; }
+.nav-active-dot { width: 4px; height: 4px; border-radius: 50%; background: #C8A96B; margin-top: 1px; }
+.voice-fab-wrap { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); }
+.voice-fab { width: 48px; height: 48px; border-radius: 50%; background: #3B2F2A; box-shadow: 0 0 0 3px #FFFFFF, 0 4px 14px rgba(59,47,42,0.25); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;font-size:11px;color:#8A7060;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+
+<div class="screen-header">
+  <div class="back-btn">‹</div>
+  <div class="header-title">Daily Briefing</div>
+  <div class="header-action">⋯</div>
+</div>
+
+<div class="content">
+
+  <!-- Date banner -->
+  <div class="date-banner">
+    <div class="date-row">
+      <div class="date-main">Tuesday, 2 Sep</div>
+      <div class="date-day">7 engines active</div>
+    </div>
+    <div class="date-sub">Generated at 7:00 AM · Based on yesterday's data</div>
+  </div>
+
+  <!-- AI Summary -->
+  <div class="summary-card">
+    <div class="summary-eyebrow">
+      <div class="summary-dot"></div>
+      <div class="summary-label">AI Summary</div>
+    </div>
+    <div class="summary-text">
+      Yesterday was a <strong>strong day</strong> — revenue up ₹3,200 vs Monday. Your top customer Ravi Ji paid the ₹8,500 outstanding. One supplier delayed — Meena Traders haven't confirmed this week's order. <strong>4 new insights</strong> ready for you.
+    </div>
+  </div>
+
+  <!-- Voice playback -->
+  <div class="voice-playback">
+    <div class="play-btn">▶</div>
+    <div class="voice-waveform">
+      <div class="v-bar played" style="height:14px;"></div>
+      <div class="v-bar played" style="height:20px;"></div>
+      <div class="v-bar played" style="height:12px;"></div>
+      <div class="v-bar played" style="height:22px;"></div>
+      <div class="v-bar played" style="height:16px;"></div>
+      <div class="v-bar" style="height:10px;"></div>
+      <div class="v-bar" style="height:18px;"></div>
+      <div class="v-bar" style="height:8px;"></div>
+      <div class="v-bar" style="height:14px;"></div>
+      <div class="v-bar" style="height:20px;"></div>
+      <div class="v-bar" style="height:12px;"></div>
+      <div class="v-bar" style="height:16px;"></div>
+      <div class="v-bar" style="height:10px;"></div>
+      <div class="v-bar" style="height:18px;"></div>
+      <div class="v-bar" style="height:14px;"></div>
+    </div>
+    <div class="voice-duration">1:32</div>
+  </div>
+
+  <div class="section-header">Key Updates</div>
+
+  <!-- Section cards -->
+  <div class="sections">
+
+    <!-- Finance -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-icon finance">💰</div>
+        <div class="sc-title-row">
+          <div class="sc-title">Finance</div>
+          <div class="sc-meta">Yesterday's summary</div>
+        </div>
+        <div class="sc-value">₹24,850</div>
+      </div>
+      <div class="bullet-list">
+        <div class="bullet-item"><div class="bullet-icon">✦</div><div class="bullet-text">Revenue <strong class="up">₹24,850</strong> — <span class="up">▲ 12%</span> vs Monday</div></div>
+        <div class="bullet-item"><div class="bullet-icon">✦</div><div class="bullet-text">Ravi Ji paid outstanding <strong>₹8,500</strong> — dues cleared</div></div>
+        <div class="bullet-item"><div class="bullet-icon">✦</div><div class="bullet-text">Cash in hand: <strong>₹12,200</strong> · UPI: <strong>₹9,400</strong></div></div>
+      </div>
+    </div>
+
+    <!-- Operations -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-icon ops">⚙️</div>
+        <div class="sc-title-row">
+          <div class="sc-title">Operations</div>
+          <div class="sc-meta">Needs attention</div>
+        </div>
+        <div class="sc-value" style="color:#B45B4A;">⚠ 1</div>
+      </div>
+      <div class="bullet-list">
+        <div class="bullet-item"><div class="bullet-icon">✦</div><div class="bullet-text"><strong>Meena Traders</strong> haven't confirmed this week's order</div></div>
+        <div class="bullet-item"><div class="bullet-icon">✦</div><div class="bullet-text">Stock running low: <strong>Basmati 5 kg</strong> — 3 units left</div></div>
+      </div>
+    </div>
+
+    <!-- Customers -->
+    <div class="section-card">
+      <div class="sc-head">
+        <div class="sc-icon customers">👥</div>
+        <div class="sc-title-row">
+          <div class="sc-title">Customers</div>
+          <div class="sc-meta">Active today</div>
+        </div>
+        <div class="sc-value">12</div>
+      </div>
+      <div class="bullet-list">
+        <div class="bullet-item"><div class="bullet-icon">✦</div><div class="bullet-text"><strong>3 new customers</strong> — Priya Devi, Arjun Shah, Nisha Gupta</div></div>
+        <div class="bullet-item"><div class="bullet-icon">✦</div><div class="bullet-text">Returning: Sunita Ji (4th visit this month)</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom nav -->
+<div class="bottom-nav">
+  <div class="voice-fab-wrap"><div class="voice-fab">🎙️</div></div>
+  <div class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+  <div class="nav-item"><div class="nav-icon">📊</div><div class="nav-label">Engines</div></div>
+  <div class="nav-item" style="flex:1.2;"></div>
+  <div class="nav-item active"><div class="nav-icon">📋</div><div class="nav-label">Briefing</div><div class="nav-active-dot"></div></div>
+  <div class="nav-item"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+</div>
+
+</body>
+</html>
