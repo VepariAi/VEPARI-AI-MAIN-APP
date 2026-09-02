@@ -1,0 +1,29 @@
+{
+  "name": "@vepari/mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "react-native start",
+    "android": "react-native run-android",
+    "ios": "react-native run-ios",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx",
+    "test": "jest",
+    "clean": "rm -rf node_modules/.cache android/build ios/build"
+  },
+  "dependencies": {
+    "@vepari/api-client": "*",
+    "@vepari/design-system": "*",
+    "@vepari/types": "*",
+    "@vepari/validation": "*",
+    "react": "18.2.0",
+    "react-native": "0.73.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@types/react": "^18.2.0",
+    "@types/react-native": "^0.73.0",
+    "typescript": "^5.4.5"
+  }
+}
