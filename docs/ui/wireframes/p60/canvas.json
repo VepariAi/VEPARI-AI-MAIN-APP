@@ -1,0 +1,15 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",          "x": 0,    "y": 0, "w": 390, "h": 844, "title": "Splash" },
+    { "file": "Language.dc.html",      "x": 470,  "y": 0, "w": 390, "h": 844, "title": "Step 1 — Language" },
+    { "file": "BusinessSetup.dc.html", "x": 940,  "y": 0, "w": 390, "h": 844, "title": "Step 2 — Business Setup" },
+    { "file": "Security.dc.html",      "x": 1410, "y": 0, "w": 390, "h": 844, "title": "Step 3 — PIN Setup" },
+    { "file": "AIIntro.dc.html",       "x": 1880, "y": 0, "w": 390, "h": 844, "title": "Step 4 — AI Intro" },
+    { "file": "Permissions.dc.html",   "x": 2350, "y": 0, "w": 390, "h": 844, "title": "Step 5 — Permissions" },
+    { "file": "Ready.dc.html",         "x": 2820, "y": 0, "w": 390, "h": 844, "title": "Step 6 — Ready" }
+  ],
+  "annotations": [
+    { "id": "p60-note", "x": 0, "y": -120, "w": 700, "text": "P60 — Onboarding Flow. 7 screens (Splash + 6 steps). Phase 5 tokens: Deep Brown #3B2F2A, Heritage Gold #C8A96B, Ivory White #FAF7F2. Progress bar advances 16.7% per step. Lotus mandala SVG on Splash + Ready. Font: Inter Variable. Depends on P33, P58, P59." }
+  ],
+  "launch": { "view": "canvas" }
+}

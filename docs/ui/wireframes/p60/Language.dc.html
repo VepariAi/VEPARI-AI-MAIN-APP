@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Onboarding — Language</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2;
+  color: #3B2F2A;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.progress-bar { height: 3px; background: #E8DDD0; margin: 0 20px; border-radius: 2px; }
+.progress-fill { height: 3px; background: #C8A96B; border-radius: 2px; width: 16.7%; transition: width 0.3s; }
+.step-label { padding: 8px 20px 0; font-size: 11px; color: #8A7060; letter-spacing: 0.2px; }
+.content { flex: 1; padding: 24px 20px 0; display: flex; flex-direction: column; }
+h1 { font-size: 26px; font-weight: 700; color: #3B2F2A; line-height: 1.2; margin-bottom: 8px; }
+.subtitle { font-size: 14px; color: #8A7060; margin-bottom: 32px; line-height: 1.5; }
+
+.lang-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.lang-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  position: relative;
+}
+.lang-card.selected {
+  border-color: #C8A96B;
+  background: #FEFAF3;
+}
+.lang-card.selected::after {
+  content: '✓';
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  color: #C8A96B;
+  font-size: 14px;
+  font-weight: 700;
+}
+.lang-script {
+  font-size: 22px;
+  color: #3B2F2A;
+  font-weight: 600;
+  line-height: 1.2;
+}
+.lang-name { font-size: 12px; font-weight: 600; color: #8A7060; }
+.lang-native { font-size: 10px; color: #C0AFA5; }
+
+.continue-btn {
+  margin: 0 0 32px;
+  height: 52px;
+  background: #3B2F2A;
+  color: #FAF7F2;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  letter-spacing: 0.1px;
+}
+.continue-btn .arrow { color: #C8A96B; font-size: 18px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;font-size:11px;color:#8A7060;">
+    <span>▲▲▲</span><span>WiFi</span><span>🔋</span>
+  </span>
+</div>
+
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<div class="step-label">Step 1 of 6</div>
+
+<div class="content">
+  <h1>Choose your<br>language</h1>
+  <p class="subtitle">Vepari AI works in your language. You can change this later in Settings.</p>
+
+  <div class="lang-grid">
+    <div class="lang-card">
+      <div class="lang-script">हिंदी</div>
+      <div class="lang-name">Hindi</div>
+      <div class="lang-native">हिन्दी</div>
+    </div>
+    <div class="lang-card selected">
+      <div class="lang-script">English</div>
+      <div class="lang-name">English</div>
+      <div class="lang-native">English</div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-script" style="font-family:'Noto Sans Tamil',sans-serif;">தமிழ்</div>
+      <div class="lang-name">Tamil</div>
+      <div class="lang-native">தமிழ்</div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-script" style="font-family:'Noto Sans Telugu',sans-serif;">తెలుగు</div>
+      <div class="lang-name">Telugu</div>
+      <div class="lang-native">తెలుగు</div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-script" style="font-family:'Noto Sans Kannada',sans-serif;">ಕನ್ನಡ</div>
+      <div class="lang-name">Kannada</div>
+      <div class="lang-native">ಕನ್ನಡ</div>
+    </div>
+    <div class="lang-card">
+      <div class="lang-script">मराठी</div>
+      <div class="lang-name">Marathi</div>
+      <div class="lang-native">मराठी</div>
+    </div>
+  </div>
+
+  <div style="flex:1;"></div>
+  <div class="continue-btn">Continue <span class="arrow">›</span></div>
+</div>
+
+</body>
+</html>

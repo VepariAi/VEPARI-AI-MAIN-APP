@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Onboarding — Business Setup</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2;
+  color: #3B2F2A;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.progress-bar { height: 3px; background: #E8DDD0; margin: 0 20px; border-radius: 2px; }
+.progress-fill { height: 3px; background: #C8A96B; border-radius: 2px; width: 33.3%; }
+.step-label { padding: 8px 20px 0; font-size: 11px; color: #8A7060; letter-spacing: 0.2px; }
+.content { flex: 1; padding: 24px 20px 0; display: flex; flex-direction: column; overflow: hidden; }
+h1 { font-size: 26px; font-weight: 700; color: #3B2F2A; line-height: 1.2; margin-bottom: 8px; }
+.subtitle { font-size: 14px; color: #8A7060; margin-bottom: 28px; line-height: 1.5; }
+
+.field-label { font-size: 11px; font-weight: 600; color: #8A7060; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 8px; }
+.text-input {
+  width: 100%; height: 52px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 10px;
+  padding: 0 16px;
+  font-size: 15px;
+  color: #3B2F2A;
+  font-family: inherit;
+  margin-bottom: 20px;
+  display: flex; align-items: center;
+}
+.text-input.filled { border-color: #C8A96B; color: #3B2F2A; }
+.text-input.placeholder { color: #C0AFA5; }
+
+.phone-row { display: flex; gap: 10px; margin-bottom: 20px; }
+.country-chip {
+  height: 52px; min-width: 88px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 10px;
+  padding: 0 14px;
+  display: flex; align-items: center; gap: 6px;
+  font-size: 13px; color: #3B2F2A; font-weight: 500;
+}
+.phone-input { flex: 1; height: 52px; background: #FFFFFF; border: 1.5px solid #E8DDD0; border-radius: 10px; padding: 0 16px; font-size: 15px; color: #3B2F2A; display: flex; align-items: center; }
+
+.type-label { font-size: 11px; font-weight: 600; color: #8A7060; letter-spacing: 0.4px; text-transform: uppercase; margin-bottom: 10px; }
+.type-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+.chip {
+  padding: 8px 14px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 20px;
+  font-size: 13px; font-weight: 500; color: #8A7060;
+  cursor: pointer;
+}
+.chip.active {
+  background: #FEFAF3;
+  border-color: #C8A96B;
+  color: #3B2F2A;
+}
+
+.continue-btn {
+  margin: 0 0 32px;
+  height: 52px;
+  background: #3B2F2A;
+  color: #FAF7F2;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+}
+.continue-btn .arrow { color: #C8A96B; font-size: 18px; }
+.skip { text-align: center; font-size: 13px; color: #C0AFA5; padding-bottom: 12px; cursor: pointer; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;font-size:11px;color:#8A7060;">
+    <span>▲▲▲</span><span>WiFi</span><span>🔋</span>
+  </span>
+</div>
+
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<div class="step-label">Step 2 of 6</div>
+
+<div class="content">
+  <h1>Tell us about<br>your business</h1>
+  <p class="subtitle">This helps Vepari AI personalise insights and reports for you.</p>
+
+  <div class="field-label">Business Name</div>
+  <div class="text-input filled">Sharma Kirana Store</div>
+
+  <div class="field-label">Business Type</div>
+  <div class="type-chips">
+    <div class="chip active">🛒 Retail</div>
+    <div class="chip">🍽️ Restaurant</div>
+    <div class="chip">⚙️ Services</div>
+    <div class="chip">🏭 Manufacturing</div>
+    <div class="chip">📦 Distribution</div>
+    <div class="chip">Other</div>
+  </div>
+
+  <div class="field-label">Mobile Number</div>
+  <div class="phone-row">
+    <div class="country-chip">
+      <span style="font-size:16px;">🇮🇳</span>
+      <span>+91</span>
+      <span style="font-size:10px;color:#C0AFA5;">▾</span>
+    </div>
+    <div class="phone-input">98765 43210</div>
+  </div>
+
+  <div style="flex:1;"></div>
+  <div class="continue-btn">Continue <span class="arrow">›</span></div>
+  <div class="skip">Skip for now</div>
+</div>
+
+</body>
+</html>

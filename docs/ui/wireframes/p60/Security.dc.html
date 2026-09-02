@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Onboarding — Security PIN</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2;
+  color: #3B2F2A;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.progress-bar { height: 3px; background: #E8DDD0; margin: 0 20px; border-radius: 2px; }
+.progress-fill { height: 3px; background: #C8A96B; border-radius: 2px; width: 50%; }
+.step-label { padding: 8px 20px 0; font-size: 11px; color: #8A7060; letter-spacing: 0.2px; }
+.content { flex: 1; padding: 24px 20px 0; display: flex; flex-direction: column; align-items: center; }
+h1 { font-size: 26px; font-weight: 700; color: #3B2F2A; line-height: 1.2; margin-bottom: 8px; text-align: center; width: 100%; }
+.subtitle { font-size: 14px; color: #8A7060; margin-bottom: 40px; line-height: 1.5; text-align: center; }
+
+/* PIN dots */
+.pin-dots { display: flex; gap: 16px; margin-bottom: 40px; }
+.pin-dot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  border: 2px solid #E8DDD0;
+  background: transparent;
+  transition: background 0.15s;
+}
+.pin-dot.filled {
+  background: #3B2F2A;
+  border-color: #3B2F2A;
+}
+.pin-dot.gold {
+  background: #C8A96B;
+  border-color: #C8A96B;
+}
+
+/* Numpad */
+.numpad {
+  width: 100%;
+  max-width: 320px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.num-key {
+  height: 70px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.num-key .digit { font-size: 24px; font-weight: 600; color: #3B2F2A; line-height: 1; }
+.num-key .letters { font-size: 9px; letter-spacing: 1px; color: #C0AFA5; margin-top: 2px; }
+.num-key.empty { background: transparent; border: none; }
+.num-key.delete { background: transparent; border: 1.5px solid transparent; }
+.num-key.delete .digit { font-size: 18px; color: #8A7060; }
+
+.biometric {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: #8A7060;
+  padding-bottom: 20px; cursor: pointer;
+}
+.biometric-icon { font-size: 20px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;font-size:11px;color:#8A7060;">
+    <span>▲▲▲</span><span>WiFi</span><span>🔋</span>
+  </span>
+</div>
+
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<div class="step-label">Step 3 of 6</div>
+
+<div class="content">
+  <h1>Create your<br>security PIN</h1>
+  <p class="subtitle">Keep your business data safe. You'll use this to unlock Vepari AI.</p>
+
+  <div class="pin-dots">
+    <div class="pin-dot filled"></div>
+    <div class="pin-dot filled"></div>
+    <div class="pin-dot filled"></div>
+    <div class="pin-dot gold"></div>
+    <div class="pin-dot"></div>
+    <div class="pin-dot"></div>
+  </div>
+
+  <div class="numpad">
+    <!-- Row 1 -->
+    <div class="num-key"><div class="digit">1</div><div class="letters"></div></div>
+    <div class="num-key"><div class="digit">2</div><div class="letters">ABC</div></div>
+    <div class="num-key"><div class="digit">3</div><div class="letters">DEF</div></div>
+    <!-- Row 2 -->
+    <div class="num-key"><div class="digit">4</div><div class="letters">GHI</div></div>
+    <div class="num-key"><div class="digit">5</div><div class="letters">JKL</div></div>
+    <div class="num-key"><div class="digit">6</div><div class="letters">MNO</div></div>
+    <!-- Row 3 -->
+    <div class="num-key"><div class="digit">7</div><div class="letters">PQRS</div></div>
+    <div class="num-key"><div class="digit">8</div><div class="letters">TUV</div></div>
+    <div class="num-key"><div class="digit">9</div><div class="letters">WXYZ</div></div>
+    <!-- Row 4 -->
+    <div class="num-key empty"></div>
+    <div class="num-key"><div class="digit">0</div><div class="letters"></div></div>
+    <div class="num-key delete"><div class="digit">⌫</div></div>
+  </div>
+
+  <div class="biometric">
+    <span class="biometric-icon">👆</span>
+    <span>Or use fingerprint / Face ID</span>
+  </div>
+</div>
+
+</body>
+</html>
