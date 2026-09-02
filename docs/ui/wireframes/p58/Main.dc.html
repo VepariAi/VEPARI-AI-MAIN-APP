@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI OS.png — Full Layout Analysis</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 900px;
+  background: #FAF7F2;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #3B2F2A;
+  padding: 32px;
+}
+
+h1 { font-size: 22px; font-weight: 700; color: #3B2F2A; margin-bottom: 4px; }
+h2 { font-size: 15px; font-weight: 700; color: #3B2F2A; margin: 24px 0 10px; border-bottom: 2px solid #C8A96B; padding-bottom: 6px; }
+h3 { font-size: 13px; font-weight: 600; color: #5A6B4F; margin: 16px 0 6px; }
+.subtitle { font-size: 11px; letter-spacing: 0.3px; color: #8A7060; margin-bottom: 24px; }
+
+.zone-map {
+  display: grid;
+  grid-template-columns: 180px 1fr 180px;
+  gap: 0;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 24px;
+  background: #FFFFFF;
+}
+.zone-header {
+  grid-column: 1 / -1;
+  background: #3B2F2A;
+  color: #C8A96B;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  padding: 8px 16px;
+}
+.zone-block {
+  padding: 14px 16px;
+  border: 1px solid #F2E8D6;
+  min-height: 60px;
+}
+.zone-block.center {
+  background: #FAF7F2;
+  border-left: 2px solid #C8A96B;
+  border-right: 2px solid #C8A96B;
+  text-align: center;
+}
+.zone-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #C8A96B;
+  margin-bottom: 4px;
+}
+.zone-desc { font-size: 11px; color: #5B4A42; line-height: 1.5; }
+.zone-percent {
+  font-size: 18px;
+  font-weight: 700;
+  color: #3B2F2A;
+  margin-bottom: 2px;
+}
+
+.annotation-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.ann-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  padding: 16px;
+}
+.ann-card.full { grid-column: 1 / -1; }
+.ann-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #C8A96B;
+  margin-bottom: 10px;
+}
+.token-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #F2E8D6;
+  font-size: 11px;
+}
+.token-row:last-child { border-bottom: none; }
+.token-label { color: #8A7060; flex: 0 0 140px; }
+.token-value { color: #3B2F2A; font-weight: 500; flex: 1; }
+.token-code { font-family: 'Courier New', monospace; font-size: 10px; color: #4A3D6B; background: #F0EDF8; padding: 1px 5px; border-radius: 3px; }
+
+.swatch-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.swatch {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #3B2F2A;
+}
+.swatch-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+.layout-diagram {
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  position: relative;
+}
+.phone-frame {
+  width: 320px;
+  margin: 0 auto;
+  border: 2.5px solid #3B2F2A;
+  border-radius: 32px;
+  overflow: hidden;
+  background: #FAF7F2;
+  position: relative;
+}
+.frame-zone {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  position: relative;
+}
+.fz-header { height: 80px; background: #FAF7F2; border-bottom: 1px solid #E8DDD0; flex-direction: column; color: #3B2F2A; }
+.fz-engines { height: 280px; background: linear-gradient(135deg, #FAF7F2, #F2E8D6); display: grid; grid-template-columns: 1fr 1fr 1fr; }
+.fz-col { display: flex; align-items: center; justify-content: center; font-size: 9px; color: #8A7060; border: 0.5px solid #F2E8D6; }
+.fz-col.center-col { background: radial-gradient(circle, rgba(200,169,107,0.15), transparent 70%); color: #C8A96B; font-weight: 700; }
+.fz-bottom { height: 160px; background: #FFFFFF; border-top: 1px solid #E8DDD0; flex-direction: column; }
+.fz-voice { height: 48px; background: #3B2F2A; color: #C8A96B; }
+
+.annotation-labels {
+  position: absolute;
+  top: 24px;
+  right: 0;
+  width: 200px;
+}
+.ann-label-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 10px;
+  color: #3B2F2A;
+}
+.ann-line { width: 24px; height: 1px; background: #C8A96B; }
+.ann-percent { font-weight: 700; color: #C8A96B; }
+
+.note {
+  background: #F0EDF8;
+  border-left: 3px solid #4A3D6B;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  font-size: 11px;
+  color: #3B2F2A;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.note strong { color: #4A3D6B; }
+
+.grid-spec {
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+table { width: 100%; border-collapse: collapse; font-size: 11px; }
+th { background: #F2E8D6; color: #3B2F2A; font-weight: 700; padding: 6px 10px; text-align: left; font-size: 10px; letter-spacing: 0.3px; }
+td { padding: 6px 10px; border-bottom: 1px solid #F2E8D6; color: #3B2F2A; vertical-align: top; }
+td.mono { font-family: 'Courier New', monospace; font-size: 10px; color: #4A3D6B; }
+</style>
+</head>
+<body>
+
+<h1>AI OS.png — Inch-by-Inch Layout Analysis</h1>
+<p class="subtitle">P58 · Design reference for Phase 6 mobile implementation · All measurements in dp equivalents</p>
+
+<h2>1. Composition Overview</h2>
+
+<div class="layout-diagram">
+  <div style="display:flex; gap:32px; align-items:flex-start;">
+    <div class="phone-frame">
+      <div class="frame-zone fz-header">
+        <div style="font-size:9px;letter-spacing:0.3px;color:#8A7060;margin-bottom:2px;">• AI OS ACTIVE</div>
+        <div style="font-size:16px;font-weight:700;color:#3B2F2A;">VEPARI AI OS</div>
+        <div style="font-size:7px;letter-spacing:0.6px;color:#8A7060;">BUSINESS OPERATING SYSTEM</div>
+      </div>
+      <div class="fz-engines">
+        <div class="fz-col" style="flex-direction:column;gap:4px;padding:4px;">
+          <div style="background:#F2E8D6;border-radius:6px;width:100%;padding:4px;margin-bottom:2px;">
+            <div style="font-size:7px;font-weight:700;color:#C8A96B;">FINANCE</div>
+            <div style="font-size:10px;font-weight:700;">₹24,850</div>
+          </div>
+          <div style="background:#F2E8D6;border-radius:6px;width:100%;padding:4px;margin-bottom:2px;">
+            <div style="font-size:7px;font-weight:700;color:#C8A96B;">CUSTOMER</div>
+            <div style="font-size:10px;font-weight:700;">12</div>
+          </div>
+          <div style="background:#F2E8D6;border-radius:6px;width:100%;padding:4px;">
+            <div style="font-size:7px;font-weight:700;color:#C8A96B;">SUPPLIER</div>
+            <div style="font-size:10px;font-weight:700;">2</div>
+          </div>
+        </div>
+        <div class="fz-col center-col" style="flex-direction:column;">
+          <div style="width:80px;height:80px;border-radius:50%;border:2px solid #C8A96B;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#FFFFFF,#FAF7F2);">
+            <div style="text-align:center;">
+              <div style="font-size:8px;font-weight:700;color:#3B2F2A;">VEPARI AI</div>
+              <div style="font-size:6px;color:#C8A96B;letter-spacing:0.3px;">AI OS CORE</div>
+            </div>
+          </div>
+          <div style="font-size:7px;margin-top:8px;color:#C8A96B;letter-spacing:0.3px;">ANALYZE·LEARN·OPTIMIZE</div>
+        </div>
+        <div class="fz-col" style="flex-direction:column;gap:4px;padding:4px;">
+          <div style="background:#F2E8D6;border-radius:6px;width:100%;padding:4px;margin-bottom:2px;">
+            <div style="font-size:7px;font-weight:700;color:#C8A96B;">INSIGHT</div>
+            <div style="font-size:10px;font-weight:700;">4</div>
+          </div>
+          <div style="background:#F2E8D6;border-radius:6px;width:100%;padding:4px;margin-bottom:2px;">
+            <div style="font-size:7px;font-weight:700;color:#C8A96B;">AUTOMATION</div>
+            <div style="font-size:10px;font-weight:700;">7</div>
+          </div>
+          <div style="background:#F2E8D6;border-radius:6px;width:100%;padding:4px;margin-bottom:2px;">
+            <div style="font-size:7px;font-weight:700;color:#C8A96B;">OPERATIONS</div>
+            <div style="font-size:10px;font-weight:700;">18</div>
+          </div>
+          <div style="background:#F2E8D6;border-radius:6px;width:100%;padding:4px;">
+            <div style="font-size:7px;font-weight:700;color:#C8A96B;">SECURITY</div>
+            <div style="font-size:8px;font-weight:700;color:#5A6B4F;">SECURE</div>
+          </div>
+        </div>
+      </div>
+      <div class="frame-zone fz-bottom" style="padding:10px 8px;">
+        <div style="font-size:8px;font-weight:700;color:#C8A96B;margin-bottom:2px;">● BUSINESS INTELLIGENCE</div>
+        <div style="font-size:11px;font-weight:700;color:#3B2F2A;margin-bottom:3px;">Good Morning, Arun</div>
+        <div style="font-size:8px;color:#8A7060;margin-bottom:6px;">I've been monitoring your business while you were away.</div>
+        <div style="background:#3B2F2A;color:#C8A96B;font-size:8px;font-weight:700;padding:4px 10px;border-radius:4px;display:inline-block;letter-spacing:0.3px;">VIEW BRIEFING ›</div>
+      </div>
+      <div class="frame-zone fz-voice">
+        <span style="font-size:8px;letter-spacing:0.5px;">VOICE COMMAND ACTIVE</span>
+      </div>
+    </div>
+
+    <div style="flex:1;">
+      <div class="ann-card" style="margin-bottom:12px;">
+        <div class="ann-title">Zone Proportions (% of total height)</div>
+        <div class="token-row">
+          <div class="token-label">Zone A — Header</div>
+          <div class="token-value"><span class="ann-percent">~10%</span> Status pill + wordmark + subtitle</div>
+        </div>
+        <div class="token-row">
+          <div class="token-label">Zone B — AI Core Ring</div>
+          <div class="token-value"><span class="ann-percent">~30%</span> Ring + glow + holographic ground</div>
+        </div>
+        <div class="token-row">
+          <div class="token-label">Zone C — Engine Cards</div>
+          <div class="token-value"><span class="ann-percent">flanks B</span> Left 3 cards + Right 4 cards alongside Zone B</div>
+        </div>
+        <div class="token-row">
+          <div class="token-label">Zone D — Bottom Panel</div>
+          <div class="token-value"><span class="ann-percent">~25%</span> BI greeting card + WYWA list</div>
+        </div>
+        <div class="token-row">
+          <div class="token-label">Zone E — Voice Bar</div>
+          <div class="token-value"><span class="ann-percent">~6%</span> Full-bleed dark bar, mic FAB</div>
+        </div>
+      </div>
+
+      <div class="ann-card" style="margin-bottom:12px;">
+        <div class="ann-title">Column Grid</div>
+        <div class="token-row">
+          <div class="token-label">Left engine column</div>
+          <div class="token-value">~28% width, screen margin 20dp</div>
+        </div>
+        <div class="token-row">
+          <div class="token-label">Center (AI Core)</div>
+          <div class="token-value">~44% width, ring diameter ~44% of screen width</div>
+        </div>
+        <div class="token-row">
+          <div class="token-label">Right engine column</div>
+          <div class="token-value">~28% width, screen margin 20dp</div>
+        </div>
+        <div class="token-row">
+          <div class="token-label">Connecting lines</div>
+          <div class="token-value">Thin horizontal, Heritage Gold, extends from ring edge to card</div>
+        </div>
+      </div>
+
+      <div class="note">
+        <strong>Implementation note:</strong> The marketing image uses a 3-column layout with a massive central AI Core ring. The mobile app must adapt this to a scrollable single-column layout (390dp wide) with the AI Core as a hero element above engine card rows. The visual language — warm palette, ring structure, engine cards, bottom BI panel — transfers directly.
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>2. Color Usage Per Element</h2>
+<div class="annotation-grid">
+  <div class="ann-card">
+    <div class="ann-title">Background & Surfaces</div>
+    <div class="token-row"><div class="token-label">Page background</div><div class="token-value"><span class="token-code">brand.ivory #FAF7F2</span> with subtle radial warmth toward center</div></div>
+    <div class="token-row"><div class="token-label">Engine card bg</div><div class="token-value"><span class="token-code">brand.beige #F2E8D6</span> with very light border</div></div>
+    <div class="token-row"><div class="token-label">Bottom panel bg</div><div class="token-value"><span class="token-code">colors.surface #FFFFFF</span></div></div>
+    <div class="token-row"><div class="token-label">Voice bar bg</div><div class="token-value"><span class="token-code">colors.primary #3B2F2A</span> (full bleed Deep Brown)</div></div>
+    <div class="token-row"><div class="token-label">Card border</div><div class="token-value"><span class="token-code">colors.border #E8DDD0</span></div></div>
+  </div>
+  <div class="ann-card">
+    <div class="ann-title">Text Colors</div>
+    <div class="token-row"><div class="token-label">Wordmark "VEPARI AI OS"</div><div class="token-value"><span class="token-code">colors.textPrimary #3B2F2A</span></div></div>
+    <div class="token-row"><div class="token-label">Subtitle spaced caps</div><div class="token-value"><span class="token-code">colors.textSecondary #8A7060</span></div></div>
+    <div class="token-row"><div class="token-label">Engine names (ALL CAPS)</div><div class="token-value"><span class="token-code">colors.textPrimary #3B2F2A</span></div></div>
+    <div class="token-row"><div class="token-label">Engine metric values</div><div class="token-value"><span class="token-code">colors.textPrimary #3B2F2A</span></div></div>
+    <div class="token-row"><div class="token-label">Metric labels ("Sales Today")</div><div class="token-value"><span class="token-code">colors.textSecondary #8A7060</span></div></div>
+    <div class="token-row"><div class="token-label">"SECURE" value text</div><div class="token-value"><span class="token-code">colors.success #5A6B4F</span></div></div>
+  </div>
+  <div class="ann-card">
+    <div class="ann-title">Heritage Gold Usage (#C8A96B)</div>
+    <div class="token-row"><div class="token-label">AI Core ring segments</div><div class="token-value">Metallic gradient, dominant ring color</div></div>
+    <div class="token-row"><div class="token-label">Connecting lines (ring→card)</div><div class="token-value">Thin 1px horizontal, with gold dot at card end</div></div>
+    <div class="token-row"><div class="token-label">Engine icon circles</div><div class="token-value">Gold stroke or light gold fill</div></div>
+    <div class="token-row"><div class="token-label">Sparkline bars</div><div class="token-value">Heritage Gold bars, varying heights</div></div>
+    <div class="token-row"><div class="token-label">Section bullet dots (●)</div><div class="token-value">Small gold filled circles before section headers</div></div>
+    <div class="token-row"><div class="token-label">"ANALYZE·LEARN·OPTIMIZE"</div><div class="token-value">Arc text on ring, Heritage Gold</div></div>
+    <div class="token-row"><div class="token-label">VIEW BRIEFING button text</div><div class="token-value">Heritage Gold on Deep Brown fill</div></div>
+    <div class="token-row"><div class="token-label">Mic FAB on voice bar</div><div class="token-value">Gold circular button</div></div>
+    <div class="token-row"><div class="token-label">WYWA check icons</div><div class="token-value">Gold filled checkmarks (✓)</div></div>
+  </div>
+  <div class="ann-card">
+    <div class="ann-title">Glow & Ambient Effects</div>
+    <div class="token-row"><div class="token-label">AI Core inner glow</div><div class="token-value">White → gold radial gradient, blurs outward ~40dp radius</div></div>
+    <div class="token-row"><div class="token-label">Holographic ground rings</div><div class="token-value">Concentric ellipses, warm gold-white, below the sphere</div></div>
+    <div class="token-row"><div class="token-label">Light beam</div><div class="token-value">Vertical gold-white cone from core downward, particle sparkles</div></div>
+    <div class="token-row"><div class="token-label">Particle stars</div><div class="token-value">Small white/gold star sparkles around ring perimeter</div></div>
+    <div class="token-row"><div class="token-label">Token mapping</div><div class="token-value"><span class="token-code">elevation.ai</span> shadow; glow = React Native LinearGradient + BlurView</div></div>
+  </div>
+</div>
+
+<h2>3. Typography Per Zone</h2>
+<div class="grid-spec">
+  <table>
+    <thead>
+      <tr>
+        <th>Text Element</th>
+        <th>Token</th>
+        <th>Size</th>
+        <th>Weight</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Status pill "AI OS ACTIVE"</td><td class="mono">typeScale.label</td><td>11sp</td><td>600</td><td>letterSpacing +0.3, Olive dot prefix</td></tr>
+      <tr><td>"VEPARI AI OS" wordmark</td><td class="mono">typeScale.displayXl</td><td>28sp</td><td>700</td><td>Cinzel or Inter 700, Deep Brown</td></tr>
+      <tr><td>"BUSINESS OPERATING SYSTEM"</td><td class="mono">typeScale.overline</td><td>10sp</td><td>700</td><td>letterSpacing +0.8, ALL CAPS, textSecondary</td></tr>
+      <tr><td>"ANALYZE · LEARN · OPTIMIZE"</td><td class="mono">typeScale.label</td><td>11sp</td><td>600</td><td>Arc text, Heritage Gold, letterSpacing +0.3</td></tr>
+      <tr><td>"VEPARI AI" (ring center)</td><td class="mono">typeScale.titleSm</td><td>15sp</td><td>600</td><td>Deep Brown</td></tr>
+      <tr><td>"AI OS CORE" (ring center)</td><td class="mono">typeScale.labelLg</td><td>12sp</td><td>600</td><td>Heritage Gold, letterSpacing +0.1</td></tr>
+      <tr><td>Engine name "FINANCE ENGINE"</td><td class="mono">typeScale.overline</td><td>10sp</td><td>700</td><td>ALL CAPS, textPrimary</td></tr>
+      <tr><td>Metric value "₹ 24,850"</td><td class="mono">typeScale.display</td><td>22sp</td><td>700</td><td>Deep Brown, includes ₹ prefix</td></tr>
+      <tr><td>Metric label "Sales Today"</td><td class="mono">typeScale.caption</td><td>11sp</td><td>400</td><td>textSecondary</td></tr>
+      <tr><td>SECURITY value "SECURE"</td><td class="mono">typeScale.titleXl</td><td>20sp</td><td>700</td><td>Olive Green (success color)</td></tr>
+      <tr><td>"Good Morning, Arun"</td><td class="mono">typeScale.titleLg</td><td>18sp</td><td>700</td><td>textPrimary</td></tr>
+      <tr><td>BI body text</td><td class="mono">typeScale.body</td><td>14sp</td><td>400</td><td>textSecondary</td></tr>
+      <tr><td>"BUSINESS INTELLIGENCE"</td><td class="mono">typeScale.overline</td><td>10sp</td><td>700</td><td>Heritage Gold, with ● dot prefix</td></tr>
+      <tr><td>"WHILE YOU WERE AWAY"</td><td class="mono">typeScale.overline</td><td>10sp</td><td>700</td><td>Heritage Gold, with ● dot prefix</td></tr>
+      <tr><td>WYWA list items</td><td class="mono">typeScale.bodySm</td><td>13sp</td><td>400</td><td>textPrimary, ✓ Gold prefix</td></tr>
+      <tr><td>"VIEW BRIEFING ›" button</td><td class="mono">typeScale.labelLg</td><td>12sp</td><td>600</td><td>Heritage Gold on Deep Brown</td></tr>
+      <tr><td>"VOICE COMMAND ACTIVE"</td><td class="mono">typeScale.label</td><td>11sp</td><td>600</td><td>letterSpacing +0.3, Heritage Gold on Deep Brown</td></tr>
+      <tr><td>"TAP TO SPEAK" / "VEPARI IS LISTENING"</td><td class="mono">typeScale.caption</td><td>11sp</td><td>400</td><td>textDisabled on dark bg</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<h2>4. Corner Bracket Decorative Motif</h2>
+<div class="annotation-grid">
+  <div class="ann-card full">
+    <div class="ann-title">Circuit-Corner Brackets</div>
+    <div style="display:flex; gap:24px; align-items:flex-start;">
+      <div>
+        <div style="position:relative;width:80px;height:80px;border:1.5px solid #F2E8D6;border-radius:8px;">
+          <!-- TL bracket -->
+          <svg width="80" height="80" style="position:absolute;top:0;left:0;" viewBox="0 0 80 80">
+            <path d="M8 30 L8 8 L30 8" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+            <circle cx="8" cy="18" r="2" fill="#C8A96B"/>
+            <line x1="8" y1="18" x2="20" y2="18" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="2,2"/>
+            <circle cx="20" cy="8" r="2" fill="#C8A96B"/>
+            <line x1="20" y1="8" x2="20" y2="18" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="2,2"/>
+          </svg>
+        </div>
+        <div style="font-size:10px;color:#8A7060;margin-top:6px;">Top-left corner</div>
+      </div>
+      <div style="flex:1;">
+        <div class="token-row"><div class="token-label">Stroke width</div><div class="token-value">1–1.5px Heritage Gold (#C8A96B)</div></div>
+        <div class="token-row"><div class="token-label">Bracket arm length</div><div class="token-value">~24dp each arm</div></div>
+        <div class="token-row"><div class="token-label">Circuit nodes</div><div class="token-value">Small filled circles (r≈2dp) at junction + midpoint of each arm</div></div>
+        <div class="token-row"><div class="token-label">Circuit traces</div><div class="token-value">Dashed secondary lines between nodes (stroke-dasharray 2,2)</div></div>
+        <div class="token-row"><div class="token-label">Placement</div><div class="token-value">All 4 corners of header zone and bottom panel card</div></div>
+        <div class="token-row"><div class="token-label">Implementation</div><div class="token-value">SVG with path + circle elements; opacity 0.6 for subtlety</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>5. Spacing Measurements</h2>
+<div class="grid-spec">
+  <table>
+    <thead>
+      <tr><th>Element</th><th>Token</th><th>dp Value</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Screen edge margin</td><td class="mono">spacing.screenMargin</td><td>20dp</td></tr>
+      <tr><td>Card internal padding H</td><td class="mono">spacing.cardPadding</td><td>16dp</td></tr>
+      <tr><td>Card internal padding V</td><td class="mono">space[3]</td><td>12dp</td></tr>
+      <tr><td>Gap between engine card and next</td><td class="mono">space[3]</td><td>12dp</td></tr>
+      <tr><td>Header section bottom margin</td><td class="mono">space[4]</td><td>16dp</td></tr>
+      <tr><td>Sparkline height</td><td class="mono">space[5]</td><td>20dp</td></tr>
+      <tr><td>Engine icon circle size</td><td class="mono">spacing.icon</td><td>24dp (icon) inside 36dp circle</td></tr>
+      <tr><td>AI Core ring diameter (marketing)</td><td>—</td><td>44% of total width (~190dp on 390dp screen)</td></tr>
+      <tr><td>Voice bar height</td><td class="mono">spacing.navBarHeight</td><td>80dp (same as bottom nav spec)</td></tr>
+      <tr><td>Mic FAB size on voice bar</td><td class="mono">spacing.voiceFabSize</td><td>56dp (canonical) or 48dp (visual)</td></tr>
+      <tr><td>Bottom panel padding H</td><td class="mono">spacing.screenMargin</td><td>20dp</td></tr>
+      <tr><td>Bottom panel padding V</td><td class="mono">space[4]</td><td>16dp</td></tr>
+      <tr><td>WYWA list item gap</td><td class="mono">space[2]</td><td>8dp</td></tr>
+      <tr><td>Status pill H padding</td><td class="mono">space[3]</td><td>12dp</td></tr>
+      <tr><td>Status pill V padding</td><td class="mono">space[1]</td><td>4dp</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="note">
+  <strong>Key insight for mobile adaptation:</strong> The marketing image is a 2D infographic, not a mobile screen. For the React Native AI OS Home screen (P61), the 3-column layout cannot be used at 390dp width. The adaptation strategy is: AI Core ring as full-width hero (~260dp diameter), engine cards in a 2×N grid below, bottom BI panel as a collapsible card, voice bar replacing the bottom navigation.
+</div>
+
+</body>
+</html>
