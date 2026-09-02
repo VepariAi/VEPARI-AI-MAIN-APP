@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "CustomerList.dc.html",   "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Customers — List" },
+    { "file": "CustomerDetail.dc.html","x": 470, "y": 0, "w": 390, "h": 844, "title": "Customer Detail" }
+  ],
+  "annotations": [
+    { "id": "p66-note", "x": 0, "y": -120, "w": 650, "text": "P66 — Customers canvas. Depends on P39, P59. Phase 5 tokens. List: search, segment tabs (All/Regular/Credit/New), stats strip (47 total/₹18K receivable/12 this month), avatar rows with balance. Detail: hero with avatar+actions, stat tiles, AI insight card (Deep Brown→AI Indigo), transaction history, action buttons." }
+  ],
+  "launch": { "view": "canvas" }
+}

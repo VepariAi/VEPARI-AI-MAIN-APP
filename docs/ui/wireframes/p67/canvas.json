@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "SupplierList.dc.html",   "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Suppliers — List" },
+    { "file": "SupplierDetail.dc.html", "x": 470, "y": 0, "w": 390, "h": 844, "title": "Supplier Detail" }
+  ],
+  "annotations": [
+    { "id": "p67-note", "x": 0, "y": -120, "w": 650, "text": "P67 — Suppliers canvas. Depends on P39, P59. Phase 5 tokens. List: search, segment tabs (All/Active/Overdue), overdue alert strip (2 suppliers/₹34.2K), stats strip, overdue-first sorted rows. Detail: hero with overdue pill, urgent pay card (₹22,400 overdue/CTA button), stat tiles, order history with paid/overdue badges." }
+  ],
+  "launch": { "view": "canvas" }
+}

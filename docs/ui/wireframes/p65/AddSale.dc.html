@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Add Sale</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.back-btn { font-size: 20px; color: #C8A96B; width: 32px; }
+.header-title { font-size: 16px; font-weight: 700; }
+.header-action { font-size: 13px; color: #C8A96B; font-weight: 600; }
+
+.form-body { flex: 1; overflow: hidden; padding: 14px 20px; display: flex; flex-direction: column; gap: 14px; }
+
+.field-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #8A7060; margin-bottom: 6px; }
+
+/* Customer row */
+.customer-row {
+  background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px;
+  padding: 12px 14px; display: flex; align-items: center; gap: 10px;
+}
+.customer-avatar { width: 36px; height: 36px; border-radius: 50%; background: #EDE5D8; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.customer-name { flex: 1; font-size: 14px; font-weight: 600; color: #3B2F2A; }
+.customer-change { font-size: 12px; color: #C8A96B; font-weight: 500; }
+
+/* Items section */
+.items-box { background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; overflow: hidden; }
+.item-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #F0EAE0; }
+.item-row:last-child { border-bottom: none; }
+.item-name { flex: 1; font-size: 13px; color: #3B2F2A; }
+.qty-ctrl { display: flex; align-items: center; gap: 6px; }
+.qty-btn { width: 24px; height: 24px; border-radius: 6px; background: #F0EAE0; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #3B2F2A; }
+.qty-val { font-size: 13px; font-weight: 600; min-width: 18px; text-align: center; }
+.item-price { font-size: 13px; font-weight: 600; color: #3B2F2A; min-width: 52px; text-align: right; font-variant-numeric: tabular-nums; }
+.add-item-row { display: flex; align-items: center; gap: 8px; padding: 10px 14px; }
+.add-item-text { font-size: 13px; color: #C8A96B; font-weight: 500; }
+
+/* Payment method */
+.pay-row { display: flex; gap: 8px; }
+.pay-chip { flex: 1; height: 38px; border-radius: 10px; border: 1.5px solid #E8DDD0; background: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; color: #8A7060; font-weight: 500; }
+.pay-chip.active { border-color: #3B2F2A; background: #3B2F2A; color: #FAF7F2; }
+
+/* Totals */
+.totals-mini { background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 10px 14px; }
+.total-row { display: flex; justify-content: space-between; font-size: 13px; color: #8A7060; padding: 3px 0; }
+.total-row.main { font-weight: 700; color: #3B2F2A; font-size: 15px; border-top: 1px solid #F0EAE0; margin-top: 4px; padding-top: 8px; }
+
+/* CTA */
+.cta-btn { height: 52px; background: #3B2F2A; color: #FAF7F2; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="back-btn">‹</div>
+  <div class="header-title">New Sale</div>
+  <div class="header-action">Save Draft</div>
+</div>
+
+<div class="form-body">
+
+  <!-- Customer -->
+  <div>
+    <div class="field-label">Customer</div>
+    <div class="customer-row">
+      <div class="customer-avatar">👤</div>
+      <div class="customer-name">Ravi Kumar Ji</div>
+      <div class="customer-change">Change ›</div>
+    </div>
+  </div>
+
+  <!-- Items -->
+  <div>
+    <div class="field-label">Items</div>
+    <div class="items-box">
+      <div class="item-row">
+        <div class="item-name">Basmati Rice 5 kg</div>
+        <div class="qty-ctrl">
+          <div class="qty-btn">−</div>
+          <div class="qty-val">2</div>
+          <div class="qty-btn">+</div>
+        </div>
+        <div class="item-price">₹1,240</div>
+      </div>
+      <div class="item-row">
+        <div class="item-name">Toor Dal 1 kg</div>
+        <div class="qty-ctrl">
+          <div class="qty-btn">−</div>
+          <div class="qty-val">3</div>
+          <div class="qty-btn">+</div>
+        </div>
+        <div class="item-price">₹540</div>
+      </div>
+      <div class="add-item-row">
+        <span style="font-size:18px;color:#C8A96B;">+</span>
+        <div class="add-item-text">Add item or scan barcode</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payment -->
+  <div>
+    <div class="field-label">Payment Method</div>
+    <div class="pay-row">
+      <div class="pay-chip active">💳 UPI</div>
+      <div class="pay-chip">💵 Cash</div>
+      <div class="pay-chip">🏦 Credit</div>
+    </div>
+  </div>
+
+  <!-- Totals -->
+  <div class="totals-mini">
+    <div class="total-row"><span>Sub-total</span><span>₹1,780</span></div>
+    <div class="total-row"><span>GST (18%)</span><span>₹320</span></div>
+    <div class="total-row main"><span>Total</span><span>₹2,100</span></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-btn">🧾 Record Sale · ₹2,100</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Transactions.dc.html", "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Transactions — List" },
+    { "file": "AddSale.dc.html", "x": 470, "y": 0, "w": 390, "h": 844, "title": "Add Sale" }
+  ],
+  "annotations": [
+    { "id": "p65-note", "x": 0, "y": -120, "w": 650, "text": "P65 — Transactions + Add Sale canvas. Depends on P38, P59. Phase 5 tokens. Transactions: filter bar, type tabs (All/Income/Expense/UPI/Cash), daily summary strip, grouped date list with credit/debit coloring, FAB. Add Sale: customer selector, item rows with qty controls, payment method chips, totals, record CTA." }
+  ],
+  "launch": { "view": "canvas" }
+}

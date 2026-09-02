@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Overview.dc.html",          "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Inventory — Overview" },
+    { "file": "StockAdjustment.dc.html",  "x": 470, "y": 0, "w": 390, "h": 844, "title": "Stock Adjustment" }
+  ],
+  "annotations": [
+    { "id": "p68-note", "x": 0, "y": -120, "w": 650, "text": "P68 — Inventory canvas. Depends on P40, P59. Phase 5 tokens. Overview: search + barcode scan, low-stock alert strip (3 items), KPI tiles (84 SKUs/₹2.6L value/3 low), category tabs, item rows with stock bars (LOW/OK badges). Stock Adjustment: item selector with alert, Add/Remove/Reorder action chips, big qty stepper, reason chips, live preview (before/after), Olive Green CTA." }
+  ],
+  "launch": { "view": "canvas" }
+}

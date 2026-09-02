@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Customers — List</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.back-btn { font-size: 20px; color: #C8A96B; width: 32px; }
+.header-title { font-size: 16px; font-weight: 700; }
+.header-action { font-size: 16px; color: #C8A96B; font-weight: 600; }
+
+.filter-row { display: flex; gap: 8px; padding: 10px 20px; }
+.search-box { flex: 1; height: 36px; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 10px; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 13px; color: #C0AFA5; }
+.filter-btn { width: 36px; height: 36px; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+.seg-tabs { display: flex; gap: 6px; padding: 0 20px 10px; }
+.stab { padding: 5px 14px; border-radius: 14px; font-size: 12px; font-weight: 600; background: #FFFFFF; border: 1.5px solid #E8DDD0; color: #8A7060; }
+.stab.active { background: #3B2F2A; border-color: #3B2F2A; color: #FAF7F2; }
+
+/* Stats strip */
+.stats-strip { display: flex; margin: 0 20px 10px; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 10px 0; }
+.stat { flex: 1; text-align: center; }
+.stat + .stat { border-left: 1px solid #F0EAE0; }
+.stat-val { font-size: 18px; font-weight: 700; color: #3B2F2A; font-variant-numeric: tabular-nums; }
+.stat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #C0AFA5; margin-top: 2px; }
+
+/* Section label */
+.section-label { padding: 6px 20px 4px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #8A7060; }
+
+/* Customer row */
+.cust-row { display: flex; align-items: center; gap: 12px; padding: 10px 20px; border-bottom: 1px solid #F5EFE6; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; color: #FFFFFF; flex-shrink: 0; }
+.cust-info { flex: 1; }
+.cust-name { font-size: 14px; font-weight: 600; color: #3B2F2A; margin-bottom: 2px; }
+.cust-meta { font-size: 11px; color: #8A7060; }
+.cust-right { text-align: right; }
+.cust-balance { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.cust-balance.credit { color: #5A6B4F; }
+.cust-balance.debit { color: #B45B4A; }
+.cust-last { font-size: 11px; color: #C0AFA5; margin-top: 2px; }
+
+/* Bottom nav */
+.bottom-nav { height: 80px; flex-shrink: 0; background: #FFFFFF; border-top: 1px solid #EDE5D8; display: flex; align-items: flex-start; padding-top: 8px; position: relative; margin-top: auto; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 4px; }
+.nav-icon { font-size: 20px; }
+.nav-label { font-size: 9px; font-weight: 600; color: #C0AFA5; }
+.nav-item.active .nav-label { color: #3B2F2A; }
+.nav-active-dot { width: 4px; height: 4px; border-radius: 50%; background: #C8A96B; margin-top: 1px; }
+.voice-fab-wrap { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); }
+.voice-fab { width: 48px; height: 48px; border-radius: 50%; background: #3B2F2A; box-shadow: 0 0 0 3px #FFFFFF, 0 4px 14px rgba(59,47,42,0.25); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="back-btn">‹</div>
+  <div class="header-title">Customers</div>
+  <div class="header-action">+ Add</div>
+</div>
+
+<div class="filter-row">
+  <div class="search-box">🔍 &nbsp;Search customers…</div>
+  <div class="filter-btn">⚙️</div>
+</div>
+
+<div class="seg-tabs">
+  <div class="stab active">All (47)</div>
+  <div class="stab">Regular</div>
+  <div class="stab">Credit</div>
+  <div class="stab">New</div>
+</div>
+
+<div class="stats-strip">
+  <div class="stat">
+    <div class="stat-val">47</div>
+    <div class="stat-label">Total</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" style="color:#B45B4A;">₹18K</div>
+    <div class="stat-label">Receivable</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val">12</div>
+    <div class="stat-label">This Month</div>
+  </div>
+</div>
+
+<div style="flex:1;overflow:hidden;">
+  <div class="section-label">Recent</div>
+  <div class="cust-row">
+    <div class="avatar" style="background:#5A6B4F;">RK</div>
+    <div class="cust-info">
+      <div class="cust-name">Ravi Kumar Ji</div>
+      <div class="cust-meta">Regular · 28 orders · UPI</div>
+    </div>
+    <div class="cust-right">
+      <div class="cust-balance credit">₹0 clear</div>
+      <div class="cust-last">Today</div>
+    </div>
+  </div>
+  <div class="cust-row">
+    <div class="avatar" style="background:#4A3D6B;">SD</div>
+    <div class="cust-info">
+      <div class="cust-name">Sunita Devi</div>
+      <div class="cust-meta">Regular · 14 orders · Cash</div>
+    </div>
+    <div class="cust-right">
+      <div class="cust-balance credit">₹0 clear</div>
+      <div class="cust-last">Today</div>
+    </div>
+  </div>
+  <div class="cust-row">
+    <div class="avatar" style="background:#B45B4A;">AV</div>
+    <div class="cust-info">
+      <div class="cust-name">Arjun Verma</div>
+      <div class="cust-meta">Credit · 9 orders · UPI</div>
+    </div>
+    <div class="cust-right">
+      <div class="cust-balance debit">₹4,200 due</div>
+      <div class="cust-last">Today</div>
+    </div>
+  </div>
+  <div class="section-label">All Customers · A–Z</div>
+  <div class="cust-row">
+    <div class="avatar" style="background:#8A7060;">ML</div>
+    <div class="cust-info">
+      <div class="cust-name">Mohan Lal</div>
+      <div class="cust-meta">Regular · 41 orders · Both</div>
+    </div>
+    <div class="cust-right">
+      <div class="cust-balance debit">₹1,800 due</div>
+      <div class="cust-last">Yesterday</div>
+    </div>
+  </div>
+  <div class="cust-row">
+    <div class="avatar" style="background:#C8A96B;">PG</div>
+    <div class="cust-info">
+      <div class="cust-name">Priya Gupta</div>
+      <div class="cust-meta">New · 2 orders · UPI</div>
+    </div>
+    <div class="cust-right">
+      <div class="cust-balance credit">₹0 clear</div>
+      <div class="cust-last">28 Aug</div>
+    </div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <div class="voice-fab-wrap"><div class="voice-fab">🎙️</div></div>
+  <div class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+  <div class="nav-item active"><div class="nav-icon">📊</div><div class="nav-label">Engines</div><div class="nav-active-dot"></div></div>
+  <div class="nav-item" style="flex:1.2;"></div>
+  <div class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">Briefing</div></div>
+  <div class="nav-item"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+</div>
+
+</body>
+</html>

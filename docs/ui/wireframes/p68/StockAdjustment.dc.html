@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Stock Adjustment</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.back-btn { font-size: 20px; color: #C8A96B; width: 32px; }
+.header-title { font-size: 16px; font-weight: 700; }
+.header-close { font-size: 20px; color: #C8A96B; width: 32px; text-align: right; }
+
+.form-body { flex: 1; overflow: hidden; padding: 14px 20px; display: flex; flex-direction: column; gap: 16px; }
+
+.field-label { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #8A7060; margin-bottom: 6px; }
+
+/* Item selector */
+.item-selector { background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; }
+.item-badge { width: 36px; height: 36px; border-radius: 10px; background: rgba(180,91,74,0.1); display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.item-sel-name { flex: 1; font-size: 14px; font-weight: 600; color: #3B2F2A; }
+.item-sel-stock { font-size: 12px; color: #B45B4A; font-weight: 500; }
+.change-btn { font-size: 12px; color: #C8A96B; font-weight: 500; }
+
+/* Adjustment type */
+.adj-type-row { display: flex; gap: 8px; }
+.adj-chip { flex: 1; height: 40px; border-radius: 10px; border: 1.5px solid #E8DDD0; background: #FFFFFF; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600; color: #8A7060; }
+.adj-chip.active { border-color: #5A6B4F; background: rgba(90,107,79,0.08); color: #5A6B4F; }
+.adj-chip.reorder { border-color: #C8A96B; background: rgba(200,169,107,0.1); color: #8A7060; }
+
+/* Qty input */
+.qty-input-box { background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 16px; display: flex; align-items: center; justify-content: center; gap: 20px; }
+.qty-big-btn { width: 48px; height: 48px; border-radius: 14px; background: #F0EAE0; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: #3B2F2A; }
+.qty-big-val { font-size: 40px; font-weight: 700; color: #3B2F2A; font-variant-numeric: tabular-nums; min-width: 72px; text-align: center; line-height: 1; }
+.qty-unit { font-size: 13px; color: #8A7060; }
+
+/* Reason */
+.reason-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.reason-chip { padding: 6px 12px; border-radius: 14px; font-size: 12px; font-weight: 500; background: #FFFFFF; border: 1.5px solid #E8DDD0; color: #8A7060; }
+.reason-chip.active { border-color: #3B2F2A; background: #3B2F2A; color: #FAF7F2; }
+
+/* Preview */
+.preview-card { background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 14px; }
+.prev-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; color: #8A7060; }
+.prev-row.result { font-weight: 700; color: #3B2F2A; font-size: 15px; border-top: 1px solid #F0EAE0; margin-top: 6px; padding-top: 10px; }
+.prev-row .positive { color: #5A6B4F; }
+
+/* Note field */
+.note-field { background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 12px 14px; font-size: 13px; color: #C0AFA5; min-height: 44px; }
+
+/* CTA */
+.cta-btn { height: 52px; background: #5A6B4F; color: #FFFFFF; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="back-btn">‹</div>
+  <div class="header-title">Add Stock</div>
+  <div class="header-close">✕</div>
+</div>
+
+<div class="form-body">
+
+  <!-- Item selector -->
+  <div>
+    <div class="field-label">Item</div>
+    <div class="item-selector">
+      <div class="item-badge">🛢️</div>
+      <div style="flex:1;">
+        <div class="item-sel-name">Sunflower Oil 1 L</div>
+        <div class="item-sel-stock">⚠ Only 6 units left</div>
+      </div>
+      <div class="change-btn">Change ›</div>
+    </div>
+  </div>
+
+  <!-- Adjustment type -->
+  <div>
+    <div class="field-label">Action</div>
+    <div class="adj-type-row">
+      <div class="adj-chip active">+ Add Stock</div>
+      <div class="adj-chip">− Remove</div>
+      <div class="adj-chip reorder">↻ Reorder</div>
+    </div>
+  </div>
+
+  <!-- Quantity -->
+  <div>
+    <div class="field-label">Quantity to Add</div>
+    <div class="qty-input-box">
+      <div class="qty-big-btn">−</div>
+      <div>
+        <div class="qty-big-val">24</div>
+        <div class="qty-unit" style="text-align:center;">units</div>
+      </div>
+      <div class="qty-big-btn">+</div>
+    </div>
+  </div>
+
+  <!-- Reason -->
+  <div>
+    <div class="field-label">Reason</div>
+    <div class="reason-row">
+      <div class="reason-chip active">Purchase received</div>
+      <div class="reason-chip">Return</div>
+      <div class="reason-chip">Audit fix</div>
+      <div class="reason-chip">Other</div>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div class="preview-card">
+    <div class="prev-row"><span>Current stock</span><span>6 units</span></div>
+    <div class="prev-row"><span>Adding</span><span class="positive">+24 units</span></div>
+    <div class="prev-row result"><span>New stock</span><span>30 units</span></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-btn">✓ Confirm Stock Update</div>
+
+</div>
+
+</body>
+</html>
