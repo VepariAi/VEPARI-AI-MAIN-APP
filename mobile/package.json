@@ -13,17 +13,24 @@
     "clean": "rm -rf node_modules/.cache android/build ios/build"
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.5.11",
+    "@react-navigation/native": "^6.1.9",
+    "@react-navigation/native-stack": "^6.9.17",
     "@vepari/api-client": "*",
     "@vepari/design-system": "*",
     "@vepari/types": "*",
     "@vepari/validation": "*",
     "react": "18.2.0",
-    "react-native": "0.73.6"
+    "react-native": "0.73.6",
+    "react-native-safe-area-context": "^4.8.2",
+    "react-native-screens": "^3.29.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@babel/plugin-proposal-decorators": "^7.24.0",
     "@types/react": "^18.2.0",
     "@types/react-native": "^0.73.0",
+    "babel-plugin-module-resolver": "^5.0.0",
     "typescript": "^5.4.5"
   }
 }

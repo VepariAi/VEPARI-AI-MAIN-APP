@@ -1,37 +1,23 @@
-/**
- * App root — placeholder until navigation and auth are wired up.
- * The launch screen uses the brand palette from the design system.
- */
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Colors, Typography } from '@vepari/design-system';
+import React, { useState } from 'react';
+import { StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Colors } from '@vepari/design-system';
+import RootNavigator from '@/navigation/RootNavigator';
 
-export default function App() {
+export default function App(): React.JSX.Element {
+  // TODO: replace with auth context / AsyncStorage token check
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.wordmark}>Vepari AI</Text>
-      <Text style={styles.tagline}>Your business, understood.</Text>
-    </View>
+    <SafeAreaProvider>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.brown} />
+      <NavigationContainer>
+        <RootNavigator
+          isAuthenticated={isAuthenticated}
+          onAuthenticated={() => setIsAuthenticated(true)}
+        />
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: Colors.brown,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  wordmark: {
-    color: Colors.gold,
-    fontSize: Typography.fontSize['2xl'],
-    fontWeight: Typography.fontWeight.bold,
-    letterSpacing: 1.5,
-  },
-  tagline: {
-    color: Colors.dim,
-    fontSize: Typography.fontSize.sm,
-    marginTop: 8,
-    letterSpacing: 0.5,
-  },
-});

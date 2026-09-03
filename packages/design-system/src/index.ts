@@ -100,6 +100,13 @@ export const Shadows = {
     shadowRadius: 12,
     elevation: 6,
   },
+  lg: {
+    shadowColor: Colors.brown,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 20,
+    elevation: 10,
+  },
 } as const;
 
 // ── Screen dimensions (canonical phone frame from prototype) ──────────────────
