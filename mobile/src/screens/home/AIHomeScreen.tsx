@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,22 @@ import {
   StyleSheet,
   SafeAreaView,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import type { MainTabScreenProps } from '@/navigation/types';
+import {
+  startRecording,
+  stopRecording,
+  getRecorderState,
+  resetRecorder,
+  checkMicPermission,
+  requestMicPermission,
+} from '@/voice';
 
 type Props = MainTabScreenProps<'AIHome'>;
 
-// Placeholder daily briefing data — replace with real API data
+// Placeholder daily briefing data — replaced with real API data in a later phase
 const BRIEFING = {
   greeting: 'Good morning',
   businessName: 'Sharma General Store',
@@ -35,6 +44,45 @@ function formatRupees(paise: number): string {
 
 export default function AIHomeScreen(_props: Props): React.JSX.Element {
   const [voiceActive, setVoiceActive] = useState(false);
+  const [voiceError, setVoiceError] = useState('');
+
+  const handleVoicePress = useCallback(async () => {
+    setVoiceError('');
+
+    if (getRecorderState() === 'recording') {
+      // Stop and hand off audio file path to STT (PROMPT 102)
+      await stopRecording();
+      resetRecorder();
+      setVoiceActive(false);
+      return;
+    }
+
+    // Check / request permission before starting
+    let permission = await checkMicPermission();
+    if (permission === 'denied') {
+      permission = await requestMicPermission();
+    }
+    if (permission === 'blocked') {
+      Alert.alert(
+        'Microphone Required',
+        'Please enable microphone access in Settings to use voice input.',
+        [{ text: 'OK' }],
+      );
+      return;
+    }
+    if (permission !== 'granted') {
+      setVoiceError('Microphone permission not granted.');
+      return;
+    }
+
+    try {
+      await startRecording();
+      setVoiceActive(true);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Failed to start recording.';
+      setVoiceError(message);
+    }
+  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -89,18 +137,20 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
             <QuickAction emoji="📦" label="Check Stock" />
           </View>
         </View>
+
+        {voiceError ? <Text style={styles.voiceError}>{voiceError}</Text> : null}
       </ScrollView>
 
-      {/* AI Voice Button */}
+      {/* AI Voice Button — hold to record */}
       <View style={styles.voiceFab}>
         <TouchableOpacity
           style={[styles.voiceBtn, voiceActive && styles.voiceBtnActive]}
-          onPress={() => setVoiceActive(v => !v)}
+          onPress={() => void handleVoicePress()}
           activeOpacity={0.85}
         >
           <Text style={styles.voiceBtnText}>{voiceActive ? '🔴' : '🎙️'}</Text>
           <Text style={styles.voiceBtnLabel}>
-            {voiceActive ? 'Listening...' : 'Speak to Vepari AI'}
+            {voiceActive ? 'Tap to stop' : 'Speak to Vepari AI'}
           </Text>
         </TouchableOpacity>
       </View>
@@ -196,6 +246,12 @@ const styles = StyleSheet.create({
   },
   quickActionEmoji: { fontSize: 28 },
   quickActionLabel: { fontSize: Typography.fontSize.sm, color: Colors.brown, fontWeight: Typography.fontWeight.medium, textAlign: 'center' },
+  voiceError: {
+    color: Colors.error,
+    fontSize: Typography.fontSize.sm,
+    textAlign: 'center',
+    marginTop: Spacing[2],
+  },
   voiceFab: { position: 'absolute', bottom: 80, left: 0, right: 0, paddingHorizontal: Spacing[6] },
   voiceBtn: {
     flexDirection: 'row',
