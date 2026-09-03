@@ -60,6 +60,10 @@ export const ENDPOINTS = {
   },
   salesForBiz: (bizId: string) => `/businesses/${bizId}/sales`,
   salesTodayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
+  analytics: {
+    snapshot: (bizId: string) => `/businesses/${bizId}/analytics/snapshot`,
+    healthScore: (bizId: string) => `/businesses/${bizId}/analytics/health-score`,
+  },
   finance: {
     profitToday: (bizId: string) => `/businesses/${bizId}/finance/profit/today`,
     profitWeek: (bizId: string) => `/businesses/${bizId}/finance/profit/week`,
@@ -476,7 +480,24 @@ export class VepariApiClient {
     }>>('GET', `/businesses/${businessId}/search?q=${encoded}`);
   }
 
-  // ── Analytics Snapshot ───────────────────────────────────────────────────
+  // ── Analytics: Snapshot + Health Score ───────────────────────────────────
+
+  async getHealthScore(businessId: string) {
+    return this.request<{
+      businessId: string;
+      overallScore: number;
+      grade: 'healthy' | 'good' | 'fair' | 'at_risk' | 'critical';
+      dimensions: Array<{
+        dimension: string;
+        score: number;
+        grade: 'healthy' | 'good' | 'fair' | 'at_risk' | 'critical';
+        insightCount: number;
+      }>;
+      criticalInsightCount: number;
+      opportunityCount: number;
+      generatedAt: string;
+    }>('GET', ENDPOINTS.analytics.healthScore(businessId));
+  }
 
   async getBusinessSnapshot(businessId: string) {
     return this.request<{
