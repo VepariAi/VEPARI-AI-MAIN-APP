@@ -209,6 +209,50 @@ export class VepariApiClient {
     }>('GET', ENDPOINTS.businesses.dashboard(id));
   }
 
+  // ── Customers ─────────────────────────────────────────────────────────────
+
+  async listCustomers(businessId: string) {
+    return this.request<Array<{
+      id: string;
+      name: string;
+      phone: string | null;
+      email: string | null;
+      creditBalance: number;
+      isActive: boolean;
+    }>>('GET', ENDPOINTS.customers.list(businessId));
+  }
+
+  async createCustomer(businessId: string, data: { name: string; phone?: string; email?: string; notes?: string }) {
+    return this.request<{ id: string; name: string; phone: string | null; creditBalance: number }>(
+      'POST', ENDPOINTS.customers.create(businessId), data,
+    );
+  }
+
+  async adjustCustomerCredit(businessId: string, customerId: string, amountInPaise: number, description?: string) {
+    return this.request<{ id: string; creditBalance: number }>(
+      'PATCH', `${ENDPOINTS.customers.byId(businessId, customerId)}/credit`, { amountInPaise, description },
+    );
+  }
+
+  // ── Suppliers ─────────────────────────────────────────────────────────────
+
+  async listSuppliers(businessId: string) {
+    return this.request<Array<{
+      id: string;
+      name: string;
+      phone: string | null;
+      email: string | null;
+      payableBalance: number;
+      isActive: boolean;
+    }>>('GET', ENDPOINTS.suppliers.list(businessId));
+  }
+
+  async createSupplier(businessId: string, data: { name: string; phone?: string; email?: string; notes?: string }) {
+    return this.request<{ id: string; name: string; phone: string | null; payableBalance: number }>(
+      'POST', ENDPOINTS.suppliers.create(businessId), data,
+    );
+  }
+
   // ── Voice (AI Gateway — Sarvam STT/TTS, server-side only) ────────────────────
 
   async transcribe(audioBase64: string, languageCode?: string) {
