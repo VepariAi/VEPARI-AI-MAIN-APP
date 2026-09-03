@@ -21,6 +21,7 @@ export type MoreStackParamList = {
   MoreHome: undefined;
   Inventory: undefined;
   Reports: undefined;
+  Search: undefined;
 };
 
 export type MoreStackScreenProps<T extends keyof MoreStackParamList> =

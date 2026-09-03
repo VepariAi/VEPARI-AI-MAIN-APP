@@ -6,6 +6,7 @@ import type { MoreStackParamList } from './types';
 import MoreScreen from '@/screens/home/MoreScreen';
 import InventoryScreen from '@/screens/inventory/InventoryScreen';
 import ReportsScreen from '@/screens/reports/ReportsScreen';
+import SearchScreen from '@/screens/search/SearchScreen';
 import { getApiClient } from '@/services/api';
 
 const Stack = createNativeStackNavigator<MoreStackParamList>();
@@ -33,12 +34,19 @@ function ReportsWrapper(): React.JSX.Element {
   return <ReportsScreen businessId={bizId} />;
 }
 
+function SearchWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <SearchScreen businessId={bizId} />;
+}
+
 export default function MoreStack(): React.JSX.Element {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MoreHome" component={MoreScreen} />
       <Stack.Screen name="Inventory" component={InventoryWrapper} />
       <Stack.Screen name="Reports" component={ReportsWrapper} />
+      <Stack.Screen name="Search" component={SearchWrapper} />
     </Stack.Navigator>
   );
 }
