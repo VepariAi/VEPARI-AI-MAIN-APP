@@ -2,7 +2,6 @@
 // PrismaService is fully mocked — no DB connection required.
 
 import { FinanceService } from '../finance.service';
-import { PaymentMethod } from '@prisma/client';
 
 const IMPORT_ID = 'import-1';
 const BIZ_ID = 'biz-1';

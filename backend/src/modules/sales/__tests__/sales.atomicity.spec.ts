@@ -3,7 +3,7 @@
 // not leave a half-committed sale in the database.
 // PrismaService is fully mocked — no DB connection required.
 
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { SalesService, CreateSaleDto } from '../sales.service';
 import { PaymentMethod } from '@prisma/client';
 

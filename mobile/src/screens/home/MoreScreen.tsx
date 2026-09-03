@@ -20,6 +20,7 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
       { emoji: '📦', label: 'Inventory', screen: 'Inventory' },
       { emoji: '🔍', label: 'Search', screen: 'Search' },
       { emoji: '🧠', label: 'AI Insights', screen: 'Insights' },
+      { emoji: '🎙️', label: 'Voice Assistant', screen: 'VoiceAssistant' },
     ],
   },
   {

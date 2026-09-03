@@ -1,7 +1,8 @@
-// AI Gateway service — routes structured extraction through the AI provider.
+// AI Gateway service — routes structured extraction and chat through the AI provider.
 // Provider API keys stay server-side; no key ever reaches the mobile client.
 
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 
 export type MemoryCandidateType =
   | 'sale'
@@ -27,6 +28,90 @@ export interface MemoryCandidate {
 @Injectable()
 export class AiService {
   private readonly logger = new Logger(AiService.name);
+
+  constructor(private readonly prisma: PrismaService) {}
+
+  async chatWithBusiness(businessId: string, transcript: string): Promise<{ reply: string }> {
+    if (!transcript.trim()) throw new BadRequestException('transcript is required');
+
+    const apiKey = process.env['OPENAI_API_KEY'] ?? process.env['ANTHROPIC_API_KEY'];
+    if (!apiKey) throw new InternalServerErrorException('AI provider key not configured');
+
+    const now = new Date();
+    const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+    const [business, todaySales, todayExpenses, lowStock, receivables] = await Promise.all([
+      this.prisma.business.findUnique({ where: { id: businessId }, select: { name: true, type: true } }),
+      this.prisma.saleOrder.aggregate({ where: { businessId, createdAt: { gte: dayStart } }, _sum: { totalInPaise: true }, _count: true }),
+      this.prisma.expense.aggregate({ where: { businessId, createdAt: { gte: dayStart } }, _sum: { amountInPaise: true } }),
+      this.prisma.product.findMany({ where: { businessId, isActive: true, stock: { lte: 5 } }, select: { name: true, stock: true }, take: 5 }),
+      this.prisma.customer.aggregate({ where: { businessId }, _sum: { creditBalance: true } }),
+    ]);
+
+    const salesInPaise = todaySales._sum.totalInPaise ?? 0;
+    const expensesInPaise = todayExpenses._sum.amountInPaise ?? 0;
+    const profitInPaise = salesInPaise - expensesInPaise;
+    const receivableInPaise = receivables._sum.creditBalance ?? 0;
+
+    const context = [
+      `Business: ${business?.name ?? 'Unknown'} (${business?.type ?? 'General'})`,
+      `Today's sales: ₹${(salesInPaise / 100).toFixed(0)} (${todaySales._count} orders)`,
+      `Today's expenses: ₹${(expensesInPaise / 100).toFixed(0)}`,
+      `Today's net profit: ₹${(profitInPaise / 100).toFixed(0)}`,
+      `Total receivables: ₹${(receivableInPaise / 100).toFixed(0)}`,
+      lowStock.length > 0 ? `Low stock items: ${lowStock.map(p => `${p.name} (${p.stock})`).join(', ')}` : 'No low-stock items.',
+    ].join('\n');
+
+    const systemPrompt = `You are Vepari AI, a business assistant for an Indian MSME owner. You speak in clear, simple English mixed with common Hindi business terms. Be concise (2-4 sentences). Use Indian currency formatting (₹, lakhs, crores). Always be helpful, positive, and actionable.
+
+Current business context:
+${context}
+
+Answer the owner's question based only on this real data. Do not fabricate figures.`;
+
+    const isAnthropic = Boolean(process.env['ANTHROPIC_API_KEY']);
+    if (isAnthropic) return this.chatViaAnthropic(transcript, systemPrompt, apiKey);
+    return this.chatViaOpenAI(transcript, systemPrompt, apiKey);
+  }
+
+  private async chatViaAnthropic(transcript: string, systemPrompt: string, apiKey: string): Promise<{ reply: string }> {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 256,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: transcript }],
+      }),
+    });
+    if (!response.ok) {
+      this.logger.error(`Anthropic chat error: ${response.status}`);
+      throw new InternalServerErrorException('AI chat service error');
+    }
+    const data = await response.json() as { content: Array<{ type: string; text: string }> };
+    const reply = data.content.find(c => c.type === 'text')?.text ?? 'Sorry, I could not generate a response.';
+    return { reply };
+  }
+
+  private async chatViaOpenAI(transcript: string, systemPrompt: string, apiKey: string): Promise<{ reply: string }> {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        max_tokens: 256,
+        messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: transcript }],
+      }),
+    });
+    if (!response.ok) {
+      this.logger.error(`OpenAI chat error: ${response.status}`);
+      throw new InternalServerErrorException('AI chat service error');
+    }
+    const data = await response.json() as { choices: Array<{ message: { content: string } }> };
+    const reply = data.choices[0]?.message.content ?? 'Sorry, I could not generate a response.';
+    return { reply };
+  }
 
   async extractMemoryCandidates(transcript: string): Promise<MemoryCandidate[]> {
     if (!transcript.trim()) throw new BadRequestException('transcript is required');

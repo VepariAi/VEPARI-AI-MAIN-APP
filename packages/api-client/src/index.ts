@@ -57,6 +57,7 @@ export const ENDPOINTS = {
   },
   ai: {
     memoryExtract: '/ai/memory/extract',
+    chat: '/ai/chat',
   },
   salesForBiz: (bizId: string) => `/businesses/${bizId}/sales`,
   salesTodayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
@@ -533,6 +534,10 @@ export class VepariApiClient {
       rawTranscript: string;
       confidence: number;
     }>>('POST', ENDPOINTS.ai.memoryExtract, { transcript });
+  }
+
+  async chatWithBusiness(businessId: string, transcript: string) {
+    return this.request<{ reply: string }>('POST', ENDPOINTS.ai.chat, { businessId, transcript });
   }
 
 // ── Generic helpers ───────────────────────────────────────────────────────

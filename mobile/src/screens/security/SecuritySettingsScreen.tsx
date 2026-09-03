@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Colors, Typography, Spacing, Radius } from '@vepari/design-system';
-import { hasPin, clearPin, setPin as savePinFn, verifyPin } from '@/security/pin';
+import { hasPin, clearPin } from '@/security/pin';
 import { getBiometricType, storeBiometricSentinel } from '@/security/biometric';
 import { secureRead, secureWrite, secureDelete, StorageKey } from '@/security/secureStorage';
 import SecurityLockScreen from './SecurityLockScreen';

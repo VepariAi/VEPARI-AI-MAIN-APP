@@ -1,12 +1,17 @@
 import { AiService } from '../ai.service';
 import { BadRequestException } from '@nestjs/common';
+import type { PrismaService } from '../../../prisma/prisma.service';
+
+function makePrisma(): PrismaService {
+  return {} as unknown as PrismaService;
+}
 
 // Unit tests for AiService — no external API calls.
 describe('AiService', () => {
   let service: AiService;
 
   beforeEach(() => {
-    service = new AiService();
+    service = new AiService(makePrisma());
   });
 
   describe('parseExtractionResponse (via extractMemoryCandidates)', () => {

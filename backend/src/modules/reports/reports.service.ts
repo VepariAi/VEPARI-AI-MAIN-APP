@@ -466,8 +466,6 @@ export class ReportsService {
       }),
     ]);
 
-    const soldMap = new Map(soldItems.map(si => [si.productId, si._sum.quantity ?? 0]));
-
     // Resolve product names for the movement drill-down
     const productNameMap = new Map(products.map(p => [p.id, p.name]));
 

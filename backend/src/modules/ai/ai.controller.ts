@@ -10,6 +10,13 @@ import { AiService } from './ai.service';
 export class AiController {
   constructor(private readonly aiService: AiService) {}
 
+  @Post('chat')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Conversational AI chat grounded in live business data' })
+  chatWithBusiness(@Body() body: { businessId: string; transcript: string }) {
+    return this.aiService.chatWithBusiness(body.businessId, body.transcript);
+  }
+
   @Post('memory/extract')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Extract structured memory candidates from a voice transcript' })
