@@ -9,6 +9,7 @@ import ReportsScreen from '@/screens/reports/ReportsScreen';
 import SearchScreen from '@/screens/search/SearchScreen';
 import SecuritySettingsScreen from '@/screens/security/SecuritySettingsScreen';
 import HelpSupportScreen from '@/screens/support/HelpSupportScreen';
+import InsightsScreen from '@/screens/insights/InsightsScreen';
 import { getApiClient } from '@/services/api';
 
 const Stack = createNativeStackNavigator<MoreStackParamList>();
@@ -42,6 +43,12 @@ function SearchWrapper(): React.JSX.Element {
   return <SearchScreen businessId={bizId} />;
 }
 
+function InsightsWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <InsightsScreen businessId={bizId} />;
+}
+
 export default function MoreStack(): React.JSX.Element {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -49,6 +56,7 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="Inventory" component={InventoryWrapper} />
       <Stack.Screen name="Reports" component={ReportsWrapper} />
       <Stack.Screen name="Search" component={SearchWrapper} />
+      <Stack.Screen name="Insights" component={InsightsWrapper} />
       <Stack.Screen name="Security" component={SecuritySettingsScreen} />
       <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
     </Stack.Navigator>

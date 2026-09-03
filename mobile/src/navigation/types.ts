@@ -22,6 +22,7 @@ export type MoreStackParamList = {
   Inventory: undefined;
   Reports: undefined;
   Search: undefined;
+  Insights: undefined;
   Security: undefined;
   HelpSupport: undefined;
 };

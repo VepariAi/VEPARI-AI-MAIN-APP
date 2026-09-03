@@ -3,6 +3,7 @@ import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AnalyticsService } from './analytics.service';
 import { HealthScoreService } from './health-score.service';
+import { InsightService } from './insight.service';
 
 @ApiTags('analytics')
 @Controller('businesses/:businessId/analytics')
@@ -12,6 +13,7 @@ export class AnalyticsController {
   constructor(
     private readonly analyticsService: AnalyticsService,
     private readonly healthScoreService: HealthScoreService,
+    private readonly insightService: InsightService,
   ) {}
 
   @Get('snapshot')
@@ -24,6 +26,12 @@ export class AnalyticsController {
   @ApiOperation({ summary: 'Business Health Score (0–100) derived from live insight data' })
   healthScore(@Param('businessId') businessId: string) {
     return this.healthScoreService.getHealthScore(businessId);
+  }
+
+  @Get('insights')
+  @ApiOperation({ summary: 'AI-generated insights: trends, anomalies, opportunities and risks' })
+  insights(@Param('businessId') businessId: string) {
+    return this.insightService.generateInsights(businessId);
   }
 
   @Get('daily')

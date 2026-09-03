@@ -63,6 +63,7 @@ export const ENDPOINTS = {
   analytics: {
     snapshot: (bizId: string) => `/businesses/${bizId}/analytics/snapshot`,
     healthScore: (bizId: string) => `/businesses/${bizId}/analytics/health-score`,
+    insights: (bizId: string) => `/businesses/${bizId}/analytics/insights`,
   },
   finance: {
     profitToday: (bizId: string) => `/businesses/${bizId}/finance/profit/today`,
@@ -481,6 +482,17 @@ export class VepariApiClient {
   }
 
   // ── Analytics: Snapshot + Health Score ───────────────────────────────────
+
+  async getInsights(businessId: string) {
+    return this.request<{
+      businessId: string;
+      generatedAt: string;
+      trends: Array<{ type: string; severity: string; title: string; description: string }>;
+      anomalies: Array<{ type: string; severity: string; title: string; description: string }>;
+      opportunities: Array<{ type: string; severity: string; title: string; description: string }>;
+      risks: Array<{ type: string; severity: string; title: string; description: string }>;
+    }>('GET', ENDPOINTS.analytics.insights(businessId));
+  }
 
   async getHealthScore(businessId: string) {
     return this.request<{
