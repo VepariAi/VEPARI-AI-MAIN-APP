@@ -33,6 +33,18 @@ export interface SaleSummary {
   itemCount: number;
 }
 
+export interface SaleDetail extends SaleSummary {
+  customerName: string | null;
+  items: Array<{
+    id: string;
+    productId: string;
+    productName: string;
+    quantity: number;
+    unitPriceInPaise: number;
+    totalInPaise: number;
+  }>;
+}
+
 @Injectable()
 export class SalesService {
   constructor(private readonly prisma: PrismaService) {}
@@ -167,6 +179,43 @@ export class SalesService {
       createdAt: o.createdAt,
       itemCount: o.items.length,
     }));
+  }
+
+  async getSaleById(businessId: string, saleId: string): Promise<SaleDetail> {
+    const order = await this.prisma.saleOrder.findFirst({
+      where: { id: saleId, businessId },
+      include: {
+        customer: { select: { id: true, name: true } },
+        items: {
+          include: { product: { select: { id: true, name: true } } },
+        },
+      },
+    });
+    if (!order) throw new NotFoundException('Sale not found');
+
+    return {
+      id: order.id,
+      businessId: order.businessId,
+      customerId: order.customerId,
+      customerName: order.customer?.name ?? null,
+      totalInPaise: order.totalInPaise,
+      taxInPaise: order.taxInPaise,
+      discountInPaise: order.discountInPaise,
+      paymentMethod: order.paymentMethod,
+      status: order.status,
+      notes: order.notes,
+      date: order.date,
+      createdAt: order.createdAt,
+      itemCount: order.items.length,
+      items: order.items.map(i => ({
+        id: i.id,
+        productId: i.productId,
+        productName: i.product.name,
+        quantity: i.quantity,
+        unitPriceInPaise: i.unitPriceInPaise,
+        totalInPaise: i.totalInPaise,
+      })),
+    };
   }
 
   async getSalesTodayTotal(businessId: string): Promise<number> {

@@ -43,6 +43,8 @@ export const ENDPOINTS = {
   sales: {
     create: (bizId: string) => `/businesses/${bizId}/sales`,
     list: (bizId: string) => `/businesses/${bizId}/sales`,
+    byId: (bizId: string, id: string) => `/businesses/${bizId}/sales/${id}`,
+    todayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
   },
   expenses: {
     create: (bizId: string) => `/businesses/${bizId}/expenses`,
@@ -377,6 +379,32 @@ export class VepariApiClient {
 
   async getSalesTodayTotal(businessId: string) {
     return this.request<number>('GET', ENDPOINTS.salesTodayTotal(businessId));
+  }
+
+  async getSaleById(businessId: string, saleId: string) {
+    return this.request<{
+      id: string;
+      businessId: string;
+      customerId: string | null;
+      customerName: string | null;
+      totalInPaise: number;
+      taxInPaise: number;
+      discountInPaise: number;
+      paymentMethod: string;
+      status: string;
+      notes: string | null;
+      date: string;
+      createdAt: string;
+      itemCount: number;
+      items: Array<{
+        id: string;
+        productId: string;
+        productName: string;
+        quantity: number;
+        unitPriceInPaise: number;
+        totalInPaise: number;
+      }>;
+    }>('GET', ENDPOINTS.sales.byId(businessId, saleId));
   }
 
   // ── Finance / Profit ─────────────────────────────────────────────────────

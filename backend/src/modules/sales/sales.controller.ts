@@ -47,4 +47,13 @@ export class SalesController {
   todayTotal(@Param('businessId') businessId: string) {
     return this.salesService.getSalesTodayTotal(businessId);
   }
+
+  @Get(':saleId')
+  @ApiOperation({ summary: 'Get a single sale with line items' })
+  getOne(
+    @Param('businessId') businessId: string,
+    @Param('saleId') saleId: string,
+  ) {
+    return this.salesService.getSaleById(businessId, saleId);
+  }
 }

@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import { getApiClient } from '@/services/api';
+import SaleReceiptScreen from '@/screens/sales/SaleReceiptScreen';
 
 const TABS = ['Overview', 'Transactions'] as const;
 type Tab = typeof TABS[number];
@@ -90,6 +91,8 @@ export default function FinanceScreen(): React.JSX.Element {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [businessId, setBusinessId] = useState<string | null>(null);
+  const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
@@ -98,6 +101,7 @@ export default function FinanceScreen(): React.JSX.Element {
       const businesses = await client.getMyBusinesses();
       const biz = businesses[0];
       if (!biz) return;
+      setBusinessId(biz.id);
       const [summary, cashFlow, recPay, txns] = await Promise.all([
         client.getProfitMonth(biz.id),
         client.getCashFlowToday(biz.id),
@@ -230,22 +234,44 @@ export default function FinanceScreen(): React.JSX.Element {
           contentContainerStyle={styles.listContent}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={Colors.gold} />}
           ListEmptyComponent={<Text style={styles.empty}>No transactions yet.</Text>}
-          renderItem={({ item }) => (
-            <View style={styles.txnCard}>
-              <View style={styles.txnIcon}>
-                <Text>{txnEmoji(item.type)}</Text>
-              </View>
-              <View style={styles.txnInfo}>
-                <Text style={styles.txnDescription}>{item.description ?? item.type}</Text>
-                <Text style={styles.txnMeta}>{relativeDate(item.date)} · {item.paymentMethod}</Text>
-              </View>
-              <Text style={[styles.txnAmount, isInflow(item.type) ? styles.positive : styles.negative]}>
-                {isInflow(item.type) ? '+' : '-'}{fmt(item.amountInPaise)}
-              </Text>
-            </View>
-          )}
+          renderItem={({ item }) => {
+            const isSale = item.type === 'SALE';
+            const inner = (
+              <>
+                <View style={styles.txnIcon}>
+                  <Text>{txnEmoji(item.type)}</Text>
+                </View>
+                <View style={styles.txnInfo}>
+                  <Text style={styles.txnDescription}>{item.description ?? item.type}</Text>
+                  <Text style={styles.txnMeta}>{relativeDate(item.date)} · {item.paymentMethod}</Text>
+                </View>
+                <View style={styles.txnRight}>
+                  <Text style={[styles.txnAmount, isInflow(item.type) ? styles.positive : styles.negative]}>
+                    {isInflow(item.type) ? '+' : '-'}{fmt(item.amountInPaise)}
+                  </Text>
+                  {isSale ? <Text style={styles.chevron}>›</Text> : null}
+                </View>
+              </>
+            );
+            if (isSale) {
+              return (
+                <TouchableOpacity activeOpacity={0.75} onPress={() => setSelectedSaleId(item.id)} style={styles.txnCard}>
+                  {inner}
+                </TouchableOpacity>
+              );
+            }
+            return <View style={styles.txnCard}>{inner}</View>;
+          }}
         />
       )}
+
+      {selectedSaleId && businessId ? (
+        <SaleReceiptScreen
+          businessId={businessId}
+          saleId={selectedSaleId}
+          onClose={() => setSelectedSaleId(null)}
+        />
+      ) : null}
     </SafeAreaView>
   );
 }
@@ -286,7 +312,9 @@ const styles = StyleSheet.create({
   txnInfo: { flex: 1, gap: 2 },
   txnDescription: { fontSize: Typography.fontSize.base, color: Colors.brown, fontWeight: Typography.fontWeight.medium },
   txnMeta: { fontSize: Typography.fontSize.xs, color: Colors.muted },
+  txnRight: { alignItems: 'flex-end', gap: 2 },
   txnAmount: { fontSize: Typography.fontSize.base, fontWeight: Typography.fontWeight.semibold },
+  chevron: { fontSize: 18, color: Colors.muted, lineHeight: 18 },
   positive: { color: Colors.success },
   negative: { color: Colors.error },
   empty: { textAlign: 'center', color: Colors.muted, marginTop: Spacing[8], fontSize: Typography.fontSize.sm },
