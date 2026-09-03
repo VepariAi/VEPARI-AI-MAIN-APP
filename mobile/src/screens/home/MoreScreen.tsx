@@ -18,6 +18,7 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
   {
     section: 'Business', items: [
       { emoji: '📦', label: 'Inventory', screen: 'Inventory' },
+      { emoji: '🛒', label: 'Products', screen: 'Products' },
       { emoji: '🔍', label: 'Search', screen: 'Search' },
       { emoji: '🧠', label: 'AI Insights', screen: 'Insights' },
       { emoji: '🎙️', label: 'Voice Assistant', screen: 'VoiceAssistant' },

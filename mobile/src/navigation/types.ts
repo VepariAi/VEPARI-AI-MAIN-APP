@@ -20,6 +20,7 @@ export type AuthScreenProps<T extends keyof AuthStackParamList> =
 export type MoreStackParamList = {
   MoreHome: undefined;
   Inventory: undefined;
+  Products: undefined;
   Reports: undefined;
   Search: undefined;
   Insights: undefined;

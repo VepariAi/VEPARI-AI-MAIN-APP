@@ -5,6 +5,7 @@ import { Colors } from '@vepari/design-system';
 import type { MoreStackParamList } from './types';
 import MoreScreen from '@/screens/home/MoreScreen';
 import InventoryScreen from '@/screens/inventory/InventoryScreen';
+import ProductsScreen from '@/screens/products/ProductsScreen';
 import ReportsScreen from '@/screens/reports/ReportsScreen';
 import SearchScreen from '@/screens/search/SearchScreen';
 import SecuritySettingsScreen from '@/screens/security/SecuritySettingsScreen';
@@ -31,6 +32,12 @@ function InventoryWrapper(): React.JSX.Element {
   const bizId = usePrimaryBusiness();
   if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
   return <InventoryScreen businessId={bizId} />;
+}
+
+function ProductsWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <ProductsScreen businessId={bizId} />;
 }
 
 function ReportsWrapper(): React.JSX.Element {
@@ -68,6 +75,7 @@ export default function MoreStack(): React.JSX.Element {
     <Stack.Navigator screenOptions={{ headerShown: false }}>
       <Stack.Screen name="MoreHome" component={MoreScreen} />
       <Stack.Screen name="Inventory" component={InventoryWrapper} />
+      <Stack.Screen name="Products" component={ProductsWrapper} />
       <Stack.Screen name="Reports" component={ReportsWrapper} />
       <Stack.Screen name="Search" component={SearchWrapper} />
       <Stack.Screen name="Insights" component={InsightsWrapper} />
