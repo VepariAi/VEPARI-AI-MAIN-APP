@@ -49,6 +49,16 @@ export class CustomersController {
     return this.customersService.getById(businessId, customerId);
   }
 
+  @Patch(':customerId')
+  @ApiOperation({ summary: 'Update customer details' })
+  update(
+    @Param('businessId') businessId: string,
+    @Param('customerId') customerId: string,
+    @Body() dto: Partial<CustomerDto>,
+  ) {
+    return this.customersService.update(businessId, customerId, dto);
+  }
+
   @Patch(':customerId/credit')
   @ApiOperation({ summary: 'Adjust customer credit balance (paise)' })
   adjustCredit(

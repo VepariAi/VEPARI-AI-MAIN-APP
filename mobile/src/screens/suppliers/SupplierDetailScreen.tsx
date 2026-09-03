@@ -14,6 +14,7 @@ import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-sys
 import { getApiClient } from '@/services/api';
 import PurchaseLogScreen from '@/screens/purchases/PurchaseLogScreen';
 import SupplierPaymentScreen from '@/screens/suppliers/SupplierPaymentScreen';
+import SupplierEditScreen from '@/screens/suppliers/SupplierEditScreen';
 
 interface SupplierDetail {
   id: string;
@@ -71,6 +72,7 @@ export default function SupplierDetailScreen({
   const [refreshing, setRefreshing] = useState(false);
   const [showPurchase, setShowPurchase] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -166,12 +168,15 @@ export default function SupplierDetailScreen({
 
         {/* Action buttons */}
         <View style={styles.actionRow}>
+          <TouchableOpacity style={styles.editBtn} onPress={() => setShowEdit(true)}>
+            <Text style={styles.editBtnText}>Edit</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.buyBtn} onPress={() => setShowPurchase(true)}>
-            <Text style={styles.buyBtnText}>+ New Purchase</Text>
+            <Text style={styles.buyBtnText}>+ Purchase</Text>
           </TouchableOpacity>
           {currentPayable > 0 && (
             <TouchableOpacity style={styles.payBtn} onPress={() => setShowPayment(true)}>
-              <Text style={styles.payBtnText}>Record Payment</Text>
+              <Text style={styles.payBtnText}>Pay</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -197,6 +202,22 @@ export default function SupplierDetailScreen({
           )}
         </View>
       </ScrollView>
+
+      {/* Edit modal */}
+      {showEdit && supplier && (
+        <Modal visible animationType="slide" onRequestClose={() => setShowEdit(false)}>
+          <SupplierEditScreen
+            businessId={businessId}
+            supplierId={supplierId}
+            initialName={supplier.name}
+            initialPhone={supplier.phone}
+            initialEmail={supplier.email}
+            initialNotes={supplier.notes}
+            onSaved={() => { setShowEdit(false); void load(); onRefreshParent(); }}
+            onCancel={() => setShowEdit(false)}
+          />
+        </Modal>
+      )}
 
       {/* Purchase modal */}
       {showPurchase && (
@@ -287,6 +308,16 @@ const styles = StyleSheet.create({
   balanceClear: { fontSize: Typography.fontSize.xs, color: Colors.success },
 
   actionRow: { flexDirection: 'row', gap: Spacing[3] },
+  editBtn: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.md,
+    padding: Spacing[3],
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  editBtnText: { color: Colors.brown, fontWeight: Typography.fontWeight.semibold, fontSize: Typography.fontSize.sm },
   buyBtn: {
     flex: 1,
     backgroundColor: Colors.gold,

@@ -102,6 +102,22 @@ export class CustomersService {
     return this.toDto(updated);
   }
 
+  async update(businessId: string, customerId: string, dto: Partial<CustomerDto>): Promise<CustomerWithCredit> {
+    const customer = await this.prisma.customer.findFirst({
+      where: { id: customerId, businessId },
+    });
+    if (!customer) throw new NotFoundException('Customer not found');
+
+    const data: Parameters<typeof this.prisma.customer.update>[0]['data'] = {};
+    if (dto.name !== undefined) data['name'] = dto.name;
+    if (dto.phone !== undefined) data['phone'] = dto.phone;
+    if (dto.email !== undefined) data['email'] = dto.email;
+    if (dto.notes !== undefined) data['notes'] = dto.notes;
+
+    const updated = await this.prisma.customer.update({ where: { id: customerId }, data });
+    return this.toDto(updated);
+  }
+
   async getTopDebtors(businessId: string, limit = 10): Promise<CustomerWithCredit[]> {
     const customers = await this.prisma.customer.findMany({
       where: { businessId, isActive: true, creditBalance: { gt: 0 } },

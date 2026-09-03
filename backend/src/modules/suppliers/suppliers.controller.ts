@@ -49,6 +49,16 @@ export class SuppliersController {
     return this.suppliersService.getById(businessId, supplierId);
   }
 
+  @Patch(':supplierId')
+  @ApiOperation({ summary: 'Update supplier details' })
+  update(
+    @Param('businessId') businessId: string,
+    @Param('supplierId') supplierId: string,
+    @Body() dto: Partial<SupplierDto>,
+  ) {
+    return this.suppliersService.update(businessId, supplierId, dto);
+  }
+
   @Patch(':supplierId/payable')
   @ApiOperation({ summary: 'Adjust supplier payable balance (paise)' })
   adjustPayable(

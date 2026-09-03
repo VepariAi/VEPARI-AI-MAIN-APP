@@ -100,6 +100,22 @@ export class SuppliersService {
     return this.toDto(updated);
   }
 
+  async update(businessId: string, supplierId: string, dto: Partial<SupplierDto>): Promise<SupplierWithBalance> {
+    const supplier = await this.prisma.supplier.findFirst({
+      where: { id: supplierId, businessId },
+    });
+    if (!supplier) throw new NotFoundException('Supplier not found');
+
+    const data: Parameters<typeof this.prisma.supplier.update>[0]['data'] = {};
+    if (dto.name !== undefined) data['name'] = dto.name;
+    if (dto.phone !== undefined) data['phone'] = dto.phone;
+    if (dto.email !== undefined) data['email'] = dto.email;
+    if (dto.notes !== undefined) data['notes'] = dto.notes;
+
+    const updated = await this.prisma.supplier.update({ where: { id: supplierId }, data });
+    return this.toDto(updated);
+  }
+
   async getTotalPayable(businessId: string): Promise<number> {
     const result = await this.prisma.supplier.aggregate({
       where: { businessId, isActive: true, payableBalance: { gt: 0 } },

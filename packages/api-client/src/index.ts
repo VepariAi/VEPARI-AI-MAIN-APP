@@ -29,6 +29,7 @@ export const ENDPOINTS = {
     list: (bizId: string) => `/businesses/${bizId}/customers`,
     create: (bizId: string) => `/businesses/${bizId}/customers`,
     byId: (bizId: string, id: string) => `/businesses/${bizId}/customers/${id}`,
+    credit: (bizId: string, id: string) => `/businesses/${bizId}/customers/${id}/credit`,
   },
   suppliers: {
     list: (bizId: string) => `/businesses/${bizId}/suppliers`,
@@ -263,8 +264,20 @@ export class VepariApiClient {
 
   async adjustCustomerCredit(businessId: string, customerId: string, amountInPaise: number, description?: string) {
     return this.request<{ id: string; creditBalance: number }>(
-      'PATCH', `${ENDPOINTS.customers.byId(businessId, customerId)}/credit`, { amountInPaise, description },
+      'PATCH', ENDPOINTS.customers.credit(businessId, customerId), { amountInPaise, description },
     );
+  }
+
+  async updateCustomer(businessId: string, customerId: string, data: { name?: string; phone?: string; email?: string; notes?: string }) {
+    return this.request<{
+      id: string;
+      name: string;
+      phone: string | null;
+      email: string | null;
+      creditBalance: number;
+      notes: string | null;
+      isActive: boolean;
+    }>('PATCH', ENDPOINTS.customers.byId(businessId, customerId), data);
   }
 
   // ── Suppliers ─────────────────────────────────────────────────────────────
@@ -296,6 +309,18 @@ export class VepariApiClient {
       notes: string | null;
       isActive: boolean;
     }>('GET', ENDPOINTS.suppliers.byId(businessId, supplierId));
+  }
+
+  async updateSupplier(businessId: string, supplierId: string, data: { name?: string; phone?: string; email?: string; notes?: string }) {
+    return this.request<{
+      id: string;
+      name: string;
+      phone: string | null;
+      email: string | null;
+      payableBalance: number;
+      notes: string | null;
+      isActive: boolean;
+    }>('PATCH', ENDPOINTS.suppliers.byId(businessId, supplierId), data);
   }
 
   async listPurchases(businessId: string, options?: { limit?: number; offset?: number; supplierId?: string }) {

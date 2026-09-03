@@ -13,6 +13,7 @@ import {
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import { getApiClient } from '@/services/api';
 import CustomerCreditScreen from '@/screens/customers/CustomerCreditScreen';
+import CustomerEditScreen from '@/screens/customers/CustomerEditScreen';
 
 interface CustomerDetail {
   id: string;
@@ -69,6 +70,7 @@ export default function CustomerDetailScreen({
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showCredit, setShowCredit] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -157,6 +159,9 @@ export default function CustomerDetailScreen({
 
         {/* Action buttons */}
         <View style={styles.actionRow}>
+          <TouchableOpacity style={styles.editBtn} onPress={() => setShowEdit(true)}>
+            <Text style={styles.editBtnText}>Edit</Text>
+          </TouchableOpacity>
           <TouchableOpacity style={styles.creditBtn} onPress={() => setShowCredit(true)}>
             <Text style={styles.creditBtnText}>Adjust Credit</Text>
           </TouchableOpacity>
@@ -183,6 +188,22 @@ export default function CustomerDetailScreen({
           )}
         </View>
       </ScrollView>
+
+      {/* Edit modal */}
+      {showEdit && customer && (
+        <Modal visible animationType="slide" onRequestClose={() => setShowEdit(false)}>
+          <CustomerEditScreen
+            businessId={businessId}
+            customerId={customerId}
+            initialName={customer.name}
+            initialPhone={customer.phone}
+            initialEmail={customer.email}
+            initialNotes={customer.notes}
+            onSaved={() => { setShowEdit(false); void load(); onRefreshParent(); }}
+            onCancel={() => setShowEdit(false)}
+          />
+        </Modal>
+      )}
 
       {/* Credit adjustment modal */}
       {showCredit && (
@@ -257,6 +278,16 @@ const styles = StyleSheet.create({
   balanceClear: { fontSize: Typography.fontSize.xs, color: Colors.success },
 
   actionRow: { flexDirection: 'row', gap: Spacing[3] },
+  editBtn: {
+    flex: 1,
+    backgroundColor: Colors.white,
+    borderRadius: Radius.md,
+    padding: Spacing[3],
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  editBtnText: { color: Colors.brown, fontWeight: Typography.fontWeight.semibold, fontSize: Typography.fontSize.sm },
   creditBtn: {
     flex: 1,
     backgroundColor: Colors.brown,
