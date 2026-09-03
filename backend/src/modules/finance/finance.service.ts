@@ -7,6 +7,30 @@ import { PaymentMethod, TransactionType } from '@prisma/client';
 
 // ── BRS types ──────────────────────────────────────────────────────────────────
 
+// ── Cash flow / receivables / payables types ───────────────────────────────
+
+export interface CashFlowSummary {
+  /** All amounts in paise (integer) */
+  cashInflowInPaise: number;   // cash + UPI + card + bank sales
+  cashOutflowInPaise: number;  // cash + UPI + card + bank expenses
+  netCashFlowInPaise: number;  // inflow - outflow
+  periodStart: Date;
+  periodEnd: Date;
+}
+
+export interface ReceivablesPayablesSummary {
+  /** Total positive customer credit balances (money customers owe us) — paise */
+  totalReceivablesInPaise: number;
+  /** Total positive supplier payable balances (money we owe suppliers) — paise */
+  totalPayablesInPaise: number;
+  /** Number of customers with outstanding balance */
+  customersWithBalance: number;
+  /** Number of suppliers with outstanding balance */
+  suppliersWithBalance: number;
+}
+
+// ── BRS types ──────────────────────────────────────────────────────────────────
+
 export interface BrsEntryInput {
   date: string; // ISO date string
   amountInPaise: number; // integer; positive = credit, negative = debit
@@ -190,6 +214,85 @@ export class FinanceService {
       skip: offset,
       select: { id: true, type: true, amountInPaise: true, description: true, date: true, paymentMethod: true },
     });
+  }
+
+  // ── Cash flow ────────────────────────────────────────────────────────────
+
+  async getCashFlowSummary(businessId: string, from: Date, to: Date): Promise<CashFlowSummary> {
+    const business = await this.prisma.business.findUnique({ where: { id: businessId } });
+    if (!business) throw new NotFoundException('Business not found');
+
+    // Non-credit payment methods represent actual cash movement
+    const cashMethods = [PaymentMethod.CASH, PaymentMethod.UPI, PaymentMethod.BANK_TRANSFER, PaymentMethod.CARD];
+
+    const [salesAgg, expensesAgg] = await Promise.all([
+      this.prisma.saleOrder.aggregate({
+        where: {
+          businessId,
+          date: { gte: from, lte: to },
+          paymentMethod: { in: cashMethods },
+        },
+        _sum: { totalInPaise: true },
+      }),
+      this.prisma.expense.aggregate({
+        where: {
+          businessId,
+          date: { gte: from, lte: to },
+          paymentMethod: { in: cashMethods },
+        },
+        _sum: { amountInPaise: true },
+      }),
+    ]);
+
+    const cashInflowInPaise = salesAgg._sum.totalInPaise ?? 0;
+    const cashOutflowInPaise = expensesAgg._sum.amountInPaise ?? 0;
+
+    return {
+      cashInflowInPaise,
+      cashOutflowInPaise,
+      netCashFlowInPaise: cashInflowInPaise - cashOutflowInPaise,
+      periodStart: from,
+      periodEnd: to,
+    };
+  }
+
+  async getCashFlowToday(businessId: string): Promise<CashFlowSummary> {
+    const today = new Date();
+    return this.getCashFlowSummary(businessId, startOfDay(today), endOfDay(today));
+  }
+
+  async getCashFlowMonth(businessId: string): Promise<CashFlowSummary> {
+    const today = new Date();
+    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+    return this.getCashFlowSummary(businessId, startOfDay(monthStart), endOfDay(today));
+  }
+
+  // ── Receivables & Payables ────────────────────────────────────────────────
+
+  async getReceivablesPayables(businessId: string): Promise<ReceivablesPayablesSummary> {
+    const business = await this.prisma.business.findUnique({ where: { id: businessId } });
+    if (!business) throw new NotFoundException('Business not found');
+
+    const [customers, suppliers] = await Promise.all([
+      this.prisma.customer.findMany({
+        where: { businessId, isActive: true, creditBalance: { gt: 0 } },
+        select: { creditBalance: true },
+      }),
+      this.prisma.supplier.findMany({
+        where: { businessId, isActive: true, payableBalance: { gt: 0 } },
+        select: { payableBalance: true },
+      }),
+    ]);
+
+    const totalReceivablesInPaise = customers.reduce((sum, c) => sum + c.creditBalance, 0);
+    const totalPayablesInPaise = suppliers.reduce((sum, s) => sum + s.payableBalance, 0);
+
+    return {
+      totalReceivablesInPaise,
+      totalPayablesInPaise,
+      customersWithBalance: customers.length,
+      suppliersWithBalance: suppliers.length,
+    };
   }
 
   // ── BRS (Bank Reconciliation) ─────────────────────────────────────────────

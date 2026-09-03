@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, Param, Query, UseGuards, BadRequestExcepti
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { FinanceService, BrsEntryInput } from './finance.service';
+import type { CashFlowSummary, ReceivablesPayablesSummary } from './finance.service';
 
 interface ImportBankStatementBody {
   label: string;
@@ -57,6 +58,26 @@ export class FinanceController {
       limit ? parseInt(limit, 10) : undefined,
       offset ? parseInt(offset, 10) : undefined,
     );
+  }
+
+  // ── Cash flow endpoints ────────────────────────────────────────────────────
+
+  @Get('finance/cashflow/today')
+  @ApiOperation({ summary: 'Cash inflow/outflow for today (cash, UPI, card, bank-transfer sales vs expenses)' })
+  cashFlowToday(@Param('businessId') businessId: string): Promise<CashFlowSummary> {
+    return this.financeService.getCashFlowToday(businessId);
+  }
+
+  @Get('finance/cashflow/month')
+  @ApiOperation({ summary: 'Cash inflow/outflow month-to-date' })
+  cashFlowMonth(@Param('businessId') businessId: string): Promise<CashFlowSummary> {
+    return this.financeService.getCashFlowMonth(businessId);
+  }
+
+  @Get('finance/receivables-payables')
+  @ApiOperation({ summary: 'Total outstanding receivables (customers) and payables (suppliers)' })
+  receivablesPayables(@Param('businessId') businessId: string): Promise<ReceivablesPayablesSummary> {
+    return this.financeService.getReceivablesPayables(businessId);
   }
 
   // ── BRS endpoints ──────────────────────────────────────────────────────────
