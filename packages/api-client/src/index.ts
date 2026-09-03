@@ -57,6 +57,8 @@ export const ENDPOINTS = {
   ai: {
     memoryExtract: '/ai/memory/extract',
   },
+  salesForBiz: (bizId: string) => `/businesses/${bizId}/sales`,
+  salesTodayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
 } as const;
 
 // ── Client config ─────────────────────────────────────────────────────────────
@@ -212,6 +214,40 @@ export class VepariApiClient {
     return this.request<{ audioBase64: string; durationSeconds: number }>(
       'POST', ENDPOINTS.voice.tts, { text, languageCode },
     );
+  }
+
+  // ── Sales ─────────────────────────────────────────────────────────────────
+
+  async createSale(businessId: string, data: {
+    items: Array<{ productId?: string; description: string; quantity: number; unitPriceInPaise: number }>;
+    customerId?: string;
+    paymentMethod?: 'CASH' | 'UPI' | 'CARD' | 'BANK_TRANSFER' | 'CREDIT';
+    notes?: string;
+    totalInPaise?: number;
+    date?: string;
+  }) {
+    return this.request<{
+      id: string;
+      totalInPaise: number;
+      date: string;
+      itemCount: number;
+      paymentMethod: string;
+    }>('POST', ENDPOINTS.salesForBiz(businessId), data);
+  }
+
+  async listSales(businessId: string, limit = 50, offset = 0) {
+    return this.request<Array<{
+      id: string;
+      totalInPaise: number;
+      date: string;
+      itemCount: number;
+      paymentMethod: string;
+      notes: string | null;
+    }>>('GET', `${ENDPOINTS.salesForBiz(businessId)}?limit=${limit}&offset=${offset}`);
+  }
+
+  async getSalesTodayTotal(businessId: string) {
+    return this.request<number>('GET', ENDPOINTS.salesTodayTotal(businessId));
   }
 
   // ── AI (Memory extraction via AI Gateway) ────────────────────────────────

@@ -1,12 +1,47 @@
-import { Controller, Get } from '@nestjs/common';
-import { SalesService } from './sales.service';
+import {
+  Controller, Get, Post, Body, Param, Query,
+  HttpCode, HttpStatus, UseGuards,
+} from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { SalesService, type CreateSaleDto } from './sales.service';
 
-@Controller('sales')
+@ApiTags('sales')
+@Controller('businesses/:businessId/sales')
+@UseGuards(JwtAuthGuard)
+@ApiBearerAuth()
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}
 
+  @Post()
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Record a sale (confirm-before-save from mobile)' })
+  create(
+    @Param('businessId') businessId: string,
+    @Body() body: Omit<CreateSaleDto, 'businessId'>,
+  ) {
+    return this.salesService.createSale({ ...body, businessId });
+  }
+
   @Get()
-  findAll() {
-    return this.salesService.findAll();
+  @ApiOperation({ summary: 'List sales for a business' })
+  @ApiQuery({ name: 'limit', required: false })
+  @ApiQuery({ name: 'offset', required: false })
+  list(
+    @Param('businessId') businessId: string,
+    @Query('limit') limit?: string,
+    @Query('offset') offset?: string,
+  ) {
+    return this.salesService.listSales(
+      businessId,
+      limit ? parseInt(limit, 10) : undefined,
+      offset ? parseInt(offset, 10) : undefined,
+    );
+  }
+
+  @Get('today-total')
+  @ApiOperation({ summary: 'Get total sales amount for today (in paise)' })
+  todayTotal(@Param('businessId') businessId: string) {
+    return this.salesService.getSalesTodayTotal(businessId);
   }
 }
