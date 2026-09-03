@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,27 +7,105 @@ import {
   SafeAreaView,
   ScrollView,
   FlatList,
+  ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
-import { Colors, Typography, Spacing, Radius } from '@vepari/design-system';
+import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
+import { getApiClient } from '@/services/api';
 
-const TABS = ['Overview', 'Transactions', 'Expenses'] as const;
+const TABS = ['Overview', 'Transactions'] as const;
 type Tab = typeof TABS[number];
 
-// Placeholder — replace with real API data
-const TRANSACTIONS = [
-  { id: '1', type: 'SALE', description: 'Rice & dal sale', amountInPaise: 45000, date: 'Today 2:30 PM', paymentMethod: 'CASH' },
-  { id: '2', type: 'EXPENSE', description: 'Electricity bill', amountInPaise: 180000, date: 'Today 10:00 AM', paymentMethod: 'BANK_TRANSFER' },
-  { id: '3', type: 'SALE', description: 'Groceries — Priya', amountInPaise: 32000, date: 'Yesterday 4:00 PM', paymentMethod: 'UPI' },
-  { id: '4', type: 'PURCHASE', description: 'Stock replenishment', amountInPaise: 560000, date: 'Yesterday 9:00 AM', paymentMethod: 'BANK_TRANSFER' },
-];
+type TxnType = 'SALE' | 'EXPENSE' | 'PURCHASE' | 'PAYMENT_IN' | 'PAYMENT_OUT' | 'CREDIT_GIVEN' | 'CREDIT_RECEIVED' | 'ADJUSTMENT';
+
+interface Transaction {
+  id: string;
+  type: TxnType;
+  amountInPaise: number;
+  description: string | null;
+  date: string;
+  paymentMethod: string;
+}
+
+interface ProfitSummary {
+  salesInPaise: number;
+  expensesInPaise: number;
+  profitInPaise: number;
+  grossMarginBps: number;
+}
 
 function fmt(paise: number): string {
-  const rupees = paise / 100;
-  return `₹${rupees.toLocaleString('en-IN')}`;
+  const r = Math.abs(paise) / 100;
+  const sign = paise < 0 ? '-' : '';
+  if (r >= 100000) return `${sign}₹${(r / 100000).toFixed(1)}L`;
+  if (r >= 1000) return `${sign}₹${(r / 1000).toFixed(1)}K`;
+  return `${sign}₹${r.toFixed(0)}`;
+}
+
+function txnEmoji(type: TxnType): string {
+  switch (type) {
+    case 'SALE': return '💰';
+    case 'EXPENSE': return '💸';
+    case 'PURCHASE': return '🛒';
+    case 'PAYMENT_IN': return '📥';
+    case 'PAYMENT_OUT': return '📤';
+    case 'CREDIT_GIVEN': return '🤝';
+    case 'CREDIT_RECEIVED': return '🏦';
+    default: return '📋';
+  }
+}
+
+function isInflow(type: TxnType): boolean {
+  return type === 'SALE' || type === 'PAYMENT_IN' || type === 'CREDIT_RECEIVED';
+}
+
+function relativeDate(iso: string): string {
+  const d = new Date(iso);
+  const now = new Date();
+  const diffMs = now.getTime() - d.getTime();
+  const diffDays = Math.floor(diffMs / 86400000);
+  if (diffDays === 0) return `Today ${d.getHours().toString().padStart(2, '0')}:${d.getMinutes().toString().padStart(2, '0')}`;
+  if (diffDays === 1) return 'Yesterday';
+  return `${d.getDate()}/${d.getMonth() + 1}`;
 }
 
 export default function FinanceScreen(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<Tab>('Overview');
+  const [, setBusinessId] = useState<string | null>(null);
+  const [monthSummary, setMonthSummary] = useState<ProfitSummary | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const load = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true); else setLoading(true);
+    try {
+      const client = getApiClient();
+      const businesses = await client.getMyBusinesses();
+      const biz = businesses[0];
+      if (!biz) return;
+      setBusinessId(biz.id);
+      const [summary, txns] = await Promise.all([
+        client.getProfitMonth(biz.id),
+        client.listTransactions(biz.id, 50, 0),
+      ]);
+      setMonthSummary(summary);
+      setTransactions(txns);
+    } catch { /* silent */ } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => { void load(); }, [load]);
+
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator style={{ flex: 1 }} color={Colors.brown} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -35,7 +113,6 @@ export default function FinanceScreen(): React.JSX.Element {
         <Text style={styles.title}>Finance</Text>
       </View>
 
-      {/* Tabs */}
       <View style={styles.tabRow}>
         {TABS.map(tab => (
           <TouchableOpacity
@@ -50,61 +127,69 @@ export default function FinanceScreen(): React.JSX.Element {
         ))}
       </View>
 
-      {activeTab === 'Overview' && <OverviewTab />}
+      {activeTab === 'Overview' && (
+        <ScrollView
+          contentContainerStyle={styles.listContent}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={Colors.gold} />}
+        >
+          {monthSummary ? (
+            <>
+              <View style={styles.summaryCard}>
+                <Text style={styles.summaryLabel}>This Month Revenue</Text>
+                <Text style={styles.summaryValue}>{fmt(monthSummary.salesInPaise)}</Text>
+              </View>
+
+              <View style={styles.twoCol}>
+                <View style={[styles.miniCard, styles.miniCardGreen]}>
+                  <Text style={styles.miniLabel}>Sales</Text>
+                  <Text style={styles.miniValue}>{fmt(monthSummary.salesInPaise)}</Text>
+                </View>
+                <View style={[styles.miniCard, styles.miniCardRed]}>
+                  <Text style={styles.miniLabel}>Expenses</Text>
+                  <Text style={styles.miniValue}>{fmt(monthSummary.expensesInPaise)}</Text>
+                </View>
+              </View>
+
+              <View style={styles.profitCard}>
+                <Text style={styles.profitLabel}>Net Profit</Text>
+                <Text style={[styles.profitValue, monthSummary.profitInPaise < 0 && styles.negative]}>
+                  {fmt(monthSummary.profitInPaise)}
+                </Text>
+                <Text style={[styles.profitMargin, monthSummary.grossMarginBps < 0 && styles.negative]}>
+                  {(monthSummary.grossMarginBps / 100).toFixed(1)}% margin
+                </Text>
+              </View>
+            </>
+          ) : (
+            <Text style={styles.empty}>No data yet. Record your first sale!</Text>
+          )}
+        </ScrollView>
+      )}
+
       {activeTab === 'Transactions' && (
         <FlatList
-          data={TRANSACTIONS}
+          data={transactions}
           keyExtractor={item => item.id}
           contentContainerStyle={styles.listContent}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={Colors.gold} />}
+          ListEmptyComponent={<Text style={styles.empty}>No transactions yet.</Text>}
           renderItem={({ item }) => (
             <View style={styles.txnCard}>
               <View style={styles.txnIcon}>
-                <Text>{item.type === 'SALE' ? '💰' : item.type === 'EXPENSE' ? '💸' : '🛒'}</Text>
+                <Text>{txnEmoji(item.type)}</Text>
               </View>
               <View style={styles.txnInfo}>
-                <Text style={styles.txnDescription}>{item.description}</Text>
-                <Text style={styles.txnMeta}>{item.date} · {item.paymentMethod}</Text>
+                <Text style={styles.txnDescription}>{item.description ?? item.type}</Text>
+                <Text style={styles.txnMeta}>{relativeDate(item.date)} · {item.paymentMethod}</Text>
               </View>
-              <Text style={[
-                styles.txnAmount,
-                item.type === 'SALE' ? styles.positive : styles.negative,
-              ]}>
-                {item.type === 'SALE' ? '+' : '-'}{fmt(item.amountInPaise)}
+              <Text style={[styles.txnAmount, isInflow(item.type) ? styles.positive : styles.negative]}>
+                {isInflow(item.type) ? '+' : '-'}{fmt(item.amountInPaise)}
               </Text>
             </View>
           )}
         />
       )}
     </SafeAreaView>
-  );
-}
-
-function OverviewTab(): React.JSX.Element {
-  return (
-    <ScrollView contentContainerStyle={styles.listContent}>
-      <View style={styles.summaryCard}>
-        <Text style={styles.summaryLabel}>This Month</Text>
-        <Text style={styles.summaryValue}>{fmt(1285000)}</Text>
-        <Text style={styles.summarySubLabel}>Total Revenue</Text>
-      </View>
-
-      <View style={styles.twoCol}>
-        <View style={[styles.miniCard, styles.miniCardGreen]}>
-          <Text style={styles.miniLabel}>Sales</Text>
-          <Text style={styles.miniValue}>{fmt(1285000)}</Text>
-        </View>
-        <View style={[styles.miniCard, styles.miniCardRed]}>
-          <Text style={styles.miniLabel}>Expenses</Text>
-          <Text style={styles.miniValue}>{fmt(420000)}</Text>
-        </View>
-      </View>
-
-      <View style={styles.profitCard}>
-        <Text style={styles.profitLabel}>Net Profit</Text>
-        <Text style={styles.profitValue}>{fmt(865000)}</Text>
-        <Text style={styles.profitMargin}>67.5% margin</Text>
-      </View>
-    </ScrollView>
   );
 }
 
@@ -118,25 +203,29 @@ const styles = StyleSheet.create({
   tabText: { fontSize: Typography.fontSize.sm, color: Colors.muted, fontWeight: Typography.fontWeight.medium },
   tabTextActive: { color: Colors.brown, fontWeight: Typography.fontWeight.semibold },
   listContent: { padding: Spacing[4], gap: Spacing[3] },
-  txnCard: { flexDirection: 'row', alignItems: 'center', gap: Spacing[3], backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing[4], borderWidth: 1, borderColor: Colors.border },
-  txnIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: Colors.beige, alignItems: 'center', justifyContent: 'center' },
+  txnCard: {
+    flexDirection: 'row', alignItems: 'center', gap: Spacing[3],
+    backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing[4],
+    borderWidth: 1, borderColor: Colors.border, ...Shadows.sm,
+  },
+  txnIcon: { width: 36, height: 36, borderRadius: 18, backgroundColor: Colors.ivory, alignItems: 'center', justifyContent: 'center' },
   txnInfo: { flex: 1, gap: 2 },
   txnDescription: { fontSize: Typography.fontSize.base, color: Colors.brown, fontWeight: Typography.fontWeight.medium },
   txnMeta: { fontSize: Typography.fontSize.xs, color: Colors.muted },
   txnAmount: { fontSize: Typography.fontSize.base, fontWeight: Typography.fontWeight.semibold },
   positive: { color: Colors.success },
   negative: { color: Colors.error },
-  summaryCard: { backgroundColor: Colors.brown, borderRadius: Radius.xl, padding: Spacing[6], alignItems: 'center', gap: Spacing[1] },
+  empty: { textAlign: 'center', color: Colors.muted, marginTop: Spacing[8], fontSize: Typography.fontSize.sm },
+  summaryCard: { backgroundColor: Colors.brown, borderRadius: Radius.xl, padding: Spacing[6], alignItems: 'center', gap: Spacing[1], ...Shadows.md },
   summaryLabel: { color: Colors.dim, fontSize: Typography.fontSize.sm },
   summaryValue: { color: Colors.gold, fontSize: Typography.fontSize['3xl'], fontWeight: Typography.fontWeight.bold },
-  summarySubLabel: { color: Colors.dim, fontSize: Typography.fontSize.sm },
   twoCol: { flexDirection: 'row', gap: Spacing[3] },
   miniCard: { flex: 1, borderRadius: Radius.lg, padding: Spacing[4], gap: Spacing[1] },
   miniCardGreen: { backgroundColor: '#EAF3E8' },
   miniCardRed: { backgroundColor: '#FDECEA' },
   miniLabel: { fontSize: Typography.fontSize.sm, color: Colors.muted },
   miniValue: { fontSize: Typography.fontSize.lg, fontWeight: Typography.fontWeight.bold, color: Colors.brown },
-  profitCard: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing[4], borderWidth: 1, borderColor: Colors.border, alignItems: 'center', gap: Spacing[1] },
+  profitCard: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing[4], borderWidth: 1, borderColor: Colors.border, alignItems: 'center', gap: Spacing[1], ...Shadows.sm },
   profitLabel: { fontSize: Typography.fontSize.sm, color: Colors.muted },
   profitValue: { fontSize: Typography.fontSize['2xl'], fontWeight: Typography.fontWeight.bold, color: Colors.success },
   profitMargin: { fontSize: Typography.fontSize.sm, color: Colors.success },

@@ -7,7 +7,7 @@ import AIHomeScreen from '@/screens/home/AIHomeScreen';
 import FinanceScreen from '@/screens/finance/FinanceScreen';
 import CustomersScreen from '@/screens/customers/CustomersScreen';
 import SuppliersScreen from '@/screens/suppliers/SuppliersScreen';
-import MoreScreen from '@/screens/home/MoreScreen';
+import MoreStack from '@/navigation/MoreStack';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 
@@ -82,7 +82,7 @@ export default function MainNavigator(): React.JSX.Element {
       />
       <Tab.Screen
         name="More"
-        component={MoreScreen}
+        component={MoreStack}
         options={{
           tabBarLabel: 'More',
           tabBarIcon: ({ focused }) => <TabIcon label="⋯" focused={focused} />,

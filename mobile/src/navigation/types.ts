@@ -1,5 +1,6 @@
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
 
 // ── Auth Stack ────────────────────────────────────────────────────────────────
 
@@ -13,6 +14,20 @@ export type AuthStackParamList = {
 
 export type AuthScreenProps<T extends keyof AuthStackParamList> =
   NativeStackScreenProps<AuthStackParamList, T>;
+
+// ── More Stack (nested inside the More tab) ───────────────────────────────────
+
+export type MoreStackParamList = {
+  MoreHome: undefined;
+  Inventory: undefined;
+  Reports: undefined;
+};
+
+export type MoreStackScreenProps<T extends keyof MoreStackParamList> =
+  CompositeScreenProps<
+    NativeStackScreenProps<MoreStackParamList, T>,
+    BottomTabScreenProps<MainTabParamList>
+  >;
 
 // ── Main Tab Navigator ────────────────────────────────────────────────────────
 

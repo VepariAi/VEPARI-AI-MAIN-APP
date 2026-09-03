@@ -270,6 +270,17 @@ export class VepariApiClient {
     }>('GET', path);
   }
 
+  async listTransactions(businessId: string, limit = 50, offset = 0) {
+    return this.request<Array<{
+      id: string;
+      type: 'SALE' | 'EXPENSE' | 'PURCHASE' | 'PAYMENT_IN' | 'PAYMENT_OUT' | 'CREDIT_GIVEN' | 'CREDIT_RECEIVED' | 'ADJUSTMENT';
+      amountInPaise: number;
+      description: string | null;
+      date: string;
+      paymentMethod: string;
+    }>>('GET', `${ENDPOINTS.transactions.list(businessId)}?limit=${limit}&offset=${offset}`);
+  }
+
   getProfitToday(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitToday(businessId)); }
   getProfitWeek(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitWeek(businessId)); }
   getProfitMonth(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitMonth(businessId)); }
@@ -361,6 +372,32 @@ export class VepariApiClient {
     return this.request<{ id: string; stock: number }>(
       'PATCH', `${ENDPOINTS.products.list(businessId)}/${productId}/stock`, { adjustment },
     );
+  }
+
+  // ── Alerts ───────────────────────────────────────────────────────────────
+
+  async getAlerts(businessId: string) {
+    return this.request<Array<{
+      type: string;
+      severity: 'info' | 'warning' | 'critical';
+      message: string;
+      amountInPaise?: number;
+      party?: string;
+      detectedAt: string;
+    }>>('GET', `/businesses/${businessId}/alerts`);
+  }
+
+  // ── Search ───────────────────────────────────────────────────────────────
+
+  async search(businessId: string, q: string) {
+    const encoded = encodeURIComponent(q);
+    return this.request<Array<{
+      type: 'customer' | 'supplier' | 'product' | 'sale' | 'expense';
+      id: string;
+      title: string;
+      subtitle: string;
+      amountInPaise?: number;
+    }>>('GET', `/businesses/${businessId}/search?q=${encoded}`);
   }
 
   // ── Analytics Snapshot ───────────────────────────────────────────────────

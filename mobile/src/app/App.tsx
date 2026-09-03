@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { StatusBar } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Colors } from '@vepari/design-system';
 import RootNavigator from '@/navigation/RootNavigator';
+import { AuthProvider } from '@/navigation/AuthContext';
 import { initDb } from '@/database';
-import { initSession } from '@/services/api';
+import { initSession, clearSession } from '@/services/api';
 import SecurityLockScreen from '@/screens/security/SecurityLockScreen';
 
 export default function App(): React.JSX.Element {
@@ -20,6 +21,18 @@ export default function App(): React.JSX.Element {
         setIsAuthenticated(hasToken);
       })
       .finally(() => setDbReady(true));
+  }, []);
+
+  const handleAuthenticated = useCallback(() => {
+    setIsAuthenticated(true);
+    setIsUnlocked(true); // first login: skip lock
+  }, []);
+
+  const handleSignOut = useCallback(() => {
+    void clearSession().then(() => {
+      setIsAuthenticated(false);
+      setIsUnlocked(false);
+    });
   }, []);
 
   if (!dbReady) return <></>;
@@ -37,13 +50,12 @@ export default function App(): React.JSX.Element {
     <SafeAreaProvider>
       <StatusBar barStyle="light-content" backgroundColor={Colors.brown} />
       <NavigationContainer>
-        <RootNavigator
-          isAuthenticated={isAuthenticated}
-          onAuthenticated={() => {
-            setIsAuthenticated(true);
-            setIsUnlocked(true); // first login: already authenticated, skip lock
-          }}
-        />
+        <AuthProvider onAuthenticated={handleAuthenticated} signOut={handleSignOut}>
+          <RootNavigator
+            isAuthenticated={isAuthenticated}
+            onAuthenticated={handleAuthenticated}
+          />
+        </AuthProvider>
       </NavigationContainer>
     </SafeAreaProvider>
   );

@@ -3,6 +3,16 @@
 
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { PaymentMethod, TransactionType } from '@prisma/client';
+
+export interface TransactionRow {
+  id: string;
+  type: TransactionType;
+  amountInPaise: number;
+  description: string | null;
+  date: Date;
+  paymentMethod: PaymentMethod;
+}
 
 export interface ProfitSummary {
   /** All amounts in paise (integer) */
@@ -138,5 +148,18 @@ export class FinanceService {
     }
 
     return results;
+  }
+
+  async listTransactions(businessId: string, limit = 50, offset = 0): Promise<TransactionRow[]> {
+    const business = await this.prisma.business.findUnique({ where: { id: businessId } });
+    if (!business) throw new NotFoundException('Business not found');
+
+    return this.prisma.transaction.findMany({
+      where: { businessId },
+      orderBy: { date: 'desc' },
+      take: limit,
+      skip: offset,
+      select: { id: true, type: true, amountInPaise: true, description: true, date: true, paymentMethod: true },
+    });
   }
 }
