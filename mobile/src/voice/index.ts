@@ -4,3 +4,5 @@ export { startRecording, stopRecording, getRecorderState, resetRecorder } from '
 export type { RecorderState } from './recorder';
 export { transcribeAudioFile } from './stt';
 export type { TranscriptResult } from './stt';
+export { synthesise, speakText } from './tts';
+export type { TtsResult, SupportedLanguage } from './tts';
