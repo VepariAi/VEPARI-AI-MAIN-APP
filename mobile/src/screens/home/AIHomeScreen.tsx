@@ -26,9 +26,11 @@ import { getApiClient } from '@/services/api';
 import SaleLogScreen from '@/screens/sales/SaleLogScreen';
 import ExpenseLogScreen from '@/screens/expenses/ExpenseLogScreen';
 import MemoryConfirmScreen, { type MemoryCandidate } from '@/memory/MemoryConfirmScreen';
+import CustomerCreditScreen from '@/screens/customers/CustomerCreditScreen';
+import InventoryScreen from '@/screens/inventory/InventoryScreen';
 
 type Props = MainTabScreenProps<'AIHome'>;
-type ActiveModal = 'sale' | 'expense' | null;
+type ActiveModal = 'sale' | 'expense' | 'credit' | 'stock' | null;
 
 interface Snapshot {
   businessName: string;
@@ -213,8 +215,8 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
           <View style={styles.actionsGrid}>
             <QuickAction emoji="💰" label="Record Sale" onPress={() => setActiveModal('sale')} />
             <QuickAction emoji="💸" label="Add Expense" onPress={() => setActiveModal('expense')} />
-            <QuickAction emoji="👤" label="Customer Credit" onPress={() => undefined} />
-            <QuickAction emoji="📦" label="Check Stock" onPress={() => undefined} />
+            <QuickAction emoji="👤" label="Customer Credit" onPress={() => setActiveModal('credit')} />
+            <QuickAction emoji="📦" label="Check Stock" onPress={() => setActiveModal('stock')} />
           </View>
         </View>
 
@@ -267,6 +269,34 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
             }}
             onCancel={() => setActiveModal(null)}
           />
+        ) : null}
+      </Modal>
+
+      {/* Customer credit modal */}
+      <Modal
+        visible={activeModal === 'credit'}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setActiveModal(null)}
+      >
+        {businessId != null ? (
+          <CustomerCreditScreen
+            businessId={businessId}
+            onDone={() => setActiveModal(null)}
+            onCancel={() => setActiveModal(null)}
+          />
+        ) : null}
+      </Modal>
+
+      {/* Stock / inventory modal */}
+      <Modal
+        visible={activeModal === 'stock'}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setActiveModal(null)}
+      >
+        {businessId != null ? (
+          <InventoryScreen businessId={businessId} />
         ) : null}
       </Modal>
 
