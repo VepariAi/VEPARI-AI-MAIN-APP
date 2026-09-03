@@ -99,6 +99,14 @@ export const ENDPOINTS = {
     updateRole: (bizId: string, memberId: string) => `/businesses/${bizId}/team/${memberId}/role`,
     remove: (bizId: string, memberId: string) => `/businesses/${bizId}/team/${memberId}`,
   },
+  reports: {
+    pl: (bizId: string) => `/businesses/${bizId}/reports/pl`,
+    sales: (bizId: string) => `/businesses/${bizId}/reports/sales`,
+    expenses: (bizId: string) => `/businesses/${bizId}/reports/expenses`,
+    cashflow: (bizId: string) => `/businesses/${bizId}/reports/cashflow`,
+    customers: (bizId: string) => `/businesses/${bizId}/reports/customers`,
+    inventory: (bizId: string) => `/businesses/${bizId}/reports/inventory`,
+  },
 } as const;
 
 // ── Client config ─────────────────────────────────────────────────────────────
@@ -569,6 +577,80 @@ export class VepariApiClient {
       profitInPaise: number;
       grossMarginBps: number;
     }>>('GET', `${ENDPOINTS.finance.profitSeries(businessId)}?days=${days}`);
+  }
+
+  // ── Reports (detailed, date-range) ───────────────────────────────────────
+
+  private reportRequest<T>(url: string, from?: string, to?: string): Promise<T> {
+    const params = new URLSearchParams();
+    if (from) params.set('from', from);
+    if (to) params.set('to', to);
+    const qs = params.toString();
+    return this.request<T>('GET', qs ? `${url}?${qs}` : url);
+  }
+
+  getPLReport(businessId: string, from?: string, to?: string) {
+    return this.reportRequest<{
+      revenueInPaise: number;
+      costOfGoodsSoldInPaise: number;
+      grossProfitInPaise: number;
+      grossMarginBps: number;
+      operatingExpensesInPaise: number;
+      netProfitInPaise: number;
+      netMarginBps: number;
+      revenueByPaymentMethod: Record<string, number>;
+      expensesByCategory: Record<string, number>;
+    }>(ENDPOINTS.reports.pl(businessId), from, to);
+  }
+
+  getSalesReport(businessId: string, from?: string, to?: string) {
+    return this.reportRequest<{
+      totalSalesInPaise: number;
+      totalOrderCount: number;
+      averageOrderValueInPaise: number;
+      topCustomers: Array<{ customerId: string | null; customerName: string; totalInPaise: number; orderCount: number }>;
+      byPaymentMethod: Record<string, number>;
+      dailySeries: Array<{ date: string; salesInPaise: number; orderCount: number }>;
+    }>(ENDPOINTS.reports.sales(businessId), from, to);
+  }
+
+  getExpenseReport(businessId: string, from?: string, to?: string) {
+    return this.reportRequest<{
+      totalExpensesInPaise: number;
+      byCategory: Record<string, number>;
+      dailySeries: Array<{ date: string; amountInPaise: number }>;
+      topExpenses: Array<{ id: string; category: string; amountInPaise: number; description: string | null; date: string }>;
+    }>(ENDPOINTS.reports.expenses(businessId), from, to);
+  }
+
+  getCashFlowReport(businessId: string, from?: string, to?: string) {
+    return this.reportRequest<{
+      cashInflowInPaise: number;
+      cashOutflowInPaise: number;
+      netCashFlowInPaise: number;
+      byPaymentMethod: { inflow: Record<string, number>; outflow: Record<string, number> };
+      dailySeries: Array<{ date: string; inflowInPaise: number; outflowInPaise: number; netInPaise: number }>;
+    }>(ENDPOINTS.reports.cashflow(businessId), from, to);
+  }
+
+  getCustomerReport(businessId: string, from?: string, to?: string) {
+    return this.reportRequest<{
+      totalReceivablesInPaise: number;
+      customersWithOpenBalance: number;
+      topDebtors: Array<{ customerId: string; customerName: string; balanceInPaise: number }>;
+      recentActivity: Array<{ customerId: string; customerName: string; type: string; amountInPaise: number; date: string }>;
+    }>(ENDPOINTS.reports.customers(businessId), from, to);
+  }
+
+  getInventoryReport(businessId: string, from?: string, to?: string) {
+    return this.reportRequest<{
+      totalProducts: number;
+      lowStockCount: number;
+      outOfStockCount: number;
+      totalStockValueInPaise: number;
+      lowStockProducts: Array<{ id: string; name: string; stock: number; threshold: number | null; priceInPaise: number }>;
+      topMovers: Array<{ productId: string; productName: string; unitsSold: number; revenueInPaise: number }>;
+    }>(ENDPOINTS.reports.inventory(businessId), from, to);
   }
 
   // ── Expenses ──────────────────────────────────────────────────────────────
