@@ -65,6 +65,7 @@ export interface TransactionRow {
   description: string | null;
   date: Date;
   paymentMethod: PaymentMethod;
+  referenceId: string | null;
 }
 
 export interface ProfitSummary {
@@ -212,7 +213,7 @@ export class FinanceService {
       orderBy: { date: 'desc' },
       take: limit,
       skip: offset,
-      select: { id: true, type: true, amountInPaise: true, description: true, date: true, paymentMethod: true },
+      select: { id: true, type: true, amountInPaise: true, description: true, date: true, paymentMethod: true, referenceId: true },
     });
   }
 

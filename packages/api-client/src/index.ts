@@ -49,6 +49,7 @@ export const ENDPOINTS = {
   expenses: {
     create: (bizId: string) => `/businesses/${bizId}/expenses`,
     list: (bizId: string) => `/businesses/${bizId}/expenses`,
+    byId: (bizId: string, id: string) => `/businesses/${bizId}/expenses/${id}`,
     todayTotal: (bizId: string) => `/businesses/${bizId}/expenses/today-total`,
   },
   products: {
@@ -428,6 +429,7 @@ export class VepariApiClient {
       description: string | null;
       date: string;
       paymentMethod: string;
+      referenceId: string | null;
     }>>('GET', `${ENDPOINTS.transactions.list(businessId)}?limit=${limit}&offset=${offset}`);
   }
 
@@ -508,6 +510,20 @@ export class VepariApiClient {
 
   async getExpensesTodayTotal(businessId: string) {
     return this.request<number>('GET', ENDPOINTS.expenses.todayTotal(businessId));
+  }
+
+  async getExpenseById(businessId: string, expenseId: string) {
+    return this.request<{
+      id: string;
+      businessId: string;
+      category: string;
+      amountInPaise: number;
+      description: string | null;
+      notes: string | null;
+      paymentMethod: string;
+      date: string;
+      createdAt: string;
+    }>('GET', ENDPOINTS.expenses.byId(businessId, expenseId));
   }
 
   // ── Products ──────────────────────────────────────────────────────────────

@@ -54,4 +54,12 @@ export class ExpensesController {
   getExpensesTodayTotal(@Param('businessId') businessId: string) {
     return this.expensesService.getExpensesTodayTotal(businessId);
   }
+
+  @Get(':expenseId')
+  getExpense(
+    @Param('businessId') businessId: string,
+    @Param('expenseId') expenseId: string,
+  ) {
+    return this.expensesService.getExpenseById(businessId, expenseId);
+  }
 }

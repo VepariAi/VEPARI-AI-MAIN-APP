@@ -82,6 +82,12 @@ export class ExpensesService {
     return expense;
   }
 
+  async getExpenseById(businessId: string, expenseId: string): Promise<ExpenseSummary> {
+    const expense = await this.prisma.expense.findFirst({ where: { id: expenseId, businessId } });
+    if (!expense) throw new NotFoundException('Expense not found');
+    return expense;
+  }
+
   async listExpenses(businessId: string, limit = 50, offset = 0): Promise<ExpenseSummary[]> {
     const business = await this.prisma.business.findUnique({ where: { id: businessId } });
     if (!business) throw new NotFoundException('Business not found');

@@ -13,6 +13,7 @@ import {
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import { getApiClient } from '@/services/api';
 import SaleReceiptScreen from '@/screens/sales/SaleReceiptScreen';
+import ExpenseDetailScreen from '@/screens/expenses/ExpenseDetailScreen';
 
 const TABS = ['Overview', 'Transactions'] as const;
 type Tab = typeof TABS[number];
@@ -26,6 +27,7 @@ interface Transaction {
   description: string | null;
   date: string;
   paymentMethod: string;
+  referenceId: string | null;
 }
 
 interface ProfitSummary {
@@ -93,6 +95,7 @@ export default function FinanceScreen(): React.JSX.Element {
   const [refreshing, setRefreshing] = useState(false);
   const [businessId, setBusinessId] = useState<string | null>(null);
   const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
+  const [selectedExpenseId, setSelectedExpenseId] = useState<string | null>(null);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
@@ -236,6 +239,12 @@ export default function FinanceScreen(): React.JSX.Element {
           ListEmptyComponent={<Text style={styles.empty}>No transactions yet.</Text>}
           renderItem={({ item }) => {
             const isSale = item.type === 'SALE';
+            const isExpense = item.type === 'EXPENSE' && item.referenceId != null;
+            const isTappable = isSale || isExpense;
+            const handlePress = () => {
+              if (isSale) setSelectedSaleId(item.id);
+              else if (isExpense && item.referenceId) setSelectedExpenseId(item.referenceId);
+            };
             const inner = (
               <>
                 <View style={styles.txnIcon}>
@@ -249,13 +258,13 @@ export default function FinanceScreen(): React.JSX.Element {
                   <Text style={[styles.txnAmount, isInflow(item.type) ? styles.positive : styles.negative]}>
                     {isInflow(item.type) ? '+' : '-'}{fmt(item.amountInPaise)}
                   </Text>
-                  {isSale ? <Text style={styles.chevron}>›</Text> : null}
+                  {isTappable ? <Text style={styles.chevron}>›</Text> : null}
                 </View>
               </>
             );
-            if (isSale) {
+            if (isTappable) {
               return (
-                <TouchableOpacity activeOpacity={0.75} onPress={() => setSelectedSaleId(item.id)} style={styles.txnCard}>
+                <TouchableOpacity activeOpacity={0.75} onPress={handlePress} style={styles.txnCard}>
                   {inner}
                 </TouchableOpacity>
               );
@@ -270,6 +279,13 @@ export default function FinanceScreen(): React.JSX.Element {
           businessId={businessId}
           saleId={selectedSaleId}
           onClose={() => setSelectedSaleId(null)}
+        />
+      ) : null}
+      {selectedExpenseId && businessId ? (
+        <ExpenseDetailScreen
+          businessId={businessId}
+          expenseId={selectedExpenseId}
+          onClose={() => setSelectedExpenseId(null)}
         />
       ) : null}
     </SafeAreaView>
