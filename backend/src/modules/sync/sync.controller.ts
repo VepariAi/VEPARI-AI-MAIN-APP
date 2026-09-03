@@ -1,12 +1,24 @@
-import { Controller, Get } from '@nestjs/common';
-import { SyncService } from './sync.service';
+import { Controller, Post, Body, Param, UseGuards } from '@nestjs/common';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { SyncService, SyncMutation } from './sync.service';
 
-@Controller('sync')
+class SyncBatchBody {
+  mutations!: SyncMutation[];
+}
+
+@ApiTags('sync')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@Controller('businesses/:businessId/sync')
 export class SyncController {
   constructor(private readonly syncService: SyncService) {}
 
-  @Get()
-  findAll() {
-    return this.syncService.findAll();
+  @Post('mutations')
+  applyMutations(
+    @Param('businessId') businessId: string,
+    @Body() body: SyncBatchBody,
+  ) {
+    return this.syncService.applyMutations(businessId, body.mutations);
   }
 }
