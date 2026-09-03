@@ -34,6 +34,19 @@ interface ProfitSummary {
   grossMarginBps: number;
 }
 
+interface CashFlowSummary {
+  cashInflowInPaise: number;
+  cashOutflowInPaise: number;
+  netCashFlowInPaise: number;
+}
+
+interface ReceivablesPayables {
+  totalReceivablesInPaise: number;
+  totalPayablesInPaise: number;
+  customersWithBalance: number;
+  suppliersWithBalance: number;
+}
+
 function fmt(paise: number): string {
   const r = Math.abs(paise) / 100;
   const sign = paise < 0 ? '-' : '';
@@ -71,8 +84,9 @@ function relativeDate(iso: string): string {
 
 export default function FinanceScreen(): React.JSX.Element {
   const [activeTab, setActiveTab] = useState<Tab>('Overview');
-  const [, setBusinessId] = useState<string | null>(null);
   const [monthSummary, setMonthSummary] = useState<ProfitSummary | null>(null);
+  const [cashFlowToday, setCashFlowToday] = useState<CashFlowSummary | null>(null);
+  const [receivablesPayables, setReceivablesPayables] = useState<ReceivablesPayables | null>(null);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -84,12 +98,15 @@ export default function FinanceScreen(): React.JSX.Element {
       const businesses = await client.getMyBusinesses();
       const biz = businesses[0];
       if (!biz) return;
-      setBusinessId(biz.id);
-      const [summary, txns] = await Promise.all([
+      const [summary, cashFlow, recPay, txns] = await Promise.all([
         client.getProfitMonth(biz.id),
+        client.getCashFlowToday(biz.id),
+        client.getReceivablesPayables(biz.id),
         client.listTransactions(biz.id, 50, 0),
       ]);
       setMonthSummary(summary);
+      setCashFlowToday(cashFlow);
+      setReceivablesPayables(recPay);
       setTransactions(txns);
     } catch { /* silent */ } finally {
       setLoading(false);
@@ -132,13 +149,52 @@ export default function FinanceScreen(): React.JSX.Element {
           contentContainerStyle={styles.listContent}
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={Colors.gold} />}
         >
-          {monthSummary ? (
-            <>
-              <View style={styles.summaryCard}>
-                <Text style={styles.summaryLabel}>This Month Revenue</Text>
-                <Text style={styles.summaryValue}>{fmt(monthSummary.salesInPaise)}</Text>
+          {/* Cash flow today */}
+          {cashFlowToday ? (
+            <View style={styles.sectionCard}>
+              <Text style={styles.sectionTitle}>Today's Cash Flow</Text>
+              <View style={styles.twoCol}>
+                <View style={[styles.miniCard, styles.miniCardGreen]}>
+                  <Text style={styles.miniLabel}>Inflow</Text>
+                  <Text style={styles.miniValue}>{fmt(cashFlowToday.cashInflowInPaise)}</Text>
+                </View>
+                <View style={[styles.miniCard, styles.miniCardRed]}>
+                  <Text style={styles.miniLabel}>Outflow</Text>
+                  <Text style={styles.miniValue}>{fmt(cashFlowToday.cashOutflowInPaise)}</Text>
+                </View>
               </View>
+              <View style={styles.netRow}>
+                <Text style={styles.netLabel}>Net</Text>
+                <Text style={[styles.netValue, cashFlowToday.netCashFlowInPaise < 0 && styles.negative]}>
+                  {cashFlowToday.netCashFlowInPaise >= 0 ? '+' : ''}{fmt(cashFlowToday.netCashFlowInPaise)}
+                </Text>
+              </View>
+            </View>
+          ) : null}
 
+          {/* Receivables and payables */}
+          {receivablesPayables ? (
+            <View style={styles.sectionCard}>
+              <Text style={styles.sectionTitle}>Credit Overview</Text>
+              <View style={styles.twoCol}>
+                <View style={[styles.miniCard, styles.miniCardGreen]}>
+                  <Text style={styles.miniLabel}>Receivables</Text>
+                  <Text style={styles.miniValue}>{fmt(receivablesPayables.totalReceivablesInPaise)}</Text>
+                  <Text style={styles.miniSub}>{receivablesPayables.customersWithBalance} customers</Text>
+                </View>
+                <View style={[styles.miniCard, styles.miniCardRed]}>
+                  <Text style={styles.miniLabel}>Payables</Text>
+                  <Text style={styles.miniValue}>{fmt(receivablesPayables.totalPayablesInPaise)}</Text>
+                  <Text style={styles.miniSub}>{receivablesPayables.suppliersWithBalance} suppliers</Text>
+                </View>
+              </View>
+            </View>
+          ) : null}
+
+          {/* Month P&L summary */}
+          {monthSummary ? (
+            <View style={styles.sectionCard}>
+              <Text style={styles.sectionTitle}>This Month</Text>
               <View style={styles.twoCol}>
                 <View style={[styles.miniCard, styles.miniCardGreen]}>
                   <Text style={styles.miniLabel}>Sales</Text>
@@ -149,17 +205,18 @@ export default function FinanceScreen(): React.JSX.Element {
                   <Text style={styles.miniValue}>{fmt(monthSummary.expensesInPaise)}</Text>
                 </View>
               </View>
-
-              <View style={styles.profitCard}>
-                <Text style={styles.profitLabel}>Net Profit</Text>
-                <Text style={[styles.profitValue, monthSummary.profitInPaise < 0 && styles.negative]}>
-                  {fmt(monthSummary.profitInPaise)}
-                </Text>
-                <Text style={[styles.profitMargin, monthSummary.grossMarginBps < 0 && styles.negative]}>
-                  {(monthSummary.grossMarginBps / 100).toFixed(1)}% margin
-                </Text>
+              <View style={styles.netRow}>
+                <Text style={styles.netLabel}>Net Profit</Text>
+                <View style={styles.netValueRow}>
+                  <Text style={[styles.netValue, monthSummary.profitInPaise < 0 && styles.negative]}>
+                    {monthSummary.profitInPaise >= 0 ? '+' : ''}{fmt(monthSummary.profitInPaise)}
+                  </Text>
+                  <Text style={[styles.marginBadge, monthSummary.grossMarginBps < 0 && styles.negative]}>
+                    {(monthSummary.grossMarginBps / 100).toFixed(1)}%
+                  </Text>
+                </View>
               </View>
-            </>
+            </View>
           ) : (
             <Text style={styles.empty}>No data yet. Record your first sale!</Text>
           )}
@@ -203,6 +260,23 @@ const styles = StyleSheet.create({
   tabText: { fontSize: Typography.fontSize.sm, color: Colors.muted, fontWeight: Typography.fontWeight.medium },
   tabTextActive: { color: Colors.brown, fontWeight: Typography.fontWeight.semibold },
   listContent: { padding: Spacing[4], gap: Spacing[3] },
+  sectionCard: {
+    backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing[4],
+    borderWidth: 1, borderColor: Colors.border, gap: Spacing[3], ...Shadows.sm,
+  },
+  sectionTitle: { fontSize: Typography.fontSize.sm, fontWeight: Typography.fontWeight.semibold, color: Colors.muted, textTransform: 'uppercase', letterSpacing: 0.5 },
+  twoCol: { flexDirection: 'row', gap: Spacing[3] },
+  miniCard: { flex: 1, borderRadius: Radius.md, padding: Spacing[3], gap: 2 },
+  miniCardGreen: { backgroundColor: '#EAF3E8' },
+  miniCardRed: { backgroundColor: '#FDECEA' },
+  miniLabel: { fontSize: Typography.fontSize.xs, color: Colors.muted },
+  miniValue: { fontSize: Typography.fontSize.base, fontWeight: Typography.fontWeight.bold, color: Colors.brown },
+  miniSub: { fontSize: Typography.fontSize.xs, color: Colors.muted },
+  netRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingTop: Spacing[2], borderTopWidth: 1, borderTopColor: Colors.border },
+  netValueRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing[2] },
+  netLabel: { fontSize: Typography.fontSize.sm, color: Colors.muted, fontWeight: Typography.fontWeight.medium },
+  netValue: { fontSize: Typography.fontSize.lg, fontWeight: Typography.fontWeight.bold, color: Colors.success },
+  marginBadge: { fontSize: Typography.fontSize.xs, color: Colors.success, backgroundColor: '#EAF3E8', paddingHorizontal: Spacing[2], paddingVertical: 2, borderRadius: Radius.sm },
   txnCard: {
     flexDirection: 'row', alignItems: 'center', gap: Spacing[3],
     backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing[4],
@@ -216,17 +290,4 @@ const styles = StyleSheet.create({
   positive: { color: Colors.success },
   negative: { color: Colors.error },
   empty: { textAlign: 'center', color: Colors.muted, marginTop: Spacing[8], fontSize: Typography.fontSize.sm },
-  summaryCard: { backgroundColor: Colors.brown, borderRadius: Radius.xl, padding: Spacing[6], alignItems: 'center', gap: Spacing[1], ...Shadows.md },
-  summaryLabel: { color: Colors.dim, fontSize: Typography.fontSize.sm },
-  summaryValue: { color: Colors.gold, fontSize: Typography.fontSize['3xl'], fontWeight: Typography.fontWeight.bold },
-  twoCol: { flexDirection: 'row', gap: Spacing[3] },
-  miniCard: { flex: 1, borderRadius: Radius.lg, padding: Spacing[4], gap: Spacing[1] },
-  miniCardGreen: { backgroundColor: '#EAF3E8' },
-  miniCardRed: { backgroundColor: '#FDECEA' },
-  miniLabel: { fontSize: Typography.fontSize.sm, color: Colors.muted },
-  miniValue: { fontSize: Typography.fontSize.lg, fontWeight: Typography.fontWeight.bold, color: Colors.brown },
-  profitCard: { backgroundColor: Colors.white, borderRadius: Radius.lg, padding: Spacing[4], borderWidth: 1, borderColor: Colors.border, alignItems: 'center', gap: Spacing[1], ...Shadows.sm },
-  profitLabel: { fontSize: Typography.fontSize.sm, color: Colors.muted },
-  profitValue: { fontSize: Typography.fontSize['2xl'], fontWeight: Typography.fontWeight.bold, color: Colors.success },
-  profitMargin: { fontSize: Typography.fontSize.sm, color: Colors.success },
 });

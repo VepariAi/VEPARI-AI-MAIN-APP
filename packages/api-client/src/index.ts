@@ -65,6 +65,9 @@ export const ENDPOINTS = {
     profitWeek: (bizId: string) => `/businesses/${bizId}/finance/profit/week`,
     profitMonth: (bizId: string) => `/businesses/${bizId}/finance/profit/month`,
     profitSeries: (bizId: string) => `/businesses/${bizId}/finance/profit/series`,
+    cashFlowToday: (bizId: string) => `/businesses/${bizId}/finance/cashflow/today`,
+    cashFlowMonth: (bizId: string) => `/businesses/${bizId}/finance/cashflow/month`,
+    receivablesPayables: (bizId: string) => `/businesses/${bizId}/finance/receivables-payables`,
   },
 } as const;
 
@@ -328,6 +331,35 @@ export class VepariApiClient {
   getProfitToday(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitToday(businessId)); }
   getProfitWeek(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitWeek(businessId)); }
   getProfitMonth(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitMonth(businessId)); }
+
+  getCashFlowToday(businessId: string) {
+    return this.request<{
+      cashInflowInPaise: number;
+      cashOutflowInPaise: number;
+      netCashFlowInPaise: number;
+      periodStart: string;
+      periodEnd: string;
+    }>('GET', ENDPOINTS.finance.cashFlowToday(businessId));
+  }
+
+  getCashFlowMonth(businessId: string) {
+    return this.request<{
+      cashInflowInPaise: number;
+      cashOutflowInPaise: number;
+      netCashFlowInPaise: number;
+      periodStart: string;
+      periodEnd: string;
+    }>('GET', ENDPOINTS.finance.cashFlowMonth(businessId));
+  }
+
+  getReceivablesPayables(businessId: string) {
+    return this.request<{
+      totalReceivablesInPaise: number;
+      totalPayablesInPaise: number;
+      customersWithBalance: number;
+      suppliersWithBalance: number;
+    }>('GET', ENDPOINTS.finance.receivablesPayables(businessId));
+  }
 
   getProfitSeries(businessId: string, days = 30) {
     return this.request<Array<{
