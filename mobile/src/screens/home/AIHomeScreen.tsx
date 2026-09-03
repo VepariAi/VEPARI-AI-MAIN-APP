@@ -17,6 +17,7 @@ import {
   resetRecorder,
   checkMicPermission,
   requestMicPermission,
+  transcribeAudioFile,
 } from '@/voice';
 
 type Props = MainTabScreenProps<'AIHome'>;
@@ -45,15 +46,23 @@ function formatRupees(paise: number): string {
 export default function AIHomeScreen(_props: Props): React.JSX.Element {
   const [voiceActive, setVoiceActive] = useState(false);
   const [voiceError, setVoiceError] = useState('');
+  const [transcript, setTranscript] = useState('');
 
   const handleVoicePress = useCallback(async () => {
     setVoiceError('');
 
     if (getRecorderState() === 'recording') {
-      // Stop and hand off audio file path to STT (PROMPT 102)
-      await stopRecording();
+      const audioPath = await stopRecording();
       resetRecorder();
       setVoiceActive(false);
+      if (audioPath) {
+        try {
+          const result = await transcribeAudioFile(audioPath);
+          setTranscript(result.transcript);
+        } catch {
+          setVoiceError('Transcription failed. Please try again.');
+        }
+      }
       return;
     }
 
@@ -139,6 +148,12 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
         </View>
 
         {voiceError ? <Text style={styles.voiceError}>{voiceError}</Text> : null}
+        {transcript ? (
+          <View style={styles.transcriptCard}>
+            <Text style={styles.transcriptLabel}>You said:</Text>
+            <Text style={styles.transcriptText}>{transcript}</Text>
+          </View>
+        ) : null}
       </ScrollView>
 
       {/* AI Voice Button — hold to record */}
@@ -252,6 +267,16 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: Spacing[2],
   },
+  transcriptCard: {
+    backgroundColor: Colors.white,
+    borderRadius: Radius.md,
+    padding: Spacing[4],
+    marginTop: Spacing[3],
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.gold,
+  },
+  transcriptLabel: { fontSize: Typography.fontSize.xs, color: Colors.muted, marginBottom: 4 },
+  transcriptText: { fontSize: Typography.fontSize.base, color: Colors.brown },
   voiceFab: { position: 'absolute', bottom: 80, left: 0, right: 0, paddingHorizontal: Spacing[6] },
   voiceBtn: {
     flexDirection: 'row',

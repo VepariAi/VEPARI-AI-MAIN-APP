@@ -50,6 +50,10 @@ export const ENDPOINTS = {
     list: (bizId: string) => `/businesses/${bizId}/products`,
     create: (bizId: string) => `/businesses/${bizId}/products`,
   },
+  voice: {
+    stt: '/voice/stt',
+    tts: '/voice/tts',
+  },
 } as const;
 
 // ── Client config ─────────────────────────────────────────────────────────────
@@ -193,7 +197,21 @@ export class VepariApiClient {
     }>('GET', ENDPOINTS.businesses.dashboard(id));
   }
 
-  // ── Generic helpers ───────────────────────────────────────────────────────
+  // ── Voice (AI Gateway — Sarvam STT/TTS, server-side only) ────────────────────
+
+  async transcribe(audioBase64: string, languageCode?: string) {
+    return this.request<{ transcript: string; languageCode: string; confidence?: number }>(
+      'POST', ENDPOINTS.voice.stt, { audioBase64, languageCode },
+    );
+  }
+
+  async synthesise(text: string, languageCode?: string) {
+    return this.request<{ audioBase64: string; durationSeconds: number }>(
+      'POST', ENDPOINTS.voice.tts, { text, languageCode },
+    );
+  }
+
+// ── Generic helpers ───────────────────────────────────────────────────────
 
   get<T>(path: string): Promise<T> {
     return this.request<T>('GET', path);
