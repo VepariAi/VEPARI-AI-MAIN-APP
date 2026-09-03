@@ -64,4 +64,24 @@ function runMigrations(db: DB): void {
       retry_count INTEGER NOT NULL DEFAULT 0
     );
   `);
+  db.executeSync(`
+    CREATE TABLE IF NOT EXISTS memories (
+      id TEXT PRIMARY KEY,
+      business_id TEXT NOT NULL,
+      type TEXT NOT NULL,
+      amount_paise INTEGER,
+      description TEXT,
+      party TEXT,
+      item_name TEXT,
+      quantity REAL,
+      raw_transcript TEXT NOT NULL,
+      confidence REAL NOT NULL,
+      created_at INTEGER NOT NULL,
+      synced INTEGER NOT NULL DEFAULT 0
+    );
+  `);
+  db.executeSync(`
+    CREATE INDEX IF NOT EXISTS idx_memories_business_id
+      ON memories (business_id, created_at DESC);
+  `);
 }

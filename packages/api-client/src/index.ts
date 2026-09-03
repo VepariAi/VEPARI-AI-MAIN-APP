@@ -54,6 +54,9 @@ export const ENDPOINTS = {
     stt: '/voice/stt',
     tts: '/voice/tts',
   },
+  ai: {
+    memoryExtract: '/ai/memory/extract',
+  },
 } as const;
 
 // ── Client config ─────────────────────────────────────────────────────────────
@@ -209,6 +212,21 @@ export class VepariApiClient {
     return this.request<{ audioBase64: string; durationSeconds: number }>(
       'POST', ENDPOINTS.voice.tts, { text, languageCode },
     );
+  }
+
+  // ── AI (Memory extraction via AI Gateway) ────────────────────────────────
+
+  async extractMemoryCandidates(transcript: string) {
+    return this.request<Array<{
+      type: 'sale' | 'expense' | 'credit_given' | 'credit_received' | 'stock_update' | 'customer_note' | 'supplier_note' | 'unknown';
+      amountPaise?: number;
+      description?: string;
+      party?: string;
+      itemName?: string;
+      quantity?: number;
+      rawTranscript: string;
+      confidence: number;
+    }>>('POST', ENDPOINTS.ai.memoryExtract, { transcript });
   }
 
 // ── Generic helpers ───────────────────────────────────────────────────────
