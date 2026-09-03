@@ -74,6 +74,7 @@ model User {
   refreshTokens   RefreshToken[]
   auditLogs       AuditLog[]
   voiceQueries    VoiceQuery[]
+  userMemory      UserMemory?
 
   @@map("users")
 }
@@ -135,6 +136,7 @@ model Business {
   documents    Document[]
   voiceQueries VoiceQuery[]
   bankStatementImports BankStatementImport[]
+  businessMemory       BusinessMemory?
 
   @@map("businesses")
 }
@@ -420,6 +422,36 @@ model AuditLog {
   @@index([userId])
   @@index([resource, resourceId])
   @@map("audit_logs")
+}
+
+// ── Business Brain Memory ─────────────────────────────────────────────────────
+
+// Layer 1 — User Memory: personal preferences & patterns, refreshed every 7 days
+model UserMemory {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  // Serialized memory snapshot (preferences, communication style, behavior patterns)
+  snapshot    Json
+  refreshedAt DateTime @default(now())
+  version     Int      @default(1)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_memories")
+}
+
+// Layer 2 — Business Memory: customer/supplier patterns & top products, refreshed every 24h
+model BusinessMemory {
+  id          String   @id @default(uuid())
+  businessId  String   @unique
+  // Serialized memory snapshot (top customers, supplier patterns, top products, recent trends)
+  snapshot    Json
+  refreshedAt DateTime @default(now())
+  version     Int      @default(1)
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@map("business_memories")
 }
 
 // ── Bank Reconciliation ───────────────────────────────────────────────────────
