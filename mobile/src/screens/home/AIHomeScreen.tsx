@@ -9,6 +9,7 @@ import {
   Alert,
   RefreshControl,
   ActivityIndicator,
+  Modal,
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import type { MainTabScreenProps } from '@/navigation/types';
@@ -22,8 +23,11 @@ import {
   transcribeAudioFile,
 } from '@/voice';
 import { getApiClient } from '@/services/api';
+import SaleLogScreen from '@/screens/sales/SaleLogScreen';
+import ExpenseLogScreen from '@/screens/expenses/ExpenseLogScreen';
 
 type Props = MainTabScreenProps<'AIHome'>;
+type ActiveModal = 'sale' | 'expense' | null;
 
 interface Snapshot {
   businessName: string;
@@ -55,6 +59,7 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
   const [voiceActive, setVoiceActive] = useState(false);
   const [voiceError, setVoiceError] = useState('');
   const [transcript, setTranscript] = useState('');
+  const [activeModal, setActiveModal] = useState<ActiveModal>(null);
 
   const loadSnapshot = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -192,8 +197,8 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
-            <QuickAction emoji="💰" label="Record Sale" onPress={() => undefined} />
-            <QuickAction emoji="💸" label="Add Expense" onPress={() => undefined} />
+            <QuickAction emoji="💰" label="Record Sale" onPress={() => setActiveModal('sale')} />
+            <QuickAction emoji="💸" label="Add Expense" onPress={() => setActiveModal('expense')} />
             <QuickAction emoji="👤" label="Customer Credit" onPress={() => undefined} />
             <QuickAction emoji="📦" label="Check Stock" onPress={() => undefined} />
           </View>
@@ -210,6 +215,46 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
           <Text style={styles.noBusinessText}>No business set up yet. Complete onboarding first.</Text>
         )}
       </ScrollView>
+
+      {/* Sale modal */}
+      <Modal
+        visible={activeModal === 'sale'}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setActiveModal(null)}
+      >
+        {businessId != null ? (
+          <SaleLogScreen
+            businessId={businessId}
+            onSaved={(_id, amount) => {
+              setActiveModal(null);
+              void loadSnapshot(true);
+              Alert.alert('Sale recorded', `₹${(amount / 100).toFixed(0)} saved`);
+            }}
+            onCancel={() => setActiveModal(null)}
+          />
+        ) : null}
+      </Modal>
+
+      {/* Expense modal */}
+      <Modal
+        visible={activeModal === 'expense'}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setActiveModal(null)}
+      >
+        {businessId != null ? (
+          <ExpenseLogScreen
+            businessId={businessId}
+            onSaved={(_id, amount) => {
+              setActiveModal(null);
+              void loadSnapshot(true);
+              Alert.alert('Expense logged', `₹${(amount / 100).toFixed(0)} saved`);
+            }}
+            onCancel={() => setActiveModal(null)}
+          />
+        ) : null}
+      </Modal>
 
       {/* AI Voice Button */}
       <View style={styles.voiceFab}>
