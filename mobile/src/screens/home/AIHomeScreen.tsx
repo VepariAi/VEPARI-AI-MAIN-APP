@@ -25,6 +25,7 @@ import {
 import { getApiClient } from '@/services/api';
 import SaleLogScreen from '@/screens/sales/SaleLogScreen';
 import ExpenseLogScreen from '@/screens/expenses/ExpenseLogScreen';
+import MemoryConfirmScreen, { type MemoryCandidate } from '@/memory/MemoryConfirmScreen';
 
 type Props = MainTabScreenProps<'AIHome'>;
 type ActiveModal = 'sale' | 'expense' | null;
@@ -60,6 +61,8 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
   const [voiceError, setVoiceError] = useState('');
   const [transcript, setTranscript] = useState('');
   const [activeModal, setActiveModal] = useState<ActiveModal>(null);
+  const [memoryCandidates, setMemoryCandidates] = useState<MemoryCandidate[]>([]);
+  const [showMemoryConfirm, setShowMemoryConfirm] = useState(false);
 
   const loadSnapshot = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true);
@@ -101,6 +104,17 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
         try {
           const result = await transcribeAudioFile(audioPath);
           setTranscript(result.transcript);
+          if (result.transcript.trim().length > 0) {
+            try {
+              const candidates = await getApiClient().extractMemoryCandidates(result.transcript);
+              if (candidates.length > 0) {
+                setMemoryCandidates(candidates);
+                setShowMemoryConfirm(true);
+              }
+            } catch {
+              // Extraction failure is non-blocking — transcript is still shown
+            }
+          }
         } catch {
           setVoiceError('Transcription failed. Please try again.');
         }
@@ -252,6 +266,30 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
               Alert.alert('Expense logged', `₹${(amount / 100).toFixed(0)} saved`);
             }}
             onCancel={() => setActiveModal(null)}
+          />
+        ) : null}
+      </Modal>
+
+      {/* Memory confirm modal */}
+      <Modal
+        visible={showMemoryConfirm}
+        animationType="slide"
+        presentationStyle="fullScreen"
+        onRequestClose={() => setShowMemoryConfirm(false)}
+      >
+        {businessId != null ? (
+          <MemoryConfirmScreen
+            businessId={businessId}
+            candidates={memoryCandidates}
+            onDone={() => {
+              setShowMemoryConfirm(false);
+              setMemoryCandidates([]);
+              setTranscript('');
+            }}
+            onCancel={() => {
+              setShowMemoryConfirm(false);
+              setMemoryCandidates([]);
+            }}
           />
         ) : null}
       </Modal>
