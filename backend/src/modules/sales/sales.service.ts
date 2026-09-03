@@ -67,44 +67,65 @@ export class SalesService {
 
     const saleDate = date ?? new Date();
 
-    const saleOrder = await this.prisma.saleOrder.create({
-      data: {
-        businessId,
-        ...(customerId ? { customerId } : {}),
-        totalInPaise: finalTotal,
-        taxInPaise: 0,
-        discountInPaise: 0,
-        paymentMethod: paymentMethod ?? 'CASH',
-        status: 'completed',
-        ...(notes ? { notes } : {}),
-        date: saleDate,
-        // Create line items for products; skip items without productId (voice quick-log)
-        items: {
-          create: saleItems
-            .filter(i => Boolean(i.productId))
-            .map(i => ({
-              productId: i.productId as string,
-              quantity: i.quantity,
-              unitPriceInPaise: i.unitPriceInPaise,
-              totalInPaise: i.totalInPaise,
-            })),
+    // All writes in a single Prisma interactive transaction — fully atomic.
+    // A failure in any step rolls back the entire set of changes.
+    const saleOrder = await this.prisma.$transaction(async (tx) => {
+      const order = await tx.saleOrder.create({
+        data: {
+          businessId,
+          ...(customerId ? { customerId } : {}),
+          totalInPaise: finalTotal,
+          taxInPaise: 0,
+          discountInPaise: 0,
+          paymentMethod: paymentMethod ?? 'CASH',
+          status: 'completed',
+          ...(notes ? { notes } : {}),
+          date: saleDate,
+          items: {
+            create: saleItems
+              .filter(i => Boolean(i.productId))
+              .map(i => ({
+                productId: i.productId as string,
+                quantity: i.quantity,
+                unitPriceInPaise: i.unitPriceInPaise,
+                totalInPaise: i.totalInPaise,
+              })),
+          },
         },
-      },
-      include: { items: true },
-    });
+        include: { items: true },
+      });
 
-    // Also record a transaction ledger entry
-    await this.prisma.transaction.create({
-      data: {
-        businessId,
-        ...(customerId ? { customerId } : {}),
-        type: 'SALE',
-        amountInPaise: finalTotal,
-        paymentMethod: paymentMethod ?? 'CASH',
-        date: saleDate,
-        referenceId: saleOrder.id,
-        ...(notes ? { description: notes } : {}),
-      },
+      // Decrement stock for each product item
+      for (const item of saleItems.filter(i => Boolean(i.productId))) {
+        await tx.product.update({
+          where: { id: item.productId as string },
+          data: { stock: { decrement: item.quantity } },
+        });
+      }
+
+      // If sale is on credit, add to customer's credit balance
+      if (customerId && paymentMethod === PaymentMethod.CREDIT) {
+        await tx.customer.update({
+          where: { id: customerId },
+          data: { creditBalance: { increment: finalTotal } },
+        });
+      }
+
+      // Ledger entry
+      await tx.transaction.create({
+        data: {
+          businessId,
+          ...(customerId ? { customerId } : {}),
+          type: 'SALE',
+          amountInPaise: finalTotal,
+          paymentMethod: paymentMethod ?? 'CASH',
+          date: saleDate,
+          referenceId: order.id,
+          ...(notes ? { description: notes } : {}),
+        },
+      });
+
+      return order;
     });
 
     return {
