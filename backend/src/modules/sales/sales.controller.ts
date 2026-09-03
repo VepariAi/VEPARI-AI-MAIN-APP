@@ -27,15 +27,18 @@ export class SalesController {
   @ApiOperation({ summary: 'List sales for a business' })
   @ApiQuery({ name: 'limit', required: false })
   @ApiQuery({ name: 'offset', required: false })
+  @ApiQuery({ name: 'customerId', required: false })
   list(
     @Param('businessId') businessId: string,
     @Query('limit') limit?: string,
     @Query('offset') offset?: string,
+    @Query('customerId') customerId?: string,
   ) {
     return this.salesService.listSales(
       businessId,
       limit ? parseInt(limit, 10) : undefined,
       offset ? parseInt(offset, 10) : undefined,
+      customerId,
     );
   }
 

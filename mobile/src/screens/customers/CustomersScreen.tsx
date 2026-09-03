@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import { getApiClient } from '@/services/api';
+import CustomerDetailScreen from '@/screens/customers/CustomerDetailScreen';
 
 interface Customer {
   id: string;
@@ -39,6 +40,7 @@ export default function CustomersScreen(): React.JSX.Element {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
+  const [detailCustomer, setDetailCustomer] = useState<{ id: string; name: string } | null>(null);
   const [addName, setAddName] = useState('');
   const [addPhone, setAddPhone] = useState('');
   const [adding, setAdding] = useState(false);
@@ -131,7 +133,11 @@ export default function CustomersScreen(): React.JSX.Element {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={Colors.gold} />}
         ListEmptyComponent={<Text style={styles.empty}>{search ? 'No results' : 'No customers yet. Add your first one!'}</Text>}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.customerCard} activeOpacity={0.8}>
+          <TouchableOpacity
+            style={styles.customerCard}
+            activeOpacity={0.75}
+            onPress={() => setDetailCustomer({ id: item.id, name: item.name })}
+          >
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{item.name[0]?.toUpperCase() ?? '?'}</Text>
             </View>
@@ -148,6 +154,19 @@ export default function CustomersScreen(): React.JSX.Element {
           </TouchableOpacity>
         )}
       />
+
+      {/* Customer detail modal */}
+      {detailCustomer && businessId && (
+        <Modal visible animationType="slide" onRequestClose={() => setDetailCustomer(null)}>
+          <CustomerDetailScreen
+            businessId={businessId}
+            customerId={detailCustomer.id}
+            customerName={detailCustomer.name}
+            onClose={() => setDetailCustomer(null)}
+            onRefreshParent={() => void load()}
+          />
+        </Modal>
+      )}
 
       {/* Add customer modal */}
       <Modal visible={showAdd} animationType="slide" transparent onRequestClose={() => setShowAdd(false)}>

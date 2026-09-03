@@ -244,6 +244,18 @@ export class VepariApiClient {
     );
   }
 
+  async getCustomerById(businessId: string, customerId: string) {
+    return this.request<{
+      id: string;
+      name: string;
+      phone: string | null;
+      email: string | null;
+      creditBalance: number;
+      notes: string | null;
+      isActive: boolean;
+    }>('GET', ENDPOINTS.customers.byId(businessId, customerId));
+  }
+
   async adjustCustomerCredit(businessId: string, customerId: string, amountInPaise: number, description?: string) {
     return this.request<{ id: string; creditBalance: number }>(
       'PATCH', `${ENDPOINTS.customers.byId(businessId, customerId)}/credit`, { amountInPaise, description },
@@ -348,7 +360,10 @@ export class VepariApiClient {
     }>('POST', ENDPOINTS.salesForBiz(businessId), data);
   }
 
-  async listSales(businessId: string, limit = 50, offset = 0) {
+  async listSales(businessId: string, options?: { limit?: number; offset?: number; customerId?: string }) {
+    const { limit = 50, offset = 0, customerId } = options ?? {};
+    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (customerId) params.set('customerId', customerId);
     return this.request<Array<{
       id: string;
       totalInPaise: number;
@@ -356,7 +371,7 @@ export class VepariApiClient {
       itemCount: number;
       paymentMethod: string;
       notes: string | null;
-    }>>('GET', `${ENDPOINTS.salesForBiz(businessId)}?limit=${limit}&offset=${offset}`);
+    }>>('GET', `${ENDPOINTS.salesForBiz(businessId)}?${params.toString()}`);
   }
 
   async getSalesTodayTotal(businessId: string) {

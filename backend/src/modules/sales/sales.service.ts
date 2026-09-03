@@ -144,9 +144,9 @@ export class SalesService {
     };
   }
 
-  async listSales(businessId: string, limit = 50, offset = 0): Promise<SaleSummary[]> {
+  async listSales(businessId: string, limit = 50, offset = 0, customerId?: string): Promise<SaleSummary[]> {
     const orders = await this.prisma.saleOrder.findMany({
-      where: { businessId },
+      where: { businessId, ...(customerId ? { customerId } : {}) },
       orderBy: { date: 'desc' },
       take: limit,
       skip: offset,
