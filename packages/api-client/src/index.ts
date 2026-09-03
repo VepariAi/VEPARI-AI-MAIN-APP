@@ -70,6 +70,7 @@ export const ENDPOINTS = {
   purchases: {
     create: (bizId: string) => `/businesses/${bizId}/purchases`,
     list: (bizId: string) => `/businesses/${bizId}/purchases`,
+    byId: (bizId: string, id: string) => `/businesses/${bizId}/purchases/${id}`,
   },
   analytics: {
     snapshot: (bizId: string) => `/businesses/${bizId}/analytics/snapshot`,
@@ -524,6 +525,30 @@ export class VepariApiClient {
       date: string;
       createdAt: string;
     }>('GET', ENDPOINTS.expenses.byId(businessId, expenseId));
+  }
+
+  async getPurchaseById(businessId: string, purchaseId: string) {
+    return this.request<{
+      id: string;
+      businessId: string;
+      supplierId: string | null;
+      supplierName: string | null;
+      totalInPaise: number;
+      paymentMethod: string;
+      status: string;
+      notes: string | null;
+      date: string;
+      createdAt: string;
+      itemCount: number;
+      items: Array<{
+        id: string;
+        productId: string;
+        productName: string;
+        quantity: number;
+        unitCostInPaise: number;
+        totalInPaise: number;
+      }>;
+    }>('GET', ENDPOINTS.purchases.byId(businessId, purchaseId));
   }
 
   // ── Products ──────────────────────────────────────────────────────────────

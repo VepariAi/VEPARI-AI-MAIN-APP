@@ -14,6 +14,7 @@ import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-sys
 import { getApiClient } from '@/services/api';
 import SaleReceiptScreen from '@/screens/sales/SaleReceiptScreen';
 import ExpenseDetailScreen from '@/screens/expenses/ExpenseDetailScreen';
+import PurchaseDetailScreen from '@/screens/purchases/PurchaseDetailScreen';
 
 const TABS = ['Overview', 'Transactions'] as const;
 type Tab = typeof TABS[number];
@@ -96,6 +97,7 @@ export default function FinanceScreen(): React.JSX.Element {
   const [businessId, setBusinessId] = useState<string | null>(null);
   const [selectedSaleId, setSelectedSaleId] = useState<string | null>(null);
   const [selectedExpenseId, setSelectedExpenseId] = useState<string | null>(null);
+  const [selectedPurchaseId, setSelectedPurchaseId] = useState<string | null>(null);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
@@ -238,12 +240,14 @@ export default function FinanceScreen(): React.JSX.Element {
           refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={Colors.gold} />}
           ListEmptyComponent={<Text style={styles.empty}>No transactions yet.</Text>}
           renderItem={({ item }) => {
-            const isSale = item.type === 'SALE';
+            const isSale = item.type === 'SALE' && item.referenceId != null;
             const isExpense = item.type === 'EXPENSE' && item.referenceId != null;
-            const isTappable = isSale || isExpense;
+            const isPurchase = item.type === 'PURCHASE' && item.referenceId != null;
+            const isTappable = isSale || isExpense || isPurchase;
             const handlePress = () => {
-              if (isSale) setSelectedSaleId(item.id);
+              if (isSale && item.referenceId) setSelectedSaleId(item.referenceId);
               else if (isExpense && item.referenceId) setSelectedExpenseId(item.referenceId);
+              else if (isPurchase && item.referenceId) setSelectedPurchaseId(item.referenceId);
             };
             const inner = (
               <>
@@ -286,6 +290,13 @@ export default function FinanceScreen(): React.JSX.Element {
           businessId={businessId}
           expenseId={selectedExpenseId}
           onClose={() => setSelectedExpenseId(null)}
+        />
+      ) : null}
+      {selectedPurchaseId && businessId ? (
+        <PurchaseDetailScreen
+          businessId={businessId}
+          purchaseId={selectedPurchaseId}
+          onClose={() => setSelectedPurchaseId(null)}
         />
       ) : null}
     </SafeAreaView>

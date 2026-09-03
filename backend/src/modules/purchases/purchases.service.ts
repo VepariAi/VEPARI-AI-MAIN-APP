@@ -132,6 +132,40 @@ export class PurchasesService {
     };
   }
 
+  async getPurchaseById(businessId: string, purchaseId: string): Promise<PurchaseSummary & {
+    items: Array<{ id: string; productId: string; productName: string; quantity: number; unitCostInPaise: number; totalInPaise: number }>;
+  }> {
+    const record = await this.prisma.purchase.findFirst({
+      where: { id: purchaseId, businessId },
+      include: {
+        supplier: { select: { id: true, name: true } },
+        items: { include: { product: { select: { id: true, name: true } } } },
+      },
+    });
+    if (!record) throw new NotFoundException('Purchase not found');
+    return {
+      id: record.id,
+      businessId: record.businessId,
+      supplierId: record.supplierId,
+      supplierName: record.supplier?.name ?? null,
+      totalInPaise: record.totalInPaise,
+      paymentMethod: record.paymentMethod,
+      status: record.status,
+      notes: record.notes,
+      date: record.date,
+      createdAt: record.createdAt,
+      itemCount: record.items.length,
+      items: record.items.map(i => ({
+        id: i.id,
+        productId: i.productId,
+        productName: i.product.name,
+        quantity: i.quantity,
+        unitCostInPaise: i.unitCostInPaise,
+        totalInPaise: i.totalInPaise,
+      })),
+    };
+  }
+
   async listPurchases(businessId: string, limit = 50, offset = 0, supplierId?: string): Promise<PurchaseSummary[]> {
     const records = await this.prisma.purchase.findMany({
       where: { businessId, ...(supplierId ? { supplierId } : {}) },

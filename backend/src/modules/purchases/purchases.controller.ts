@@ -35,4 +35,13 @@ export class PurchasesController {
       supplierId,
     );
   }
+
+  @Get(':purchaseId')
+  @ApiOperation({ summary: 'Get a single purchase with line items' })
+  getOne(
+    @Param('businessId') businessId: string,
+    @Param('purchaseId') purchaseId: string,
+  ) {
+    return this.purchasesService.getPurchaseById(businessId, purchaseId);
+  }
 }
