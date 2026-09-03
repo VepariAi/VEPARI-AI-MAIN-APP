@@ -6,9 +6,11 @@ import { Colors } from '@vepari/design-system';
 import RootNavigator from '@/navigation/RootNavigator';
 import { initDb } from '@/database';
 import { secureRead, StorageKey } from '@/security';
+import SecurityLockScreen from '@/screens/security/SecurityLockScreen';
 
 export default function App(): React.JSX.Element {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isUnlocked, setIsUnlocked] = useState(false);
   const [dbReady, setDbReady] = useState(false);
 
   useEffect(() => {
@@ -22,6 +24,14 @@ export default function App(): React.JSX.Element {
 
   if (!dbReady) return <></>;
 
+  // Authenticated but not yet passed the security gate: show PIN/biometric lock.
+  if (isAuthenticated && !isUnlocked) {
+    return (
+      <SafeAreaProvider>
+        <SecurityLockScreen onUnlocked={() => setIsUnlocked(true)} />
+      </SafeAreaProvider>
+    );
+  }
 
   return (
     <SafeAreaProvider>
@@ -29,7 +39,10 @@ export default function App(): React.JSX.Element {
       <NavigationContainer>
         <RootNavigator
           isAuthenticated={isAuthenticated}
-          onAuthenticated={() => setIsAuthenticated(true)}
+          onAuthenticated={() => {
+            setIsAuthenticated(true);
+            setIsUnlocked(true); // first login: already authenticated, skip lock
+          }}
         />
       </NavigationContainer>
     </SafeAreaProvider>
