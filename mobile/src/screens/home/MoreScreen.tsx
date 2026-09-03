@@ -26,6 +26,13 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
     ],
   },
   {
+    section: 'Transactions', items: [
+      { emoji: '💰', label: 'Sales',     screen: 'Sales' },
+      { emoji: '💸', label: 'Expenses',  screen: 'Expenses' },
+      { emoji: '🛒', label: 'Purchases', screen: 'Purchases' },
+    ],
+  },
+  {
     section: 'Finance', items: [
       { emoji: '📊', label: 'Reports', screen: 'Reports' },
     ],

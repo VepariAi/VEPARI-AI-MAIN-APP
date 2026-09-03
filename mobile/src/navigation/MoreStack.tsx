@@ -13,6 +13,9 @@ import HelpSupportScreen from '@/screens/support/HelpSupportScreen';
 import InsightsScreen from '@/screens/insights/InsightsScreen';
 import VoiceScreen from '@/screens/voice/VoiceScreen';
 import BriefingScreen from '@/screens/home/BriefingScreen';
+import SalesScreen from '@/screens/sales/SalesScreen';
+import ExpensesScreen from '@/screens/expenses/ExpensesScreen';
+import PurchasesScreen from '@/screens/purchases/PurchasesScreen';
 import { getApiClient } from '@/services/api';
 
 const Stack = createNativeStackNavigator<MoreStackParamList>();
@@ -70,6 +73,24 @@ function BriefingWrapper(): React.JSX.Element {
   return <BriefingScreen businessId={bizId} />;
 }
 
+function SalesWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <SalesScreen businessId={bizId} />;
+}
+
+function ExpensesWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <ExpensesScreen businessId={bizId} />;
+}
+
+function PurchasesWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <PurchasesScreen businessId={bizId} />;
+}
+
 export default function MoreStack(): React.JSX.Element {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -83,6 +104,9 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="Briefing" component={BriefingWrapper} />
       <Stack.Screen name="Security" component={SecuritySettingsScreen} />
       <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
+      <Stack.Screen name="Sales" component={SalesWrapper} />
+      <Stack.Screen name="Expenses" component={ExpensesWrapper} />
+      <Stack.Screen name="Purchases" component={PurchasesWrapper} />
     </Stack.Navigator>
   );
 }
