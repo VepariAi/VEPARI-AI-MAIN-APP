@@ -12,6 +12,7 @@ import {
 import { Colors, Typography, Spacing, Radius } from '@vepari/design-system';
 import type { AuthScreenProps } from '@/navigation/types';
 import { useAuth } from '@/navigation/AuthContext';
+import { getApiClient } from '@/services/api';
 
 type Props = AuthScreenProps<'BusinessSetup'>;
 
@@ -39,7 +40,8 @@ export default function BusinessSetupScreen({ navigation: _navigation }: Props):
     setLoading(true);
     setError('');
     try {
-      // TODO: call api-client createBusiness({ name, type, phone })
+      const api = getApiClient();
+      await api.createBusiness({ name: name.trim(), type, phone });
       onAuthenticated();
     } catch (_err) {
       setError('Failed to create business. Please try again.');
@@ -97,7 +99,7 @@ export default function BusinessSetupScreen({ navigation: _navigation }: Props):
 
         <TouchableOpacity
           style={[styles.btn, !isValid && styles.btnDisabled]}
-          onPress={handleCreate}
+          onPress={() => void handleCreate()}
           disabled={!isValid || loading}
           activeOpacity={0.85}
         >

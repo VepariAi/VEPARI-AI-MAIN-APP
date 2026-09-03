@@ -5,7 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Colors } from '@vepari/design-system';
 import RootNavigator from '@/navigation/RootNavigator';
 import { initDb } from '@/database';
-import { secureRead, StorageKey } from '@/security';
+import { initSession } from '@/services/api';
 import SecurityLockScreen from '@/screens/security/SecurityLockScreen';
 
 export default function App(): React.JSX.Element {
@@ -16,8 +16,8 @@ export default function App(): React.JSX.Element {
   useEffect(() => {
     void initDb()
       .then(async () => {
-        const token = await secureRead(StorageKey.ACCESS_TOKEN);
-        setIsAuthenticated(token !== null);
+        const hasToken = await initSession();
+        setIsAuthenticated(hasToken);
       })
       .finally(() => setDbReady(true));
   }, []);

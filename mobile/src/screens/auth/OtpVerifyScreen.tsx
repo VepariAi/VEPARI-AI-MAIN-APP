@@ -11,6 +11,7 @@ import {
 import { Colors, Typography, Spacing, Radius } from '@vepari/design-system';
 import type { AuthScreenProps } from '@/navigation/types';
 import { useAuth } from '@/navigation/AuthContext';
+import { getApiClient, saveSession } from '@/services/api';
 
 type Props = AuthScreenProps<'OtpVerify'>;
 
@@ -36,8 +37,10 @@ export default function OtpVerifyScreen({ route, navigation }: Props): React.JSX
     setLoading(true);
     setError('');
     try {
+      const api = getApiClient();
       if (purpose === 'login') {
-        // TODO: call api-client login
+        const res = await api.login(phone, otp);
+        await saveSession(res.tokens.accessToken, res.tokens.refreshToken);
         onAuthenticated();
       } else {
         navigation.navigate('ProfileSetup', { phone, code: otp });
@@ -49,11 +52,16 @@ export default function OtpVerifyScreen({ route, navigation }: Props): React.JSX
     }
   }
 
-  function handleResend(): void {
+  async function handleResend(): Promise<void> {
     setResendTimer(30);
     setOtp('');
     setError('');
-    // TODO: call api-client sendOtp
+    try {
+      const api = getApiClient();
+      await api.sendOtp(phone, purpose === 'login' ? 'LOGIN' : 'REGISTER');
+    } catch {
+      setError('Failed to resend OTP. Please try again.');
+    }
   }
 
   const digits = otp.padEnd(OTP_LENGTH, ' ').split('');
@@ -88,7 +96,7 @@ export default function OtpVerifyScreen({ route, navigation }: Props): React.JSX
           onChangeText={v => {
             const cleaned = v.replace(/\D/g, '').slice(0, OTP_LENGTH);
             setOtp(cleaned);
-            if (cleaned.length === OTP_LENGTH) handleVerify();
+            if (cleaned.length === OTP_LENGTH) void handleVerify();
           }}
           keyboardType="number-pad"
           maxLength={OTP_LENGTH}
@@ -100,7 +108,7 @@ export default function OtpVerifyScreen({ route, navigation }: Props): React.JSX
 
         <TouchableOpacity
           style={[styles.btn, otp.length !== OTP_LENGTH && styles.btnDisabled]}
-          onPress={handleVerify}
+          onPress={() => void handleVerify()}
           disabled={otp.length !== OTP_LENGTH || loading}
           activeOpacity={0.85}
         >
@@ -115,7 +123,7 @@ export default function OtpVerifyScreen({ route, navigation }: Props): React.JSX
           {resendTimer > 0 ? (
             <Text style={styles.resendTimer}>Resend OTP in {resendTimer}s</Text>
           ) : (
-            <TouchableOpacity onPress={handleResend}>
+            <TouchableOpacity onPress={() => void handleResend()}>
               <Text style={styles.resendLink}>Resend OTP</Text>
             </TouchableOpacity>
           )}

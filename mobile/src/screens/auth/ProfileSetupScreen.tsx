@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius } from '@vepari/design-system';
 import type { AuthScreenProps } from '@/navigation/types';
+import { getApiClient, saveSession } from '@/services/api';
 
 type Props = AuthScreenProps<'ProfileSetup'>;
 
@@ -28,7 +29,9 @@ export default function ProfileSetupScreen({ route, navigation }: Props): React.
     setLoading(true);
     setError('');
     try {
-      void phone; void code; // TODO: call api-client register(phone, code, name)
+      const api = getApiClient();
+      const res = await api.register(phone, code, name.trim());
+      await saveSession(res.tokens.accessToken, res.tokens.refreshToken);
       navigation.navigate('BusinessSetup');
     } catch (_err) {
       setError('Registration failed. Please try again.');
@@ -63,7 +66,7 @@ export default function ProfileSetupScreen({ route, navigation }: Props): React.
 
           <TouchableOpacity
             style={[styles.btn, !isValid && styles.btnDisabled]}
-            onPress={handleNext}
+            onPress={() => void handleNext()}
             disabled={!isValid || loading}
             activeOpacity={0.85}
           >
