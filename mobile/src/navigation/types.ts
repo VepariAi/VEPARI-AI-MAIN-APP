@@ -23,6 +23,7 @@ export type MoreStackParamList = {
   Reports: undefined;
   Search: undefined;
   Security: undefined;
+  HelpSupport: undefined;
 };
 
 export type MoreStackScreenProps<T extends keyof MoreStackParamList> =
