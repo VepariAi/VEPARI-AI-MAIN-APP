@@ -28,7 +28,7 @@ export default function ProfileSetupScreen({ route, navigation }: Props): React.
     setLoading(true);
     setError('');
     try {
-      // TODO: call api-client register(phone, code, name)
+      void phone; void code; // TODO: call api-client register(phone, code, name)
       navigation.navigate('BusinessSetup');
     } catch (_err) {
       setError('Registration failed. Please try again.');
