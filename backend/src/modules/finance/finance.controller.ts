@@ -1,7 +1,12 @@
-import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, UseGuards, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { FinanceService } from './finance.service';
+import { FinanceService, BrsEntryInput } from './finance.service';
+
+interface ImportBankStatementBody {
+  label: string;
+  entries: BrsEntryInput[];
+}
 
 @ApiTags('finance')
 @Controller('businesses/:businessId')
@@ -52,5 +57,34 @@ export class FinanceController {
       limit ? parseInt(limit, 10) : undefined,
       offset ? parseInt(offset, 10) : undefined,
     );
+  }
+
+  // ── BRS endpoints ──────────────────────────────────────────────────────────
+
+  @Post('finance/brs/import')
+  @ApiOperation({ summary: 'Import a bank statement and reconcile against recorded transactions' })
+  importBankStatement(
+    @Param('businessId') businessId: string,
+    @Body() body: ImportBankStatementBody,
+  ) {
+    if (!body.label || !Array.isArray(body.entries)) {
+      throw new BadRequestException('label and entries are required');
+    }
+    return this.financeService.importBankStatement(businessId, body.label, body.entries);
+  }
+
+  @Get('finance/brs')
+  @ApiOperation({ summary: 'List bank statement imports for a business' })
+  listBankStatementImports(@Param('businessId') businessId: string) {
+    return this.financeService.listBankStatementImports(businessId);
+  }
+
+  @Get('finance/brs/:importId/reconcile')
+  @ApiOperation({ summary: 'Run or re-run reconciliation for an imported bank statement' })
+  reconcileImport(
+    @Param('businessId') businessId: string,
+    @Param('importId') importId: string,
+  ) {
+    return this.financeService.reconcileImport(businessId, importId);
   }
 }

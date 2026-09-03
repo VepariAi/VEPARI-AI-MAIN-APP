@@ -5,6 +5,35 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PaymentMethod, TransactionType } from '@prisma/client';
 
+// ── BRS types ──────────────────────────────────────────────────────────────────
+
+export interface BrsEntryInput {
+  date: string; // ISO date string
+  amountInPaise: number; // integer; positive = credit, negative = debit
+  description?: string;
+  reference?: string;
+}
+
+export interface BrsMatchResult {
+  entryId: string;
+  date: string;
+  amountInPaise: number;
+  description: string | null;
+  reference: string | null;
+  status: 'matched' | 'unmatched';
+  matchedTransactionId: string | null;
+  matchedAt: Date | null;
+}
+
+export interface BrsReconcileResult {
+  importId: string;
+  label: string;
+  totalEntries: number;
+  matchedCount: number;
+  unmatchedCount: number;
+  entries: BrsMatchResult[];
+}
+
 export interface TransactionRow {
   id: string;
   type: TransactionType;
@@ -162,4 +191,162 @@ export class FinanceService {
       select: { id: true, type: true, amountInPaise: true, description: true, date: true, paymentMethod: true },
     });
   }
+
+  // ── BRS (Bank Reconciliation) ─────────────────────────────────────────────
+
+  async importBankStatement(
+    businessId: string,
+    label: string,
+    entries: BrsEntryInput[],
+  ): Promise<BrsReconcileResult> {
+    const business = await this.prisma.business.findUnique({ where: { id: businessId } });
+    if (!business) throw new NotFoundException('Business not found');
+
+    // Create the import record and entries in one transaction
+    const brsImport = await this.prisma.$transaction(async (tx) => {
+      const imp = await tx.bankStatementImport.create({
+        data: { businessId, label },
+      });
+      if (entries.length > 0) {
+        await tx.bankStatementEntry.createMany({
+          data: entries.map((e) => ({
+            importId: imp.id,
+            date: new Date(e.date),
+            amountInPaise: e.amountInPaise,
+            description: e.description ?? null,
+            reference: e.reference ?? null,
+          })),
+        });
+      }
+      return imp;
+    });
+
+    return this.reconcileImport(businessId, brsImport.id);
+  }
+
+  async reconcileImport(businessId: string, importId: string): Promise<BrsReconcileResult> {
+    const brsImport = await this.prisma.bankStatementImport.findFirst({
+      where: { id: importId, businessId },
+    });
+    if (!brsImport) throw new NotFoundException('Bank statement import not found');
+
+    const rawEntries = await this.prisma.bankStatementEntry.findMany({
+      where: { importId },
+      orderBy: { date: 'asc' },
+    });
+
+    // Load business transactions within the date range covered by the statement
+    const dates = rawEntries.map((e) => e.date);
+    if (dates.length === 0) {
+      return {
+        importId,
+        label: brsImport.label,
+        totalEntries: 0,
+        matchedCount: 0,
+        unmatchedCount: 0,
+        entries: [],
+      };
+    }
+
+    const minDate = new Date(Math.min(...dates.map((d) => d.getTime())));
+    const maxDate = new Date(Math.max(...dates.map((d) => d.getTime())));
+    // Expand window by ±1 day to allow for timezone / posting-date differences
+    minDate.setDate(minDate.getDate() - 1);
+    maxDate.setDate(maxDate.getDate() + 1);
+
+    const transactions = await this.prisma.transaction.findMany({
+      where: {
+        businessId,
+        date: { gte: minDate, lte: maxDate },
+        // Only bank-channel transactions are candidates for reconciliation
+        paymentMethod: { in: [PaymentMethod.UPI, PaymentMethod.BANK_TRANSFER, PaymentMethod.CARD] },
+      },
+      select: { id: true, amountInPaise: true, date: true },
+    });
+
+    // Build a mutable pool so each transaction is matched at most once
+    const txPool = transactions.map((t) => ({ ...t, used: false }));
+
+    const updatedEntries: BrsMatchResult[] = [];
+
+    for (const entry of rawEntries) {
+      // Entry already matched from a previous reconcile run
+      if (entry.matchedTransactionId) {
+        updatedEntries.push(entryToResult(entry, 'matched'));
+        continue;
+      }
+
+      // Find best candidate: same amount, date within ±1 day, not yet used
+      const entryTime = entry.date.getTime();
+      const DAY_MS = 86_400_000;
+      const candidate = txPool.find(
+        (t) =>
+          !t.used &&
+          Math.abs(t.amountInPaise) === Math.abs(entry.amountInPaise) &&
+          Math.abs(t.date.getTime() - entryTime) <= DAY_MS,
+      );
+
+      if (candidate) {
+        candidate.used = true;
+        const matchedAt = new Date();
+        await this.prisma.bankStatementEntry.update({
+          where: { id: entry.id },
+          data: { matchedTransactionId: candidate.id, matchedAt },
+        });
+        updatedEntries.push({
+          entryId: entry.id,
+          date: entry.date.toISOString().slice(0, 10),
+          amountInPaise: entry.amountInPaise,
+          description: entry.description,
+          reference: entry.reference,
+          status: 'matched',
+          matchedTransactionId: candidate.id,
+          matchedAt,
+        });
+      } else {
+        updatedEntries.push(entryToResult(entry, 'unmatched'));
+      }
+    }
+
+    const matchedCount = updatedEntries.filter((e) => e.status === 'matched').length;
+
+    return {
+      importId,
+      label: brsImport.label,
+      totalEntries: updatedEntries.length,
+      matchedCount,
+      unmatchedCount: updatedEntries.length - matchedCount,
+      entries: updatedEntries,
+    };
+  }
+
+  async listBankStatementImports(businessId: string): Promise<{ id: string; label: string; importedAt: Date; entryCount: number }[]> {
+    const imports = await this.prisma.bankStatementImport.findMany({
+      where: { businessId },
+      orderBy: { importedAt: 'desc' },
+      include: { _count: { select: { entries: true } } },
+    });
+    return imports.map((i) => ({
+      id: i.id,
+      label: i.label,
+      importedAt: i.importedAt,
+      entryCount: i._count.entries,
+    }));
+  }
+}
+
+function entryToResult(
+  entry: { id: string; date: Date; amountInPaise: number; description: string | null; reference: string | null; matchedTransactionId: string | null; matchedAt: Date | null },
+  status: 'matched' | 'unmatched',
+): BrsMatchResult {
+  return {
+    entryId: entry.id,
+    date: entry.date.toISOString().slice(0, 10),
+    amountInPaise: entry.amountInPaise,
+    description: entry.description,
+    reference: entry.reference,
+    status,
+    matchedTransactionId: entry.matchedTransactionId,
+    matchedAt: entry.matchedAt,
+  };
 }
