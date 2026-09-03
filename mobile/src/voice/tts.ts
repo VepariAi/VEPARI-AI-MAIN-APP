@@ -26,7 +26,7 @@ let Sound: SoundCtor | null = null;
 function tryLoadSound(): SoundCtor | null {
   if (Sound !== null) return Sound;
   try {
-    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-unsafe-assignment
+    // eslint-disable-next-line @typescript-eslint/no-require-imports, @typescript-eslint/no-var-requires, @typescript-eslint/no-unsafe-assignment
     const mod: unknown = require('react-native-sound');
     if (mod != null && typeof mod === 'object' && 'default' in mod && typeof mod.default === 'function') {
       Sound = mod.default as SoundCtor;

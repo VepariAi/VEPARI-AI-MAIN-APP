@@ -45,6 +45,7 @@ export const ENDPOINTS = {
   expenses: {
     create: (bizId: string) => `/businesses/${bizId}/expenses`,
     list: (bizId: string) => `/businesses/${bizId}/expenses`,
+    todayTotal: (bizId: string) => `/businesses/${bizId}/expenses/today-total`,
   },
   products: {
     list: (bizId: string) => `/businesses/${bizId}/products`,
@@ -281,6 +282,96 @@ export class VepariApiClient {
       profitInPaise: number;
       grossMarginBps: number;
     }>>('GET', `${ENDPOINTS.finance.profitSeries(businessId)}?days=${days}`);
+  }
+
+  // ── Expenses ──────────────────────────────────────────────────────────────
+
+  async createExpense(businessId: string, data: {
+    category: string;
+    amountInPaise: number;
+    description?: string;
+    notes?: string;
+    paymentMethod?: 'CASH' | 'UPI' | 'CARD' | 'BANK_TRANSFER' | 'CREDIT';
+    date?: string;
+  }) {
+    return this.request<{
+      id: string;
+      category: string;
+      amountInPaise: number;
+      description: string | null;
+      paymentMethod: string;
+      date: string;
+    }>('POST', ENDPOINTS.expenses.create(businessId), data);
+  }
+
+  async listExpenses(businessId: string, limit = 50, offset = 0) {
+    return this.request<Array<{
+      id: string;
+      category: string;
+      amountInPaise: number;
+      description: string | null;
+      notes: string | null;
+      paymentMethod: string;
+      date: string;
+    }>>('GET', `${ENDPOINTS.expenses.list(businessId)}?limit=${limit}&offset=${offset}`);
+  }
+
+  async getExpensesTodayTotal(businessId: string) {
+    return this.request<number>('GET', ENDPOINTS.expenses.todayTotal(businessId));
+  }
+
+  // ── Products ──────────────────────────────────────────────────────────────
+
+  async createProduct(businessId: string, data: {
+    name: string;
+    sku?: string;
+    priceInPaise: number;
+    costPriceInPaise?: number;
+    stock?: number;
+    unit?: string;
+    lowStockThreshold?: number;
+  }) {
+    return this.request<{
+      id: string;
+      name: string;
+      sku: string | null;
+      priceInPaise: number;
+      costPriceInPaise: number;
+      stock: number;
+      unit: string;
+      lowStockThreshold: number | null;
+    }>('POST', ENDPOINTS.products.create(businessId), data);
+  }
+
+  async listProducts(businessId: string) {
+    return this.request<Array<{
+      id: string;
+      name: string;
+      sku: string | null;
+      priceInPaise: number;
+      costPriceInPaise: number;
+      stock: number;
+      unit: string;
+      lowStockThreshold: number | null;
+      isActive: boolean;
+    }>>('GET', ENDPOINTS.products.list(businessId));
+  }
+
+  async updateProductStock(businessId: string, productId: string, adjustment: number) {
+    return this.request<{ id: string; stock: number }>(
+      'PATCH', `${ENDPOINTS.products.list(businessId)}/${productId}/stock`, { adjustment },
+    );
+  }
+
+  // ── Analytics Snapshot ───────────────────────────────────────────────────
+
+  async getBusinessSnapshot(businessId: string) {
+    return this.request<{
+      today: { salesInPaise: number; expensesInPaise: number; profitInPaise: number; grossMarginBps: number };
+      receivableInPaise: number;
+      payableInPaise: number;
+      alertCount: number;
+    }>('GET', `/businesses/${businessId}/analytics/snapshot`);
   }
 
   // ── AI (Memory extraction via AI Gateway) ────────────────────────────────
