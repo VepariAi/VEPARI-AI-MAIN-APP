@@ -30,6 +30,7 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
       { emoji: '💰', label: 'Sales',     screen: 'Sales' },
       { emoji: '💸', label: 'Expenses',  screen: 'Expenses' },
       { emoji: '🛒', label: 'Purchases', screen: 'Purchases' },
+      { emoji: '💳', label: 'Payments',  screen: 'Payments' },
     ],
   },
   {

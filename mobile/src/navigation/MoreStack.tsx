@@ -16,6 +16,7 @@ import BriefingScreen from '@/screens/home/BriefingScreen';
 import SalesScreen from '@/screens/sales/SalesScreen';
 import ExpensesScreen from '@/screens/expenses/ExpensesScreen';
 import PurchasesScreen from '@/screens/purchases/PurchasesScreen';
+import PaymentsScreen from '@/screens/payments/PaymentsScreen';
 import { getApiClient } from '@/services/api';
 
 const Stack = createNativeStackNavigator<MoreStackParamList>();
@@ -91,6 +92,12 @@ function PurchasesWrapper(): React.JSX.Element {
   return <PurchasesScreen businessId={bizId} />;
 }
 
+function PaymentsWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <PaymentsScreen businessId={bizId} />;
+}
+
 export default function MoreStack(): React.JSX.Element {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -107,6 +114,7 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="Sales" component={SalesWrapper} />
       <Stack.Screen name="Expenses" component={ExpensesWrapper} />
       <Stack.Screen name="Purchases" component={PurchasesWrapper} />
+      <Stack.Screen name="Payments" component={PaymentsWrapper} />
     </Stack.Navigator>
   );
 }

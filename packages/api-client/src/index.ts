@@ -41,6 +41,11 @@ export const ENDPOINTS = {
     list: (bizId: string) => `/businesses/${bizId}/transactions`,
     create: (bizId: string) => `/businesses/${bizId}/transactions`,
   },
+  payments: {
+    list: (bizId: string) => `/businesses/${bizId}/payments`,
+    create: (bizId: string) => `/businesses/${bizId}/payments`,
+    byId: (bizId: string, id: string) => `/businesses/${bizId}/payments/${id}`,
+  },
   sales: {
     create: (bizId: string) => `/businesses/${bizId}/sales`,
     list: (bizId: string) => `/businesses/${bizId}/sales`,
@@ -355,6 +360,60 @@ export class VepariApiClient {
       ...(description ? { description } : {}),
       ...(paymentMethod ? { paymentMethod } : {}),
     });
+  }
+
+  // ── Payments ─────────────────────────────────────────────────────────────────
+
+  async listPayments(businessId: string, options?: { limit?: number; offset?: number; customerId?: string; supplierId?: string }) {
+    const { limit = 50, offset = 0, customerId, supplierId } = options ?? {};
+    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (customerId) params.set('customerId', customerId);
+    if (supplierId) params.set('supplierId', supplierId);
+    return this.request<Array<{
+      id: string;
+      type: string;
+      amountInPaise: number;
+      paymentMethod: string;
+      customerId: string | null;
+      customerName: string | null;
+      supplierId: string | null;
+      supplierName: string | null;
+      description: string | null;
+      notes: string | null;
+      date: string;
+      createdAt: string;
+    }>>('GET', `${ENDPOINTS.payments.list(businessId)}?${params.toString()}`);
+  }
+
+  async getPaymentById(businessId: string, paymentId: string) {
+    return this.request<{
+      id: string;
+      type: string;
+      amountInPaise: number;
+      paymentMethod: string;
+      customerId: string | null;
+      customerName: string | null;
+      supplierId: string | null;
+      supplierName: string | null;
+      description: string | null;
+      notes: string | null;
+      date: string;
+      createdAt: string;
+    }>('GET', ENDPOINTS.payments.byId(businessId, paymentId));
+  }
+
+  async recordPayment(businessId: string, data: {
+    amountInPaise: number;
+    paymentMethod?: 'CASH' | 'UPI' | 'CARD' | 'BANK_TRANSFER' | 'CREDIT';
+    customerId?: string;
+    supplierId?: string;
+    description?: string;
+    notes?: string;
+    date?: string;
+  }) {
+    return this.request<{ id: string; amountInPaise: number; type: string; date: string }>(
+      'POST', ENDPOINTS.payments.create(businessId), data,
+    );
   }
 
   // ── Voice (AI Gateway — Sarvam STT/TTS, server-side only) ────────────────────
