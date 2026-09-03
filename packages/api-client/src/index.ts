@@ -52,6 +52,7 @@ export const ENDPOINTS = {
   products: {
     list: (bizId: string) => `/businesses/${bizId}/products`,
     create: (bizId: string) => `/businesses/${bizId}/products`,
+    byId: (bizId: string, id: string) => `/businesses/${bizId}/products/${id}`,
   },
   voice: {
     stt: '/voice/stt',
@@ -518,9 +519,45 @@ export class VepariApiClient {
     }>>('GET', ENDPOINTS.products.list(businessId));
   }
 
+  async getProductById(businessId: string, productId: string) {
+    return this.request<{
+      id: string;
+      name: string;
+      sku: string | null;
+      priceInPaise: number;
+      costPriceInPaise: number;
+      stock: number;
+      unit: string;
+      lowStockThreshold: number | null;
+      isActive: boolean;
+    }>('GET', ENDPOINTS.products.byId(businessId, productId));
+  }
+
+  async updateProduct(businessId: string, productId: string, data: {
+    name?: string;
+    sku?: string | null;
+    priceInPaise?: number;
+    costPriceInPaise?: number;
+    unit?: string;
+    lowStockThreshold?: number | null;
+    isActive?: boolean;
+  }) {
+    return this.request<{
+      id: string;
+      name: string;
+      sku: string | null;
+      priceInPaise: number;
+      costPriceInPaise: number;
+      stock: number;
+      unit: string;
+      lowStockThreshold: number | null;
+      isActive: boolean;
+    }>('PATCH', ENDPOINTS.products.byId(businessId, productId), data);
+  }
+
   async updateProductStock(businessId: string, productId: string, adjustment: number) {
     return this.request<{ id: string; stock: number }>(
-      'PATCH', `${ENDPOINTS.products.list(businessId)}/${productId}/stock`, { adjustment },
+      'PATCH', `${ENDPOINTS.products.byId(businessId, productId)}/stock`, { adjustment },
     );
   }
 

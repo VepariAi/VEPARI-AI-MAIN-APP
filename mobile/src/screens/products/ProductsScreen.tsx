@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import { getApiClient } from '@/services/api';
+import ProductDetailScreen from '@/screens/products/ProductDetailScreen';
 
 interface Product {
   id: string;
@@ -58,6 +59,7 @@ export default function ProductsScreen({ businessId }: Props): React.JSX.Element
   const [addStock, setAddStock] = useState('0');
   const [addThreshold, setAddThreshold] = useState('');
   const [adding, setAdding] = useState(false);
+  const [detailProduct, setDetailProduct] = useState<{ id: string; name: string } | null>(null);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
@@ -168,7 +170,11 @@ export default function ProductsScreen({ businessId }: Props): React.JSX.Element
         renderItem={({ item }) => {
           const low = isLowStock(item);
           return (
-            <View style={[styles.card, low && styles.cardLowStock]}>
+            <TouchableOpacity
+              style={[styles.card, low && styles.cardLowStock]}
+              activeOpacity={0.75}
+              onPress={() => setDetailProduct({ id: item.id, name: item.name })}
+            >
               <View style={styles.cardMain}>
                 <View style={styles.cardTop}>
                   <Text style={styles.productName} numberOfLines={1}>{item.name}</Text>
@@ -187,10 +193,23 @@ export default function ProductsScreen({ businessId }: Props): React.JSX.Element
                   <Text style={styles.costPrice}>Cost: {formatRupees(item.costPriceInPaise)}</Text>
                 )}
               </View>
-            </View>
+            </TouchableOpacity>
           );
         }}
       />
+
+      {/* Product detail modal */}
+      {detailProduct && (
+        <Modal visible animationType="slide" onRequestClose={() => setDetailProduct(null)}>
+          <ProductDetailScreen
+            businessId={businessId}
+            productId={detailProduct.id}
+            productName={detailProduct.name}
+            onClose={() => setDetailProduct(null)}
+            onRefreshParent={() => void load()}
+          />
+        </Modal>
+      )}
 
       {/* Add product modal */}
       <Modal visible={showAdd} animationType="slide" transparent onRequestClose={() => setShowAdd(false)}>

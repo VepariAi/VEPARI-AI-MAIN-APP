@@ -12,6 +12,16 @@ export interface CreateProductDto {
   lowStockThreshold?: number;
 }
 
+export interface UpdateProductDto {
+  name?: string;
+  sku?: string | null;
+  priceInPaise?: number;
+  costPriceInPaise?: number;
+  unit?: string;
+  lowStockThreshold?: number | null;
+  isActive?: boolean;
+}
+
 export interface ProductSummary {
   id: string;
   businessId: string;
@@ -83,6 +93,38 @@ export class ProductsService {
       select: { id: true, stock: true },
     });
     return updated;
+  }
+
+  async getProductById(businessId: string, productId: string): Promise<ProductSummary> {
+    const product = await this.prisma.product.findFirst({ where: { id: productId, businessId } });
+    if (!product) throw new NotFoundException('Product not found');
+    return product;
+  }
+
+  async updateProduct(businessId: string, productId: string, dto: UpdateProductDto): Promise<ProductSummary> {
+    const product = await this.prisma.product.findFirst({ where: { id: productId, businessId } });
+    if (!product) throw new NotFoundException('Product not found');
+
+    if (dto.priceInPaise !== undefined && dto.priceInPaise < 0) throw new BadRequestException('Price must be non-negative');
+    if (dto.costPriceInPaise !== undefined && dto.costPriceInPaise !== null && dto.costPriceInPaise < 0) throw new BadRequestException('Cost price must be non-negative');
+
+    if (dto.sku && dto.sku !== product.sku) {
+      const existing = await this.prisma.product.findFirst({ where: { businessId, sku: dto.sku } });
+      if (existing) throw new BadRequestException(`Product with SKU '${dto.sku}' already exists`);
+    }
+
+    return this.prisma.product.update({
+      where: { id: productId },
+      data: {
+        ...(dto.name !== undefined && { name: dto.name }),
+        ...(dto.sku !== undefined && { sku: dto.sku }),
+        ...(dto.priceInPaise !== undefined && { priceInPaise: dto.priceInPaise }),
+        ...(dto.costPriceInPaise !== undefined && { costPriceInPaise: dto.costPriceInPaise }),
+        ...(dto.unit !== undefined && { unit: dto.unit }),
+        ...(dto.lowStockThreshold !== undefined && { lowStockThreshold: dto.lowStockThreshold }),
+        ...(dto.isActive !== undefined && { isActive: dto.isActive }),
+      },
+    });
   }
 
   async getLowStockProducts(businessId: string): Promise<ProductSummary[]> {

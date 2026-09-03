@@ -4,7 +4,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { ProductsService, CreateProductDto } from './products.service';
+import { ProductsService, CreateProductDto, UpdateProductDto } from './products.service';
 
 class CreateProductBody {
   name!: string;
@@ -18,6 +18,16 @@ class CreateProductBody {
 
 class AdjustStockBody {
   adjustment!: number;
+}
+
+class UpdateProductBody {
+  name?: string;
+  sku?: string | null;
+  priceInPaise?: number;
+  costPriceInPaise?: number;
+  unit?: string;
+  lowStockThreshold?: number | null;
+  isActive?: boolean;
 }
 
 @ApiTags('products')
@@ -52,6 +62,31 @@ export class ProductsController {
   @Get('low-stock')
   getLowStock(@Param('businessId') businessId: string) {
     return this.productsService.getLowStockProducts(businessId);
+  }
+
+  @Get(':productId')
+  getProduct(
+    @Param('businessId') businessId: string,
+    @Param('productId') productId: string,
+  ) {
+    return this.productsService.getProductById(businessId, productId);
+  }
+
+  @Patch(':productId')
+  updateProduct(
+    @Param('businessId') businessId: string,
+    @Param('productId') productId: string,
+    @Body() body: UpdateProductBody,
+  ) {
+    const dto: UpdateProductDto = {};
+    if (body.name !== undefined) dto.name = body.name;
+    if (body.sku !== undefined) dto.sku = body.sku;
+    if (body.priceInPaise !== undefined) dto.priceInPaise = body.priceInPaise;
+    if (body.costPriceInPaise !== undefined) dto.costPriceInPaise = body.costPriceInPaise;
+    if (body.unit !== undefined) dto.unit = body.unit;
+    if (body.lowStockThreshold !== undefined) dto.lowStockThreshold = body.lowStockThreshold;
+    if (body.isActive !== undefined) dto.isActive = body.isActive;
+    return this.productsService.updateProduct(businessId, productId, dto);
   }
 
   @Patch(':productId/stock')
