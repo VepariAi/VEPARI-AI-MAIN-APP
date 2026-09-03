@@ -33,6 +33,7 @@ export const ENDPOINTS = {
   suppliers: {
     list: (bizId: string) => `/businesses/${bizId}/suppliers`,
     create: (bizId: string) => `/businesses/${bizId}/suppliers`,
+    payable: (bizId: string, supplierId: string) => `/businesses/${bizId}/suppliers/${supplierId}/payable`,
   },
   transactions: {
     list: (bizId: string) => `/businesses/${bizId}/transactions`,
@@ -265,6 +266,24 @@ export class VepariApiClient {
     return this.request<{ id: string; name: string; phone: string | null; payableBalance: number }>(
       'POST', ENDPOINTS.suppliers.create(businessId), data,
     );
+  }
+
+  async adjustSupplierPayable(
+    businessId: string,
+    supplierId: string,
+    amountInPaise: number,
+    description?: string,
+    paymentMethod?: 'CASH' | 'UPI' | 'CARD' | 'BANK_TRANSFER' | 'CREDIT',
+  ) {
+    return this.request<{
+      id: string;
+      name: string;
+      payableBalance: number;
+    }>('PATCH', ENDPOINTS.suppliers.payable(businessId, supplierId), {
+      amountInPaise,
+      ...(description ? { description } : {}),
+      ...(paymentMethod ? { paymentMethod } : {}),
+    });
   }
 
   // ── Voice (AI Gateway — Sarvam STT/TTS, server-side only) ────────────────────

@@ -17,6 +17,7 @@ import {
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import { getApiClient } from '@/services/api';
 import PurchaseLogScreen from '@/screens/purchases/PurchaseLogScreen';
+import SupplierPaymentScreen from '@/screens/suppliers/SupplierPaymentScreen';
 
 interface Supplier {
   id: string;
@@ -45,6 +46,7 @@ export default function SuppliersScreen(): React.JSX.Element {
   const [addPhone, setAddPhone] = useState('');
   const [adding, setAdding] = useState(false);
   const [purchaseSupplier, setPurchaseSupplier] = useState<{ id: string; name: string } | null>(null);
+  const [paySupplier, setPaySupplier] = useState<{ id: string; name: string; payableBalance: number } | null>(null);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
@@ -149,12 +151,22 @@ export default function SuppliersScreen(): React.JSX.Element {
                   <Text style={styles.badgeLabel}>payable</Text>
                 </View>
               )}
-              <TouchableOpacity
-                style={styles.purchaseBtn}
-                onPress={() => setPurchaseSupplier({ id: item.id, name: item.name })}
-              >
-                <Text style={styles.purchaseBtnText}>+ Purchase</Text>
-              </TouchableOpacity>
+              <View style={styles.actionRow}>
+                <TouchableOpacity
+                  style={styles.purchaseBtn}
+                  onPress={() => setPurchaseSupplier({ id: item.id, name: item.name })}
+                >
+                  <Text style={styles.purchaseBtnText}>+ Buy</Text>
+                </TouchableOpacity>
+                {item.payableBalance > 0 && (
+                  <TouchableOpacity
+                    style={styles.payBtn}
+                    onPress={() => setPaySupplier({ id: item.id, name: item.name, payableBalance: item.payableBalance })}
+                  >
+                    <Text style={styles.payBtnText}>Pay</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
             </View>
           </View>
         )}
@@ -172,6 +184,23 @@ export default function SuppliersScreen(): React.JSX.Element {
               setPurchaseSupplier(null);
               void load();
               Alert.alert('Purchase Recorded', `Purchase of ${formatRupees(totalInPaise)} logged.`);
+            }}
+          />
+        </Modal>
+      )}
+
+      {/* Pay supplier modal */}
+      {paySupplier && businessId && (
+        <Modal visible animationType="slide" onRequestClose={() => setPaySupplier(null)}>
+          <SupplierPaymentScreen
+            businessId={businessId}
+            supplierId={paySupplier.id}
+            supplierName={paySupplier.name}
+            currentPayableInPaise={paySupplier.payableBalance}
+            onCancel={() => setPaySupplier(null)}
+            onDone={() => {
+              setPaySupplier(null);
+              void load();
             }}
           />
         </Modal>
@@ -238,6 +267,7 @@ const styles = StyleSheet.create({
   name: { fontSize: Typography.fontSize.base, fontWeight: Typography.fontWeight.medium, color: Colors.brown },
   phone: { fontSize: Typography.fontSize.xs, color: Colors.muted },
   cardRight: { alignItems: 'flex-end', gap: Spacing[1] },
+  actionRow: { flexDirection: 'row', gap: Spacing[1] },
   badge: { alignItems: 'flex-end', gap: 1 },
   badgeAmount: { fontSize: Typography.fontSize.sm, fontWeight: Typography.fontWeight.bold, color: Colors.error },
   badgeLabel: { fontSize: Typography.fontSize.xs, color: Colors.muted },
@@ -248,6 +278,13 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   purchaseBtnText: { fontSize: Typography.fontSize.xs, color: Colors.white, fontWeight: Typography.fontWeight.semibold },
+  payBtn: {
+    backgroundColor: Colors.success,
+    borderRadius: Radius.sm,
+    paddingHorizontal: Spacing[2],
+    paddingVertical: 4,
+  },
+  payBtnText: { fontSize: Typography.fontSize.xs, color: Colors.white, fontWeight: Typography.fontWeight.semibold },
   empty: { textAlign: 'center', color: Colors.muted, marginTop: Spacing[8], fontSize: Typography.fontSize.sm },
   modalOverlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' },
   modalSheet: { backgroundColor: Colors.white, borderTopLeftRadius: Radius.xl, borderTopRightRadius: Radius.xl, padding: Spacing[5], gap: Spacing[4] },
