@@ -65,6 +65,7 @@ export const ENDPOINTS = {
     snapshot: (bizId: string) => `/businesses/${bizId}/analytics/snapshot`,
     healthScore: (bizId: string) => `/businesses/${bizId}/analytics/health-score`,
     insights: (bizId: string) => `/businesses/${bizId}/analytics/insights`,
+    briefing: (bizId: string) => `/businesses/${bizId}/analytics/briefing`,
   },
   finance: {
     profitToday: (bizId: string) => `/businesses/${bizId}/finance/profit/today`,
@@ -538,6 +539,31 @@ export class VepariApiClient {
 
   async chatWithBusiness(businessId: string, transcript: string) {
     return this.request<{ reply: string }>('POST', ENDPOINTS.ai.chat, { businessId, transcript });
+  }
+
+  async getBriefing(businessId: string, since?: Date) {
+    const url = since
+      ? `${ENDPOINTS.analytics.briefing(businessId)}?since=${encodeURIComponent(since.toISOString())}`
+      : ENDPOINTS.analytics.briefing(businessId);
+    return this.request<{
+      businessId: string;
+      since: string;
+      generatedAt: string;
+      items: Array<{
+        priority: 'critical' | 'important' | 'actionable' | 'informational';
+        category: 'sales' | 'expenses' | 'new_customers' | 'payments' | 'supplier_bills' | 'stock_alerts' | 'opportunities';
+        title: string;
+        description: string;
+        evidence: Record<string, unknown>;
+      }>;
+      summary: {
+        totalItems: number;
+        criticalCount: number;
+        importantCount: number;
+        actionableCount: number;
+        informationalCount: number;
+      };
+    }>('GET', url);
   }
 
 // ── Generic helpers ───────────────────────────────────────────────────────

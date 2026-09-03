@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { AnalyticsService } from './analytics.service';
 import { HealthScoreService } from './health-score.service';
 import { InsightService } from './insight.service';
+import { BriefingService } from '../ai/briefing.service';
 
 @ApiTags('analytics')
 @Controller('businesses/:businessId/analytics')
@@ -14,6 +15,7 @@ export class AnalyticsController {
     private readonly analyticsService: AnalyticsService,
     private readonly healthScoreService: HealthScoreService,
     private readonly insightService: InsightService,
+    private readonly briefingService: BriefingService,
   ) {}
 
   @Get('snapshot')
@@ -43,5 +45,16 @@ export class AnalyticsController {
   ) {
     const d = date ?? new Date().toISOString().slice(0, 10);
     return this.analyticsService.getDailySummary(businessId, d);
+  }
+
+  @Get('briefing')
+  @ApiOperation({ summary: '"While you were away" briefing — real events since a checkpoint' })
+  @ApiQuery({ name: 'since', required: false, description: 'ISO timestamp checkpoint (defaults to 24 hours ago)' })
+  briefing(
+    @Param('businessId') businessId: string,
+    @Query('since') since?: string,
+  ) {
+    const sinceDate = since ? new Date(since) : new Date(Date.now() - 24 * 60 * 60 * 1000);
+    return this.briefingService.generateBriefing(businessId, sinceDate);
   }
 }
