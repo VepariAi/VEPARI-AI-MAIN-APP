@@ -17,6 +17,11 @@ import SalesScreen from '@/screens/sales/SalesScreen';
 import ExpensesScreen from '@/screens/expenses/ExpensesScreen';
 import PurchasesScreen from '@/screens/purchases/PurchasesScreen';
 import PaymentsScreen from '@/screens/payments/PaymentsScreen';
+import AlertsScreen from '@/screens/notifications/AlertsScreen';
+import ProfileSettingsScreen from '@/screens/settings/ProfileSettingsScreen';
+import BusinessSettingsScreen from '@/screens/settings/BusinessSettingsScreen';
+import { useNavigation } from '@react-navigation/native';
+import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getApiClient } from '@/services/api';
 
 const Stack = createNativeStackNavigator<MoreStackParamList>();
@@ -98,6 +103,22 @@ function PaymentsWrapper(): React.JSX.Element {
   return <PaymentsScreen businessId={bizId} />;
 }
 
+function AlertsWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <AlertsScreen businessId={bizId} />;
+}
+
+function ProfileWrapper(): React.JSX.Element {
+  const nav = useNavigation<NativeStackNavigationProp<MoreStackParamList>>();
+  return <ProfileSettingsScreen onBack={() => nav.goBack()} />;
+}
+
+function BusinessWrapper(): React.JSX.Element {
+  const nav = useNavigation<NativeStackNavigationProp<MoreStackParamList>>();
+  return <BusinessSettingsScreen onBack={() => nav.goBack()} />;
+}
+
 export default function MoreStack(): React.JSX.Element {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -115,6 +136,9 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="Expenses" component={ExpensesWrapper} />
       <Stack.Screen name="Purchases" component={PurchasesWrapper} />
       <Stack.Screen name="Payments" component={PaymentsWrapper} />
+      <Stack.Screen name="Alerts" component={AlertsWrapper} />
+      <Stack.Screen name="ProfileSettings" component={ProfileWrapper} />
+      <Stack.Screen name="BusinessSettings" component={BusinessWrapper} />
     </Stack.Navigator>
   );
 }

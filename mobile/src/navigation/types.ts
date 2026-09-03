@@ -32,6 +32,9 @@ export type MoreStackParamList = {
   Expenses: undefined;
   Purchases: undefined;
   Payments: undefined;
+  Alerts: undefined;
+  ProfileSettings: undefined;
+  BusinessSettings: undefined;
 };
 
 export type MoreStackScreenProps<T extends keyof MoreStackParamList> =

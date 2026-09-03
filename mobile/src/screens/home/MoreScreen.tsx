@@ -39,7 +39,14 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
     ],
   },
   {
+    section: 'Alerts', items: [
+      { emoji: '🔔', label: 'Alerts', screen: 'Alerts' },
+    ],
+  },
+  {
     section: 'Settings', items: [
+      { emoji: '👤', label: 'Profile', screen: 'ProfileSettings' },
+      { emoji: '🏪', label: 'Business', screen: 'BusinessSettings' },
       { emoji: '🔒', label: 'Security', screen: 'Security' },
       { emoji: '❓', label: 'Help & Support', screen: 'HelpSupport' },
     ],

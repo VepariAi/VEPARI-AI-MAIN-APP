@@ -229,6 +229,10 @@ export class VepariApiClient {
     return this.request<Business>('GET', ENDPOINTS.businesses.byId(id));
   }
 
+  async updateBusiness(id: string, data: { name?: string; phone?: string; gstNumber?: string; type?: string }) {
+    return this.request<Business>('PATCH', ENDPOINTS.businesses.byId(id), data);
+  }
+
   async getBusinessDashboard(id: string) {
     return this.request<{
       today: { salesInPaise: number; expensesInPaise: number; profitInPaise: number };
