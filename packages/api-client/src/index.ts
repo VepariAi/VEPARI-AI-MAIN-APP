@@ -61,6 +61,10 @@ export const ENDPOINTS = {
   },
   salesForBiz: (bizId: string) => `/businesses/${bizId}/sales`,
   salesTodayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
+  purchases: {
+    create: (bizId: string) => `/businesses/${bizId}/purchases`,
+    list: (bizId: string) => `/businesses/${bizId}/purchases`,
+  },
   analytics: {
     snapshot: (bizId: string) => `/businesses/${bizId}/analytics/snapshot`,
     healthScore: (bizId: string) => `/businesses/${bizId}/analytics/health-score`,
@@ -539,6 +543,44 @@ export class VepariApiClient {
 
   async chatWithBusiness(businessId: string, transcript: string) {
     return this.request<{ reply: string }>('POST', ENDPOINTS.ai.chat, { businessId, transcript });
+  }
+
+  async createPurchase(businessId: string, data: {
+    supplierId?: string;
+    items: Array<{ productId: string; quantity: number; unitCostInPaise: number }>;
+    paymentMethod?: 'CASH' | 'UPI' | 'CARD' | 'BANK_TRANSFER' | 'CREDIT';
+    notes?: string;
+    date?: string;
+    totalInPaise?: number;
+  }) {
+    return this.request<{
+      id: string;
+      businessId: string;
+      supplierId: string | null;
+      supplierName: string | null;
+      totalInPaise: number;
+      paymentMethod: string;
+      status: string;
+      notes: string | null;
+      date: string;
+      createdAt: string;
+      itemCount: number;
+    }>('POST', ENDPOINTS.purchases.create(businessId), data);
+  }
+
+  async listPurchases(businessId: string, limit = 50, offset = 0) {
+    return this.request<Array<{
+      id: string;
+      supplierId: string | null;
+      supplierName: string | null;
+      totalInPaise: number;
+      paymentMethod: string;
+      status: string;
+      notes: string | null;
+      date: string;
+      createdAt: string;
+      itemCount: number;
+    }>>('GET', `${ENDPOINTS.purchases.list(businessId)}?limit=${limit}&offset=${offset}`);
   }
 
   async getBriefing(businessId: string, since?: Date) {

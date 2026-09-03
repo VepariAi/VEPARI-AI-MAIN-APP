@@ -12,9 +12,11 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import { getApiClient } from '@/services/api';
+import PurchaseLogScreen from '@/screens/purchases/PurchaseLogScreen';
 
 interface Supplier {
   id: string;
@@ -42,6 +44,7 @@ export default function SuppliersScreen(): React.JSX.Element {
   const [addName, setAddName] = useState('');
   const [addPhone, setAddPhone] = useState('');
   const [adding, setAdding] = useState(false);
+  const [purchaseSupplier, setPurchaseSupplier] = useState<{ id: string; name: string } | null>(null);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
@@ -131,7 +134,7 @@ export default function SuppliersScreen(): React.JSX.Element {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={Colors.gold} />}
         ListEmptyComponent={<Text style={styles.empty}>{search ? 'No results' : 'No suppliers yet. Add your first one!'}</Text>}
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.card} activeOpacity={0.8}>
+          <View style={styles.card}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{item.name[0]?.toUpperCase() ?? '?'}</Text>
             </View>
@@ -139,15 +142,40 @@ export default function SuppliersScreen(): React.JSX.Element {
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.phone}>{item.phone ?? 'No phone'}</Text>
             </View>
-            {item.payableBalance > 0 && (
-              <View style={styles.badge}>
-                <Text style={styles.badgeAmount}>{formatRupees(item.payableBalance)}</Text>
-                <Text style={styles.badgeLabel}>payable</Text>
-              </View>
-            )}
-          </TouchableOpacity>
+            <View style={styles.cardRight}>
+              {item.payableBalance > 0 && (
+                <View style={styles.badge}>
+                  <Text style={styles.badgeAmount}>{formatRupees(item.payableBalance)}</Text>
+                  <Text style={styles.badgeLabel}>payable</Text>
+                </View>
+              )}
+              <TouchableOpacity
+                style={styles.purchaseBtn}
+                onPress={() => setPurchaseSupplier({ id: item.id, name: item.name })}
+              >
+                <Text style={styles.purchaseBtnText}>+ Purchase</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         )}
       />
+
+      {/* Purchase log modal */}
+      {purchaseSupplier && businessId && (
+        <Modal visible animationType="slide" onRequestClose={() => setPurchaseSupplier(null)}>
+          <PurchaseLogScreen
+            businessId={businessId}
+            supplierId={purchaseSupplier.id}
+            supplierName={purchaseSupplier.name}
+            onCancel={() => setPurchaseSupplier(null)}
+            onSaved={(_id, totalInPaise) => {
+              setPurchaseSupplier(null);
+              void load();
+              Alert.alert('Purchase Recorded', `Purchase of ${formatRupees(totalInPaise)} logged.`);
+            }}
+          />
+        </Modal>
+      )}
 
       {/* Add supplier modal */}
       <Modal visible={showAdd} animationType="slide" transparent onRequestClose={() => setShowAdd(false)}>
@@ -209,9 +237,17 @@ const styles = StyleSheet.create({
   info: { flex: 1, gap: 2 },
   name: { fontSize: Typography.fontSize.base, fontWeight: Typography.fontWeight.medium, color: Colors.brown },
   phone: { fontSize: Typography.fontSize.xs, color: Colors.muted },
+  cardRight: { alignItems: 'flex-end', gap: Spacing[1] },
   badge: { alignItems: 'flex-end', gap: 1 },
   badgeAmount: { fontSize: Typography.fontSize.sm, fontWeight: Typography.fontWeight.bold, color: Colors.error },
   badgeLabel: { fontSize: Typography.fontSize.xs, color: Colors.muted },
+  purchaseBtn: {
+    backgroundColor: Colors.gold,
+    borderRadius: Radius.sm,
+    paddingHorizontal: Spacing[2],
+    paddingVertical: 4,
+  },
+  purchaseBtnText: { fontSize: Typography.fontSize.xs, color: Colors.white, fontWeight: Typography.fontWeight.semibold },
   empty: { textAlign: 'center', color: Colors.muted, marginTop: Spacing[8], fontSize: Typography.fontSize.sm },
   modalOverlay: { flex: 1, justifyContent: 'flex-end', backgroundColor: 'rgba(0,0,0,0.4)' },
   modalSheet: { backgroundColor: Colors.white, borderTopLeftRadius: Radius.xl, borderTopRightRadius: Radius.xl, padding: Spacing[5], gap: Spacing[4] },
