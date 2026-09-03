@@ -7,6 +7,7 @@ import MoreScreen from '@/screens/home/MoreScreen';
 import InventoryScreen from '@/screens/inventory/InventoryScreen';
 import ReportsScreen from '@/screens/reports/ReportsScreen';
 import SearchScreen from '@/screens/search/SearchScreen';
+import SecuritySettingsScreen from '@/screens/security/SecuritySettingsScreen';
 import { getApiClient } from '@/services/api';
 
 const Stack = createNativeStackNavigator<MoreStackParamList>();
@@ -47,6 +48,7 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="Inventory" component={InventoryWrapper} />
       <Stack.Screen name="Reports" component={ReportsWrapper} />
       <Stack.Screen name="Search" component={SearchWrapper} />
+      <Stack.Screen name="Security" component={SecuritySettingsScreen} />
     </Stack.Navigator>
   );
 }

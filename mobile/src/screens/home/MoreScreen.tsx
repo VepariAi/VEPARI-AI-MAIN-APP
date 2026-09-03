@@ -28,7 +28,7 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
   },
   {
     section: 'Settings', items: [
-      { emoji: '🔒', label: 'Security' },
+      { emoji: '🔒', label: 'Security', screen: 'Security' },
       { emoji: '❓', label: 'Help & Support' },
     ],
   },
