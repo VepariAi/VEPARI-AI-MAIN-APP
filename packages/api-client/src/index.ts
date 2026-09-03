@@ -33,6 +33,7 @@ export const ENDPOINTS = {
   suppliers: {
     list: (bizId: string) => `/businesses/${bizId}/suppliers`,
     create: (bizId: string) => `/businesses/${bizId}/suppliers`,
+    byId: (bizId: string, id: string) => `/businesses/${bizId}/suppliers/${id}`,
     payable: (bizId: string, supplierId: string) => `/businesses/${bizId}/suppliers/${supplierId}/payable`,
   },
   transactions: {
@@ -266,6 +267,34 @@ export class VepariApiClient {
     return this.request<{ id: string; name: string; phone: string | null; payableBalance: number }>(
       'POST', ENDPOINTS.suppliers.create(businessId), data,
     );
+  }
+
+  async getSupplierById(businessId: string, supplierId: string) {
+    return this.request<{
+      id: string;
+      name: string;
+      phone: string | null;
+      email: string | null;
+      payableBalance: number;
+      notes: string | null;
+      isActive: boolean;
+    }>('GET', ENDPOINTS.suppliers.byId(businessId, supplierId));
+  }
+
+  async listPurchases(businessId: string, options?: { limit?: number; offset?: number; supplierId?: string }) {
+    const { limit = 50, offset = 0, supplierId } = options ?? {};
+    const params = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (supplierId) params.set('supplierId', supplierId);
+    return this.request<Array<{
+      id: string;
+      supplierId: string | null;
+      supplierName: string | null;
+      totalInPaise: number;
+      paymentMethod: string;
+      notes: string | null;
+      date: string;
+      itemCount: number;
+    }>>('GET', `${ENDPOINTS.purchases.list(businessId)}?${params.toString()}`);
   }
 
   async adjustSupplierPayable(
@@ -587,20 +616,7 @@ export class VepariApiClient {
     }>('POST', ENDPOINTS.purchases.create(businessId), data);
   }
 
-  async listPurchases(businessId: string, limit = 50, offset = 0) {
-    return this.request<Array<{
-      id: string;
-      supplierId: string | null;
-      supplierName: string | null;
-      totalInPaise: number;
-      paymentMethod: string;
-      status: string;
-      notes: string | null;
-      date: string;
-      createdAt: string;
-      itemCount: number;
-    }>>('GET', `${ENDPOINTS.purchases.list(businessId)}?limit=${limit}&offset=${offset}`);
-  }
+  // listPurchases overload consolidated above — removed duplicate
 
   async getBriefing(businessId: string, since?: Date) {
     const url = since

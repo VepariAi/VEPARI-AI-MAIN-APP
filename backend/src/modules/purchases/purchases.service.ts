@@ -132,9 +132,9 @@ export class PurchasesService {
     };
   }
 
-  async listPurchases(businessId: string, limit = 50, offset = 0): Promise<PurchaseSummary[]> {
+  async listPurchases(businessId: string, limit = 50, offset = 0, supplierId?: string): Promise<PurchaseSummary[]> {
     const records = await this.prisma.purchase.findMany({
-      where: { businessId },
+      where: { businessId, ...(supplierId ? { supplierId } : {}) },
       orderBy: { date: 'desc' },
       take: limit,
       skip: offset,

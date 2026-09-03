@@ -18,6 +18,7 @@ import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-sys
 import { getApiClient } from '@/services/api';
 import PurchaseLogScreen from '@/screens/purchases/PurchaseLogScreen';
 import SupplierPaymentScreen from '@/screens/suppliers/SupplierPaymentScreen';
+import SupplierDetailScreen from '@/screens/suppliers/SupplierDetailScreen';
 
 interface Supplier {
   id: string;
@@ -47,6 +48,7 @@ export default function SuppliersScreen(): React.JSX.Element {
   const [adding, setAdding] = useState(false);
   const [purchaseSupplier, setPurchaseSupplier] = useState<{ id: string; name: string } | null>(null);
   const [paySupplier, setPaySupplier] = useState<{ id: string; name: string; payableBalance: number } | null>(null);
+  const [detailSupplier, setDetailSupplier] = useState<{ id: string; name: string } | null>(null);
 
   const load = useCallback(async (isRefresh = false) => {
     if (isRefresh) setRefreshing(true); else setLoading(true);
@@ -136,7 +138,11 @@ export default function SuppliersScreen(): React.JSX.Element {
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => void load(true)} tintColor={Colors.gold} />}
         ListEmptyComponent={<Text style={styles.empty}>{search ? 'No results' : 'No suppliers yet. Add your first one!'}</Text>}
         renderItem={({ item }) => (
-          <View style={styles.card}>
+          <TouchableOpacity
+            style={styles.card}
+            activeOpacity={0.75}
+            onPress={() => setDetailSupplier({ id: item.id, name: item.name })}
+          >
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{item.name[0]?.toUpperCase() ?? '?'}</Text>
             </View>
@@ -154,23 +160,36 @@ export default function SuppliersScreen(): React.JSX.Element {
               <View style={styles.actionRow}>
                 <TouchableOpacity
                   style={styles.purchaseBtn}
-                  onPress={() => setPurchaseSupplier({ id: item.id, name: item.name })}
+                  onPress={e => { e.stopPropagation?.(); setPurchaseSupplier({ id: item.id, name: item.name }); }}
                 >
                   <Text style={styles.purchaseBtnText}>+ Buy</Text>
                 </TouchableOpacity>
                 {item.payableBalance > 0 && (
                   <TouchableOpacity
                     style={styles.payBtn}
-                    onPress={() => setPaySupplier({ id: item.id, name: item.name, payableBalance: item.payableBalance })}
+                    onPress={e => { e.stopPropagation?.(); setPaySupplier({ id: item.id, name: item.name, payableBalance: item.payableBalance }); }}
                   >
                     <Text style={styles.payBtnText}>Pay</Text>
                   </TouchableOpacity>
                 )}
               </View>
             </View>
-          </View>
+          </TouchableOpacity>
         )}
       />
+
+      {/* Supplier detail modal */}
+      {detailSupplier && businessId && (
+        <Modal visible animationType="slide" onRequestClose={() => setDetailSupplier(null)}>
+          <SupplierDetailScreen
+            businessId={businessId}
+            supplierId={detailSupplier.id}
+            supplierName={detailSupplier.name}
+            onClose={() => setDetailSupplier(null)}
+            onRefreshParent={() => void load()}
+          />
+        </Modal>
+      )}
 
       {/* Purchase log modal */}
       {purchaseSupplier && businessId && (
