@@ -59,6 +59,12 @@ export const ENDPOINTS = {
   },
   salesForBiz: (bizId: string) => `/businesses/${bizId}/sales`,
   salesTodayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
+  finance: {
+    profitToday: (bizId: string) => `/businesses/${bizId}/finance/profit/today`,
+    profitWeek: (bizId: string) => `/businesses/${bizId}/finance/profit/week`,
+    profitMonth: (bizId: string) => `/businesses/${bizId}/finance/profit/month`,
+    profitSeries: (bizId: string) => `/businesses/${bizId}/finance/profit/series`,
+  },
 } as const;
 
 // ── Client config ─────────────────────────────────────────────────────────────
@@ -248,6 +254,33 @@ export class VepariApiClient {
 
   async getSalesTodayTotal(businessId: string) {
     return this.request<number>('GET', ENDPOINTS.salesTodayTotal(businessId));
+  }
+
+  // ── Finance / Profit ─────────────────────────────────────────────────────
+
+  private profitRequest(path: string) {
+    return this.request<{
+      salesInPaise: number;
+      expensesInPaise: number;
+      profitInPaise: number;
+      grossMarginBps: number;
+      periodStart: string;
+      periodEnd: string;
+    }>('GET', path);
+  }
+
+  getProfitToday(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitToday(businessId)); }
+  getProfitWeek(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitWeek(businessId)); }
+  getProfitMonth(businessId: string) { return this.profitRequest(ENDPOINTS.finance.profitMonth(businessId)); }
+
+  getProfitSeries(businessId: string, days = 30) {
+    return this.request<Array<{
+      date: string;
+      salesInPaise: number;
+      expensesInPaise: number;
+      profitInPaise: number;
+      grossMarginBps: number;
+    }>>('GET', `${ENDPOINTS.finance.profitSeries(businessId)}?days=${days}`);
   }
 
   // ── AI (Memory extraction via AI Gateway) ────────────────────────────────
