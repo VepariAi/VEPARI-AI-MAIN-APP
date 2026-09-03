@@ -93,6 +93,12 @@ export const ENDPOINTS = {
     cashFlowMonth: (bizId: string) => `/businesses/${bizId}/finance/cashflow/month`,
     receivablesPayables: (bizId: string) => `/businesses/${bizId}/finance/receivables-payables`,
   },
+  team: {
+    list: (bizId: string) => `/businesses/${bizId}/team`,
+    invite: (bizId: string) => `/businesses/${bizId}/team/invite`,
+    updateRole: (bizId: string, memberId: string) => `/businesses/${bizId}/team/${memberId}/role`,
+    remove: (bizId: string, memberId: string) => `/businesses/${bizId}/team/${memberId}`,
+  },
 } as const;
 
 // ── Client config ─────────────────────────────────────────────────────────────
@@ -716,6 +722,47 @@ export class VepariApiClient {
     return this.request<{ id: string; stock: number }>(
       'PATCH', `${ENDPOINTS.products.byId(businessId, productId)}/stock`, { adjustment },
     );
+  }
+
+  // ── Team ─────────────────────────────────────────────────────────────────
+
+  async listTeamMembers(businessId: string) {
+    return this.request<Array<{
+      memberId: string;
+      userId: string;
+      name: string;
+      phone: string;
+      role: 'OWNER' | 'MANAGER' | 'STAFF';
+      joinedAt: string;
+    }>>('GET', ENDPOINTS.team.list(businessId));
+  }
+
+  async inviteTeamMember(businessId: string, phone: string, role?: 'MANAGER' | 'STAFF') {
+    const body: { phone: string; role?: string } = { phone };
+    if (role) body.role = role;
+    return this.request<{
+      memberId: string;
+      userId: string;
+      name: string;
+      phone: string;
+      role: 'OWNER' | 'MANAGER' | 'STAFF';
+      joinedAt: string;
+    }>('POST', ENDPOINTS.team.invite(businessId), body);
+  }
+
+  async updateTeamMemberRole(businessId: string, memberId: string, role: 'MANAGER' | 'STAFF') {
+    return this.request<{
+      memberId: string;
+      userId: string;
+      name: string;
+      phone: string;
+      role: 'OWNER' | 'MANAGER' | 'STAFF';
+      joinedAt: string;
+    }>('PATCH', ENDPOINTS.team.updateRole(businessId, memberId), { role });
+  }
+
+  async removeTeamMember(businessId: string, memberId: string) {
+    return this.request<{ message: string }>('DELETE', ENDPOINTS.team.remove(businessId, memberId));
   }
 
   // ── Alerts ───────────────────────────────────────────────────────────────

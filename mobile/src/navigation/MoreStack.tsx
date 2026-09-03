@@ -18,6 +18,7 @@ import ExpensesScreen from '@/screens/expenses/ExpensesScreen';
 import PurchasesScreen from '@/screens/purchases/PurchasesScreen';
 import PaymentsScreen from '@/screens/payments/PaymentsScreen';
 import AlertsScreen from '@/screens/notifications/AlertsScreen';
+import TeamScreen from '@/screens/team/TeamScreen';
 import ProfileSettingsScreen from '@/screens/settings/ProfileSettingsScreen';
 import BusinessSettingsScreen from '@/screens/settings/BusinessSettingsScreen';
 import { useNavigation } from '@react-navigation/native';
@@ -109,6 +110,12 @@ function AlertsWrapper(): React.JSX.Element {
   return <AlertsScreen businessId={bizId} />;
 }
 
+function TeamWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <TeamScreen businessId={bizId} />;
+}
+
 function ProfileWrapper(): React.JSX.Element {
   const nav = useNavigation<NativeStackNavigationProp<MoreStackParamList>>();
   return <ProfileSettingsScreen onBack={() => nav.goBack()} />;
@@ -137,6 +144,7 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="Purchases" component={PurchasesWrapper} />
       <Stack.Screen name="Payments" component={PaymentsWrapper} />
       <Stack.Screen name="Alerts" component={AlertsWrapper} />
+      <Stack.Screen name="Team" component={TeamWrapper} />
       <Stack.Screen name="ProfileSettings" component={ProfileWrapper} />
       <Stack.Screen name="BusinessSettings" component={BusinessWrapper} />
     </Stack.Navigator>

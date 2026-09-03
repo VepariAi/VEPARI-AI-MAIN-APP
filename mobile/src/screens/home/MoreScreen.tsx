@@ -44,6 +44,11 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
     ],
   },
   {
+    section: 'Team', items: [
+      { emoji: '👥', label: 'Team Members', screen: 'Team' },
+    ],
+  },
+  {
     section: 'Settings', items: [
       { emoji: '👤', label: 'Profile', screen: 'ProfileSettings' },
       { emoji: '🏪', label: 'Business', screen: 'BusinessSettings' },
