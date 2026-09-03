@@ -72,7 +72,7 @@ export class ExpensesService {
           type: 'EXPENSE',
           amountInPaise,
           description: description ?? category,
-          notes,
+          notes: notes ?? null,
           date: expenseDate,
           paymentMethod: paymentMethod ?? PaymentMethod.CASH,
         },

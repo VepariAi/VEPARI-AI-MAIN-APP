@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   SafeAreaView,
   ScrollView,
   Alert,
+  RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import type { MainTabScreenProps } from '@/navigation/types';
@@ -19,22 +21,17 @@ import {
   requestMicPermission,
   transcribeAudioFile,
 } from '@/voice';
+import { getApiClient } from '@/services/api';
 
 type Props = MainTabScreenProps<'AIHome'>;
 
-// Placeholder daily briefing data — replaced with real API data in a later phase
-const BRIEFING = {
-  greeting: 'Good morning',
-  businessName: 'Sharma General Store',
-  todaySalesInPaise: 485000,
-  todayExpensesInPaise: 120000,
-  todayProfitInPaise: 365000,
-  receivableInPaise: 1250000,
-  alerts: [
-    { id: '1', type: 'low_stock', message: '3 products running low on stock' },
-    { id: '2', type: 'credit', message: 'Rajan owes ₹2,500 — due 3 days ago' },
-  ],
-};
+interface Snapshot {
+  businessName: string;
+  today: { salesInPaise: number; expensesInPaise: number; profitInPaise: number; grossMarginBps: number };
+  receivableInPaise: number;
+  payableInPaise: number;
+  alertCount: number;
+}
 
 function formatRupees(paise: number): string {
   const rupees = paise / 100;
@@ -43,10 +40,50 @@ function formatRupees(paise: number): string {
   return `₹${rupees.toFixed(0)}`;
 }
 
+function greetingByHour(): string {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 17) return 'Good afternoon';
+  return 'Good evening';
+}
+
 export default function AIHomeScreen(_props: Props): React.JSX.Element {
+  const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
+  const [businessId, setBusinessId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [voiceActive, setVoiceActive] = useState(false);
   const [voiceError, setVoiceError] = useState('');
   const [transcript, setTranscript] = useState('');
+
+  const loadSnapshot = useCallback(async (isRefresh = false) => {
+    if (isRefresh) setRefreshing(true);
+    try {
+      const businesses = await getApiClient().getMyBusinesses();
+      if (businesses.length === 0) {
+        setLoading(false);
+        setRefreshing(false);
+        return;
+      }
+      const biz = businesses[0]!;
+      setBusinessId(biz.id);
+      const snap = await getApiClient().getBusinessSnapshot(biz.id);
+      setSnapshot({
+        businessName: biz.name,
+        today: snap.today,
+        receivableInPaise: snap.receivableInPaise,
+        payableInPaise: snap.payableInPaise,
+        alertCount: snap.alertCount,
+      });
+    } catch {
+      // Show hardcoded fallback silently on network error
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  }, []);
+
+  useEffect(() => { void loadSnapshot(); }, [loadSnapshot]);
 
   const handleVoicePress = useCallback(async () => {
     setVoiceError('');
@@ -66,17 +103,10 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
       return;
     }
 
-    // Check / request permission before starting
     let permission = await checkMicPermission();
-    if (permission === 'denied') {
-      permission = await requestMicPermission();
-    }
+    if (permission === 'denied') permission = await requestMicPermission();
     if (permission === 'blocked') {
-      Alert.alert(
-        'Microphone Required',
-        'Please enable microphone access in Settings to use voice input.',
-        [{ text: 'OK' }],
-      );
+      Alert.alert('Microphone Required', 'Please enable microphone access in Settings to use voice input.');
       return;
     }
     if (permission !== 'granted') {
@@ -93,17 +123,37 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
     }
   }, []);
 
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <ActivityIndicator style={{ flex: 1 }} color={Colors.brown} size="large" />
+      </SafeAreaView>
+    );
+  }
+
+  const todaySalesInPaise = snapshot?.today.salesInPaise ?? 0;
+  const todayExpensesInPaise = snapshot?.today.expensesInPaise ?? 0;
+  const todayProfitInPaise = snapshot?.today.profitInPaise ?? 0;
+  const receivableInPaise = snapshot?.receivableInPaise ?? 0;
+  const bName = snapshot?.businessName ?? 'Your Business';
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={() => void loadSnapshot(true)} tintColor={Colors.gold} />
+        }
+      >
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={styles.greeting}>{BRIEFING.greeting}</Text>
-            <Text style={styles.businessName}>{BRIEFING.businessName}</Text>
+            <Text style={styles.greeting}>{greetingByHour()}</Text>
+            <Text style={styles.businessName}>{bName}</Text>
           </View>
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>S</Text>
+            <Text style={styles.avatarText}>{bName.charAt(0).toUpperCase()}</Text>
           </View>
         </View>
 
@@ -111,28 +161,30 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
         <View style={styles.briefingCard}>
           <Text style={styles.briefingTitle}>Today's Summary</Text>
           <View style={styles.metricsRow}>
-            <MetricTile label="Sales" value={formatRupees(BRIEFING.todaySalesInPaise)} positive />
-            <MetricTile label="Expenses" value={formatRupees(BRIEFING.todayExpensesInPaise)} />
-            <MetricTile label="Profit" value={formatRupees(BRIEFING.todayProfitInPaise)} positive />
+            <MetricTile label="Sales" value={formatRupees(todaySalesInPaise)} positive />
+            <MetricTile label="Expenses" value={formatRupees(todayExpensesInPaise)} />
+            <MetricTile
+              label="Profit"
+              value={formatRupees(todayProfitInPaise)}
+              positive={todayProfitInPaise >= 0}
+            />
           </View>
           <View style={styles.receivableRow}>
-            <Text style={styles.receivableLabel}>Total Receivable</Text>
-            <Text style={styles.receivableValue}>
-              {formatRupees(BRIEFING.receivableInPaise)}
-            </Text>
+            <Text style={styles.receivableLabel}>Receivable</Text>
+            <Text style={styles.receivableValue}>{formatRupees(receivableInPaise)}</Text>
           </View>
         </View>
 
         {/* Alerts */}
-        {BRIEFING.alerts.length > 0 && (
+        {(snapshot?.alertCount ?? 0) > 0 && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Alerts</Text>
-            {BRIEFING.alerts.map(alert => (
-              <View key={alert.id} style={styles.alertCard}>
-                <Text style={styles.alertDot}>⚠️</Text>
-                <Text style={styles.alertText}>{alert.message}</Text>
-              </View>
-            ))}
+            <View style={styles.alertCard}>
+              <Text style={styles.alertDot}>⚠️</Text>
+              <Text style={styles.alertText}>
+                {snapshot!.alertCount} alert{snapshot!.alertCount > 1 ? 's' : ''} need your attention
+              </Text>
+            </View>
           </View>
         )}
 
@@ -140,10 +192,10 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Quick Actions</Text>
           <View style={styles.actionsGrid}>
-            <QuickAction emoji="💰" label="Record Sale" />
-            <QuickAction emoji="💸" label="Add Expense" />
-            <QuickAction emoji="👤" label="Customer Credit" />
-            <QuickAction emoji="📦" label="Check Stock" />
+            <QuickAction emoji="💰" label="Record Sale" onPress={() => undefined} />
+            <QuickAction emoji="💸" label="Add Expense" onPress={() => undefined} />
+            <QuickAction emoji="👤" label="Customer Credit" onPress={() => undefined} />
+            <QuickAction emoji="📦" label="Check Stock" onPress={() => undefined} />
           </View>
         </View>
 
@@ -154,9 +206,12 @@ export default function AIHomeScreen(_props: Props): React.JSX.Element {
             <Text style={styles.transcriptText}>{transcript}</Text>
           </View>
         ) : null}
+        {businessId == null && !loading && (
+          <Text style={styles.noBusinessText}>No business set up yet. Complete onboarding first.</Text>
+        )}
       </ScrollView>
 
-      {/* AI Voice Button — hold to record */}
+      {/* AI Voice Button */}
       <View style={styles.voiceFab}>
         <TouchableOpacity
           style={[styles.voiceBtn, voiceActive && styles.voiceBtnActive]}
@@ -182,9 +237,9 @@ function MetricTile({ label, value, positive }: { label: string; value: string; 
   );
 }
 
-function QuickAction({ emoji, label }: { emoji: string; label: string }): React.JSX.Element {
+function QuickAction({ emoji, label, onPress }: { emoji: string; label: string; onPress: () => void }): React.JSX.Element {
   return (
-    <TouchableOpacity style={styles.quickAction} activeOpacity={0.8}>
+    <TouchableOpacity style={styles.quickAction} activeOpacity={0.8} onPress={onPress}>
       <Text style={styles.quickActionEmoji}>{emoji}</Text>
       <Text style={styles.quickActionLabel}>{label}</Text>
     </TouchableOpacity>
@@ -261,12 +316,7 @@ const styles = StyleSheet.create({
   },
   quickActionEmoji: { fontSize: 28 },
   quickActionLabel: { fontSize: Typography.fontSize.sm, color: Colors.brown, fontWeight: Typography.fontWeight.medium, textAlign: 'center' },
-  voiceError: {
-    color: Colors.error,
-    fontSize: Typography.fontSize.sm,
-    textAlign: 'center',
-    marginTop: Spacing[2],
-  },
+  voiceError: { color: Colors.error, fontSize: Typography.fontSize.sm, textAlign: 'center', marginTop: Spacing[2] },
   transcriptCard: {
     backgroundColor: Colors.white,
     borderRadius: Radius.md,
@@ -277,6 +327,7 @@ const styles = StyleSheet.create({
   },
   transcriptLabel: { fontSize: Typography.fontSize.xs, color: Colors.muted, marginBottom: 4 },
   transcriptText: { fontSize: Typography.fontSize.base, color: Colors.brown },
+  noBusinessText: { textAlign: 'center', color: Colors.muted, fontSize: Typography.fontSize.sm, marginTop: Spacing[4] },
   voiceFab: { position: 'absolute', bottom: 80, left: 0, right: 0, paddingHorizontal: Spacing[6] },
   voiceBtn: {
     flexDirection: 'row',

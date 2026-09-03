@@ -46,18 +46,18 @@ export class ProductsService {
       if (existing) throw new BadRequestException(`Product with SKU '${sku}' already exists`);
     }
 
-    const data: Parameters<typeof this.prisma.product.create>[0]['data'] = {
-      businessId,
-      name,
-      priceInPaise,
-    };
-    if (sku !== undefined) data.sku = sku;
-    if (costPriceInPaise !== undefined) data.costPriceInPaise = costPriceInPaise;
-    if (stock !== undefined) data.stock = stock;
-    if (unit !== undefined) data.unit = unit;
-    if (lowStockThreshold !== undefined) data.lowStockThreshold = lowStockThreshold;
-
-    return this.prisma.product.create({ data });
+    return this.prisma.product.create({
+      data: {
+        businessId,
+        name,
+        priceInPaise,
+        ...(sku !== undefined && { sku }),
+        ...(costPriceInPaise !== undefined && { costPriceInPaise }),
+        ...(stock !== undefined && { stock }),
+        ...(unit !== undefined && { unit }),
+        ...(lowStockThreshold !== undefined && { lowStockThreshold }),
+      },
+    });
   }
 
   async listProducts(businessId: string, activeOnly = true): Promise<ProductSummary[]> {
@@ -65,7 +65,7 @@ export class ProductsService {
     if (!business) throw new NotFoundException('Business not found');
 
     return this.prisma.product.findMany({
-      where: { businessId, isActive: activeOnly ? true : undefined },
+      where: activeOnly ? { businessId, isActive: true } : { businessId },
       orderBy: { name: 'asc' },
     });
   }
