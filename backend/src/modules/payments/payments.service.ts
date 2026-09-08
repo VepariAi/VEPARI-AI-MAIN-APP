@@ -163,8 +163,4 @@ export class PaymentsService {
     return result;
   }
 
-  // Legacy stub — remove once controller migrated
-  findAll(): unknown[] {
-    return [];
-  }
 }
