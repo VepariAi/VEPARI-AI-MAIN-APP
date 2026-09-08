@@ -70,6 +70,8 @@ export const ENDPOINTS = {
   ai: {
     memoryExtract: '/ai/memory/extract',
     chat: (bizId: string) => `/businesses/${bizId}/ai/chat`,
+    businessMemory: (bizId: string) => `/businesses/${bizId}/ai/memory`,
+    refreshBusinessMemory: (bizId: string) => `/businesses/${bizId}/ai/memory/refresh`,
   },
   salesForBiz: (bizId: string) => `/businesses/${bizId}/sales`,
   salesTodayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
@@ -1074,6 +1076,28 @@ export class VepariApiClient {
 
   async chatWithBusiness(businessId: string, transcript: string) {
     return this.request<{ reply: string }>('POST', ENDPOINTS.ai.chat(businessId), { transcript });
+  }
+
+  async getBusinessMemory(businessId: string) {
+    return this.request<{
+      topCustomers: Array<{ id: string; name: string; revenueInPaise: number; orderCount: number }>;
+      topProducts: Array<{ id: string; name: string; unitsSold: number; revenueInPaise: number }>;
+      topSuppliers: Array<{ id: string; name: string; purchasedInPaise: number }>;
+      revenueTrend: { last7DaysInPaise: number; prev7DaysInPaise: number; changePercent: number };
+      openReceivablesInPaise: number;
+      openPayablesInPaise: number;
+    }>('GET', ENDPOINTS.ai.businessMemory(businessId));
+  }
+
+  async refreshBusinessMemory(businessId: string) {
+    return this.request<{
+      topCustomers: Array<{ id: string; name: string; revenueInPaise: number; orderCount: number }>;
+      topProducts: Array<{ id: string; name: string; unitsSold: number; revenueInPaise: number }>;
+      topSuppliers: Array<{ id: string; name: string; purchasedInPaise: number }>;
+      revenueTrend: { last7DaysInPaise: number; prev7DaysInPaise: number; changePercent: number };
+      openReceivablesInPaise: number;
+      openPayablesInPaise: number;
+    }>('POST', ENDPOINTS.ai.refreshBusinessMemory(businessId), {});
   }
 
   async createPurchase(businessId: string, data: {

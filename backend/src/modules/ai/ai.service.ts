@@ -3,6 +3,7 @@
 
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { MemoryService } from './memory.service';
 
 export type MemoryCandidateType =
   | 'sale'
@@ -29,9 +30,12 @@ export interface MemoryCandidate {
 export class AiService {
   private readonly logger = new Logger(AiService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly memoryService: MemoryService,
+  ) {}
 
-  async chatWithBusiness(businessId: string, transcript: string): Promise<{ reply: string }> {
+  async chatWithBusiness(businessId: string, transcript: string, userId?: string): Promise<{ reply: string }> {
     if (!transcript.trim()) throw new BadRequestException('transcript is required');
 
     const apiKey = process.env['OPENAI_API_KEY'] ?? process.env['ANTHROPIC_API_KEY'];
@@ -40,32 +44,40 @@ export class AiService {
     const now = new Date();
     const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
 
-    const [business, todaySales, todayExpenses, lowStock, receivables] = await Promise.all([
+    const [business, todaySales, todayExpenses, lowStock, businessMemory, userMemory] = await Promise.all([
       this.prisma.business.findUnique({ where: { id: businessId }, select: { name: true, type: true } }),
       this.prisma.saleOrder.aggregate({ where: { businessId, createdAt: { gte: dayStart } }, _sum: { totalInPaise: true }, _count: true }),
       this.prisma.expense.aggregate({ where: { businessId, createdAt: { gte: dayStart } }, _sum: { amountInPaise: true } }),
       this.prisma.product.findMany({ where: { businessId, isActive: true, stock: { lte: 5 } }, select: { name: true, stock: true }, take: 5 }),
-      this.prisma.customer.aggregate({ where: { businessId }, _sum: { creditBalance: true } }),
+      this.memoryService.getBusinessMemory(businessId).catch(() => null),
+      userId ? this.memoryService.getUserMemory(userId).catch(() => null) : Promise.resolve(null),
     ]);
 
     const salesInPaise = todaySales._sum.totalInPaise ?? 0;
     const expensesInPaise = todayExpenses._sum.amountInPaise ?? 0;
     const profitInPaise = salesInPaise - expensesInPaise;
-    const receivableInPaise = receivables._sum.creditBalance ?? 0;
 
-    const context = [
+    const todayContext = [
       `Business: ${business?.name ?? 'Unknown'} (${business?.type ?? 'General'})`,
       `Today's sales: ₹${(salesInPaise / 100).toFixed(0)} (${todaySales._count} orders)`,
       `Today's expenses: ₹${(expensesInPaise / 100).toFixed(0)}`,
       `Today's net profit: ₹${(profitInPaise / 100).toFixed(0)}`,
-      `Total receivables: ₹${(receivableInPaise / 100).toFixed(0)}`,
       lowStock.length > 0 ? `Low stock items: ${lowStock.map(p => `${p.name} (${p.stock})`).join(', ')}` : 'No low-stock items.',
     ].join('\n');
 
-    const systemPrompt = `You are Vepari AI, a business assistant for an Indian MSME owner. You speak in clear, simple English mixed with common Hindi business terms. Be concise (2-4 sentences). Use Indian currency formatting (₹, lakhs, crores). Always be helpful, positive, and actionable.
+    const memoryContext = businessMemory
+      ? '\n' + this.memoryService.formatBusinessMemoryForPrompt(businessMemory)
+      : '';
 
-Current business context:
-${context}
+    const ownerName = userMemory?.displayName ?? 'Owner';
+    const lang = userMemory?.preferredLanguage ?? 'en';
+    const langNote = lang !== 'en' ? ` The owner prefers ${lang}; you may mix in common phrases from that language.` : '';
+
+    const systemPrompt = `You are Vepari AI, a business assistant for an Indian MSME owner named ${ownerName}.${langNote} Speak in clear, simple English mixed with common Hindi business terms. Be concise (2-4 sentences). Use Indian currency formatting (₹, lakhs, crores). Always be helpful, positive, and actionable.
+
+Today's live data:
+${todayContext}
+${memoryContext}
 
 Answer the owner's question based only on this real data. Do not fabricate figures.`;
 
