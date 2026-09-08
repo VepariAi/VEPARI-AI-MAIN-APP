@@ -25,6 +25,8 @@ import PrivacyPolicyScreen from '@/screens/legal/PrivacyPolicyScreen';
 import TermsConditionsScreen from '@/screens/legal/TermsConditionsScreen';
 import OperationsScreen from '@/screens/operations/OperationsScreen';
 import ReturnsScreen from '@/screens/returns/ReturnsScreen';
+import CookiePolicyScreen from '@/screens/legal/CookiePolicyScreen';
+import RefundPolicyScreen from '@/screens/legal/RefundPolicyScreen';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getApiClient } from '@/services/api';
@@ -167,6 +169,8 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="TermsConditions" component={TermsConditionsScreen} />
       <Stack.Screen name="Operations" component={OperationsWrapper} />
       <Stack.Screen name="Returns" component={ReturnsWrapper} />
+      <Stack.Screen name="CookiePolicy" component={CookiePolicyScreen} />
+      <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
     </Stack.Navigator>
   );
 }

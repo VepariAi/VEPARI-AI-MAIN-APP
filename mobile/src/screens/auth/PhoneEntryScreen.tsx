@@ -42,7 +42,12 @@ export default function PhoneEntryScreen({ navigation }: Props): React.JSX.Eleme
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.inner}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.back}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.back}
+          accessibilityLabel="Go back"
+          accessibilityRole="button"
+        >
           <Text style={styles.backText}>← Back</Text>
         </TouchableOpacity>
 
@@ -65,6 +70,8 @@ export default function PhoneEntryScreen({ navigation }: Props): React.JSX.Eleme
               value={phone}
               onChangeText={setPhone}
               autoFocus
+              accessibilityLabel="Mobile number"
+              accessibilityHint="Enter your 10-digit Indian mobile number"
             />
           </View>
 
@@ -75,6 +82,9 @@ export default function PhoneEntryScreen({ navigation }: Props): React.JSX.Eleme
             onPress={handleContinue}
             disabled={!isValid || loading}
             activeOpacity={0.85}
+            accessibilityLabel="Send one-time password"
+            accessibilityRole="button"
+            accessibilityState={{ disabled: !isValid || loading }}
           >
             {loading ? (
               <ActivityIndicator color={Colors.brown} />

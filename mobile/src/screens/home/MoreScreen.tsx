@@ -66,6 +66,8 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
     section: 'Legal', items: [
       { emoji: '🔏', label: 'Privacy Policy', screen: 'PrivacyPolicy' },
       { emoji: '📜', label: 'Terms & Conditions', screen: 'TermsConditions' },
+      { emoji: '🍪', label: 'Cookie & Tracking', screen: 'CookiePolicy' },
+      { emoji: '↩️', label: 'Refund Policy', screen: 'RefundPolicy' },
     ],
   },
 ];

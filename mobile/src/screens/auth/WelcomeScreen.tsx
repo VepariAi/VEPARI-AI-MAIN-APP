@@ -21,6 +21,8 @@ export default function WelcomeScreen({ navigation }: Props): React.JSX.Element 
           style={styles.primaryBtn}
           onPress={() => navigation.navigate('PhoneEntry')}
           activeOpacity={0.85}
+          accessibilityLabel="Get Started — create a new account"
+          accessibilityRole="button"
         >
           <Text style={styles.primaryBtnText}>Get Started</Text>
         </TouchableOpacity>
@@ -29,6 +31,8 @@ export default function WelcomeScreen({ navigation }: Props): React.JSX.Element 
           style={styles.secondaryBtn}
           onPress={() => navigation.navigate('PhoneEntry')}
           activeOpacity={0.85}
+          accessibilityLabel="Log in to existing account"
+          accessibilityRole="button"
         >
           <Text style={styles.secondaryBtnText}>Already have an account? Login</Text>
         </TouchableOpacity>

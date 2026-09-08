@@ -40,6 +40,8 @@ export type MoreStackParamList = {
   TermsConditions: undefined;
   Operations: undefined;
   Returns: undefined;
+  CookiePolicy: undefined;
+  RefundPolicy: undefined;
 };
 
 export type MoreStackScreenProps<T extends keyof MoreStackParamList> =
