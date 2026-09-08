@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PaymentMethod } from '@prisma/client';
+import { EventsService } from '../../events/events.service';
 
 export interface CreateSaleDto {
   businessId: string;
@@ -47,7 +48,10 @@ export interface SaleDetail extends SaleSummary {
 
 @Injectable()
 export class SalesService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly events: EventsService,
+  ) {}
 
   async createSale(dto: CreateSaleDto): Promise<SaleSummary> {
     const { businessId, customerId, items, paymentMethod, notes, date, totalInPaise } = dto;
@@ -138,6 +142,13 @@ export class SalesService {
       });
 
       return order;
+    });
+
+    this.events.emit('sale.created', {
+      businessId: saleOrder.businessId,
+      saleId: saleOrder.id,
+      ...(customerId ? { customerId } : {}),
+      totalPaise: saleOrder.totalInPaise,
     });
 
     return {

@@ -1,5 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { EventsService } from '../../events/events.service';
 
 export interface PaymentDto {
   amountInPaise: number;
@@ -30,7 +31,10 @@ const PAYMENT_TYPES = ['PAYMENT', 'CREDIT_ISSUED', 'CREDIT_RECEIVED'] as const;
 
 @Injectable()
 export class PaymentsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly events: EventsService,
+  ) {}
 
   async listPayments(
     businessId: string,
@@ -133,7 +137,7 @@ export class PaymentsService {
       include: { customer: true, supplier: true },
     });
 
-    return {
+    const result: PaymentRow = {
       id: row.id,
       type: row.type,
       amountInPaise: row.amountInPaise,
@@ -147,6 +151,16 @@ export class PaymentsService {
       date: row.date,
       createdAt: row.createdAt,
     };
+
+    this.events.emit('payment.recorded', {
+      businessId,
+      paymentId: row.id,
+      amountPaise: dto.amountInPaise,
+      direction: dto.supplierId ? 'OUT' : 'IN',
+      ...(row.customer?.name ? { party: row.customer.name } : row.supplier?.name ? { party: row.supplier.name } : {}),
+    });
+
+    return result;
   }
 
   // Legacy stub — remove once controller migrated

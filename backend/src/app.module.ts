@@ -4,6 +4,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { HealthModule } from './health/health.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { EventsModule } from './events/events.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { BusinessesModule } from './modules/businesses/businesses.module';
@@ -41,6 +42,7 @@ import { ReturnsModule } from './modules/returns/returns.module';
       { name: 'medium', ttl: 60_000, limit: 200 },
     ]),
     PrismaModule,
+    EventsModule,
     HealthModule,
     AuthModule,
     UsersModule,

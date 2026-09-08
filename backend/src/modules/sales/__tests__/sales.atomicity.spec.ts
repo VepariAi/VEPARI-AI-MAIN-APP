@@ -6,6 +6,9 @@
 import { NotFoundException } from '@nestjs/common';
 import { SalesService, CreateSaleDto } from '../sales.service';
 import { PaymentMethod } from '@prisma/client';
+import { EventsService } from '../../../events/events.service';
+
+const mockEvents = { emit: jest.fn(), on: jest.fn() } as unknown as EventsService;
 
 const BIZ_ID = 'biz-1';
 const CUST_ID = 'cust-1';
@@ -52,7 +55,7 @@ describe('SalesService — createSale atomicity', () => {
     txMock.transaction.create.mockResolvedValue({});
 
     const prisma = makePrisma(txMock);
-    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0]);
+    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0], mockEvents);
 
     await service.createSale(BASE_DTO);
 
@@ -80,7 +83,7 @@ describe('SalesService — createSale atomicity', () => {
     txMock.transaction.create.mockRejectedValue(new Error('DB constraint violation'));
 
     const prisma = makePrisma(txMock);
-    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0]);
+    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0], mockEvents);
 
     // The error must propagate so Prisma can roll back the entire transaction
     await expect(service.createSale(BASE_DTO)).rejects.toThrow('DB constraint violation');
@@ -100,7 +103,7 @@ describe('SalesService — createSale atomicity', () => {
     txMock.transaction.create.mockResolvedValue({});
 
     const prisma = makePrisma(txMock);
-    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0]);
+    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0], mockEvents);
 
     await service.createSale({ ...BASE_DTO, customerId: CUST_ID, paymentMethod: PaymentMethod.CREDIT });
 
@@ -118,7 +121,7 @@ describe('SalesService — createSale atomicity', () => {
     txMock.transaction.create.mockResolvedValue({});
 
     const prisma = makePrisma(txMock);
-    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0]);
+    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0], mockEvents);
 
     await service.createSale({ ...BASE_DTO, customerId: CUST_ID, paymentMethod: PaymentMethod.CASH });
 
@@ -130,7 +133,7 @@ describe('SalesService — createSale atomicity', () => {
     const prisma = makePrisma(txMock);
     (prisma.business.findUnique as jest.Mock).mockResolvedValue(null);
 
-    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0]);
+    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0], mockEvents);
 
     await expect(service.createSale(BASE_DTO)).rejects.toThrow(NotFoundException);
     expect(prisma.$transaction).not.toHaveBeenCalled();
@@ -147,7 +150,7 @@ describe('SalesService — createSale atomicity', () => {
     txMock.transaction.create.mockResolvedValue({});
 
     const prisma = makePrisma(txMock);
-    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0]);
+    const service = new SalesService(prisma as unknown as ConstructorParameters<typeof SalesService>[0], mockEvents);
 
     await service.createSale({
       businessId: BIZ_ID,

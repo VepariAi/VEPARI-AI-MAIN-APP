@@ -4,6 +4,7 @@
 
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
+import { EventsService } from '../../events/events.service';
 
 export type StockMovementReason =
   | 'PURCHASE'
@@ -44,7 +45,10 @@ const movementStore: InMemoryMovement[] = [];
 
 @Injectable()
 export class InventoryService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly events: EventsService,
+  ) {}
 
   async listProducts(businessId: string): Promise<Array<{
     id: string; name: string; sku: string | null; stock: number;
@@ -100,6 +104,16 @@ export class InventoryService {
       data: { stock: newStock, syncStatus: 'PENDING' },
     });
 
+    this.events.emit('inventory.adjusted', {
+      businessId,
+      productId: dto.productId,
+      productName: product.name,
+      newStock,
+      delta: dto.quantity,
+      reason: dto.reason,
+      lowStockThreshold: product.lowStockThreshold ?? 0,
+    });
+
     return { movementId: movement.id, newStock };
   }
 
@@ -127,6 +141,16 @@ export class InventoryService {
     await this.prisma.product.update({
       where: { id: dto.productId },
       data: { stock: dto.newQuantity, syncStatus: 'PENDING' },
+    });
+
+    this.events.emit('inventory.adjusted', {
+      businessId,
+      productId: dto.productId,
+      productName: product.name,
+      newStock: dto.newQuantity,
+      delta,
+      reason: 'ADJUSTMENT',
+      lowStockThreshold: product.lowStockThreshold ?? 0,
     });
 
     return { movementId: movement.id, previousStock: product.stock, newStock: dto.newQuantity };
