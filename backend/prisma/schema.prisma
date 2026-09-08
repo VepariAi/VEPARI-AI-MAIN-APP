@@ -137,6 +137,7 @@ model Business {
   voiceQueries VoiceQuery[]
   bankStatementImports BankStatementImport[]
   businessMemory       BusinessMemory?
+  stockMovements       StockMovement[]
 
   @@map("businesses")
 }
@@ -221,9 +222,10 @@ model Product {
   syncStatus        SyncStatus @default(PENDING)
   syncedAt          DateTime?
 
-  business       Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
-  saleOrderItems SaleOrderItem[]
-  purchaseItems  PurchaseItem[]
+  business        Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  saleOrderItems  SaleOrderItem[]
+  purchaseItems   PurchaseItem[]
+  stockMovements  StockMovement[]
 
   @@index([businessId])
   @@map("products")
@@ -486,6 +488,38 @@ model BankStatementEntry {
 
   @@index([importId])
   @@map("bank_statement_entries")
+}
+
+// ── Inventory ─────────────────────────────────────────────────────────────────
+
+enum StockMovementReason {
+  PURCHASE
+  SALE
+  ADJUSTMENT
+  RETURN_IN
+  RETURN_OUT
+  TRANSFER_IN
+  TRANSFER_OUT
+  OPENING_STOCK
+}
+
+model StockMovement {
+  id         String               @id @default(uuid())
+  businessId String
+  productId  String
+  // Positive = stock in, negative = stock out
+  quantity   Int
+  reason     StockMovementReason
+  referenceId String?              // sale/purchase/return id
+  notes      String?
+  createdAt  DateTime             @default(now())
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, productId])
+  @@index([businessId, createdAt])
+  @@map("stock_movements")
 }
 
 // ── Sync ──────────────────────────────────────────────────────────────────────

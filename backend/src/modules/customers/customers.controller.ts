@@ -1,5 +1,5 @@
 import {
-  Controller, Get, Post, Patch, Body, Param, UseGuards, HttpCode, HttpStatus,
+  Controller, Get, Post, Patch, Delete, Body, Param, Query, UseGuards, HttpCode, HttpStatus,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -67,5 +67,25 @@ export class CustomersController {
     @Body() dto: CreditAdjustmentDto,
   ) {
     return this.customersService.adjustCredit(businessId, customerId, dto);
+  }
+
+  @Get(':customerId/history')
+  @ApiOperation({ summary: 'Full transaction history for a customer' })
+  getHistory(
+    @Param('businessId') businessId: string,
+    @Param('customerId') customerId: string,
+    @Query('limit') limit?: string,
+  ) {
+    return this.customersService.getHistory(businessId, customerId, limit ? parseInt(limit, 10) : 50);
+  }
+
+  @Delete(':customerId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Deactivate (soft-delete) a customer' })
+  deactivate(
+    @Param('businessId') businessId: string,
+    @Param('customerId') customerId: string,
+  ) {
+    return this.customersService.deactivate(businessId, customerId);
   }
 }

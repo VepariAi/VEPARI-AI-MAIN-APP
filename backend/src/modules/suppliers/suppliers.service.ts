@@ -133,6 +133,31 @@ export class SuppliersService {
     return suppliers.map(s => this.toDto(s));
   }
 
+  async getHistory(businessId: string, supplierId: string, limit = 50): Promise<{
+    purchases: Array<{ id: string; totalInPaise: number; date: Date; notes: string | null }>;
+    totalPurchasedInPaise: number;
+  }> {
+    const supplier = await this.prisma.supplier.findFirst({ where: { id: supplierId, businessId } });
+    if (!supplier) throw new NotFoundException('Supplier not found');
+
+    const purchases = await this.prisma.purchase.findMany({
+      where: { businessId, supplierId },
+      orderBy: { date: 'desc' },
+      take: limit,
+      select: { id: true, totalInPaise: true, date: true, notes: true },
+    });
+
+    const totalPurchased = purchases.reduce((sum, p) => sum + p.totalInPaise, 0);
+    return { purchases, totalPurchasedInPaise: totalPurchased };
+  }
+
+  async deactivate(businessId: string, supplierId: string): Promise<SupplierWithBalance> {
+    const supplier = await this.prisma.supplier.findFirst({ where: { id: supplierId, businessId } });
+    if (!supplier) throw new NotFoundException('Supplier not found');
+    const updated = await this.prisma.supplier.update({ where: { id: supplierId }, data: { isActive: false } });
+    return this.toDto(updated);
+  }
+
   private toDto(s: {
     id: string;
     businessId: string;

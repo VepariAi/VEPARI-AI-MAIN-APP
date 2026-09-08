@@ -135,6 +135,49 @@ export class CustomersService {
     return result._sum.creditBalance ?? 0;
   }
 
+  async getHistory(businessId: string, customerId: string, limit = 50): Promise<{
+    transactions: Array<{
+      id: string;
+      type: string;
+      amountInPaise: number;
+      paymentMethod: string | null;
+      description: string | null;
+      date: Date;
+    }>;
+    totalSpentInPaise: number;
+    transactionCount: number;
+  }> {
+    const customer = await this.prisma.customer.findFirst({ where: { id: customerId, businessId } });
+    if (!customer) throw new NotFoundException('Customer not found');
+
+    const transactions = await this.prisma.transaction.findMany({
+      where: { businessId, customerId },
+      orderBy: { date: 'desc' },
+      take: limit,
+      select: { id: true, type: true, amountInPaise: true, paymentMethod: true, description: true, date: true },
+    });
+
+    const totalSpent = transactions
+      .filter(t => t.type !== 'CREDIT_ISSUED')
+      .reduce((sum, t) => sum + t.amountInPaise, 0);
+
+    return {
+      transactions,
+      totalSpentInPaise: totalSpent,
+      transactionCount: transactions.length,
+    };
+  }
+
+  async deactivate(businessId: string, customerId: string): Promise<CustomerWithCredit> {
+    const customer = await this.prisma.customer.findFirst({ where: { id: customerId, businessId } });
+    if (!customer) throw new NotFoundException('Customer not found');
+    const updated = await this.prisma.customer.update({
+      where: { id: customerId },
+      data: { isActive: false },
+    });
+    return this.toDto(updated);
+  }
+
   private toDto(c: {
     id: string;
     businessId: string;
