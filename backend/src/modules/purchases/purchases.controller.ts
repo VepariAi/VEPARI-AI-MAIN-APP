@@ -1,21 +1,37 @@
-import { Controller, Get, Post, Body, Param, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, UseGuards, HttpCode, HttpStatus, Req } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { PurchasesService, CreatePurchaseDto } from './purchases.service';
+import { AuditService } from '../audit/audit.service';
 
 @ApiTags('purchases')
 @Controller('businesses/:businessId/purchases')
 @UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class PurchasesController {
-  constructor(private readonly purchasesService: PurchasesService) {}
+  constructor(
+    private readonly purchasesService: PurchasesService,
+    private readonly auditService: AuditService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Record a purchase from a supplier (stock-in, atomic)' })
-  create(@Param('businessId') businessId: string, @Body() body: Omit<CreatePurchaseDto, 'businessId'>) {
-    return this.purchasesService.createPurchase({ ...body, businessId });
+  async create(
+    @Param('businessId') businessId: string,
+    @Body() body: Omit<CreatePurchaseDto, 'businessId'>,
+    @Req() req: { ip?: string; user?: { id: string } },
+  ) {
+    const purchase = await this.purchasesService.createPurchase({ ...body, businessId });
+    void this.auditService.log({
+      ...(req.user?.id ? { userId: req.user.id } : {}),
+      action: 'PURCHASE_CREATED',
+      resource: 'purchase',
+      resourceId: purchase.id,
+      ...(req.ip ? { ipAddress: req.ip } : {}),
+    }).catch(() => undefined);
+    return purchase;
   }
 
   @Get()

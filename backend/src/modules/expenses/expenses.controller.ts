@@ -1,11 +1,12 @@
 import {
   Controller, Get, Post, Body, Param, Query,
-  ParseIntPipe, DefaultValuePipe, UseGuards,
+  ParseIntPipe, DefaultValuePipe, UseGuards, Req,
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { ExpensesService, CreateExpenseDto, EXPENSE_CATEGORIES } from './expenses.service';
+import { AuditService } from '../audit/audit.service';
 import { PaymentMethod } from '@prisma/client';
 
 class CreateExpenseBody {
@@ -22,12 +23,16 @@ class CreateExpenseBody {
 @UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @Controller('businesses/:businessId/expenses')
 export class ExpensesController {
-  constructor(private readonly expensesService: ExpensesService) {}
+  constructor(
+    private readonly expensesService: ExpensesService,
+    private readonly auditService: AuditService,
+  ) {}
 
   @Post()
-  createExpense(
+  async createExpense(
     @Param('businessId') businessId: string,
     @Body() body: CreateExpenseBody,
+    @Req() req: { ip?: string; user?: { id: string } },
   ) {
     const category = body.category as typeof EXPENSE_CATEGORIES[number];
     const dto: CreateExpenseDto = {
@@ -39,7 +44,15 @@ export class ExpensesController {
     if (body.notes !== undefined) dto.notes = body.notes;
     if (body.paymentMethod !== undefined) dto.paymentMethod = body.paymentMethod as PaymentMethod;
     if (body.date !== undefined) dto.date = new Date(body.date);
-    return this.expensesService.createExpense(dto);
+    const expense = await this.expensesService.createExpense(dto);
+    void this.auditService.log({
+      ...(req.user?.id ? { userId: req.user.id } : {}),
+      action: 'EXPENSE_CREATED',
+      resource: 'expense',
+      resourceId: expense.id,
+      ...(req.ip ? { ipAddress: req.ip } : {}),
+    }).catch(() => undefined);
+    return expense;
   }
 
   @Get()
