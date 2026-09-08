@@ -31,6 +31,7 @@ import { SyncModule } from './modules/sync/sync.module';
 import { BillingModule } from './modules/billing/billing.module';
 import { UsageModule } from './modules/usage/usage.module';
 import { AuditModule } from './modules/audit/audit.module';
+import { ReturnsModule } from './modules/returns/returns.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { AuditModule } from './modules/audit/audit.module';
     BillingModule,
     UsageModule,
     AuditModule,
+    ReturnsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },

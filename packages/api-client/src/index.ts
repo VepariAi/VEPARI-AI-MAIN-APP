@@ -860,6 +860,151 @@ export class VepariApiClient {
     }>>('GET', `/businesses/${businessId}/alerts`);
   }
 
+  // ── In-app Notifications ─────────────────────────────────────────────────
+
+  async listNotifications(businessId: string, unreadOnly = false) {
+    const q = unreadOnly ? '?unread=true' : '';
+    return this.request<Array<{
+      id: string;
+      category: string;
+      title: string;
+      body: string;
+      isRead: boolean;
+      deepLink?: string;
+      createdAt: string;
+    }>>('GET', `/businesses/${businessId}/notifications${q}`);
+  }
+
+  async getUnreadCount(businessId: string) {
+    return this.request<{ count: number }>('GET', `/businesses/${businessId}/notifications/unread-count`);
+  }
+
+  async markNotificationRead(businessId: string, notificationId: string) {
+    return this.request<{ marked: boolean }>('PATCH', `/businesses/${businessId}/notifications/${notificationId}/read`, {});
+  }
+
+  async markAllNotificationsRead(businessId: string) {
+    return this.request<{ marked: number }>('PATCH', `/businesses/${businessId}/notifications/read-all`, {});
+  }
+
+  async dismissNotification(businessId: string, notificationId: string) {
+    return this.request<{ dismissed: boolean }>('DELETE', `/businesses/${businessId}/notifications/${notificationId}`);
+  }
+
+  // ── Customer / Supplier History ───────────────────────────────────────────
+
+  async getCustomerHistory(businessId: string, customerId: string, limit = 50) {
+    return this.request<{
+      transactions: Array<{ id: string; type: string; amountInPaise: number; paymentMethod: string | null; description: string | null; date: string }>;
+      totalSpentInPaise: number;
+      transactionCount: number;
+    }>('GET', `/businesses/${businessId}/customers/${customerId}/history?limit=${limit}`);
+  }
+
+  async getSupplierHistory(businessId: string, supplierId: string, limit = 50) {
+    return this.request<{
+      purchases: Array<{ id: string; totalInPaise: number; date: string; notes: string | null }>;
+      totalPurchasedInPaise: number;
+    }>('GET', `/businesses/${businessId}/suppliers/${supplierId}/history?limit=${limit}`);
+  }
+
+  // ── Inventory ─────────────────────────────────────────────────────────────
+
+  async getInventoryValue(businessId: string) {
+    return this.request<{
+      totalValueAtCost: number;
+      totalValueAtPrice: number;
+      productCount: number;
+      lowStockCount: number;
+    }>('GET', `/businesses/${businessId}/inventory/value`);
+  }
+
+  async getLowStockProducts(businessId: string) {
+    return this.request<Array<{
+      id: string; name: string; sku: string | null; stock: number;
+      unit: string; lowStockThreshold: number | null;
+    }>>('GET', `/businesses/${businessId}/inventory/low-stock`);
+  }
+
+  async recordStockMovement(businessId: string, dto: {
+    productId: string; quantity: number;
+    reason: string; referenceId?: string; notes?: string;
+  }) {
+    return this.request<{ movementId: string; newStock: number }>(
+      'POST', `/businesses/${businessId}/inventory/movements`, dto,
+    );
+  }
+
+  async adjustStock(businessId: string, dto: { productId: string; newQuantity: number; notes?: string }) {
+    return this.request<{ movementId: string; previousStock: number; newStock: number }>(
+      'POST', `/businesses/${businessId}/inventory/adjust`, dto,
+    );
+  }
+
+  // ── Automation ────────────────────────────────────────────────────────────
+
+  async listAutomationRules(businessId: string) {
+    return this.request<Array<{
+      id: string; name: string; description: string | null; trigger: string;
+      isActive: boolean; lastRunAt: string | null; runCount: number;
+    }>>('GET', `/businesses/${businessId}/automation`);
+  }
+
+  // ── Operations ───────────────────────────────────────────────────────────
+
+  async listOperations(businessId: string, status?: string) {
+    const qs = status ? `?status=${status}` : '';
+    return this.request<Array<{
+      id: string; type: string; title: string; status: string; priority: string;
+      customerId: string | null; assignedToUserId: string | null;
+      dueDate: string | null; estimatedValueInPaise: number | null;
+      createdAt: string; completedAt: string | null;
+    }>>('GET', `/businesses/${businessId}/operations${qs}`);
+  }
+
+  async createOperation(businessId: string, dto: {
+    type: string; title: string; description?: string; priority?: string;
+    customerId?: string; assignedToUserId?: string; dueDate?: string;
+    estimatedValueInPaise?: number;
+  }) {
+    return this.request<{ id: string }>('POST', `/businesses/${businessId}/operations`, dto);
+  }
+
+  async updateOperationStatus(businessId: string, operationId: string, status: string) {
+    return this.request<{ id: string; status: string }>(
+      'PATCH', `/businesses/${businessId}/operations/${operationId}/status`, { status },
+    );
+  }
+
+  // ── Returns ──────────────────────────────────────────────────────────────
+
+  async listReturns(businessId: string, status?: string, type?: string) {
+    const params = new URLSearchParams();
+    if (status) params.set('status', status);
+    if (type) params.set('type', type);
+    const qs = params.toString() ? `?${params}` : '';
+    return this.request<Array<{
+      id: string; type: string; status: string; referenceId: string;
+      totalRefundInPaise: number; createdAt: string;
+    }>>('GET', `/businesses/${businessId}/returns${qs}`);
+  }
+
+  async createReturn(businessId: string, dto: {
+    type: string; referenceId: string; customerId?: string; supplierId?: string;
+    items: Array<{ productId: string; quantity: number; priceInPaise: number; reason: string }>;
+    notes?: string;
+  }) {
+    return this.request<{ id: string; totalRefundInPaise: number }>(
+      'POST', `/businesses/${businessId}/returns`, dto,
+    );
+  }
+
+  async updateReturnStatus(businessId: string, returnId: string, status: string) {
+    return this.request<{ id: string; status: string }>(
+      'PATCH', `/businesses/${businessId}/returns/${returnId}/status`, { status },
+    );
+  }
+
   // ── Search ───────────────────────────────────────────────────────────────
 
   async search(businessId: string, q: string) {

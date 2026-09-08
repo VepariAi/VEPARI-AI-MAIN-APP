@@ -23,6 +23,8 @@ import ProfileSettingsScreen from '@/screens/settings/ProfileSettingsScreen';
 import BusinessSettingsScreen from '@/screens/settings/BusinessSettingsScreen';
 import PrivacyPolicyScreen from '@/screens/legal/PrivacyPolicyScreen';
 import TermsConditionsScreen from '@/screens/legal/TermsConditionsScreen';
+import OperationsScreen from '@/screens/operations/OperationsScreen';
+import ReturnsScreen from '@/screens/returns/ReturnsScreen';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getApiClient } from '@/services/api';
@@ -128,6 +130,18 @@ function BusinessWrapper(): React.JSX.Element {
   return <BusinessSettingsScreen onBack={() => nav.goBack()} />;
 }
 
+function OperationsWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <OperationsScreen businessId={bizId} />;
+}
+
+function ReturnsWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <ReturnsScreen businessId={bizId} />;
+}
+
 export default function MoreStack(): React.JSX.Element {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -151,6 +165,8 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="BusinessSettings" component={BusinessWrapper} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
       <Stack.Screen name="TermsConditions" component={TermsConditionsScreen} />
+      <Stack.Screen name="Operations" component={OperationsWrapper} />
+      <Stack.Screen name="Returns" component={ReturnsWrapper} />
     </Stack.Navigator>
   );
 }
