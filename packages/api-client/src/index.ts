@@ -72,6 +72,7 @@ export const ENDPOINTS = {
     chat: (bizId: string) => `/businesses/${bizId}/ai/chat`,
     businessMemory: (bizId: string) => `/businesses/${bizId}/ai/memory`,
     refreshBusinessMemory: (bizId: string) => `/businesses/${bizId}/ai/memory/refresh`,
+    applyActions: (bizId: string) => `/businesses/${bizId}/ai/actions/apply`,
   },
   salesForBiz: (bizId: string) => `/businesses/${bizId}/sales`,
   salesTodayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
@@ -1098,6 +1099,25 @@ export class VepariApiClient {
       openReceivablesInPaise: number;
       openPayablesInPaise: number;
     }>('POST', ENDPOINTS.ai.refreshBusinessMemory(businessId), {});
+  }
+
+  async applyApprovedActions(
+    businessId: string,
+    candidates: Array<{
+      type: string;
+      amountPaise?: number;
+      description?: string;
+      party?: string;
+      itemName?: string;
+      quantity?: number;
+      rawTranscript: string;
+      confidence: number;
+    }>,
+  ) {
+    return this.request<{
+      applied: Array<{ type: string; recordId: string; amountInPaise: number; description: string }>;
+      skipped: Array<{ type: string; reason: string }>;
+    }>('POST', ENDPOINTS.ai.applyActions(businessId), { candidates });
   }
 
   async createPurchase(businessId: string, data: {

@@ -26,6 +26,18 @@ export interface MemoryCandidate {
   confidence: number;      // 0-1
 }
 
+export interface AppliedAction {
+  type: MemoryCandidateType;
+  recordId: string;
+  amountInPaise: number;
+  description: string;
+}
+
+export interface ApplyActionsResult {
+  applied: AppliedAction[];
+  skipped: Array<{ type: MemoryCandidateType; reason: string }>;
+}
+
 @Injectable()
 export class AiService {
   private readonly logger = new Logger(AiService.name);
@@ -123,6 +135,122 @@ Answer the owner's question based only on this real data. Do not fabricate figur
     const data = await response.json() as { choices: Array<{ message: { content: string } }> };
     const reply = data.choices[0]?.message.content ?? 'Sorry, I could not generate a response.';
     return { reply };
+  }
+
+  async applyApprovedActions(businessId: string, candidates: MemoryCandidate[]): Promise<ApplyActionsResult> {
+    const applied: AppliedAction[] = [];
+    const skipped: Array<{ type: MemoryCandidateType; reason: string }> = [];
+    const today = new Date();
+
+    for (const candidate of candidates) {
+      try {
+        switch (candidate.type) {
+          case 'sale': {
+            if (!candidate.amountPaise || candidate.amountPaise <= 0) {
+              skipped.push({ type: candidate.type, reason: 'missing or zero amount' });
+              break;
+            }
+            const sale = await this.prisma.saleOrder.create({
+              data: {
+                businessId,
+                totalInPaise: candidate.amountPaise,
+                date: today,
+                notes: candidate.description ?? candidate.rawTranscript.slice(0, 200),
+              },
+            });
+            applied.push({ type: 'sale', recordId: sale.id, amountInPaise: candidate.amountPaise, description: candidate.description ?? 'Voice sale' });
+            break;
+          }
+
+          case 'expense': {
+            if (!candidate.amountPaise || candidate.amountPaise <= 0) {
+              skipped.push({ type: candidate.type, reason: 'missing or zero amount' });
+              break;
+            }
+            const expense = await this.prisma.expense.create({
+              data: {
+                businessId,
+                category: 'OTHER',
+                amountInPaise: candidate.amountPaise,
+                description: candidate.description ?? candidate.itemName ?? null,
+                notes: candidate.rawTranscript.slice(0, 200),
+                date: today,
+              },
+            });
+            applied.push({ type: 'expense', recordId: expense.id, amountInPaise: candidate.amountPaise, description: candidate.description ?? 'Voice expense' });
+            break;
+          }
+
+          case 'credit_given': {
+            if (!candidate.amountPaise || candidate.amountPaise <= 0 || !candidate.party) {
+              skipped.push({ type: candidate.type, reason: 'missing amount or party name' });
+              break;
+            }
+            const customer = await this.prisma.customer.findFirst({
+              where: { businessId, name: { contains: candidate.party, mode: 'insensitive' } },
+            });
+            if (!customer) {
+              skipped.push({ type: candidate.type, reason: `customer "${candidate.party}" not found` });
+              break;
+            }
+            await this.prisma.customer.update({
+              where: { id: customer.id },
+              data: { creditBalance: { increment: candidate.amountPaise } },
+            });
+            applied.push({ type: 'credit_given', recordId: customer.id, amountInPaise: candidate.amountPaise, description: `Credit given to ${customer.name}` });
+            break;
+          }
+
+          case 'credit_received': {
+            if (!candidate.amountPaise || candidate.amountPaise <= 0 || !candidate.party) {
+              skipped.push({ type: candidate.type, reason: 'missing amount or party name' });
+              break;
+            }
+            const debtor = await this.prisma.customer.findFirst({
+              where: { businessId, name: { contains: candidate.party, mode: 'insensitive' } },
+            });
+            if (!debtor) {
+              skipped.push({ type: candidate.type, reason: `customer "${candidate.party}" not found` });
+              break;
+            }
+            await this.prisma.customer.update({
+              where: { id: debtor.id },
+              data: { creditBalance: { decrement: candidate.amountPaise } },
+            });
+            applied.push({ type: 'credit_received', recordId: debtor.id, amountInPaise: candidate.amountPaise, description: `Credit received from ${debtor.name}` });
+            break;
+          }
+
+          case 'stock_update': {
+            if (!candidate.itemName || !candidate.quantity) {
+              skipped.push({ type: candidate.type, reason: 'missing item name or quantity' });
+              break;
+            }
+            const product = await this.prisma.product.findFirst({
+              where: { businessId, isActive: true, name: { contains: candidate.itemName, mode: 'insensitive' } },
+            });
+            if (!product) {
+              skipped.push({ type: candidate.type, reason: `product "${candidate.itemName}" not found` });
+              break;
+            }
+            await this.prisma.product.update({
+              where: { id: product.id },
+              data: { stock: { increment: candidate.quantity } },
+            });
+            applied.push({ type: 'stock_update', recordId: product.id, amountInPaise: 0, description: `Stock +${candidate.quantity} for ${product.name}` });
+            break;
+          }
+
+          default:
+            skipped.push({ type: candidate.type, reason: 'action type not directly applicable' });
+        }
+      } catch (err) {
+        this.logger.error(`Failed to apply action ${candidate.type}: ${String(err)}`);
+        skipped.push({ type: candidate.type, reason: 'internal error during apply' });
+      }
+    }
+
+    return { applied, skipped };
   }
 
   async extractMemoryCandidates(transcript: string): Promise<MemoryCandidate[]> {

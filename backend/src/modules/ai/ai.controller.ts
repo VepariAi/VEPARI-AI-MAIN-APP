@@ -2,7 +2,7 @@ import { Controller, Post, Get, Body, Param, HttpCode, HttpStatus, UseGuards, Re
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
-import { AiService } from './ai.service';
+import { AiService, type MemoryCandidate } from './ai.service';
 import { MemoryService } from './memory.service';
 import { UsageService } from '../usage/usage.service';
 import { AuditService } from '../audit/audit.service';
@@ -69,5 +69,15 @@ export class AiBusinessController {
   @ApiOperation({ summary: 'Force-refresh the business memory snapshot' })
   refreshBusinessMemory(@Param('businessId') businessId: string) {
     return this.memoryService.refreshBusinessMemory(businessId);
+  }
+
+  @Post('actions/apply')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Apply user-approved AI-extracted actions to the database' })
+  applyApprovedActions(
+    @Param('businessId') businessId: string,
+    @Body() body: { candidates: MemoryCandidate[] },
+  ) {
+    return this.aiService.applyApprovedActions(businessId, body.candidates ?? []);
   }
 }
