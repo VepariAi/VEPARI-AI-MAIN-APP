@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Colors, Typography, Spacing, Radius, Shadows } from '@vepari/design-system';
 import { saveMemory, type MemoryType } from './memoryRepository';
+import { getApiClient } from '@/services/api';
 
 export interface MemoryCandidate {
   type: MemoryType;
@@ -87,6 +88,14 @@ export default function MemoryConfirmScreen({ businessId, candidates, onDone, on
       return;
     }
     setSaving(true);
+    let serverSynced = false;
+    try {
+      await getApiClient().applyApprovedActions(businessId, toSave);
+      serverSynced = true;
+    } catch {
+      // Network unavailable — fall through to local save for later sync
+    }
+
     try {
       const now = Date.now();
       for (const c of toSave) {
@@ -97,7 +106,7 @@ export default function MemoryConfirmScreen({ businessId, candidates, onDone, on
           rawTranscript: c.rawTranscript,
           confidence: c.confidence,
           createdAt: now,
-          synced: false,
+          synced: serverSynced,
         };
         if (c.amountPaise !== undefined) mem.amountPaise = c.amountPaise;
         if (c.description !== undefined) mem.description = c.description;
@@ -106,9 +115,15 @@ export default function MemoryConfirmScreen({ businessId, candidates, onDone, on
         if (c.quantity !== undefined) mem.quantity = c.quantity;
         saveMemory(mem);
       }
+      if (!serverSynced) {
+        Alert.alert(
+          'Saved offline',
+          'No connection — your entries are saved and will sync automatically when you are back online.',
+        );
+      }
       onDone();
     } catch {
-      Alert.alert('Error', 'Failed to save memories. Please try again.');
+      Alert.alert('Error', 'Failed to save. Please try again.');
     } finally {
       setSaving(false);
     }
