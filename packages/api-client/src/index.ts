@@ -1177,6 +1177,32 @@ export class VepariApiClient {
     return this.request<void>('DELETE', `/businesses/${businessId}/connections/${connectionId}`);
   }
 
+// ── Documents ─────────────────────────────────────────────────────────────
+
+  async listDocuments(businessId: string, type?: string) {
+    const qs = type ? `?type=${encodeURIComponent(type)}` : '';
+    return this.request<unknown[]>('GET', `/businesses/${businessId}/documents${qs}`);
+  }
+
+  async getDocument(businessId: string, documentId: string) {
+    return this.request<unknown>('GET', `/businesses/${businessId}/documents/${documentId}`);
+  }
+
+  async createDocument(businessId: string, body: {
+    type: string;
+    title: string;
+    url?: string;
+    date: string;
+    referenceId?: string;
+    metadata?: Record<string, unknown>;
+  }) {
+    return this.request<unknown>('POST', `/businesses/${businessId}/documents`, body);
+  }
+
+  async deleteDocument(businessId: string, documentId: string) {
+    return this.request<void>('DELETE', `/businesses/${businessId}/documents/${documentId}`);
+  }
+
 // ── Generic helpers ───────────────────────────────────────────────────────
 
   get<T>(path: string): Promise<T> {

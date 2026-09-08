@@ -57,6 +57,7 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
   {
     section: 'Integrations', items: [
       { emoji: '🔗', label: 'Connected Apps', screen: 'Connections' },
+      { emoji: '📂', label: 'Documents', screen: 'Documents' },
     ],
   },
   {

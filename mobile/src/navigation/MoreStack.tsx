@@ -29,6 +29,7 @@ import CookiePolicyScreen from '@/screens/legal/CookiePolicyScreen';
 import RefundPolicyScreen from '@/screens/legal/RefundPolicyScreen';
 import BillingScreen from '@/screens/billing/BillingScreen';
 import ConnectionsScreen from '@/screens/connections/ConnectionsScreen';
+import DocumentsScreen from '@/screens/documents/DocumentsScreen';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getApiClient } from '@/services/api';
@@ -146,6 +147,12 @@ function ReturnsWrapper(): React.JSX.Element {
   return <ReturnsScreen businessId={bizId} />;
 }
 
+function DocumentsWrapper(): React.JSX.Element {
+  const bizId = usePrimaryBusiness();
+  if (!bizId) return <View style={{ flex: 1, justifyContent: 'center' }}><ActivityIndicator color={Colors.gold} /></View>;
+  return <DocumentsScreen businessId={bizId} />;
+}
+
 export default function MoreStack(): React.JSX.Element {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -175,6 +182,7 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="RefundPolicy" component={RefundPolicyScreen} />
       <Stack.Screen name="Billing" component={BillingScreen} />
       <Stack.Screen name="Connections" component={ConnectionsScreen} />
+      <Stack.Screen name="Documents" component={DocumentsWrapper} />
     </Stack.Navigator>
   );
 }
