@@ -56,6 +56,12 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
       { emoji: '❓', label: 'Help & Support', screen: 'HelpSupport' },
     ],
   },
+  {
+    section: 'Legal', items: [
+      { emoji: '🔏', label: 'Privacy Policy', screen: 'PrivacyPolicy' },
+      { emoji: '📜', label: 'Terms & Conditions', screen: 'TermsConditions' },
+    ],
+  },
 ];
 
 export default function MoreScreen(): React.JSX.Element {
@@ -89,6 +95,8 @@ export default function MoreScreen(): React.JSX.Element {
                   style={[styles.row, i > 0 && styles.rowBorder]}
                   activeOpacity={0.7}
                   onPress={() => { if (screen) navigation.navigate(screen); }}
+                  accessibilityLabel={label}
+                  accessibilityRole="button"
                 >
                   <Text style={styles.rowEmoji}>{emoji}</Text>
                   <Text style={styles.rowLabel}>{label}</Text>

@@ -21,6 +21,8 @@ import AlertsScreen from '@/screens/notifications/AlertsScreen';
 import TeamScreen from '@/screens/team/TeamScreen';
 import ProfileSettingsScreen from '@/screens/settings/ProfileSettingsScreen';
 import BusinessSettingsScreen from '@/screens/settings/BusinessSettingsScreen';
+import PrivacyPolicyScreen from '@/screens/legal/PrivacyPolicyScreen';
+import TermsConditionsScreen from '@/screens/legal/TermsConditionsScreen';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getApiClient } from '@/services/api';
@@ -147,6 +149,8 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="Team" component={TeamWrapper} />
       <Stack.Screen name="ProfileSettings" component={ProfileWrapper} />
       <Stack.Screen name="BusinessSettings" component={BusinessWrapper} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicyScreen} />
+      <Stack.Screen name="TermsConditions" component={TermsConditionsScreen} />
     </Stack.Navigator>
   );
 }
