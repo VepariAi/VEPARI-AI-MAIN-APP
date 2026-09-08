@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { AnalyticsService } from './analytics.service';
 import { HealthScoreService } from './health-score.service';
 import { InsightService } from './insight.service';
@@ -8,7 +9,7 @@ import { BriefingService } from '../ai/briefing.service';
 
 @ApiTags('analytics')
 @Controller('businesses/:businessId/analytics')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class AnalyticsController {
   constructor(

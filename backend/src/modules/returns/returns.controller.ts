@@ -3,11 +3,12 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { ReturnsService, CreateReturnDto, ReturnStatus, ReturnType } from './returns.service';
 
 @ApiTags('returns')
 @Controller('businesses/:businessId/returns')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class ReturnsController {
   constructor(private readonly returnsService: ReturnsService) {}

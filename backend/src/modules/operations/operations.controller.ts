@@ -3,11 +3,12 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { OperationsService, CreateOperationDto, OperationStatus } from './operations.service';
 
 @ApiTags('operations')
 @Controller('businesses/:businessId/operations')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class OperationsController {
   constructor(private readonly operationsService: OperationsService) {}

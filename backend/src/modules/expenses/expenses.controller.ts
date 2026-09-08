@@ -4,6 +4,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { ExpensesService, CreateExpenseDto, EXPENSE_CATEGORIES } from './expenses.service';
 import { PaymentMethod } from '@prisma/client';
 
@@ -18,7 +19,7 @@ class CreateExpenseBody {
 
 @ApiTags('expenses')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @Controller('businesses/:businessId/expenses')
 export class ExpensesController {
   constructor(private readonly expensesService: ExpensesService) {}

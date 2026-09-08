@@ -4,11 +4,12 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { SalesService, type CreateSaleDto } from './sales.service';
 
 @ApiTags('sales')
 @Controller('businesses/:businessId/sales')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class SalesController {
   constructor(private readonly salesService: SalesService) {}

@@ -3,11 +3,12 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { DocumentsService, type CreateDocumentDto } from './documents.service';
 
 @ApiTags('documents')
 @Controller('businesses/:businessId/documents')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}

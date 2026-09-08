@@ -4,6 +4,7 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { ProductsService, CreateProductDto, UpdateProductDto } from './products.service';
 
 class CreateProductBody {
@@ -32,7 +33,7 @@ class UpdateProductBody {
 
 @ApiTags('products')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @Controller('businesses/:businessId/products')
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}

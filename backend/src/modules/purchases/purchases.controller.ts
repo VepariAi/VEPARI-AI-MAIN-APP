@@ -1,11 +1,12 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { PurchasesService, CreatePurchaseDto } from './purchases.service';
 
 @ApiTags('purchases')
 @Controller('businesses/:businessId/purchases')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class PurchasesController {
   constructor(private readonly purchasesService: PurchasesService) {}

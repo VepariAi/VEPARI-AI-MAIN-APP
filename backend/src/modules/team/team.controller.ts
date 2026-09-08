@@ -2,6 +2,7 @@ import { Controller, Get, Post, Patch, Delete, Body, Param, UseGuards, Request }
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { TeamService } from './team.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { UserRole } from '@prisma/client';
 
 interface AuthRequest {
@@ -10,7 +11,7 @@ interface AuthRequest {
 
 @ApiTags('team')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @Controller('businesses/:businessId/team')
 export class TeamController {
   constructor(private readonly teamService: TeamService) {}

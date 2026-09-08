@@ -3,12 +3,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { AlertsService } from './alerts.service';
 import { NotificationsService } from './notifications.service';
 
 @ApiTags('notifications')
 @Controller('businesses/:businessId')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class NotificationsController {
   constructor(

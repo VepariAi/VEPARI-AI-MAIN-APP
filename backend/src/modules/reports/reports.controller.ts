@@ -1,6 +1,7 @@
 import { Controller, Get, Param, Query, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { ReportsService, DateRange } from './reports.service';
 
 function parseDateRange(from?: string, to?: string): DateRange {
@@ -12,7 +13,7 @@ function parseDateRange(from?: string, to?: string): DateRange {
 
 @ApiTags('reports')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @Controller('businesses/:businessId/reports')
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}

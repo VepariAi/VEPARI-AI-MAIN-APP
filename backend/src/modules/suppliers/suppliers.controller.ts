@@ -3,11 +3,12 @@ import {
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { SuppliersService, type SupplierDto, type PayableAdjustmentDto } from './suppliers.service';
 
 @ApiTags('suppliers')
 @Controller('businesses/:businessId/suppliers')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class SuppliersController {
   constructor(private readonly suppliersService: SuppliersService) {}

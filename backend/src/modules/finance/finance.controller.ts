@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Param, Query, UseGuards, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { FinanceService, BrsEntryInput } from './finance.service';
 import type { CashFlowSummary, ReceivablesPayablesSummary } from './finance.service';
 
@@ -11,7 +12,7 @@ interface ImportBankStatementBody {
 
 @ApiTags('finance')
 @Controller('businesses/:businessId')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class FinanceController {
   constructor(private readonly financeService: FinanceService) {}

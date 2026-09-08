@@ -1,11 +1,12 @@
 import { Controller, Get, Param, Query, UseGuards, BadRequestException } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation, ApiQuery } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { SearchService } from './search.service';
 
 @ApiTags('search')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @Controller('businesses/:businessId/search')
 export class SearchController {
   constructor(private readonly searchService: SearchService) {}

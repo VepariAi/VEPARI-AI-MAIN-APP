@@ -1,6 +1,7 @@
 import { Controller, Post, Body, Param, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { SyncService, SyncMutation } from './sync.service';
 
 class SyncBatchBody {
@@ -9,7 +10,7 @@ class SyncBatchBody {
 
 @ApiTags('sync')
 @ApiBearerAuth()
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @Controller('businesses/:businessId/sync')
 export class SyncController {
   constructor(private readonly syncService: SyncService) {}

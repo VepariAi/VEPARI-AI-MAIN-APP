@@ -2,11 +2,12 @@ import { Controller, Param, Sse, UseGuards } from '@nestjs/common';
 import { ApiTags, ApiBearerAuth, ApiOperation } from '@nestjs/swagger';
 import { Observable } from 'rxjs';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
 import { RealtimeService, RealtimeEvent } from './realtime.service';
 
 @ApiTags('realtime')
 @Controller('businesses/:businessId/events')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, BusinessMemberGuard)
 @ApiBearerAuth()
 export class RealtimeController {
   constructor(private readonly realtimeService: RealtimeService) {}
