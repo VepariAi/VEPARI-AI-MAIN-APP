@@ -33,6 +33,7 @@ import { BillingModule } from './modules/billing/billing.module';
 import { UsageModule } from './modules/usage/usage.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { ReturnsModule } from './modules/returns/returns.module';
+import { RealtimeModule } from './modules/realtime/realtime.module';
 
 @Module({
   imports: [
@@ -72,6 +73,7 @@ import { ReturnsModule } from './modules/returns/returns.module';
     UsageModule,
     AuditModule,
     ReturnsModule,
+    RealtimeModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
