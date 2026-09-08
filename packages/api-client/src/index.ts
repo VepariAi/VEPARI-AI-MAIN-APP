@@ -1126,6 +1126,57 @@ export class VepariApiClient {
     }>('GET', url);
   }
 
+// ── Billing ──────────────────────────────────────────────────────────────
+
+  async getBillingPlans(businessId: string) {
+    return this.request<unknown[]>('GET', `/businesses/${businessId}/billing/plans`);
+  }
+
+  async getSubscription(businessId: string) {
+    return this.request<{
+      businessId: string;
+      planId: string;
+      status: string;
+      billingCycle: string;
+      currentPeriodStart: string;
+      currentPeriodEnd: string;
+      cancelAtPeriodEnd: boolean;
+      trialEndsAt: string | null;
+      nextBillingDate: string | null;
+      priceInPaise: number;
+    }>('GET', `/businesses/${businessId}/billing/subscription`);
+  }
+
+  async changePlan(businessId: string, planId: string, billingCycle: 'MONTHLY' | 'ANNUAL') {
+    return this.request<unknown>('POST', `/businesses/${businessId}/billing/subscription`, { planId, billingCycle });
+  }
+
+  async cancelSubscription(businessId: string) {
+    return this.request<unknown>('PATCH', `/businesses/${businessId}/billing/subscription/cancel`, {});
+  }
+
+  async reactivateSubscription(businessId: string) {
+    return this.request<unknown>('PATCH', `/businesses/${businessId}/billing/subscription/reactivate`, {});
+  }
+
+// ── Connections ───────────────────────────────────────────────────────────
+
+  async getConnectionProviders(businessId: string) {
+    return this.request<unknown[]>('GET', `/businesses/${businessId}/connections/providers`);
+  }
+
+  async listConnections(businessId: string) {
+    return this.request<unknown[]>('GET', `/businesses/${businessId}/connections`);
+  }
+
+  async createConnection(businessId: string, providerId: string) {
+    return this.request<unknown>('POST', `/businesses/${businessId}/connections`, { providerId });
+  }
+
+  async deleteConnection(businessId: string, connectionId: string) {
+    return this.request<void>('DELETE', `/businesses/${businessId}/connections/${connectionId}`);
+  }
+
 // ── Generic helpers ───────────────────────────────────────────────────────
 
   get<T>(path: string): Promise<T> {

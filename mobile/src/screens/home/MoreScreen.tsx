@@ -55,10 +55,16 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
     ],
   },
   {
+    section: 'Integrations', items: [
+      { emoji: '🔗', label: 'Connected Apps', screen: 'Connections' },
+    ],
+  },
+  {
     section: 'Settings', items: [
       { emoji: '👤', label: 'Profile', screen: 'ProfileSettings' },
       { emoji: '🏪', label: 'Business', screen: 'BusinessSettings' },
       { emoji: '🔒', label: 'Security', screen: 'Security' },
+      { emoji: '💳', label: 'Billing', screen: 'Billing' },
       { emoji: '❓', label: 'Help & Support', screen: 'HelpSupport' },
     ],
   },
@@ -102,7 +108,7 @@ export default function MoreScreen(): React.JSX.Element {
                   key={label}
                   style={[styles.row, i > 0 && styles.rowBorder]}
                   activeOpacity={0.7}
-                  onPress={() => { if (screen) navigation.navigate(screen); }}
+                  onPress={() => { if (screen) (navigation.navigate as (s: string) => void)(screen); }}
                   accessibilityLabel={label}
                   accessibilityRole="button"
                 >
