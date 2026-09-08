@@ -69,7 +69,7 @@ export const ENDPOINTS = {
   },
   ai: {
     memoryExtract: '/ai/memory/extract',
-    chat: '/ai/chat',
+    chat: (bizId: string) => `/businesses/${bizId}/ai/chat`,
   },
   salesForBiz: (bizId: string) => `/businesses/${bizId}/sales`,
   salesTodayTotal: (bizId: string) => `/businesses/${bizId}/sales/today-total`,
@@ -1073,7 +1073,7 @@ export class VepariApiClient {
   }
 
   async chatWithBusiness(businessId: string, transcript: string) {
-    return this.request<{ reply: string }>('POST', ENDPOINTS.ai.chat, { businessId, transcript });
+    return this.request<{ reply: string }>('POST', ENDPOINTS.ai.chat(businessId), { transcript });
   }
 
   async createPurchase(businessId: string, data: {
