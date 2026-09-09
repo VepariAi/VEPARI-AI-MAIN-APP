@@ -21,8 +21,6 @@ import { FinanceService } from '../modules/finance/finance.service';
 
 // ── Shared mock factory ────────────────────────────────────────────────────────
 
-type DeepMock<T> = { [K in keyof T]: T[K] extends (...args: never[]) => unknown ? jest.Mock : DeepMock<T[K]> };
-
 // We build a single prisma mock that all services share, wiring data consistently.
 function buildGoldenPrisma() {
   const BIZ_ID = 'biz-golden';
