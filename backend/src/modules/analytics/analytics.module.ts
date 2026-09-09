@@ -6,12 +6,13 @@ import { InsightService } from './insight.service';
 import { HealthScoreService } from './health-score.service';
 import { GrowthService } from './growth.service';
 import { SchemeMatchingService } from './scheme-matching.service';
+import { MarketIntelligenceService } from './market-intelligence.service';
 import { BriefingService } from '../ai/briefing.service';
 
 @Module({
   imports: [AuthModule],
   controllers: [AnalyticsController],
-  providers: [AnalyticsService, InsightService, HealthScoreService, GrowthService, SchemeMatchingService, BriefingService],
-  exports: [AnalyticsService, InsightService, HealthScoreService, GrowthService, SchemeMatchingService, BriefingService],
+  providers: [AnalyticsService, InsightService, HealthScoreService, GrowthService, SchemeMatchingService, MarketIntelligenceService, BriefingService],
+  exports: [AnalyticsService, InsightService, HealthScoreService, GrowthService, SchemeMatchingService, MarketIntelligenceService, BriefingService],
 })
 export class AnalyticsModule {}

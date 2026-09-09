@@ -16,7 +16,8 @@ const INJECTION_PATTERNS: RegExp[] = [
   /disregard\s+(all\s+)?previous/i,
   /you\s+are\s+now\s+(a\s+)?(?!Vepari)/i,  // persona switch except "Vepari AI"
   /act\s+as\s+(if\s+you\s+(are|were)\s+)?(?!Vepari)/i,
-  /system\s*:\s*override/i,
+  /system\s*:\s*(override|disregard|ignore|forget)/i,
+  /^\s*SYSTEM\s*:/im,          // newline-injected SYSTEM: prefix
   /\[\s*SYSTEM\s*\]/i,
   /<\s*system\s*>/i,
   /jailbreak/i,
@@ -24,12 +25,20 @@ const INJECTION_PATTERNS: RegExp[] = [
   /do\s+anything\s+now/i,
 ];
 
-// Output patterns that suggest the model is leaking its system prompt
+// Output patterns that suggest the model is leaking its system prompt or credentials
 const LEAK_PATTERNS: RegExp[] = [
   /you\s+are\s+Vepari\s+AI.*business\s+assistant/i,
   /CRITICAL:\s+You\s+MUST\s+respond/i,
   /today'?s?\s+live\s+data:/i,
   /answer\s+the\s+owner'?s?\s+question\s+based/i,
+  // System prompt disclosure
+  /my\s+system\s+prompt\s+is/i,
+  /system\s+prompt\s*:/i,
+  /initial\s+instructions\s+(are|were|say)/i,
+  // API key patterns (OpenAI, Anthropic, Sarvam)
+  /sk-[A-Za-z0-9]{8,}/,
+  /sk-ant-[A-Za-z0-9-]{8,}/,
+  /\bAPI[-_\s]?key\s*[:=]\s*\S{8,}/i,
 ];
 
 export interface GuardResult {

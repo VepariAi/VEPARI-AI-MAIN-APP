@@ -1,3 +1,8 @@
+// Offline mutation push + pull with idempotency — Prompts 150-157.
+// Idempotency: client-supplied mutation IDs are stored in the SyncCheckpoint
+// JSON blob so duplicate deliveries are silently accepted without re-applying.
+// Pull: returns recent server-side changes since a client-provided cursor.
+
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { PaymentMethod } from '@prisma/client';
@@ -5,34 +10,63 @@ import { PaymentMethod } from '@prisma/client';
 export type MutationType = 'CREATE_SALE' | 'CREATE_EXPENSE' | 'ADJUST_CREDIT' | 'ADJUST_PAYABLE' | 'ADJUST_STOCK';
 
 export interface SyncMutation {
-  id: string;
+  id: string;                        // client-generated idempotency key (UUIDv4)
   type: MutationType;
   payload: Record<string, unknown>;
-  createdAt: number; // epoch ms
+  createdAt: number;                 // epoch ms (client clock)
 }
 
 export interface SyncResult {
   accepted: string[];
   rejected: Array<{ id: string; reason: string }>;
+  serverCursor: number;              // epoch ms — client stores and sends on next push
   timestamp: number;
+}
+
+export interface SyncPullResult {
+  changes: SyncChange[];
+  cursor: number;                    // advance the client cursor to this value
+}
+
+export interface SyncChange {
+  entity: 'sale' | 'expense' | 'customer' | 'supplier' | 'product' | 'transaction';
+  id: string;
+  serverUpdatedAt: number;           // epoch ms
+  data: Record<string, unknown>;
 }
 
 @Injectable()
 export class SyncService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async applyMutations(businessId: string, mutations: SyncMutation[]): Promise<SyncResult> {
+  // ── Push (mutations from device) ─────────────────────────────────────────
+
+  async applyMutations(
+    businessId: string,
+    deviceId: string,
+    mutations: SyncMutation[],
+  ): Promise<SyncResult> {
     if (mutations.length > 100) {
       throw new BadRequestException('Max 100 mutations per sync batch');
     }
+
+    // Load (or create) device checkpoint and extract already-applied IDs
+    const checkpoint = await this.loadCheckpoint(businessId, deviceId);
+    const appliedIds: Set<string> = new Set(checkpoint.appliedMutationIds ?? []);
 
     const accepted: string[] = [];
     const rejected: Array<{ id: string; reason: string }> = [];
 
     for (const m of mutations) {
+      if (appliedIds.has(m.id)) {
+        // Idempotent re-delivery — accept without re-applying
+        accepted.push(m.id);
+        continue;
+      }
       try {
         await this.applyOne(businessId, m);
         accepted.push(m.id);
+        appliedIds.add(m.id);
       } catch (err) {
         rejected.push({
           id: m.id,
@@ -41,14 +75,119 @@ export class SyncService {
       }
     }
 
-    // Upsert checkpoint after batch
-    await this.prisma.syncCheckpoint.upsert({
-      where: { businessId_deviceId: { businessId, deviceId: 'default' } },
-      create: { businessId, deviceId: 'default', lastSyncAt: new Date(), checkpoint: {} },
-      update: { lastSyncAt: new Date() },
-    });
+    // Persist checkpoint — keep at most last 500 IDs to bound JSON size
+    const trimmedIds = Array.from(appliedIds).slice(-500);
+    const serverCursor = Date.now();
+    await this.saveCheckpoint(businessId, deviceId, trimmedIds, serverCursor);
 
-    return { accepted, rejected, timestamp: Date.now() };
+    return { accepted, rejected, serverCursor, timestamp: serverCursor };
+  }
+
+  // ── Pull (changes from server since cursor) ───────────────────────────────
+
+  async pullChanges(businessId: string, since: number): Promise<SyncPullResult> {
+    const sinceDate = new Date(since);
+    const now = new Date();
+
+    const [sales, expenses, customers, suppliers, products] = await Promise.all([
+      this.prisma.saleOrder.findMany({
+        where: { businessId, createdAt: { gt: sinceDate } },
+        select: { id: true, totalInPaise: true, paymentMethod: true, date: true,
+                  notes: true, status: true, createdAt: true },
+        orderBy: { createdAt: 'asc' },
+        take: 200,
+      }),
+      this.prisma.expense.findMany({
+        where: { businessId, createdAt: { gt: sinceDate } },
+        select: { id: true, amountInPaise: true, category: true, description: true,
+                  paymentMethod: true, date: true, createdAt: true },
+        orderBy: { createdAt: 'asc' },
+        take: 200,
+      }),
+      this.prisma.customer.findMany({
+        where: { businessId, updatedAt: { gt: sinceDate } },
+        select: { id: true, name: true, creditBalance: true, phone: true, updatedAt: true },
+        orderBy: { updatedAt: 'asc' },
+        take: 200,
+      }),
+      this.prisma.supplier.findMany({
+        where: { businessId, updatedAt: { gt: sinceDate } },
+        select: { id: true, name: true, payableBalance: true, phone: true, updatedAt: true },
+        orderBy: { updatedAt: 'asc' },
+        take: 200,
+      }),
+      this.prisma.product.findMany({
+        where: { businessId, updatedAt: { gt: sinceDate } },
+        select: { id: true, name: true, stock: true, priceInPaise: true,
+                  lowStockThreshold: true, updatedAt: true },
+        orderBy: { updatedAt: 'asc' },
+        take: 200,
+      }),
+    ]);
+
+    const changes: SyncChange[] = [
+      ...sales.map(s => ({
+        entity: 'sale' as const,
+        id: s.id,
+        serverUpdatedAt: s.createdAt.getTime(),
+        data: s as Record<string, unknown>,
+      })),
+      ...expenses.map(e => ({
+        entity: 'expense' as const,
+        id: e.id,
+        serverUpdatedAt: e.createdAt.getTime(),
+        data: e as Record<string, unknown>,
+      })),
+      ...customers.map(c => ({
+        entity: 'customer' as const,
+        id: c.id,
+        serverUpdatedAt: c.updatedAt.getTime(),
+        data: c as Record<string, unknown>,
+      })),
+      ...suppliers.map(s => ({
+        entity: 'supplier' as const,
+        id: s.id,
+        serverUpdatedAt: s.updatedAt.getTime(),
+        data: s as Record<string, unknown>,
+      })),
+      ...products.map(p => ({
+        entity: 'product' as const,
+        id: p.id,
+        serverUpdatedAt: p.updatedAt.getTime(),
+        data: p as Record<string, unknown>,
+      })),
+    ];
+
+    changes.sort((a, b) => a.serverUpdatedAt - b.serverUpdatedAt);
+
+    return { changes, cursor: now.getTime() };
+  }
+
+  // ── Checkpoint helpers ────────────────────────────────────────────────────
+
+  private async loadCheckpoint(
+    businessId: string,
+    deviceId: string,
+  ): Promise<{ appliedMutationIds?: string[] }> {
+    const row = await this.prisma.syncCheckpoint.findUnique({
+      where: { businessId_deviceId: { businessId, deviceId } },
+    });
+    if (!row) return {};
+    return (row.checkpoint ?? {}) as { appliedMutationIds?: string[] };
+  }
+
+  private async saveCheckpoint(
+    businessId: string,
+    deviceId: string,
+    appliedMutationIds: string[],
+    cursorMs: number,
+  ): Promise<void> {
+    const data = { appliedMutationIds, cursorMs };
+    await this.prisma.syncCheckpoint.upsert({
+      where: { businessId_deviceId: { businessId, deviceId } },
+      create: { businessId, deviceId, lastSyncAt: new Date(cursorMs), checkpoint: data },
+      update: { lastSyncAt: new Date(cursorMs), checkpoint: data },
+    });
   }
 
   private async applyOne(businessId: string, m: SyncMutation): Promise<void> {
