@@ -64,6 +64,7 @@ const MENU_ITEMS: Array<{ section: string; items: MenuItem[] }> = [
     section: 'Settings', items: [
       { emoji: '👤', label: 'Profile', screen: 'ProfileSettings' },
       { emoji: '🏪', label: 'Business', screen: 'BusinessSettings' },
+      { emoji: '🌐', label: 'Language', screen: 'LanguageSettings' },
       { emoji: '🔒', label: 'Security', screen: 'Security' },
       { emoji: '💳', label: 'Billing', screen: 'Billing' },
       { emoji: '❓', label: 'Help & Support', screen: 'HelpSupport' },

@@ -45,6 +45,7 @@ export type MoreStackParamList = {
   Billing: undefined;
   Connections: undefined;
   Documents: undefined;
+  LanguageSettings: undefined;
 };
 
 export type MoreStackScreenProps<T extends keyof MoreStackParamList> =

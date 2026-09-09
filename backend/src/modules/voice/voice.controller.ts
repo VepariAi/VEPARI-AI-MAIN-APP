@@ -4,6 +4,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { VoiceService } from './voice.service';
 import type { SupportedLanguage } from './voice.service';
 import { UsageService } from '../usage/usage.service';
+import type { LanguageCode } from '@vepari/types';
 
 @ApiTags('voice')
 @Controller('voice')
@@ -32,7 +33,7 @@ export class VoiceController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Synthesise speech using Sarvam Bulbul (server-side only)' })
   async synthesise(
-    @Body() body: { text: string; languageCode?: SupportedLanguage; businessId?: string },
+    @Body() body: { text: string; languageCode?: SupportedLanguage | LanguageCode; businessId?: string },
   ) {
     const result = await this.voiceService.synthesise(body.text, body.languageCode);
     if (body.businessId) {

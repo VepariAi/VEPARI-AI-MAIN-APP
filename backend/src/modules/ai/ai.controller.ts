@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, HttpCode, HttpStatus, UseGuards, Req } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, HttpCode, HttpStatus, UseGuards, Req, Headers } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { BusinessMemberGuard } from '../auth/guards/business-member.guard';
@@ -6,6 +6,7 @@ import { AiService, type MemoryCandidate } from './ai.service';
 import { MemoryService } from './memory.service';
 import { UsageService } from '../usage/usage.service';
 import { AuditService } from '../audit/audit.service';
+import { isValidLanguageCode, type LanguageCode } from '@vepari/types';
 
 @ApiTags('ai')
 @Controller('ai')
@@ -45,8 +46,12 @@ export class AiBusinessController {
     @Param('businessId') businessId: string,
     @Body() body: { transcript: string },
     @Req() req: { ip?: string; user?: { id: string } },
+    @Headers('x-language') xLanguage?: string,
+    @Headers('accept-language') acceptLanguage?: string,
   ) {
-    const result = await this.aiService.chatWithBusiness(businessId, body.transcript, req.user?.id);
+    const rawLang = xLanguage ?? acceptLanguage?.split(',')[0]?.split(';')[0]?.trim();
+    const language: LanguageCode = (rawLang && isValidLanguageCode(rawLang)) ? rawLang : 'en';
+    const result = await this.aiService.chatWithBusiness(businessId, body.transcript, req.user?.id, language);
     this.usageService.record({ businessId, type: 'ai_chat' });
     void this.auditService.log({
       ...(req.user?.id ? { userId: req.user.id } : {}),

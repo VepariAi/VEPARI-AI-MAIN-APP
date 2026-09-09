@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, I18nManager } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Colors } from '@vepari/design-system';
@@ -8,11 +8,24 @@ import { AuthProvider } from '@/navigation/AuthContext';
 import { initDb } from '@/database';
 import { initSession, clearSession } from '@/services/api';
 import SecurityLockScreen from '@/screens/security/SecurityLockScreen';
+import { initI18n, onLanguageChange } from '@/localization';
+import { isRTL } from '@vepari/types';
+import type { LanguageCode } from '@vepari/types';
 
 export default function App(): React.JSX.Element {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [dbReady, setDbReady] = useState(false);
+
+  useEffect(() => {
+    void initI18n();
+    return onLanguageChange((lang: LanguageCode) => {
+      const rtl = isRTL(lang);
+      if (I18nManager.isRTL !== rtl) {
+        I18nManager.forceRTL(rtl);
+      }
+    });
+  }, []);
 
   useEffect(() => {
     void initDb()

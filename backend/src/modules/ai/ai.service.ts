@@ -4,6 +4,7 @@
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { MemoryService } from './memory.service';
+import { LANGUAGE_CONFIG, type LanguageCode } from '@vepari/types';
 
 export type MemoryCandidateType =
   | 'sale'
@@ -47,7 +48,7 @@ export class AiService {
     private readonly memoryService: MemoryService,
   ) {}
 
-  async chatWithBusiness(businessId: string, transcript: string, userId?: string): Promise<{ reply: string }> {
+  async chatWithBusiness(businessId: string, transcript: string, userId?: string, language: LanguageCode = 'en'): Promise<{ reply: string }> {
     if (!transcript.trim()) throw new BadRequestException('transcript is required');
 
     const apiKey = process.env['OPENAI_API_KEY'] ?? process.env['ANTHROPIC_API_KEY'];
@@ -82,10 +83,16 @@ export class AiService {
       : '';
 
     const ownerName = userMemory?.displayName ?? 'Owner';
-    const lang = userMemory?.preferredLanguage ?? 'en';
-    const langNote = lang !== 'en' ? ` The owner prefers ${lang}; you may mix in common phrases from that language.` : '';
+    const langDef = LANGUAGE_CONFIG[language];
+    const langInstruction = language !== 'en'
+      ? `CRITICAL: You MUST respond ONLY in ${langDef.nameEn} (${langDef.name}), written in ${langDef.script} script. Do NOT use any English words in your response, not even a single English letter. Every word must be in ${langDef.nameEn}.`
+      : 'Respond in clear English. You may include common Hindi business terms where natural.';
 
-    const systemPrompt = `You are Vepari AI, a business assistant for an Indian MSME owner named ${ownerName}.${langNote} Speak in clear, simple English mixed with common Hindi business terms. Be concise (2-4 sentences). Use Indian currency formatting (₹, lakhs, crores). Always be helpful, positive, and actionable.
+    const systemPrompt = `You are Vepari AI, a business assistant for an Indian MSME owner named ${ownerName}.
+
+Language instruction: ${langInstruction}
+
+Be concise (2-4 sentences). Use Indian currency formatting (₹, lakhs, crores). Always be helpful, positive, and actionable.
 
 Today's live data:
 ${todayContext}

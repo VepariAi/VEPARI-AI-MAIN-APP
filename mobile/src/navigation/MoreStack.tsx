@@ -30,6 +30,7 @@ import RefundPolicyScreen from '@/screens/legal/RefundPolicyScreen';
 import BillingScreen from '@/screens/billing/BillingScreen';
 import ConnectionsScreen from '@/screens/connections/ConnectionsScreen';
 import DocumentsScreen from '@/screens/documents/DocumentsScreen';
+import LanguageSettingsScreen from '@/screens/settings/LanguageSettingsScreen';
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { getApiClient } from '@/services/api';
@@ -153,6 +154,11 @@ function DocumentsWrapper(): React.JSX.Element {
   return <DocumentsScreen businessId={bizId} />;
 }
 
+function LanguageWrapper(): React.JSX.Element {
+  const nav = useNavigation<NativeStackNavigationProp<MoreStackParamList>>();
+  return <LanguageSettingsScreen onBack={() => nav.goBack()} />;
+}
+
 export default function MoreStack(): React.JSX.Element {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -183,6 +189,7 @@ export default function MoreStack(): React.JSX.Element {
       <Stack.Screen name="Billing" component={BillingScreen} />
       <Stack.Screen name="Connections" component={ConnectionsScreen} />
       <Stack.Screen name="Documents" component={DocumentsWrapper} />
+      <Stack.Screen name="LanguageSettings" component={LanguageWrapper} />
     </Stack.Navigator>
   );
 }

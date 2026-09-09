@@ -3,6 +3,7 @@
 // All Sarvam network calls happen here, server-side only.
 
 import { Injectable, Logger, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import { getSarvamVoiceCode, type LanguageCode } from '@vepari/types';
 
 const SARVAM_API_BASE = 'https://api.sarvam.ai';
 const STT_MODEL = 'saaras:v2';  // Sarvam Saaras v2 — multilingual STT
@@ -71,12 +72,18 @@ export class VoiceService {
     return result;
   }
 
-  async synthesise(text: string, languageCode: SupportedLanguage = 'hi-IN'): Promise<TtsResult> {
+  async synthesise(text: string, languageCode: SupportedLanguage | LanguageCode = 'hi-IN'): Promise<TtsResult> {
     if (!text) throw new BadRequestException('text is required');
+
+    // Short LanguageCodes ('hi', 'en', …) → map to Sarvam format via shared utility.
+    // Already-formatted Sarvam codes ('hi-IN', …) → pass through directly.
+    const sarvamCode: string = languageCode.includes('-')
+      ? languageCode
+      : getSarvamVoiceCode(languageCode as LanguageCode);
 
     const payload = {
       inputs: [text],
-      target_language_code: languageCode,
+      target_language_code: sarvamCode,
       model: TTS_MODEL,
       pitch: 0,
       pace: 1.0,

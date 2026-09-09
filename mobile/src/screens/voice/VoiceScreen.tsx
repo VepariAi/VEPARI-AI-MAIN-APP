@@ -23,6 +23,8 @@ import {
 } from '@/voice';
 import type { SupportedLanguage } from '@/voice';
 import { getApiClient } from '@/services/api';
+import { useLanguage } from '@/hooks/useLanguage';
+import { getSarvamVoiceCode } from '@vepari/types';
 
 interface Message {
   id: string;
@@ -31,27 +33,19 @@ interface Message {
   timestamp: Date;
 }
 
-const LANGUAGES: { code: SupportedLanguage; label: string }[] = [
-  { code: 'en-IN', label: 'English' },
-  { code: 'hi-IN', label: 'हिन्दी' },
-  { code: 'ta-IN', label: 'தமிழ்' },
-  { code: 'te-IN', label: 'తెలుగు' },
-  { code: 'mr-IN', label: 'मराठी' },
-  { code: 'bn-IN', label: 'বাংলা' },
-  { code: 'kn-IN', label: 'ಕನ್ನಡ' },
-  { code: 'gu-IN', label: 'ગુજરાતી' },
-];
-
 interface Props {
   businessId: string;
 }
 
 export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
+  const { language: appLang, t } = useLanguage();
+  // Derive the Sarvam TTS code from the app's selected language.
+  // STT input uses `undefined` (auto-detect) since the user may speak any language.
+  const ttsLang = getSarvamVoiceCode(appLang) as SupportedLanguage;
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [recording, setRecording] = useState(false);
   const [thinking, setThinking] = useState(false);
-  const [language, setLanguage] = useState<SupportedLanguage>('hi-IN');
-  const [showLangPicker, setShowLangPicker] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
   const pulseAnim = useRef(new Animated.Value(1)).current;
 
@@ -88,16 +82,17 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
       let transcript = '';
       try {
         setThinking(true);
-        const result = await transcribeAudioFile(audioPath, language);
+        // STT: auto-detect language (user may speak any language)
+        const result = await transcribeAudioFile(audioPath, undefined);
         transcript = result.transcript.trim();
       } catch {
-        addMessage('assistant', 'Sorry, I could not understand the audio. Please try again.');
+        addMessage('assistant', t('status.somethingWrong'));
         setThinking(false);
         return;
       }
 
       if (!transcript) {
-        addMessage('assistant', 'I did not catch that. Please speak clearly and try again.');
+        addMessage('assistant', t('voice.tapToSpeak'));
         setThinking(false);
         return;
       }
@@ -107,9 +102,10 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
       try {
         const { reply } = await getApiClient().chatWithBusiness(businessId, transcript);
         addMessage('assistant', reply);
-        void speakText(reply, language);
+        // TTS: always speak in the user's selected app language
+        void speakText(reply, ttsLang);
       } catch {
-        addMessage('assistant', 'Unable to get a response right now. Please try again.');
+        addMessage('assistant', t('status.somethingWrong'));
       } finally {
         setThinking(false);
       }
@@ -120,7 +116,7 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
     let permission = await checkMicPermission();
     if (permission === 'denied') permission = await requestMicPermission();
     if (permission === 'blocked') {
-      Alert.alert('Microphone Required', 'Please enable microphone access in Settings.');
+      Alert.alert(t('voice.voiceInput'), t('error.unauthorized'));
       return;
     }
     if (permission !== 'granted') return;
@@ -129,44 +125,18 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
       await startRecording();
       setRecording(true);
     } catch (err) {
-      const msg = err instanceof Error ? err.message : 'Failed to start recording.';
-      Alert.alert('Error', msg);
+      const msg = err instanceof Error ? err.message : t('status.somethingWrong');
+      Alert.alert(t('status.error'), msg);
     }
-  }, [businessId, language, thinking, addMessage]);
-
-  const selectedLang = LANGUAGES.find(l => l.code === language);
+  }, [businessId, ttsLang, thinking, addMessage, t]);
 
   return (
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.title}>Voice Assistant</Text>
-        <TouchableOpacity
-          style={styles.langBtn}
-          onPress={() => setShowLangPicker(v => !v)}
-          activeOpacity={0.7}
-        >
-          <Text style={styles.langBtnText}>{selectedLang?.label ?? 'EN'}</Text>
-          <Text style={styles.langChevron}>▾</Text>
-        </TouchableOpacity>
+        <Text style={styles.title}>{t('nav.voice')}</Text>
+        <Text style={styles.langIndicator}>{(ttsLang.split('-')[0] ?? ttsLang).toUpperCase()}</Text>
       </View>
-
-      {/* Language picker */}
-      {showLangPicker && (
-        <View style={styles.langPicker}>
-          {LANGUAGES.map(l => (
-            <TouchableOpacity
-              key={l.code}
-              style={[styles.langOption, language === l.code && styles.langOptionActive]}
-              onPress={() => { setLanguage(l.code); setShowLangPicker(false); }}
-            >
-              <Text style={[styles.langOptionText, language === l.code && styles.langOptionTextActive]}>
-                {l.label}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      )}
 
       {/* Messages */}
       <ScrollView
@@ -178,15 +148,8 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
         {messages.length === 0 && !recording && !thinking && (
           <View style={styles.emptyState}>
             <Text style={styles.emptyEmoji}>🎙️</Text>
-            <Text style={styles.emptyTitle}>Ask Vepari AI</Text>
-            <Text style={styles.emptyHint}>Tap the mic and ask about your sales, profits, stock, or customers.</Text>
-            <View style={styles.suggestions}>
-              {SUGGESTIONS.map(s => (
-                <View key={s} style={styles.suggestionChip}>
-                  <Text style={styles.suggestionText}>{s}</Text>
-                </View>
-              ))}
-            </View>
+            <Text style={styles.emptyTitle}>{t('voice.askAnything')}</Text>
+            <Text style={styles.emptyHint}>{t('ai.askExample')}</Text>
           </View>
         )}
 
@@ -196,7 +159,7 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
             style={[styles.bubble, msg.role === 'user' ? styles.bubbleUser : styles.bubbleAssistant]}
           >
             {msg.role === 'assistant' && (
-              <Text style={styles.bubbleLabel}>Vepari AI</Text>
+              <Text style={styles.bubbleLabel}>{t('ai.assistant')}</Text>
             )}
             <Text style={[styles.bubbleText, msg.role === 'user' ? styles.bubbleTextUser : styles.bubbleTextAssistant]}>
               {msg.text}
@@ -209,7 +172,7 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
 
         {thinking && (
           <View style={[styles.bubble, styles.bubbleAssistant, styles.thinkingBubble]}>
-            <Text style={styles.bubbleLabel}>Vepari AI</Text>
+            <Text style={styles.bubbleLabel}>{t('ai.assistant')}</Text>
             <ActivityIndicator color={Colors.brown} size="small" />
           </View>
         )}
@@ -218,7 +181,10 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
       {/* Mic button */}
       <View style={styles.footer}>
         {recording && (
-          <Text style={styles.recordingHint}>Listening… tap to send</Text>
+          <Text style={styles.recordingHint}>{t('voice.listening')}</Text>
+        )}
+        {thinking && !recording && (
+          <Text style={styles.recordingHint}>{t('ai.thinking')}</Text>
         )}
         <Animated.View style={{ transform: [{ scale: pulseAnim }] }}>
           <TouchableOpacity
@@ -230,26 +196,22 @@ export default function VoiceScreen({ businessId }: Props): React.JSX.Element {
             <Text style={styles.micEmoji}>{recording ? '⏹' : '🎙️'}</Text>
           </TouchableOpacity>
         </Animated.View>
+        {!recording && !thinking && (
+          <Text style={styles.tapHint}>{t('voice.tapToSpeak')}</Text>
+        )}
         {messages.length > 0 && (
           <TouchableOpacity
             style={styles.clearBtn}
             onPress={() => setMessages([])}
             activeOpacity={0.7}
           >
-            <Text style={styles.clearText}>Clear</Text>
+            <Text style={styles.clearText}>{t('action.close')}</Text>
           </TouchableOpacity>
         )}
       </View>
     </SafeAreaView>
   );
 }
-
-const SUGGESTIONS = [
-  '"Aaj kitna hua?"',
-  '"Who owes me money?"',
-  '"Low stock items?"',
-  '"Today\'s profit?"',
-];
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: Colors.ivory },
@@ -258,38 +220,17 @@ const styles = StyleSheet.create({
     padding: Spacing[4], paddingBottom: Spacing[2],
   },
   title: { fontSize: Typography.fontSize.xl, fontWeight: Typography.fontWeight.bold, color: Colors.brown },
-  langBtn: {
-    flexDirection: 'row', alignItems: 'center', gap: 4,
-    paddingHorizontal: Spacing[3], paddingVertical: Spacing[1],
-    borderRadius: Radius.full, borderWidth: 1, borderColor: Colors.border,
-    backgroundColor: Colors.white,
+  langIndicator: {
+    fontSize: Typography.fontSize.xs, color: Colors.muted,
+    borderWidth: 1, borderColor: Colors.border, borderRadius: Radius.sm,
+    paddingHorizontal: Spacing[2], paddingVertical: 2, backgroundColor: Colors.white,
   },
-  langBtnText: { fontSize: Typography.fontSize.sm, color: Colors.brown, fontWeight: Typography.fontWeight.medium },
-  langChevron: { color: Colors.muted, fontSize: 10 },
-  langPicker: {
-    flexDirection: 'row', flexWrap: 'wrap', gap: Spacing[2],
-    paddingHorizontal: Spacing[4], paddingBottom: Spacing[2],
-  },
-  langOption: {
-    paddingHorizontal: Spacing[3], paddingVertical: Spacing[1],
-    borderRadius: Radius.full, borderWidth: 1, borderColor: Colors.border, backgroundColor: Colors.white,
-  },
-  langOptionActive: { backgroundColor: Colors.brown, borderColor: Colors.brown },
-  langOptionText: { fontSize: Typography.fontSize.sm, color: Colors.muted },
-  langOptionTextActive: { color: Colors.white, fontWeight: Typography.fontWeight.semibold },
   messages: { flex: 1 },
   messagesContent: { padding: Spacing[4], gap: Spacing[3], paddingBottom: Spacing[6] },
   emptyState: { alignItems: 'center', paddingTop: Spacing[10], gap: Spacing[3] },
   emptyEmoji: { fontSize: 56 },
   emptyTitle: { fontSize: Typography.fontSize.xl, fontWeight: Typography.fontWeight.bold, color: Colors.brown },
   emptyHint: { fontSize: Typography.fontSize.sm, color: Colors.muted, textAlign: 'center', maxWidth: 260 },
-  suggestions: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing[2], justifyContent: 'center', marginTop: Spacing[2] },
-  suggestionChip: {
-    paddingHorizontal: Spacing[3], paddingVertical: Spacing[2],
-    borderRadius: Radius.full, backgroundColor: Colors.white,
-    borderWidth: 1, borderColor: Colors.border,
-  },
-  suggestionText: { fontSize: Typography.fontSize.xs, color: Colors.muted, fontStyle: 'italic' },
   bubble: {
     maxWidth: '80%', borderRadius: Radius.lg, padding: Spacing[3], gap: 4, ...Shadows.sm,
   },
@@ -303,6 +244,7 @@ const styles = StyleSheet.create({
   thinkingBubble: { paddingVertical: Spacing[4] },
   footer: { alignItems: 'center', paddingVertical: Spacing[4], gap: Spacing[2] },
   recordingHint: { fontSize: Typography.fontSize.sm, color: Colors.terra, fontWeight: Typography.fontWeight.medium },
+  tapHint: { fontSize: Typography.fontSize.xs, color: Colors.muted },
   micBtn: {
     width: 72, height: 72, borderRadius: 36,
     backgroundColor: Colors.brown, alignItems: 'center', justifyContent: 'center',
