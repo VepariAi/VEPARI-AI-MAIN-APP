@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { LanguageCode, LANGUAGE_CONFIG, ALL_LANGUAGES, isRTL } from '@vepari/types';
+import { LanguageCode, ALL_LANGUAGES, isRTL } from '@vepari/types';
 import { t, getCurrentLanguage, setLanguage, onLanguageChange } from '../localization';
 
 export interface UseLanguageReturn {
