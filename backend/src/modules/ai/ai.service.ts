@@ -4,6 +4,8 @@
 import { Injectable, Logger, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { MemoryService } from './memory.service';
+import { ProviderGatewayService } from './provider-gateway.service';
+import { guardInput, guardOutput, sanitizeInput } from './prompt-injection.guard';
 import { LANGUAGE_CONFIG, type LanguageCode } from '@vepari/types';
 
 export type MemoryCandidateType =
@@ -46,13 +48,20 @@ export class AiService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly memoryService: MemoryService,
+    private readonly gateway: ProviderGatewayService,
   ) {}
 
   async chatWithBusiness(businessId: string, transcript: string, userId?: string, language: LanguageCode = 'en'): Promise<{ reply: string }> {
     if (!transcript.trim()) throw new BadRequestException('transcript is required');
+    if (!this.gateway.hasProvider) throw new InternalServerErrorException('AI provider key not configured');
 
-    const apiKey = process.env['OPENAI_API_KEY'] ?? process.env['ANTHROPIC_API_KEY'];
-    if (!apiKey) throw new InternalServerErrorException('AI provider key not configured');
+    // Prompt-injection defense (Prompt 123)
+    const clean = sanitizeInput(transcript);
+    const inputGuard = guardInput(clean);
+    if (!inputGuard.safe) {
+      this.logger.warn(`Input rejected by guard: ${inputGuard.reason}`);
+      throw new BadRequestException('Invalid input');
+    }
 
     const now = new Date();
     const dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
@@ -100,47 +109,19 @@ ${memoryContext}
 
 Answer the owner's question based only on this real data. Do not fabricate figures.`;
 
-    const isAnthropic = Boolean(process.env['ANTHROPIC_API_KEY']);
-    if (isAnthropic) return this.chatViaAnthropic(transcript, systemPrompt, apiKey);
-    return this.chatViaOpenAI(transcript, systemPrompt, apiKey);
-  }
+    // Route through gateway (Prompt 114 + 125: abstraction + fallback)
+    const result = await this.gateway.chat(
+      [{ role: 'user', content: clean }],
+      systemPrompt,
+      { maxTokens: 256 },
+    );
 
-  private async chatViaAnthropic(transcript: string, systemPrompt: string, apiKey: string): Promise<{ reply: string }> {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 256,
-        system: systemPrompt,
-        messages: [{ role: 'user', content: transcript }],
-      }),
-    });
-    if (!response.ok) {
-      this.logger.error(`Anthropic chat error: ${response.status}`);
-      throw new InternalServerErrorException('AI chat service error');
-    }
-    const data = await response.json() as { content: Array<{ type: string; text: string }> };
-    const reply = data.content.find(c => c.type === 'text')?.text ?? 'Sorry, I could not generate a response.';
-    return { reply };
-  }
+    // Output injection defense
+    const outputGuard = guardOutput(result.reply);
+    const reply = outputGuard.safe
+      ? result.reply
+      : 'Sorry, I could not generate a safe response. Please try again.';
 
-  private async chatViaOpenAI(transcript: string, systemPrompt: string, apiKey: string): Promise<{ reply: string }> {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        max_tokens: 256,
-        messages: [{ role: 'system', content: systemPrompt }, { role: 'user', content: transcript }],
-      }),
-    });
-    if (!response.ok) {
-      this.logger.error(`OpenAI chat error: ${response.status}`);
-      throw new InternalServerErrorException('AI chat service error');
-    }
-    const data = await response.json() as { choices: Array<{ message: { content: string } }> };
-    const reply = data.choices[0]?.message.content ?? 'Sorry, I could not generate a response.';
     return { reply };
   }
 
@@ -262,74 +243,19 @@ Answer the owner's question based only on this real data. Do not fabricate figur
 
   async extractMemoryCandidates(transcript: string): Promise<MemoryCandidate[]> {
     if (!transcript.trim()) throw new BadRequestException('transcript is required');
+    if (!this.gateway.hasProvider) throw new InternalServerErrorException('AI provider key not configured');
 
-    const apiKey = process.env['OPENAI_API_KEY'] ?? process.env['ANTHROPIC_API_KEY'];
-    if (!apiKey) {
-      throw new InternalServerErrorException('AI provider key not configured');
-    }
+    const clean = sanitizeInput(transcript);
+    const guard = guardInput(clean);
+    if (!guard.safe) throw new BadRequestException('Invalid input');
 
-    const isAnthropic = Boolean(process.env['ANTHROPIC_API_KEY']);
-    if (isAnthropic) {
-      return this.extractViaAnthropic(transcript, apiKey);
-    }
-    return this.extractViaOpenAI(transcript, apiKey);
-  }
+    const result = await this.gateway.chat(
+      [{ role: 'user', content: `Transcript: "${clean}"` }],
+      EXTRACTION_SYSTEM_PROMPT,
+      { maxTokens: 1024 },
+    );
 
-  private async extractViaAnthropic(transcript: string, apiKey: string): Promise<MemoryCandidate[]> {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1024,
-        system: EXTRACTION_SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: `Transcript: "${transcript}"` }],
-      }),
-    });
-
-    if (!response.ok) {
-      this.logger.error(`Anthropic API error: ${response.status}`);
-      throw new InternalServerErrorException('AI extraction service error');
-    }
-
-    const data = await response.json() as {
-      content: Array<{ type: string; text: string }>;
-    };
-    const text = data.content.find(c => c.type === 'text')?.text ?? '[]';
-    return this.parseExtractionResponse(text, transcript);
-  }
-
-  private async extractViaOpenAI(transcript: string, apiKey: string): Promise<MemoryCandidate[]> {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: EXTRACTION_SYSTEM_PROMPT },
-          { role: 'user', content: `Transcript: "${transcript}"` },
-        ],
-      }),
-    });
-
-    if (!response.ok) {
-      this.logger.error(`OpenAI API error: ${response.status}`);
-      throw new InternalServerErrorException('AI extraction service error');
-    }
-
-    const data = await response.json() as {
-      choices: Array<{ message: { content: string } }>;
-    };
-    const text = data.choices[0]?.message.content ?? '[]';
-    return this.parseExtractionResponse(text, transcript);
+    return this.parseExtractionResponse(result.reply, transcript);
   }
 
   private parseExtractionResponse(text: string, transcript: string): MemoryCandidate[] {
