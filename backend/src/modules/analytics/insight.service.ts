@@ -77,11 +77,39 @@ function growthBps(current: number, prior: number): number {
   return Math.round(((current - prior) / prior) * 10000);
 }
 
+// ── Alert dedup/cooldown (AI OS.txt §198) ────────────────────────────────────
+// Prevents the same insight title firing again within its severity's cooldown window.
+// Keyed by `${businessId}:${title}` — per-business, per-signal deduplication.
+// In-process Map is appropriate for a single NestJS instance; a Redis-backed variant
+// can replace the Map field without changing the public API when horizontal scaling is needed.
+
+const COOLDOWN_MS: Record<InsightSeverity, number> = {
+  info:     24 * 60 * 60 * 1000, // 24 h
+  warning:  12 * 60 * 60 * 1000, // 12 h
+  critical:  4 * 60 * 60 * 1000, //  4 h
+};
+
 // ── Service ──────────────────────────────────────────────────────────────────
 
 @Injectable()
 export class InsightService {
+  private readonly firedAt = new Map<string, number>(); // key → unix-ms timestamp
+
   constructor(private readonly prisma: PrismaService) {}
+
+  /** Returns true when the cooldown has elapsed and resets the timer. */
+  private shouldFire(businessId: string, insight: Insight): boolean {
+    const key = `${businessId}:${insight.title}`;
+    const cooldown = COOLDOWN_MS[insight.severity];
+    const last = this.firedAt.get(key) ?? 0;
+    if (Date.now() - last < cooldown) return false;
+    this.firedAt.set(key, Date.now());
+    return true;
+  }
+
+  private dedup(businessId: string, insights: Insight[]): Insight[] {
+    return insights.filter(i => this.shouldFire(businessId, i));
+  }
 
   async generateInsights(businessId: string): Promise<InsightReport> {
     const business = await this.prisma.business.findUnique({ where: { id: businessId } });
@@ -145,10 +173,10 @@ export class InsightService {
     const insights: InsightReport = {
       businessId,
       generatedAt: now,
-      trends: this.detectTrends(buckets),
-      anomalies: this.detectAnomalies(buckets),
-      opportunities: this.detectOpportunities(buckets, customers, products),
-      risks: this.detectRisks(buckets, customers, suppliers, products, expenses),
+      trends: this.dedup(businessId, this.detectTrends(buckets)),
+      anomalies: this.dedup(businessId, this.detectAnomalies(buckets)),
+      opportunities: this.dedup(businessId, this.detectOpportunities(buckets, customers, products)),
+      risks: this.dedup(businessId, this.detectRisks(buckets, customers, suppliers, products, expenses)),
     };
 
     return insights;

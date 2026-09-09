@@ -409,3 +409,63 @@ describe('InsightService — each insight has a distinct type from the four', ()
     }
   });
 });
+
+// ── Alert dedup / cooldown (AI OS.txt §198) ────────────────────────────────
+
+describe('InsightService — alert dedup/cooldown (§198)', () => {
+  function makeRichPrisma() {
+    const prisma = makePrisma();
+    const orders = generateSaleOrders(30, i => (i < 15 ? 100000 : 200000));
+    const expenses = generateExpenses(30, i => (i < 27 ? 10000 : 500000));
+    (prisma.saleOrder.findMany as jest.Mock).mockResolvedValue(orders);
+    (prisma.expense.findMany as jest.Mock).mockResolvedValue(expenses);
+    (prisma.customer.findMany as jest.Mock).mockResolvedValue([{ id: 'c1', name: 'Ravi', creditBalance: 200000 }]);
+    (prisma.supplier.findMany as jest.Mock).mockResolvedValue([{ id: 's1', name: 'Mohan', payableBalance: 150000 }]);
+    (prisma.product.findMany as jest.Mock).mockResolvedValue([{ id: 'p1', name: 'Oil', stock: 0, lowStockThreshold: 5 }]);
+    return prisma;
+  }
+
+  it('suppresses the same insight on a second call within the cooldown window', async () => {
+    const svc = makeService(makeRichPrisma());
+
+    const first = await svc.generateInsights(BIZ_ID);
+    const firstAll = [...first.trends, ...first.anomalies, ...first.opportunities, ...first.risks];
+    expect(firstAll.length).toBeGreaterThan(0);
+
+    // Second call — same business, same signal — should be suppressed within cooldown
+    const second = await svc.generateInsights(BIZ_ID);
+    const secondAll = [...second.trends, ...second.anomalies, ...second.opportunities, ...second.risks];
+    expect(secondAll.length).toBe(0);
+  });
+
+  it('fires again for a different business even within cooldown', async () => {
+    const svc = makeService(makeRichPrisma());
+
+    const first = await svc.generateInsights(BIZ_ID);
+    const firstAll = [...first.trends, ...first.anomalies, ...first.opportunities, ...first.risks];
+    expect(firstAll.length).toBeGreaterThan(0);
+
+    // Different business — cooldown map key is business-scoped, so it fires again
+    const second = await svc.generateInsights('biz-OTHER');
+    const secondAll = [...second.trends, ...second.anomalies, ...second.opportunities, ...second.risks];
+    expect(secondAll.length).toBeGreaterThan(0);
+  });
+
+  it('fires again after the cooldown window expires', async () => {
+    jest.useFakeTimers();
+    const svc = makeService(makeRichPrisma());
+
+    const first = await svc.generateInsights(BIZ_ID);
+    const firstAll = [...first.trends, ...first.anomalies, ...first.opportunities, ...first.risks];
+    expect(firstAll.length).toBeGreaterThan(0);
+
+    // Advance past the longest cooldown (24 h for 'info')
+    jest.advanceTimersByTime(25 * 60 * 60 * 1000);
+
+    const third = await svc.generateInsights(BIZ_ID);
+    const thirdAll = [...third.trends, ...third.anomalies, ...third.opportunities, ...third.risks];
+    expect(thirdAll.length).toBeGreaterThan(0);
+
+    jest.useRealTimers();
+  });
+});
