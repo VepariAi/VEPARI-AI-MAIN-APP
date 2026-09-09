@@ -29,14 +29,15 @@ interface SectionConfig {
   description: string;
 }
 
+// rateBps = rate in basis points; 1 bps = 0.01%, so 1% = 100 bps, 10% = 1000 bps
 const SECTION_CONFIG: Record<TdsSection, SectionConfig> = {
-  '194C_individual': { rateBps: 10000, thresholdInPaise: 3000000, description: 'Contractor (individual) — 1%' },
-  '194C_company':    { rateBps: 20000, thresholdInPaise: 3000000, description: 'Contractor (company) — 2%' },
-  '194J':            { rateBps: 100000, thresholdInPaise: 3000000, description: 'Professional/Technical — 10%' },
-  '194I':            { rateBps: 100000, thresholdInPaise: 24000000, description: 'Rent — 10%' },
-  '194H':            { rateBps: 50000, thresholdInPaise: 1500000, description: 'Commission/Brokerage — 5%' },
-  '194A':            { rateBps: 100000, thresholdInPaise: 4000000, description: 'Interest — 10%' },
-  '194M':            { rateBps: 50000, thresholdInPaise: 5000000000, description: 'Payments by individuals — 5%' },
+  '194C_individual': { rateBps: 100,  thresholdInPaise: 3000000,    description: 'Contractor (individual) — 1%' },
+  '194C_company':    { rateBps: 200,  thresholdInPaise: 3000000,    description: 'Contractor (company) — 2%' },
+  '194J':            { rateBps: 1000, thresholdInPaise: 3000000,    description: 'Professional/Technical — 10%' },
+  '194I':            { rateBps: 1000, thresholdInPaise: 24000000,   description: 'Rent — 10%' },
+  '194H':            { rateBps: 500,  thresholdInPaise: 1500000,    description: 'Commission/Brokerage — 5%' },
+  '194A':            { rateBps: 1000, thresholdInPaise: 4000000,    description: 'Interest — 10%' },
+  '194M':            { rateBps: 500,  thresholdInPaise: 5000000000, description: 'Payments by individuals — 5%' },
 };
 
 export interface TdsCalculation {
@@ -73,7 +74,7 @@ export function calculateTds(
     const taxableBase = cumulativePriorInPaise >= config.thresholdInPaise
       ? paymentInPaise
       : cumulativeAfter - config.thresholdInPaise;
-    tdsInPaise = Math.round((taxableBase * config.rateBps) / 10000000); // bps * 100 = percent, /100 = fraction
+    tdsInPaise = Math.round((taxableBase * config.rateBps) / 10000); // bps/10000 = fraction (100bps=1%)
   }
 
   return {
@@ -88,7 +89,7 @@ export function calculateTds(
 
 /** Get TDS rate percentage (integer) for display */
 export function tdsRatePercent(section: TdsSection): number {
-  return SECTION_CONFIG[section]!.rateBps / 100000;
+  return SECTION_CONFIG[section]!.rateBps / 100;
 }
 
 /** Get threshold in paise for a section */
