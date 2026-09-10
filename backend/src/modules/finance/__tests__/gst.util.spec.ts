@@ -4,7 +4,6 @@ import {
   calculateGstFromTotal,
   isValidGstSlab,
   aggregateGst,
-  type GstSlab,
 } from '../gst.util';
 
 describe('gst.util', () => {

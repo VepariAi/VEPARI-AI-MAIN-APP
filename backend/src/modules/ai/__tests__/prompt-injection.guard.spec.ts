@@ -72,7 +72,7 @@ describe('prompt-injection.guard', () => {
     });
 
     it('rejects output containing API key patterns', () => {
-      const result = guardOutput('Sure, here is the key: sk-abc123def456');
+      const result = guardOutput('Sure, here is the key: sk-abc123def456'); // gitleaks:allow
       expect(result.safe).toBe(false);
     });
 

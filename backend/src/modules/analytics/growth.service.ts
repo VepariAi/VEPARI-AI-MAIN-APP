@@ -194,13 +194,12 @@ export class GrowthService {
   private async segmentCustomers(
     businessId: string,
     customers: Array<{ id: string; name: string; creditBalance: bigint | number; createdAt: Date }>,
-    ninetyDaysAgo: Date,
+    _ninetyDaysAgo: Date,
   ): Promise<CustomerSegmentProfile[]> {
     if (customers.length === 0) return [];
 
     // Get recent sale orders with customer links via notes (simplified — real impl would use foreign key)
     const profiles: CustomerSegmentProfile[] = [];
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
     for (const customer of customers) {
       const creditBalance = Number(customer.creditBalance);
