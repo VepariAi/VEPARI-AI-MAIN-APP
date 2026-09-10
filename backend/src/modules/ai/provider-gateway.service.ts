@@ -4,13 +4,14 @@
 // fallback.  Provider priority: Anthropic → OpenAI.  Each provider gets
 // up to MAX_RETRIES attempts before the next provider is tried.
 //
-// Usage tracking (Prompt 124) is handled here so every call is accounted for
-// regardless of which provider served it.
+// Usage + cost tracking (Prompt 124) is handled here via UsageService so
+// every call is accounted for regardless of which provider served it.
 
 import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
 import type { AiProvider, ChatMessage, ChatOptions, ChatResult } from './provider.interface';
 import { AnthropicProvider } from './providers/anthropic.provider';
 import { OpenAiProvider } from './providers/openai.provider';
+import { UsageService } from '../usage/usage.service';
 
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
@@ -24,7 +25,7 @@ export class ProviderGatewayService {
   private readonly logger = new Logger(ProviderGatewayService.name);
   private readonly providers: AiProvider[];
 
-  constructor() {
+  constructor(private readonly usageService: UsageService) {
     const anthropicKey = process.env['ANTHROPIC_API_KEY'];
     const openaiKey = process.env['OPENAI_API_KEY'];
 
@@ -42,11 +43,13 @@ export class ProviderGatewayService {
    * Send a chat request through the provider chain.
    * Tries Anthropic first, falls back to OpenAI on failure.
    * Retries each provider up to MAX_RETRIES times with exponential delay.
+   * Records usage (tokens + estimated cost) via UsageService after every
+   * successful call.
    */
   async chat(
     messages: ChatMessage[],
     systemPrompt: string,
-    opts?: ChatOptions,
+    opts?: ChatOptions & { businessId?: string },
   ): Promise<ChatResult> {
     if (!this.hasProvider) {
       throw new InternalServerErrorException('No AI provider configured');
@@ -63,6 +66,18 @@ export class ProviderGatewayService {
           if (attempt > 1 || errors.length > 0) {
             this.logger.log(`Provider ${provider.name} succeeded on attempt ${attempt}`);
           }
+
+          // Record usage so every AI call is cost-accounted
+          if (opts?.businessId) {
+            this.usageService.record({
+              businessId: opts.businessId,
+              type: 'ai_chat',
+              provider: result.provider,
+              ...(result.inputTokens !== undefined ? { inputTokens: result.inputTokens } : {}),
+              ...(result.outputTokens !== undefined ? { outputTokens: result.outputTokens } : {}),
+            });
+          }
+
           return result;
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);

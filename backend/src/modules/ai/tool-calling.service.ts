@@ -115,9 +115,16 @@ When done, respond with plain text (no JSON tool_call).`;
 
   private parseToolCall(text: string): ToolCall | null {
     try {
-      const match = text.match(/\{"tool_call"\s*:\s*\{[^}]+\}\s*\}/);
-      if (!match?.[0]) return null;
-      const parsed = JSON.parse(match[0]) as { tool_call?: { name?: string; input?: unknown } };
+      const start = text.indexOf('{"tool_call"');
+      if (start === -1) return null;
+      let depth = 0;
+      let end = -1;
+      for (let i = start; i < text.length; i++) {
+        if (text[i] === '{') depth++;
+        else if (text[i] === '}') { depth--; if (depth === 0) { end = i; break; } }
+      }
+      if (end === -1) return null;
+      const parsed = JSON.parse(text.slice(start, end + 1)) as { tool_call?: { name?: string; input?: unknown } };
       if (!parsed.tool_call?.name) return null;
       return { toolName: parsed.tool_call.name, input: parsed.tool_call.input ?? {} };
     } catch {
