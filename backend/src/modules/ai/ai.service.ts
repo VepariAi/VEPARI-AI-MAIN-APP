@@ -175,7 +175,7 @@ Answer the owner's question based only on this real data. Do not fabricate figur
               break;
             }
             const customer = await this.prisma.customer.findFirst({
-              where: { businessId, name: { contains: candidate.party, mode: 'insensitive' } },
+              where: { businessId, name: { contains: candidate.party } },
             });
             if (!customer) {
               skipped.push({ type: candidate.type, reason: `customer "${candidate.party}" not found` });
@@ -195,7 +195,7 @@ Answer the owner's question based only on this real data. Do not fabricate figur
               break;
             }
             const debtor = await this.prisma.customer.findFirst({
-              where: { businessId, name: { contains: candidate.party, mode: 'insensitive' } },
+              where: { businessId, name: { contains: candidate.party } },
             });
             if (!debtor) {
               skipped.push({ type: candidate.type, reason: `customer "${candidate.party}" not found` });
@@ -215,7 +215,7 @@ Answer the owner's question based only on this real data. Do not fabricate figur
               break;
             }
             const product = await this.prisma.product.findFirst({
-              where: { businessId, isActive: true, name: { contains: candidate.itemName, mode: 'insensitive' } },
+              where: { businessId, isActive: true, name: { contains: candidate.itemName } },
             });
             if (!product) {
               skipped.push({ type: candidate.type, reason: `product "${candidate.itemName}" not found` });

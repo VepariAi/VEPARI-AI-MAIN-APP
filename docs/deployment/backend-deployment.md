@@ -9,14 +9,14 @@ environment separation, release-candidate flow, and rollback. (Prompts
 | Artifact | Path | Purpose |
 |---|---|---|
 | Production image | `Dockerfile` (repo root) | Multi-stage build → slim `node:22-slim` runtime, non-root `vepari` user, `/health` HEALTHCHECK |
-| Local stack | `docker-compose.yml` | Postgres 16 + backend for local/integration use |
+| Local stack | `docker-compose.yml` | MySQL 8 + backend for local/integration use |
 | Ignore rules | `.dockerignore` | Keeps secrets, `node_modules`, tests, mobile out of the build context |
 
 Build and run locally:
 
 ```bash
 docker build -t vepari-backend .
-docker compose up --build          # brings up Postgres + backend, runs migrations
+docker compose up --build          # brings up MySQL + backend, runs migrations
 ```
 
 ## 2. Environment separation (Prompt 220)
@@ -25,9 +25,9 @@ Three isolated environments; **no shared databases or secrets** across them.
 
 | Env | Branch | Database | Secrets source |
 |---|---|---|---|
-| development | feature branches | local Postgres / dev instance | `backend/.env` (git-ignored) |
-| staging | `main` | staging Postgres | platform secret store |
-| production | tagged release | production Postgres | platform secret store |
+| development | feature branches | local MySQL / dev instance | `backend/.env` (git-ignored) |
+| staging | `main` | staging MySQL | platform secret store |
+| production | tagged release | production MySQL | platform secret store |
 
 Required variables are documented in `backend/.env.example`. Secrets are
 **never** committed; the CI secret-scan (gitleaks) gates every push.
@@ -89,7 +89,7 @@ Application rollback is fast; schema rollback is deliberate.
 ## 7. Go-live checklist (Prompt 229)
 
 - [ ] All secrets set in the production secret store; none in the image.
-- [ ] `DATABASE_URL` points at production Postgres; connection verified via `/health/ready`.
+- [ ] `DATABASE_URL` points at production MySQL; connection verified via `/health/ready`.
 - [ ] `ALLOWED_ORIGINS` restricted to real production origins.
 - [ ] `migrate deploy` applied; `migrate status` clean.
 - [ ] `/metrics` scrape target registered; alert rules wired to on-call.

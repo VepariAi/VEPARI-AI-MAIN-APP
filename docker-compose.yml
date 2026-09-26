@@ -7,35 +7,38 @@
 # deployments inject secrets from the platform's secret store, never this file.
 
 services:
-  postgres:
-    image: postgres:16-alpine
+  mysql:
+    image: mysql:8.0
     environment:
-      POSTGRES_USER: vepari
-      POSTGRES_PASSWORD: localdev
-      POSTGRES_DB: vepari_dev
+      MYSQL_DATABASE: vepari_dev
+      MYSQL_USER: vepari
+      MYSQL_PASSWORD: localdev
+      MYSQL_ROOT_PASSWORD: localdev-root
     ports:
-      - '5432:5432'
+      - '3306:3306'
     volumes:
-      - vepari_pgdata:/var/lib/postgresql/data
+      - vepari_mysqldata:/var/lib/mysql
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U vepari -d vepari_dev']
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'vepari', '-plocaldev']
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 15
 
   backend:
     build:
       context: .
       dockerfile: Dockerfile
     depends_on:
-      postgres:
+      mysql:
         condition: service_healthy
     environment:
       NODE_ENV: production
       PORT: '3000'
-      DATABASE_URL: postgresql://vepari:localdev@postgres:5432/vepari_dev?schema=public
-      # LOCAL-ONLY placeholder secret; override for anything shared.
+      DATABASE_URL: mysql://vepari:localdev@mysql:3306/vepari_dev
+      # LOCAL-ONLY placeholder secrets; override for anything shared.
       JWT_SECRET: local-dev-secret-not-for-production-use-only-abcdefghijklmnop
+      # 32-byte hex key for AES-256-GCM at-rest encryption (local dev only).
+      DATA_ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
       ALLOWED_ORIGINS: http://localhost:3000,http://localhost:19006
     ports:
       - '3000:3000'
@@ -43,4 +46,4 @@ services:
     command: sh -c "npx prisma migrate deploy --schema prisma/schema.prisma && node dist/main"
 
 volumes:
-  vepari_pgdata:
+  vepari_mysqldata:

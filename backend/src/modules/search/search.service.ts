@@ -27,7 +27,7 @@ export class SearchService {
           businessId,
           isActive: true,
           OR: [
-            { name: { contains: q, mode: 'insensitive' } },
+            { name: { contains: q } },
             { phone: { contains: q } },
           ],
         },
@@ -39,7 +39,7 @@ export class SearchService {
           businessId,
           isActive: true,
           OR: [
-            { name: { contains: q, mode: 'insensitive' } },
+            { name: { contains: q } },
             { phone: { contains: q } },
           ],
         },
@@ -51,8 +51,8 @@ export class SearchService {
           businessId,
           isActive: true,
           OR: [
-            { name: { contains: q, mode: 'insensitive' } },
-            { sku: { contains: q, mode: 'insensitive' } },
+            { name: { contains: q } },
+            { sku: { contains: q } },
           ],
         },
         take: 5,
@@ -61,7 +61,7 @@ export class SearchService {
       this.prisma.saleOrder.findMany({
         where: {
           businessId,
-          notes: { contains: q, mode: 'insensitive' },
+          notes: { contains: q },
         },
         orderBy: { date: 'desc' },
         take: 5,
@@ -71,8 +71,8 @@ export class SearchService {
         where: {
           businessId,
           OR: [
-            { description: { contains: q, mode: 'insensitive' } },
-            { category: { contains: q, mode: 'insensitive' } },
+            { description: { contains: q } },
+            { category: { contains: q } },
           ],
         },
         orderBy: { date: 'desc' },
