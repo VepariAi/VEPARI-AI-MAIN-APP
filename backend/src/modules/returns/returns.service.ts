@@ -1,6 +1,7 @@
-// Returns & Refunds: in-memory for Phase 15; DB migration in Phase 16.
+// Returns & Refunds — persisted in MySQL via Prisma (DL-011).
 
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 
 export type ReturnType = 'SALE_RETURN' | 'PURCHASE_RETURN';
 export type ReturnStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'REFUNDED';
@@ -38,23 +39,57 @@ export interface Return {
   resolvedAt: Date | null;
 }
 
-const returnStore = new Map<string, Return[]>();
+interface ReturnRow {
+  id: string;
+  businessId: string;
+  type: string;
+  status: string;
+  referenceId: string;
+  customerId: string | null;
+  supplierId: string | null;
+  items: unknown;
+  totalRefundInPaise: number;
+  notes: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  resolvedAt: Date | null;
+}
 
-function getList(businessId: string): Return[] {
-  if (!returnStore.has(businessId)) returnStore.set(businessId, []);
-  return returnStore.get(businessId)!;
+function toDomain(row: ReturnRow): Return {
+  return {
+    id: row.id,
+    businessId: row.businessId,
+    type: row.type as ReturnType,
+    status: row.status as ReturnStatus,
+    referenceId: row.referenceId,
+    customerId: row.customerId,
+    supplierId: row.supplierId,
+    items: (row.items as ReturnLineItem[]) ?? [],
+    totalRefundInPaise: row.totalRefundInPaise,
+    notes: row.notes,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+    resolvedAt: row.resolvedAt,
+  };
 }
 
 @Injectable()
 export class ReturnsService {
-  findAll(businessId: string, status?: ReturnStatus, type?: ReturnType): Return[] {
-    const list = getList(businessId);
-    return list
-      .filter(r => (!status || r.status === status) && (!type || r.type === type))
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findAll(businessId: string, status?: ReturnStatus, type?: ReturnType): Promise<Return[]> {
+    const rows = await this.prisma.return.findMany({
+      where: {
+        businessId,
+        ...(status ? { status } : {}),
+        ...(type ? { type } : {}),
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    return rows.map(r => toDomain(r as ReturnRow));
   }
 
-  create(businessId: string, dto: CreateReturnDto): Return {
+  async create(businessId: string, dto: CreateReturnDto): Promise<Return> {
     if (!dto.items || dto.items.length === 0) {
       throw new BadRequestException('At least one return item is required');
     }
@@ -70,58 +105,64 @@ export class ReturnsService {
       0,
     );
 
-    const ret: Return = {
-      id: `ret_${Date.now()}_${Math.random().toString(36).slice(2)}`,
-      businessId,
-      type: dto.type,
-      status: 'PENDING',
-      referenceId: dto.referenceId,
-      customerId: dto.customerId ?? null,
-      supplierId: dto.supplierId ?? null,
-      items: dto.items,
-      totalRefundInPaise,
-      notes: dto.notes ?? null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      resolvedAt: null,
-    };
-    getList(businessId).push(ret);
-    return ret;
+    const row = await this.prisma.return.create({
+      data: {
+        businessId,
+        type: dto.type,
+        status: 'PENDING',
+        referenceId: dto.referenceId,
+        customerId: dto.customerId ?? null,
+        supplierId: dto.supplierId ?? null,
+        items: dto.items as unknown as object,
+        totalRefundInPaise,
+        notes: dto.notes ?? null,
+      },
+    });
+    return toDomain(row as ReturnRow);
   }
 
-  getById(businessId: string, returnId: string): Return {
-    const ret = getList(businessId).find(r => r.id === returnId);
-    if (!ret) throw new NotFoundException('Return not found');
-    return ret;
+  async getById(businessId: string, returnId: string): Promise<Return> {
+    const row = await this.prisma.return.findFirst({ where: { id: returnId, businessId } });
+    if (!row) throw new NotFoundException('Return not found');
+    return toDomain(row as ReturnRow);
   }
 
-  updateStatus(businessId: string, returnId: string, status: ReturnStatus): Return {
-    const ret = this.getById(businessId, returnId);
-    if (ret.status === 'REFUNDED') {
+  async updateStatus(businessId: string, returnId: string, status: ReturnStatus): Promise<Return> {
+    const existing = await this.getById(businessId, returnId);
+    if (existing.status === 'REFUNDED') {
       throw new BadRequestException('Cannot change status of a completed refund');
     }
-    ret.status = status;
-    ret.updatedAt = new Date();
-    if (status === 'REFUNDED' || status === 'REJECTED') {
-      ret.resolvedAt = new Date();
-    }
-    return ret;
+    const resolved = status === 'REFUNDED' || status === 'REJECTED';
+    const row = await this.prisma.return.update({
+      where: { id: returnId },
+      data: {
+        status,
+        ...(resolved ? { resolvedAt: new Date() } : {}),
+      },
+    });
+    return toDomain(row as ReturnRow);
   }
 
-  getSummary(businessId: string): {
+  async getSummary(businessId: string): Promise<{
     pendingCount: number;
     approvedCount: number;
     refundedCount: number;
     totalRefundedInPaise: number;
-  } {
-    const list = getList(businessId);
+  }> {
+    const [pendingCount, approvedCount, refundedCount, refundedAgg] = await Promise.all([
+      this.prisma.return.count({ where: { businessId, status: 'PENDING' } }),
+      this.prisma.return.count({ where: { businessId, status: 'APPROVED' } }),
+      this.prisma.return.count({ where: { businessId, status: 'REFUNDED' } }),
+      this.prisma.return.aggregate({
+        where: { businessId, status: 'REFUNDED' },
+        _sum: { totalRefundInPaise: true },
+      }),
+    ]);
     return {
-      pendingCount: list.filter(r => r.status === 'PENDING').length,
-      approvedCount: list.filter(r => r.status === 'APPROVED').length,
-      refundedCount: list.filter(r => r.status === 'REFUNDED').length,
-      totalRefundedInPaise: list
-        .filter(r => r.status === 'REFUNDED')
-        .reduce((s, r) => s + r.totalRefundInPaise, 0),
+      pendingCount,
+      approvedCount,
+      refundedCount,
+      totalRefundedInPaise: refundedAgg._sum.totalRefundInPaise ?? 0,
     };
   }
 }

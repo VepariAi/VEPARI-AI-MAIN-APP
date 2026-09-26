@@ -554,3 +554,25 @@ model SecurityEvent {
   @@index([businessId, createdAt])
   @@map("security_events")
 }
+
+// ── Returns & Refunds (persisted; DL-011 MySQL) ─────────────────────────────────
+
+model Return {
+  id                 String    @id @default(uuid())
+  businessId         String
+  type               String    // SALE_RETURN | PURCHASE_RETURN
+  status             String    @default("PENDING") // PENDING|APPROVED|REJECTED|REFUNDED
+  referenceId        String
+  customerId         String?
+  supplierId         String?
+  items              Json      // ReturnLineItem[]
+  totalRefundInPaise Int
+  notes              String?   @db.Text
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  resolvedAt         DateTime?
+
+  @@index([businessId, status])
+  @@index([businessId, createdAt])
+  @@map("returns")
+}
