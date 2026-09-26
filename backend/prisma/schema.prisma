@@ -642,3 +642,24 @@ model MarketObservation {
   @@index([businessId, observedAt])
   @@map("market_observations")
 }
+
+// ── Connection Portfolio (persisted; DL-011 MySQL) ──────────────────────────────
+// `credentials` holds a map of AES-256-GCM-encrypted secret values (keys clear,
+// values ciphertext). Raw secrets are never stored or returned to clients.
+
+model Connection {
+  id           String    @id @default(uuid())
+  businessId   String
+  providerId   String
+  providerName String
+  status       String    @default("PENDING") // CONNECTED|DISCONNECTED|ERROR|PENDING
+  credentials  Json?     // { key: encryptedValue } — values are ciphertext
+  connectedAt  DateTime?
+  lastSyncAt   DateTime?
+  errorMessage String?   @db.Text
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([businessId, status])
+  @@map("connections")
+}

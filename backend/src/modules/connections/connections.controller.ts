@@ -60,26 +60,37 @@ export class ConnectionsController {
     return this.connectionsService.triggerSync(businessId, connectionId);
   }
 
+  @Post(':connectionId/credentials')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Store integration credentials (encrypted at rest in MySQL)' })
+  setCredentials(
+    @Param('businessId') businessId: string,
+    @Param('connectionId') connectionId: string,
+    @Body() body: { credentials: Record<string, string> },
+  ) {
+    return this.connectionsService.setCredentials(businessId, connectionId, body.credentials ?? {});
+  }
+
   @Get(':connectionId/health')
   @ApiOperation({ summary: 'Check the live health of a connection via its adapter' })
-  health(
+  async health(
     @Param('businessId') businessId: string,
     @Param('connectionId') connectionId: string,
   ) {
-    const conn = this.connectionsService.getConnection(businessId, connectionId);
-    // Credentials would be loaded from the secret store keyed by connection.
-    return this.syncService.checkHealth(conn.providerId, connectionId, {});
+    const conn = await this.connectionsService.getConnection(businessId, connectionId);
+    const credentials = await this.connectionsService.getDecryptedCredentials(businessId, connectionId);
+    return this.syncService.checkHealth(conn.providerId, connectionId, credentials);
   }
 
   @Post(':connectionId/oauth/authorize-url')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Build the provider OAuth authorize URL for this connection' })
-  authorizeUrl(
+  async authorizeUrl(
     @Param('businessId') businessId: string,
     @Param('connectionId') connectionId: string,
     @Body() body: { clientId: string; authorizeEndpoint: string; redirectUri: string; scopes: string[] },
   ) {
-    const conn = this.connectionsService.getConnection(businessId, connectionId);
+    const conn = await this.connectionsService.getConnection(businessId, connectionId);
     return this.oauthFlow.buildAuthorizeUrl({
       providerId: conn.providerId,
       businessId,

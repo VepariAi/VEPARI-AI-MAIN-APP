@@ -1,4 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
+import { EncryptionService } from '../../common/crypto/encryption.service';
 
 export type ProviderCategory = 'ACCOUNTING' | 'PAYMENTS' | 'ECOMMERCE' | 'LOGISTICS' | 'BANKING' | 'COMMUNICATION';
 export type ConnectionStatus = 'CONNECTED' | 'DISCONNECTED' | 'ERROR' | 'PENDING';
@@ -38,64 +40,107 @@ const PROVIDERS: Provider[] = [
   { id: 'whatsapp_business', name: 'WhatsApp Business', category: 'COMMUNICATION', description: 'Send invoices and alerts via WhatsApp', logoSymbol: 'W', authType: 'API_KEY', isAvailable: false, comingSoon: true },
 ];
 
-// In-memory connections store — Phase 15; replace with Prisma in Phase 16
-const connections = new Map<string, Map<string, Connection>>();
+interface ConnectionRow {
+  id: string;
+  businessId: string;
+  providerId: string;
+  providerName: string;
+  status: string;
+  credentials: unknown;
+  connectedAt: Date | null;
+  lastSyncAt: Date | null;
+  errorMessage: string | null;
+}
 
-function businessConnections(businessId: string): Map<string, Connection> {
-  if (!connections.has(businessId)) connections.set(businessId, new Map());
-  return connections.get(businessId)!;
+// Map a DB row to the client-facing Connection — NEVER includes credentials.
+function toDomain(row: ConnectionRow): Connection {
+  return {
+    id: row.id,
+    businessId: row.businessId,
+    providerId: row.providerId,
+    providerName: row.providerName,
+    status: row.status as ConnectionStatus,
+    connectedAt: row.connectedAt ? row.connectedAt.toISOString() : null,
+    lastSyncAt: row.lastSyncAt ? row.lastSyncAt.toISOString() : null,
+    errorMessage: row.errorMessage,
+  };
 }
 
 @Injectable()
 export class ConnectionsService {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly encryption: EncryptionService,
+  ) {}
+
   getProviders(): Provider[] {
     return PROVIDERS;
   }
 
-  listConnections(businessId: string): Connection[] {
-    return Array.from(businessConnections(businessId).values());
+  async listConnections(businessId: string): Promise<Connection[]> {
+    const rows = await this.prisma.connection.findMany({ where: { businessId } });
+    return rows.map(r => toDomain(r as ConnectionRow));
   }
 
-  getConnection(businessId: string, connectionId: string): Connection {
-    const conn = businessConnections(businessId).get(connectionId);
-    if (!conn) throw new NotFoundException('Connection not found');
-    return conn;
+  async getConnection(businessId: string, connectionId: string): Promise<Connection> {
+    const row = await this.prisma.connection.findFirst({ where: { id: connectionId, businessId } });
+    if (!row) throw new NotFoundException('Connection not found');
+    return toDomain(row as ConnectionRow);
   }
 
-  createConnection(businessId: string, providerId: string): Connection {
+  async createConnection(businessId: string, providerId: string): Promise<Connection> {
     const provider = PROVIDERS.find(p => p.id === providerId);
     if (!provider) throw new NotFoundException('Provider not found');
 
-    const id = `conn_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
-    const conn: Connection = {
-      id,
-      businessId,
-      providerId,
-      providerName: provider.name,
-      status: 'PENDING',
-      connectedAt: null,
-      lastSyncAt: null,
-      errorMessage: null,
-    };
-
-    businessConnections(businessId).set(id, conn);
-    return conn;
+    const row = await this.prisma.connection.create({
+      data: { businessId, providerId, providerName: provider.name, status: 'PENDING' },
+    });
+    return toDomain(row as ConnectionRow);
   }
 
-  triggerSync(businessId: string, connectionId: string): { message: string; connectionId: string } {
-    const conn = this.getConnection(businessId, connectionId);
-    const updated: Connection = {
-      ...conn,
-      lastSyncAt: new Date().toISOString(),
-      status: 'CONNECTED',
-    };
-    businessConnections(businessId).set(connectionId, updated);
+  /**
+   * Store integration credentials encrypted at rest (AES-256-GCM). Keys stay
+   * clear so we know which credentials exist; values are ciphertext. Marks the
+   * connection CONNECTED. Raw secrets are never persisted or returned.
+   */
+  async setCredentials(
+    businessId: string,
+    connectionId: string,
+    credentials: Record<string, string>,
+  ): Promise<Connection> {
+    await this.getConnection(businessId, connectionId); // tenant-scoped existence
+    const encrypted = this.encryption.encryptMap(credentials);
+    const row = await this.prisma.connection.update({
+      where: { id: connectionId },
+      data: {
+        credentials: encrypted as unknown as object,
+        status: 'CONNECTED',
+        connectedAt: new Date(),
+        errorMessage: null,
+      },
+    });
+    return toDomain(row as ConnectionRow);
+  }
+
+  /** Internal: load and decrypt credentials for sync/health. Never exposed via API. */
+  async getDecryptedCredentials(businessId: string, connectionId: string): Promise<Record<string, string>> {
+    const row = await this.prisma.connection.findFirst({ where: { id: connectionId, businessId } });
+    if (!row) throw new NotFoundException('Connection not found');
+    const stored = (row.credentials as Record<string, string> | null) ?? {};
+    return this.encryption.decryptMap(stored);
+  }
+
+  async triggerSync(businessId: string, connectionId: string): Promise<{ message: string; connectionId: string }> {
+    await this.getConnection(businessId, connectionId); // tenant-scoped existence
+    await this.prisma.connection.update({
+      where: { id: connectionId },
+      data: { lastSyncAt: new Date(), status: 'CONNECTED' },
+    });
     return { message: 'Sync triggered', connectionId };
   }
 
-  deleteConnection(businessId: string, connectionId: string): void {
-    const store = businessConnections(businessId);
-    if (!store.has(connectionId)) throw new NotFoundException('Connection not found');
-    store.delete(connectionId);
+  async deleteConnection(businessId: string, connectionId: string): Promise<void> {
+    await this.getConnection(businessId, connectionId); // tenant-scoped existence
+    await this.prisma.connection.delete({ where: { id: connectionId } });
   }
 }
