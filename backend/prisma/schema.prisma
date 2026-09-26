@@ -620,3 +620,25 @@ model UsageCounter {
   @@unique([businessId, periodStart])
   @@map("usage_counters")
 }
+
+// ── Market intelligence (persisted; DL-011 MySQL) ───────────────────────────────
+
+model MarketObservation {
+  id                     String   @id @default(uuid())
+  businessId             String
+  type                   String   // PRICE_BENCHMARK|DEMAND_SIGNAL|NEW_COMPETITOR|SCHEME_OPPORTUNITY|SUPPLY_SHORTAGE|SEASONAL_TREND
+  subject                String
+  description            String   @db.Text
+  priceInPaise           Int?
+  competitorPriceInPaise Int?
+  competitorName         String?
+  locality               String?
+  confidence             String   @default("MEDIUM") // LOW|MEDIUM|HIGH
+  source                 String   @default("MANUAL") // VOICE|MANUAL
+  observedAt             DateTime
+  createdAt              DateTime @default(now())
+
+  @@index([businessId, type])
+  @@index([businessId, observedAt])
+  @@map("market_observations")
+}

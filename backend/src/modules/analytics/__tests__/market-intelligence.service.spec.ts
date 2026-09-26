@@ -1,114 +1,132 @@
-// Unit tests for MarketIntelligenceService — PROMPT 140.
+// Unit tests for MarketIntelligenceService (Prisma/MySQL-backed) — PROMPT 140, DL-011.
+// PrismaService fully mocked.
+
 import { MarketIntelligenceService } from '../market-intelligence.service';
+import { NotFoundException } from '@nestjs/common';
 
-describe('MarketIntelligenceService', () => {
-  let service: MarketIntelligenceService;
+const BIZ = 'biz-1';
 
-  beforeEach(() => {
-    service = new MarketIntelligenceService();
+function row(over: Record<string, unknown> = {}) {
+  return {
+    id: 'mkt-1',
+    businessId: BIZ,
+    type: 'PRICE_BENCHMARK',
+    subject: 'Rice',
+    description: 'benchmark',
+    priceInPaise: 5000,
+    competitorPriceInPaise: 4500,
+    competitorName: null,
+    locality: null,
+    confidence: 'MEDIUM',
+    source: 'MANUAL',
+    observedAt: new Date('2026-02-01'),
+    createdAt: new Date('2026-02-01'),
+    ...over,
+  };
+}
+
+function makePrisma() {
+  return {
+    marketObservation: {
+      create: jest.fn().mockImplementation(async ({ data }: { data: Record<string, unknown> }) => row(data)),
+      findMany: jest.fn().mockResolvedValue([]),
+      findFirst: jest.fn().mockResolvedValue(null),
+      delete: jest.fn().mockResolvedValue({}),
+    },
+  };
+}
+
+function makeService(prisma: ReturnType<typeof makePrisma>) {
+  return new MarketIntelligenceService(prisma as unknown as ConstructorParameters<typeof MarketIntelligenceService>[0]);
+}
+
+describe('addObservation', () => {
+  it('creates with trimmed subject/description and defaults', async () => {
+    const prisma = makePrisma();
+    const svc = makeService(prisma);
+    await svc.addObservation(BIZ, { type: 'DEMAND_SIGNAL', subject: '  Diwali lights  ', description: '  high demand  ' });
+    const arg = (prisma.marketObservation.create as jest.Mock).mock.calls[0][0];
+    expect(arg.data.subject).toBe('Diwali lights');
+    expect(arg.data.description).toBe('high demand');
+    expect(arg.data.confidence).toBe('MEDIUM');
+    expect(arg.data.source).toBe('MANUAL');
+    expect(arg.data.priceInPaise).toBeNull();
+  });
+});
+
+describe('listObservations', () => {
+  it('applies type filter and limit, scoped to business', async () => {
+    const prisma = makePrisma();
+    (prisma.marketObservation.findMany as jest.Mock).mockResolvedValue([row({ type: 'DEMAND_SIGNAL' })]);
+    const svc = makeService(prisma);
+    const obs = await svc.listObservations(BIZ, 'DEMAND_SIGNAL', 10);
+    const arg = (prisma.marketObservation.findMany as jest.Mock).mock.calls[0][0];
+    expect(arg.where).toEqual({ businessId: BIZ, type: 'DEMAND_SIGNAL' });
+    expect(arg.take).toBe(10);
+    expect(obs[0]!.type).toBe('DEMAND_SIGNAL');
+  });
+});
+
+describe('getPriceBenchmarks', () => {
+  it('returns empty when there are no benchmarks', async () => {
+    const svc = makeService(makePrisma());
+    expect(await svc.getPriceBenchmarks(BIZ)).toEqual([]);
   });
 
-  describe('addObservation', () => {
-    it('creates a price benchmark observation', () => {
-      const obs = service.addObservation('biz-1', {
-        type: 'PRICE_BENCHMARK',
-        subject: 'Rice (1kg)',
-        description: 'Competitor selling at ₹45',
-        competitorPriceInPaise: 4500,
-        competitorName: 'Sharma Kirana',
-        priceInPaise: 5000,
-      });
-      expect(obs.id).toMatch(/^mkt_/);
-      expect(obs.type).toBe('PRICE_BENCHMARK');
-      expect(obs.competitorPriceInPaise).toBe(4500);
-      expect(obs.businessId).toBe('biz-1');
-    });
+  it('aggregates multiple benchmarks for the same subject (integer paise)', async () => {
+    const prisma = makePrisma();
+    (prisma.marketObservation.findMany as jest.Mock).mockResolvedValue([
+      row({ id: '1', subject: 'Rice', competitorPriceInPaise: 4000, priceInPaise: 5000 }),
+      row({ id: '2', subject: 'Rice', competitorPriceInPaise: 5000, priceInPaise: 5000 }),
+      row({ id: '3', subject: 'Rice', competitorPriceInPaise: 4500, priceInPaise: 5000 }),
+    ]);
+    const svc = makeService(prisma);
+    const benchmarks = await svc.getPriceBenchmarks(BIZ);
+    expect(benchmarks).toHaveLength(1);
+    expect(benchmarks[0]!.marketLow).toBe(4000);
+    expect(benchmarks[0]!.marketHigh).toBe(5000);
+    expect(benchmarks[0]!.marketAvg).toBe(4500);
+    expect(benchmarks[0]!.sampleCount).toBe(3);
+    expect(Number.isInteger(benchmarks[0]!.marketAvg)).toBe(true);
+  });
+});
 
-    it('sets defaults for optional fields', () => {
-      const obs = service.addObservation('biz-1', {
-        type: 'DEMAND_SIGNAL',
-        subject: 'Diwali lights',
-        description: 'High demand for decorative lights',
-      });
-      expect(obs.confidence).toBe('MEDIUM');
-      expect(obs.source).toBe('MANUAL');
-      expect(obs.priceInPaise).toBeNull();
-      expect(obs.competitorPriceInPaise).toBeNull();
-    });
+describe('getSummary', () => {
+  it('counts unique competitors (case-insensitive) and by type', async () => {
+    const prisma = makePrisma();
+    const rows = [
+      row({ id: '1', subject: 'Rice', competitorName: 'Sharma Store', competitorPriceInPaise: 4000 }),
+      row({ id: '2', subject: 'Dal', competitorName: 'Gupta Store', competitorPriceInPaise: 7000 }),
+      row({ id: '3', subject: 'Oil', competitorName: 'sharma store', competitorPriceInPaise: 12000 }),
+    ];
+    // findMany is called twice (summary-all, then benchmarks); return rows both times.
+    (prisma.marketObservation.findMany as jest.Mock).mockResolvedValue(rows);
+    const svc = makeService(prisma);
+    const summary = await svc.getSummary(BIZ);
+    expect(summary.totalObservations).toBe(3);
+    expect(summary.competitorCount).toBe(2); // Sharma + Gupta
+    expect(summary.byType['PRICE_BENCHMARK']).toBe(3);
   });
 
-  describe('listObservations', () => {
-    beforeEach(() => {
-      service.addObservation('biz-1', { type: 'PRICE_BENCHMARK', subject: 'Rice', description: 'Benchmark', competitorPriceInPaise: 4500 });
-      service.addObservation('biz-1', { type: 'DEMAND_SIGNAL', subject: 'Wheat', description: 'High demand' });
-      service.addObservation('biz-1', { type: 'NEW_COMPETITOR', subject: 'New shop', description: 'New shop opened' });
-    });
+  it('returns zero counts for an empty business', async () => {
+    const svc = makeService(makePrisma());
+    const summary = await svc.getSummary('empty');
+    expect(summary.totalObservations).toBe(0);
+    expect(summary.competitorCount).toBe(0);
+  });
+});
 
-    it('returns all observations without filter', () => {
-      const obs = service.listObservations('biz-1');
-      expect(obs.length).toBe(3);
-    });
-
-    it('filters by type', () => {
-      const obs = service.listObservations('biz-1', 'DEMAND_SIGNAL');
-      expect(obs).toHaveLength(1);
-      expect(obs[0]!.type).toBe('DEMAND_SIGNAL');
-    });
-
-    it('isolates by businessId', () => {
-      service.addObservation('biz-2', { type: 'DEMAND_SIGNAL', subject: 'Mango', description: 'Seasonal demand' });
-      expect(service.listObservations('biz-2')).toHaveLength(1);
-      expect(service.listObservations('biz-1')).toHaveLength(3);
-    });
+describe('deleteObservation', () => {
+  it('deletes an existing observation', async () => {
+    const prisma = makePrisma();
+    (prisma.marketObservation.findFirst as jest.Mock).mockResolvedValue(row());
+    const svc = makeService(prisma);
+    await svc.deleteObservation(BIZ, 'mkt-1');
+    expect(prisma.marketObservation.delete).toHaveBeenCalledWith({ where: { id: 'mkt-1' } });
   });
 
-  describe('getPriceBenchmarks', () => {
-    it('returns empty for no benchmarks', () => {
-      expect(service.getPriceBenchmarks('biz-1')).toEqual([]);
-    });
-
-    it('aggregates multiple benchmarks for same subject', () => {
-      service.addObservation('biz-1', { type: 'PRICE_BENCHMARK', subject: 'Rice', description: 'd1', competitorPriceInPaise: 4000 });
-      service.addObservation('biz-1', { type: 'PRICE_BENCHMARK', subject: 'Rice', description: 'd2', competitorPriceInPaise: 5000 });
-      service.addObservation('biz-1', { type: 'PRICE_BENCHMARK', subject: 'Rice', description: 'd3', competitorPriceInPaise: 4500 });
-
-      const benchmarks = service.getPriceBenchmarks('biz-1');
-      expect(benchmarks).toHaveLength(1);
-      expect(benchmarks[0]!.subject).toBe('Rice');
-      expect(benchmarks[0]!.marketLow).toBe(4000);
-      expect(benchmarks[0]!.marketHigh).toBe(5000);
-      expect(benchmarks[0]!.marketAvg).toBe(4500);
-      expect(benchmarks[0]!.sampleCount).toBe(3);
-    });
-  });
-
-  describe('getSummary', () => {
-    it('returns zero counts for empty business', () => {
-      const summary = service.getSummary('biz-empty');
-      expect(summary.totalObservations).toBe(0);
-      expect(summary.competitorCount).toBe(0);
-    });
-
-    it('counts unique competitors', () => {
-      service.addObservation('biz-1', { type: 'PRICE_BENCHMARK', subject: 'Rice', description: 'd', competitorName: 'Sharma Store', competitorPriceInPaise: 4000 });
-      service.addObservation('biz-1', { type: 'PRICE_BENCHMARK', subject: 'Dal', description: 'd', competitorName: 'Gupta Store', competitorPriceInPaise: 7000 });
-      service.addObservation('biz-1', { type: 'PRICE_BENCHMARK', subject: 'Oil', description: 'd', competitorName: 'Sharma Store', competitorPriceInPaise: 12000 });
-
-      const summary = service.getSummary('biz-1');
-      expect(summary.competitorCount).toBe(2); // Sharma + Gupta (case-insensitive)
-      expect(summary.byType['PRICE_BENCHMARK']).toBe(3);
-    });
-  });
-
-  describe('deleteObservation', () => {
-    it('removes an existing observation', () => {
-      const obs = service.addObservation('biz-1', { type: 'DEMAND_SIGNAL', subject: 'Test', description: 'Test' });
-      service.deleteObservation('biz-1', obs.id);
-      expect(service.listObservations('biz-1')).toHaveLength(0);
-    });
-
-    it('throws NotFoundException for unknown id', () => {
-      expect(() => service.deleteObservation('biz-1', 'unknown-id')).toThrow();
-    });
+  it('throws NotFound for an unknown id', async () => {
+    const svc = makeService(makePrisma());
+    await expect(svc.deleteObservation(BIZ, 'nope')).rejects.toThrow(NotFoundException);
   });
 });

@@ -1,9 +1,10 @@
 // Market intelligence data model — PROMPT 140 (Phase 13).
 // Tracks local price benchmarks, competitor observations, and market trends
 // that an Indian MSME owner might record via voice or manual entry.
-// Storage is in-memory for Phase 15; Prisma model added in Phase 16.
+// Persisted in MySQL via Prisma (DL-011); aggregation runs in application code.
 
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 
 export type MarketObservationType =
   | 'PRICE_BENCHMARK'    // competitor price for a product/service
@@ -62,56 +63,79 @@ export interface MarketSummary {
   competitorCount: number;
 }
 
+interface ObservationRow {
+  id: string;
+  businessId: string;
+  type: string;
+  subject: string;
+  description: string;
+  priceInPaise: number | null;
+  competitorPriceInPaise: number | null;
+  competitorName: string | null;
+  locality: string | null;
+  confidence: string;
+  source: string;
+  observedAt: Date;
+  createdAt: Date;
+}
+
+function toDomain(row: ObservationRow): MarketObservation {
+  return {
+    ...row,
+    type: row.type as MarketObservationType,
+    confidence: row.confidence as MarketObservation['confidence'],
+    source: row.source as MarketObservation['source'],
+  };
+}
+
 @Injectable()
 export class MarketIntelligenceService {
-  private readonly store = new Map<string, MarketObservation[]>();
+  constructor(private readonly prisma: PrismaService) {}
 
-  private getList(businessId: string): MarketObservation[] {
-    if (!this.store.has(businessId)) this.store.set(businessId, []);
-    return this.store.get(businessId)!;
+  async addObservation(businessId: string, dto: CreateObservationDto): Promise<MarketObservation> {
+    const row = await this.prisma.marketObservation.create({
+      data: {
+        businessId,
+        type: dto.type,
+        subject: dto.subject.trim(),
+        description: dto.description.trim(),
+        priceInPaise: dto.priceInPaise ?? null,
+        competitorPriceInPaise: dto.competitorPriceInPaise ?? null,
+        competitorName: dto.competitorName?.trim() ?? null,
+        locality: dto.locality?.trim() ?? null,
+        confidence: dto.confidence ?? 'MEDIUM',
+        source: dto.source ?? 'MANUAL',
+        observedAt: dto.observedAt ? new Date(dto.observedAt) : new Date(),
+      },
+    });
+    return toDomain(row as ObservationRow);
   }
 
-  addObservation(businessId: string, dto: CreateObservationDto): MarketObservation {
-    const obs: MarketObservation = {
-      id: `mkt_${Date.now()}_${Math.random().toString(36).slice(2)}`,
-      businessId,
-      type: dto.type,
-      subject: dto.subject.trim(),
-      description: dto.description.trim(),
-      priceInPaise: dto.priceInPaise ?? null,
-      competitorPriceInPaise: dto.competitorPriceInPaise ?? null,
-      competitorName: dto.competitorName?.trim() ?? null,
-      locality: dto.locality?.trim() ?? null,
-      confidence: dto.confidence ?? 'MEDIUM',
-      source: dto.source ?? 'MANUAL',
-      observedAt: dto.observedAt ? new Date(dto.observedAt) : new Date(),
-      createdAt: new Date(),
-    };
-    this.getList(businessId).unshift(obs);
-    return obs;
-  }
-
-  listObservations(
+  async listObservations(
     businessId: string,
     type?: MarketObservationType,
     limit = 50,
-  ): MarketObservation[] {
-    const list = this.getList(businessId);
-    const filtered = type ? list.filter(o => o.type === type) : list;
-    return filtered.slice(0, limit);
+  ): Promise<MarketObservation[]> {
+    const rows = await this.prisma.marketObservation.findMany({
+      where: { businessId, ...(type ? { type } : {}) },
+      orderBy: { observedAt: 'desc' },
+      take: limit,
+    });
+    return rows.map(r => toDomain(r as ObservationRow));
   }
 
-  getObservation(businessId: string, id: string): MarketObservation {
-    const obs = this.getList(businessId).find(o => o.id === id);
-    if (!obs) throw new NotFoundException('Observation not found');
-    return obs;
+  async getObservation(businessId: string, id: string): Promise<MarketObservation> {
+    const row = await this.prisma.marketObservation.findFirst({ where: { id, businessId } });
+    if (!row) throw new NotFoundException('Observation not found');
+    return toDomain(row as ObservationRow);
   }
 
   /** Aggregate price benchmarks for a subject from all PRICE_BENCHMARK observations. */
-  getPriceBenchmarks(businessId: string): PriceBenchmark[] {
-    const list = this.getList(businessId).filter(
-      o => o.type === 'PRICE_BENCHMARK' && o.competitorPriceInPaise !== null,
-    );
+  async getPriceBenchmarks(businessId: string): Promise<PriceBenchmark[]> {
+    const rows = await this.prisma.marketObservation.findMany({
+      where: { businessId, type: 'PRICE_BENCHMARK', competitorPriceInPaise: { not: null } },
+    });
+    const list = rows.map(r => toDomain(r as ObservationRow));
 
     const bySubject = new Map<string, MarketObservation[]>();
     for (const o of list) {
@@ -141,8 +165,10 @@ export class MarketIntelligenceService {
     });
   }
 
-  getSummary(businessId: string): MarketSummary {
-    const list = this.getList(businessId);
+  async getSummary(businessId: string): Promise<MarketSummary> {
+    const rows = await this.prisma.marketObservation.findMany({ where: { businessId } });
+    const list = rows.map(r => toDomain(r as ObservationRow));
+
     const byType = {} as Record<MarketObservationType, number>;
     const types: MarketObservationType[] = [
       'PRICE_BENCHMARK', 'DEMAND_SIGNAL', 'NEW_COMPETITOR',
@@ -157,19 +183,20 @@ export class MarketIntelligenceService {
         .map(o => o.competitorName!.toLowerCase()),
     );
 
+    const benchmarks = await this.getPriceBenchmarks(businessId);
+
     return {
       totalObservations: list.length,
       byType,
-      recentPriceBenchmarks: this.getPriceBenchmarks(businessId).slice(0, 5),
+      recentPriceBenchmarks: benchmarks.slice(0, 5),
       demandSignals: list.filter(o => o.type === 'DEMAND_SIGNAL').slice(0, 5),
       competitorCount: competitorNames.size,
     };
   }
 
-  deleteObservation(businessId: string, id: string): void {
-    const list = this.getList(businessId);
-    const idx = list.findIndex(o => o.id === id);
-    if (idx === -1) throw new NotFoundException('Observation not found');
-    list.splice(idx, 1);
+  async deleteObservation(businessId: string, id: string): Promise<void> {
+    const existing = await this.prisma.marketObservation.findFirst({ where: { id, businessId } });
+    if (!existing) throw new NotFoundException('Observation not found');
+    await this.prisma.marketObservation.delete({ where: { id } });
   }
 }
