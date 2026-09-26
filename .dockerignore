@@ -1,0 +1,32 @@
+# Build artifacts and dependencies — rebuilt inside the image.
+node_modules
+**/node_modules
+**/dist
+**/.turbo
+**/*.tsbuildinfo
+
+# Local env / secrets — never bake into an image.
+**/.env
+**/.env.*
+!**/.env.example
+
+# Mobile app — not part of the backend image.
+mobile
+
+# Docs, tests scaffolding, VCS, CI.
+docs
+.git
+.github
+**/__tests__
+**/*.spec.ts
+**/*.test.ts
+
+# Editor / OS cruft.
+.vscode
+.idea
+.DS_Store
+*.log
+
+# Reference documents (not needed at runtime).
+*.docx
+*.pdf

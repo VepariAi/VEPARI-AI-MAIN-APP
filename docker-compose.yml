@@ -1,0 +1,46 @@
+# Local development stack — PROMPT 220 (environment separation).
+#
+# Brings up PostgreSQL and the backend together for local/integration use.
+#   docker compose up --build
+# The backend waits for Postgres to be healthy, runs migrations on start, then
+# serves on http://localhost:3000. Values here are LOCAL-ONLY defaults; real
+# deployments inject secrets from the platform's secret store, never this file.
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: vepari
+      POSTGRES_PASSWORD: localdev
+      POSTGRES_DB: vepari_dev
+    ports:
+      - '5432:5432'
+    volumes:
+      - vepari_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U vepari -d vepari_dev']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: '3000'
+      DATABASE_URL: postgresql://vepari:localdev@postgres:5432/vepari_dev?schema=public
+      # LOCAL-ONLY placeholder secret; override for anything shared.
+      JWT_SECRET: local-dev-secret-not-for-production-use-only-abcdefghijklmnop
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:19006
+    ports:
+      - '3000:3000'
+    # Apply migrations before serving so a fresh DB is schema-correct.
+    command: sh -c "npx prisma migrate deploy --schema prisma/schema.prisma && node dist/main"
+
+volumes:
+  vepari_pgdata:

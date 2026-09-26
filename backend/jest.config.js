@@ -6,6 +6,12 @@ module.exports = {
   transform: {
     '^.+\\.(t|j)s$': 'ts-jest',
   },
+  // Resolve workspace packages to their TS source in tests so the suite never
+  // depends on a prior `dist/` build of the shared packages.
+  moduleNameMapper: {
+    '^@vepari/types$': '<rootDir>/../../packages/types/src/index.ts',
+    '^@vepari/validation$': '<rootDir>/../../packages/validation/src/index.ts',
+  },
   collectCoverageFrom: ['**/*.(t|j)s'],
   coverageDirectory: '../coverage',
   testEnvironment: 'node',
