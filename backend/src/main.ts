@@ -16,6 +16,9 @@ async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter({ logger: isProd ? { level: 'warn' } : true }),
+    // Keep the raw request body so inbound webhooks can be signature-verified
+    // (HMAC must run over the exact bytes, not re-serialized JSON). PROMPT 234.
+    { rawBody: true },
   );
 
   // Security headers
