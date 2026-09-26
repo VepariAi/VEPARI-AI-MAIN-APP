@@ -1,8 +1,8 @@
 # Local development stack — PROMPT 220 (environment separation).
 #
-# Brings up PostgreSQL and the backend together for local/integration use.
+# Brings up MySQL and the backend together for local/integration use.
 #   docker compose up --build
-# The backend waits for Postgres to be healthy, runs migrations on start, then
+# The backend waits for MySQL to be healthy, runs migrations on start, then
 # serves on http://localhost:3000. Values here are LOCAL-ONLY defaults; real
 # deployments inject secrets from the platform's secret store, never this file.
 

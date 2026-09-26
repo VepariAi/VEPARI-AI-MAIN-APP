@@ -25,7 +25,7 @@ Consolidated record of the security-hardening pass. (Prompts 196–209.)
 
 ## 200 — Encryption (transit + rest)
 - Transit: TLS terminated at the platform edge; `helmet` sets HSTS and security headers; CORS restricted to an explicit origin allowlist.
-- Rest: database and backups encrypted at rest by the managed Postgres provider.
+- Rest: database and backups encrypted at rest by the managed MySQL provider.
 
 ## 201 — Rate limiting
 - Global `ThrottlerGuard`: 10 req/s burst and 200 req/min sustained per client. Auth/OTP endpoints inherit the strict limits to blunt brute-force.

@@ -37,7 +37,7 @@ needs attention.
 ## 276 — Architecture & technology
 - **Mobile:** React Native (Android-first, iOS-ready), SQLite offline store,
   sync engine with cursors + idempotency + conflict resolution.
-- **Backend:** NestJS 10 + Fastify, 30 modules, Prisma/PostgreSQL, JWT+OTP auth,
+- **Backend:** NestJS 10 + Fastify, 30 modules, Prisma/MySQL, JWT+OTP auth,
   RBAC via business membership.
 - **AI Gateway:** single server-side egress to providers (Anthropic → OpenAI
   fallback), prompt-injection defense, per-call cost tracking in paise. AI has

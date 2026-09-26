@@ -7,7 +7,7 @@ Technical architecture documentation for Vepari AI.
 - Four-engine model (Business Brain, Finance Engine, Growth Engine, Access Engine) — see DL-006
 - AI OS state machine documentation
 - Voice pipeline architecture
-- Sync architecture (local SQLite ↔ cloud PostgreSQL) — see DL-002
+- Sync architecture (local SQLite ↔ cloud MySQL) — see DL-002, DL-011
 - Security architecture
 - Provider-agnostic AI gateway design
 - React Native module architecture

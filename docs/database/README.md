@@ -3,7 +3,7 @@
 Database schema and data architecture documentation for Vepari AI.
 
 **Expected contents (populated during Phase 9–10 and onward):**
-- PostgreSQL schema (cloud — authoritative)
+- MySQL 8 schema (cloud — authoritative; see DL-011)
 - SQLite schema (on-device — local-first)
 - Sync queue schema (operation_id, device_id, entity, base_version, status, retry_count)
 - Data classification matrix (business fact / event / preference / derived context)
