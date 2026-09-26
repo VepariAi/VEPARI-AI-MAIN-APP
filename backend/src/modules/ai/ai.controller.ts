@@ -52,7 +52,7 @@ export class AiBusinessController {
     const rawLang = xLanguage ?? acceptLanguage?.split(',')[0]?.split(';')[0]?.trim();
     const language: LanguageCode = (rawLang && isValidLanguageCode(rawLang)) ? rawLang : 'en';
     const result = await this.aiService.chatWithBusiness(businessId, body.transcript, req.user?.id, language);
-    this.usageService.record({ businessId, type: 'ai_chat' });
+    void this.usageService.record({ businessId, type: 'ai_chat' });
     void this.auditService.log({
       ...(req.user?.id ? { userId: req.user.id } : {}),
       action: 'AI_CHAT',

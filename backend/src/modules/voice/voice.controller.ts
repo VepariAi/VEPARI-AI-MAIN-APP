@@ -24,7 +24,7 @@ export class VoiceController {
   ) {
     const result = await this.voiceService.transcribe(body.audioBase64, body.languageCode);
     if (body.businessId) {
-      this.usageService.record({ businessId: body.businessId, type: 'stt' });
+      void this.usageService.record({ businessId: body.businessId, type: 'stt' });
     }
     return result;
   }
@@ -37,7 +37,7 @@ export class VoiceController {
   ) {
     const result = await this.voiceService.synthesise(body.text, body.languageCode);
     if (body.businessId) {
-      this.usageService.record({ businessId: body.businessId, type: 'tts' });
+      void this.usageService.record({ businessId: body.businessId, type: 'tts' });
     }
     return result;
   }

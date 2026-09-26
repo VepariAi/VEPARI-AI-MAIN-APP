@@ -73,7 +73,7 @@ export class ProviderGatewayService {
 
           // Record usage so every AI call is cost-accounted
           if (opts?.businessId) {
-            this.usageService.record({
+            void this.usageService.record({
               businessId: opts.businessId,
               type: 'ai_chat',
               provider: result.provider,

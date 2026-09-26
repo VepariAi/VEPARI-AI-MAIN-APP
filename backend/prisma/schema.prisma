@@ -599,3 +599,24 @@ model Operation {
   @@index([businessId, createdAt])
   @@map("operations")
 }
+
+// ── Usage & cost tracking (persisted; DL-011 MySQL) ─────────────────────────────
+// One row per business per billing period (month). A new period is a new row,
+// so counters "reset" automatically without mutation.
+
+model UsageCounter {
+  id                     String   @id @default(uuid())
+  businessId             String
+  periodStart            DateTime // first day of the billing month
+  aiChatRequests         Int      @default(0)
+  sttRequests            Int      @default(0)
+  ttsRequests            Int      @default(0)
+  totalApiCalls          Int      @default(0)
+  inputTokens            Int      @default(0)
+  outputTokens           Int      @default(0)
+  estimatedAiCostInPaise Int      @default(0)
+  updatedAt              DateTime @updatedAt
+
+  @@unique([businessId, periodStart])
+  @@map("usage_counters")
+}

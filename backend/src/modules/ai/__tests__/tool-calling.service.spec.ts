@@ -129,43 +129,5 @@ describe('ToolCallingService.chatWithTools — with tool call', () => {
     expect(reply).toBeDefined();
   });
 });
-
-// ── UsageService integration ──────────────────────────────────────────────────
-
-describe('ProviderGatewayService cost tracking', () => {
-  it('usageService fields are present on UsageCounter', async () => {
-    const { UsageService } = await import('../../usage/usage.service');
-    const svc = new UsageService();
-    svc.record({ businessId: 'b1', type: 'ai_chat', provider: 'anthropic', inputTokens: 1000, outputTokens: 200 });
-    const usage = svc.getUsage('b1');
-    expect(usage.inputTokens).toBe(1000);
-    expect(usage.outputTokens).toBe(200);
-    expect(usage.estimatedAiCostInPaise).toBeGreaterThan(0);
-    expect(Number.isInteger(usage.estimatedAiCostInPaise)).toBe(true);
-  });
-
-  it('records AI cost with integer arithmetic', async () => {
-    const { UsageService } = await import('../../usage/usage.service');
-    const svc = new UsageService();
-    // 2000 input tokens at anthropic rate (25 paise/1K) = 50 paise
-    // 500 output tokens at anthropic rate (126 paise/1K) = 63 paise → Math.round(63) = 63
-    svc.record({ businessId: 'b2', type: 'ai_chat', provider: 'anthropic', inputTokens: 2000, outputTokens: 500 });
-    const usage = svc.getUsage('b2');
-    // 2000 * 25 / 1000 + 500 * 126 / 1000 = 50 + 63 = 113 paise
-    expect(usage.estimatedAiCostInPaise).toBe(113);
-  });
-
-  it('counts ai_chat requests separately from stt/tts', async () => {
-    const { UsageService } = await import('../../usage/usage.service');
-    const svc = new UsageService();
-    svc.record({ businessId: 'b3', type: 'ai_chat', inputTokens: 100, outputTokens: 50 });
-    svc.record({ businessId: 'b3', type: 'stt' });
-    svc.record({ businessId: 'b3', type: 'tts' });
-    svc.record({ businessId: 'b3', type: 'api' });
-    const usage = svc.getUsage('b3');
-    expect(usage.aiChatRequests).toBe(1);
-    expect(usage.sttRequests).toBe(1);
-    expect(usage.ttsRequests).toBe(1);
-    expect(usage.totalApiCalls).toBe(4);
-  });
-});
+// (UsageService cost-tracking tests moved to usage/__tests__/usage.service.spec.ts
+//  now that UsageService is Prisma-backed.)
