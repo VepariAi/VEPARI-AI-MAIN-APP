@@ -4,6 +4,7 @@ import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { HealthModule } from './health/health.module';
 import { ObservabilityModule } from './common/observability/observability.module';
+import { SecurityModule } from './common/security/security.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { EventsModule } from './events/events.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -47,6 +48,7 @@ import { PrivacyModule } from './modules/privacy/privacy.module';
     PrismaModule,
     EventsModule,
     ObservabilityModule,
+    SecurityModule,
     HealthModule,
     AuthModule,
     UsersModule,

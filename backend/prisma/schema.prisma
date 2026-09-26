@@ -534,3 +534,23 @@ model SyncCheckpoint {
   @@unique([businessId, deviceId])
   @@map("sync_checkpoints")
 }
+
+// ── Security (5-layer defense-in-depth: Layer 5 — audit) ────────────────────────
+
+model SecurityEvent {
+  id         String   @id @default(uuid())
+  businessId String?
+  userId     String?
+  // e.g. AUTH_FAILURE, RATE_LIMIT_BLOCK, INJECTION_ATTEMPT, WEBHOOK_REJECTED,
+  //      UPLOAD_REJECTED, TENANT_VIOLATION, DECRYPTION_FAILURE
+  type       String
+  severity   String   // info | warning | critical
+  ipAddress  String?
+  detail     String?  @db.Text
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([businessId, createdAt])
+  @@map("security_events")
+}
