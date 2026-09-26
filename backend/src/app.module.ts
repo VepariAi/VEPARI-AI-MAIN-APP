@@ -35,6 +35,7 @@ import { UsageModule } from './modules/usage/usage.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { ReturnsModule } from './modules/returns/returns.module';
 import { RealtimeModule } from './modules/realtime/realtime.module';
+import { PrivacyModule } from './modules/privacy/privacy.module';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { RealtimeModule } from './modules/realtime/realtime.module';
     AuditModule,
     ReturnsModule,
     RealtimeModule,
+    PrivacyModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ThrottlerGuard },
