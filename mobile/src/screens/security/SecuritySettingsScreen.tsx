@@ -14,6 +14,7 @@ import { Colors, Typography, Spacing, Radius } from '@vepari/design-system';
 import { hasPin, clearPin } from '@/security/pin';
 import { getBiometricType, storeBiometricSentinel } from '@/security/biometric';
 import { secureRead, secureWrite, secureDelete, StorageKey } from '@/security/secureStorage';
+import { getApiClient } from '@/services/api';
 import SecurityLockScreen from './SecurityLockScreen';
 
 export default function SecuritySettingsScreen(): React.JSX.Element {
@@ -62,6 +63,51 @@ export default function SecuritySettingsScreen(): React.JSX.Element {
       setSettingUpPin(true);
     }
   }, [pinEnabled]);
+
+  const [privacyBusy, setPrivacyBusy] = useState(false);
+
+  const handleExportData = useCallback(async () => {
+    setPrivacyBusy(true);
+    try {
+      await getApiClient().exportMyData();
+      Alert.alert(
+        'Data Export Ready',
+        'Your personal data has been assembled. It excludes passwords and tokens.',
+      );
+    } catch {
+      Alert.alert('Export Failed', 'Could not export your data right now. Please try again.');
+    } finally {
+      setPrivacyBusy(false);
+    }
+  }, []);
+
+  const handleDeleteAccount = useCallback(() => {
+    Alert.alert(
+      'Delete Account',
+      'This permanently removes your personal data and signs you out on all devices. ' +
+        'Financial records required by law are kept but anonymized. This cannot be undone.',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            void (async () => {
+              setPrivacyBusy(true);
+              try {
+                await getApiClient().deleteMyAccount();
+                Alert.alert('Account Deleted', 'Your account has been erased.');
+              } catch {
+                Alert.alert('Deletion Failed', 'Could not delete your account right now. Please try again.');
+              } finally {
+                setPrivacyBusy(false);
+              }
+            })();
+          },
+        },
+      ],
+    );
+  }, []);
 
   const handleToggleBiometric = useCallback(async (value: boolean) => {
     if (!pinEnabled) {
@@ -169,6 +215,41 @@ export default function SecuritySettingsScreen(): React.JSX.Element {
               activeOpacity={0.7}
             >
               <Text style={[styles.rowLabel, { color: Colors.error }]}>Clear Local Cache</Text>
+              <Text style={styles.chevron}>›</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Privacy</Text>
+          <View style={styles.card}>
+            <TouchableOpacity
+              style={styles.row}
+              onPress={() => void handleExportData()}
+              disabled={privacyBusy}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel="Export my data"
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={styles.rowLabel}>Export My Data</Text>
+                <Text style={styles.rowSub}>Download everything we hold about you</Text>
+              </View>
+              <Text style={styles.chevron}>›</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.row, styles.rowBorder]}
+              onPress={handleDeleteAccount}
+              disabled={privacyBusy}
+              activeOpacity={0.7}
+              accessibilityRole="button"
+              accessibilityLabel="Delete my account"
+            >
+              <View style={{ flex: 1 }}>
+                <Text style={[styles.rowLabel, { color: Colors.error }]}>Delete My Account</Text>
+                <Text style={styles.rowSub}>Erase your personal data (cannot be undone)</Text>
+              </View>
               <Text style={styles.chevron}>›</Text>
             </TouchableOpacity>
           </View>

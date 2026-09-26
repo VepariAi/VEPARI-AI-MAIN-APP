@@ -1217,8 +1217,53 @@ export class VepariApiClient {
     return this.request<unknown>('POST', `/businesses/${businessId}/connections`, { providerId });
   }
 
+  async getConnection(businessId: string, connectionId: string) {
+    return this.request<unknown>('GET', `/businesses/${businessId}/connections/${connectionId}`);
+  }
+
+  /** Store integration credentials — encrypted at rest server-side (AES-256-GCM). */
+  async setConnectionCredentials(businessId: string, connectionId: string, credentials: Record<string, string>) {
+    return this.request<unknown>('POST', `/businesses/${businessId}/connections/${connectionId}/credentials`, { credentials });
+  }
+
+  async getConnectionHealth(businessId: string, connectionId: string) {
+    return this.request<unknown>('GET', `/businesses/${businessId}/connections/${connectionId}/health`);
+  }
+
+  async triggerConnectionSync(businessId: string, connectionId: string) {
+    return this.request<unknown>('POST', `/businesses/${businessId}/connections/${connectionId}/sync`, {});
+  }
+
+  async buildConnectionOAuthUrl(
+    businessId: string,
+    connectionId: string,
+    body: { clientId: string; authorizeEndpoint: string; redirectUri: string; scopes: string[] },
+  ) {
+    return this.request<{ url: string; state: string }>(
+      'POST', `/businesses/${businessId}/connections/${connectionId}/oauth/authorize-url`, body,
+    );
+  }
+
   async deleteConnection(businessId: string, connectionId: string) {
     return this.request<void>('DELETE', `/businesses/${businessId}/connections/${connectionId}`);
+  }
+
+// ── Privacy (data export / erasure / retention) ─────────────────────────────
+
+  /** Export all personal data held for the authenticated user (portable JSON). */
+  async exportMyData() {
+    return this.request<unknown>('GET', `/privacy/export`);
+  }
+
+  async getRetentionPolicy() {
+    return this.request<{ policy: Array<{ dataClass: string; retention: string; basis: string }> }>(
+      'GET', `/privacy/retention`,
+    );
+  }
+
+  /** Right to erasure — anonymizes the account and revokes sessions. Irreversible. */
+  async deleteMyAccount() {
+    return this.request<unknown>('DELETE', `/privacy/account`);
   }
 
 // ── Documents ─────────────────────────────────────────────────────────────
