@@ -21,6 +21,18 @@ Each APK is debug-signed (`debug.keystore`, generated locally and **git-ignored*
 never committed), `versionName 1.0-dev`, `minSdkVersion 21`, `compileSdkVersion 34`,
 label **"Vepari AI"**.
 
+The **production release App Bundle** was also built:
+
+| Variant | Task | Artifact |
+|---|---|---|
+| Production release | `bundleProductionRelease` | `app-production-release.aab` (43.5 MB) |
+
+This exercises the full release path — release JS bundle, Hermes bytecode
+compilation, and release-mode (`RelWithDebInfo`) native compilation across all four
+ABIs. The `.aab` contains `base/lib/<abi>/{libop-sqlite.so, libcrypto.so,
+libhermes.so}` for every ABI plus op-sqlite/crypto debug symbols and a valid
+`BundleConfig.pb`. It is debug-signed (see signing limitation below).
+
 ### APK content verification (development-debug)
 
 - **`libop-sqlite.so`** present for **all four ABIs** (`arm64-v8a`, `armeabi-v7a`,
@@ -92,10 +104,11 @@ affect CI or developer machines.
   (no `/dev/kvm`) and no physical device, so on-device launch and native-module
   runtime initialization (op-sqlite open + SQLCipher key) cannot be exercised in
   this environment. This must be validated on a real device / CI emulator.
-- **Production release signing.** Release builds fall back to the debug keystore
-  unless `VEPARI_UPLOAD_STORE_FILE` (and related) are provided. A Play-Store
-  upload build requires the real upload key supplied from secure CI credentials —
-  never committed to Git.
+- **Production release signing.** The release AAB above is **debug-signed** —
+  release builds fall back to the debug keystore unless `VEPARI_UPLOAD_STORE_FILE`
+  (and related) are provided. A Play-Store upload build requires the real upload
+  key supplied from secure CI credentials — never committed to Git. The build
+  pipeline itself is verified; only the signing identity is pending.
 
 ## How to reproduce (this container)
 
