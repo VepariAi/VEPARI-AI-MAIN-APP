@@ -7,11 +7,12 @@
 // Usage + cost tracking (Prompt 124) is handled here via UsageService so
 // every call is accounted for regardless of which provider served it.
 
-import { Injectable, Logger, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, Logger, Optional, InternalServerErrorException } from '@nestjs/common';
 import type { AiProvider, ChatMessage, ChatOptions, ChatResult } from './provider.interface';
 import { AnthropicProvider } from './providers/anthropic.provider';
 import { OpenAiProvider } from './providers/openai.provider';
 import { UsageService } from '../usage/usage.service';
+import { MetricsService } from '../../common/observability/metrics.service';
 
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
@@ -25,7 +26,10 @@ export class ProviderGatewayService {
   private readonly logger = new Logger(ProviderGatewayService.name);
   private readonly providers: AiProvider[];
 
-  constructor(private readonly usageService: UsageService) {
+  constructor(
+    private readonly usageService: UsageService,
+    @Optional() private readonly metrics?: MetricsService,
+  ) {
     const anthropicKey = process.env['ANTHROPIC_API_KEY'];
     const openaiKey = process.env['OPENAI_API_KEY'];
 
@@ -82,6 +86,7 @@ export class ProviderGatewayService {
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
           errors.push(`${provider.name}[${attempt}]: ${msg}`);
+          this.metrics?.increment('ai_provider_failures_total', { provider: provider.name });
           this.logger.warn(`Provider ${provider.name} attempt ${attempt} failed: ${msg}`);
 
           // Don't retry on auth errors — they won't self-heal

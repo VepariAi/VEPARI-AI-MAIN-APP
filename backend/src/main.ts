@@ -50,7 +50,7 @@ async function bootstrap() {
   // Consistent error shape for 4xx/5xx
   app.useGlobalFilters(new AllExceptionsFilter());
 
-  app.setGlobalPrefix('v1', { exclude: ['/health', '/health/live', '/health/ready', '/robots.txt', '/.well-known/security.txt', '/llms.txt'] });
+  app.setGlobalPrefix('v1', { exclude: ['/health', '/health/live', '/health/ready', '/metrics', '/metrics/json', '/metrics/alerts', '/robots.txt', '/.well-known/security.txt', '/llms.txt'] });
 
   // Swagger — dev/staging only; never expose API docs in production
   if (!isProd) {
