@@ -17,6 +17,11 @@ react {
     reactNativeDir = file("../../../node_modules/react-native")
     codegenDir = file("../../../node_modules/@react-native/codegen")
     cliFile = file("../../../node_modules/react-native/cli.js")
+    // The RN plugin auto-detects hermesc relative to `root` (mobile/), where it
+    // is absent because react-native is hoisted to the repo root. Point at the
+    // hoisted binary explicitly; the plugin substitutes %OS-BIN% for the current
+    // OS (linux64-bin/osx-bin/win64-bin). Required for release JS→bytecode.
+    hermesCommand = file("../../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc").absolutePath
 
     // Debug variants skip JS bundling (Metro serves the bundle). With product
     // flavors we must enumerate every debuggable variant explicitly.
