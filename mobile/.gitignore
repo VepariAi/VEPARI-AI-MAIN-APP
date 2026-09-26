@@ -1,0 +1,32 @@
+# OSX
+.DS_Store
+
+# Android / Gradle
+build/
+.gradle/
+local.properties
+*.iml
+*.hprof
+.cxx/
+android/app/release/
+android/.idea/
+
+# Keystores / signing — NEVER commit (debug.keystore is generated locally/CI)
+*.keystore
+*.jks
+
+# node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Metro / bundler
+.metro-health-check*
+*.jsbundle
+
+# testing
+/coverage
+
+# iOS (future)
+**/Pods/
+ios/build/

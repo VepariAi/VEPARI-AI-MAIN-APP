@@ -1,0 +1,5 @@
+rootProject.name = 'VepariAI'
+// MONOREPO: node_modules is hoisted to the repository root (../../ from here).
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
+include ':app'
+includeBuild('../../node_modules/@react-native/gradle-plugin')

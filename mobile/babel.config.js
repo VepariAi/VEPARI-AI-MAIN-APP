@@ -1,5 +1,7 @@
 module.exports = {
-  presets: ['module:metro-react-native-babel-preset'],
+  // RN 0.73 uses @react-native/babel-preset (the legacy metro-react-native-babel-preset
+  // is not installed in this toolchain).
+  presets: ['module:@react-native/babel-preset'],
   plugins: [
     [
       'module-resolver',

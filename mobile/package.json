@@ -33,6 +33,10 @@
   "devDependencies": {
     "@babel/core": "^7.20.0",
     "@babel/plugin-proposal-decorators": "^7.24.0",
+    "@react-native-community/cli": "12.3.6",
+    "@react-native-community/cli-platform-android": "12.3.6",
+    "@react-native/babel-preset": "0.73.21",
+    "@react-native/metro-config": "0.73.5",
     "@types/react": "^18.2.0",
     "@types/react-native": "^0.73.0",
     "babel-plugin-module-resolver": "^5.0.0",
