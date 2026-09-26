@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 844, "title": "Home — Quick Actions Config" }
+  ],
+  "annotations": [
+    { "id": "p63-note", "x": 0, "y": -120, "w": 560, "text": "P63 — Home Screen Components canvas. Depends on P36, P59. Phase 5 tokens. Quick Actions config bottom sheet: drag handles, toggle switches, icon badges. Overlay dims home behind sheet." }
+  ],
+  "launch": { "view": "canvas" }
+}

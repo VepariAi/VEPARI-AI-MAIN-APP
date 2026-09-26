@@ -1,0 +1,11 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",        "x": 0,    "y": 0,    "w": 900, "h": 1520, "title": "Full Layout Analysis" },
+    { "file": "AICore.dc.html",      "x": 960,  "y": 0,    "w": 760, "h": 1240, "title": "AI Core Ring Structure" },
+    { "file": "EngineCards.dc.html", "x": 1780, "y": 0,    "w": 820, "h": 1400, "title": "Engine Cards & Bottom Panel" }
+  ],
+  "annotations": [
+    { "id": "p58-note", "x": 0, "y": -100, "w": 520, "text": "P58 — AI OS.png inch-by-inch analysis. All measurements mapped to Phase 5 tokens. Source: AI OS.png marketing reference image. Used by P61 (AI OS Home canvas)." }
+  ],
+  "launch": { "view": "canvas" }
+}

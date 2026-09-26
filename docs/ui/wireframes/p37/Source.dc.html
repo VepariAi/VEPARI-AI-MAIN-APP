@@ -1,0 +1,76 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e5e5e5; }
+.back { font-size: 14px; color: #2563eb; font-weight: 500; }
+.breadcrumb { font-size: 14px; color: #a3a3a3; }
+.top-title { font-size: 16px; font-weight: 700; flex: 1; }
+.content { flex: 1; overflow: hidden; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.receipt-ph {
+  background: #fff; border-radius: 12px; border: 1.5px dashed #d4d4d4;
+  height: 220px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 8px;
+}
+.receipt-icon { font-size: 40px; opacity: 0.3; }
+.receipt-label { font-size: 13px; color: #a3a3a3; }
+.upload-btn { margin-top: 4px; padding: 8px 16px; background: #f0f4ff; border: 1.5px dashed #c7d7fc; border-radius: 8px; font-size: 13px; color: #2563eb; font-weight: 500; }
+.detail-card { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden; }
+.detail-row { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f5f5f5; }
+.detail-row:last-child { border-bottom: none; }
+.detail-lbl { font-size: 12px; color: #a3a3a3; width: 100px; flex-shrink: 0; }
+.detail-val { font-size: 14px; color: #171717; flex: 1; }
+.audit-section { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden; }
+.audit-hdr { padding: 10px 14px; border-bottom: 1px solid #f5f5f5; font-size: 12px; font-weight: 700; color: #737373; text-transform: uppercase; letter-spacing: 0.5px; }
+.audit-row { display: flex; gap: 10px; padding: 10px 14px; border-bottom: 1px solid #f5f5f5; }
+.audit-row:last-child { border-bottom: none; }
+.audit-time { font-size: 12px; color: #a3a3a3; width: 60px; flex-shrink: 0; }
+.audit-evt { font-size: 13px; color: #404040; }
+.drill-note { text-align: center; font-size: 11px; color: #a3a3a3; padding: 4px 0; }
+</style>
+<div class="top-bar">
+  <div class="back">← Invoice #1042</div>
+  <div class="breadcrumb">/</div>
+  <div class="top-title">Source Record</div>
+</div>
+<div class="content">
+  <div class="receipt-ph">
+    <div class="receipt-icon">🧾</div>
+    <div class="receipt-label">No receipt attached</div>
+    <div class="upload-btn">+ Attach photo / file</div>
+  </div>
+  <div class="detail-card">
+    <div class="detail-row">
+      <div class="detail-lbl">Entry method</div>
+      <div class="detail-val">Manual entry</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-lbl">Device</div>
+      <div class="detail-val">Sanjay's tablet (device-b7f3)</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-lbl">Sync status</div>
+      <div class="detail-val">✓ Synced — 28 Aug, 3:46 PM</div>
+    </div>
+    <div class="detail-row">
+      <div class="detail-lbl">Operation ID</div>
+      <div class="detail-val" style="font-size:12px;color:#a3a3a3;font-family:monospace">op-8f2a9c1d…</div>
+    </div>
+  </div>
+  <div class="audit-section">
+    <div class="audit-hdr">Audit log</div>
+    <div class="audit-row">
+      <div class="audit-time">3:45 PM</div>
+      <div class="audit-evt">Invoice created by Sanjay (Manager)</div>
+    </div>
+    <div class="audit-row">
+      <div class="audit-time">3:46 PM</div>
+      <div class="audit-evt">Synced to cloud · device-b7f3</div>
+    </div>
+    <div class="audit-row">
+      <div class="audit-time">1 Sep</div>
+      <div class="audit-evt">Viewed by Rajesh (Owner)</div>
+    </div>
+  </div>
+  <div class="drill-note">Level 5 of 5: Summary → Category → Account → Transaction → <strong>Source</strong></div>
+</div>

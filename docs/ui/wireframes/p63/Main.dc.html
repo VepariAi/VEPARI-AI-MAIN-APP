@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Home Components — Quick Actions</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2;
+  color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+  position: relative;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+
+/* dimmed home behind sheet */
+.home-bg {
+  position: absolute; inset: 0;
+  background: rgba(59,47,42,0.45);
+  z-index: 1;
+}
+
+/* Quick Actions sheet */
+.sheet {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #FAF7F2;
+  border-radius: 20px 20px 0 0;
+  z-index: 2;
+  padding: 0 0 32px;
+  box-shadow: 0 -4px 32px rgba(59,47,42,0.12);
+}
+.sheet-handle {
+  width: 36px; height: 4px; border-radius: 2px; background: #E8DDD0;
+  margin: 14px auto 20px;
+}
+.sheet-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px 16px;
+  border-bottom: 1px solid #EDE5D8;
+}
+.sheet-title { font-size: 16px; font-weight: 700; color: #3B2F2A; }
+.sheet-close { font-size: 20px; color: #C0AFA5; cursor: pointer; }
+
+.qa-list {
+  padding: 12px 20px;
+  display: flex; flex-direction: column; gap: 0;
+}
+.qa-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 13px 0;
+  border-bottom: 1px solid #F0EAE0;
+}
+.qa-row:last-child { border-bottom: none; }
+.drag-handle { color: #C0AFA5; font-size: 14px; letter-spacing: -1px; flex-shrink: 0; }
+.qa-icon-wrap {
+  width: 38px; height: 38px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 17px; flex-shrink: 0;
+}
+.qa-icon-wrap.gold { background: rgba(200,169,107,0.15); }
+.qa-icon-wrap.olive { background: rgba(90,107,79,0.12); }
+.qa-icon-wrap.terra { background: rgba(180,91,74,0.12); }
+.qa-icon-wrap.indigo { background: rgba(74,61,107,0.1); }
+.qa-icon-wrap.brown { background: rgba(138,112,96,0.1); }
+.qa-label { flex: 1; font-size: 14px; font-weight: 500; color: #3B2F2A; }
+.qa-sub { font-size: 11px; color: #8A7060; margin-top: 1px; }
+
+/* Toggle */
+.toggle { width: 44px; height: 26px; border-radius: 13px; background: #E8DDD0; position: relative; flex-shrink: 0; cursor: pointer; }
+.toggle.on { background: #C8A96B; }
+.toggle-thumb { width: 20px; height: 20px; border-radius: 50%; background: #FFFFFF; position: absolute; top: 3px; left: 3px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); transition: transform 0.2s; }
+.toggle.on .toggle-thumb { transform: translateX(18px); }
+
+.done-btn {
+  margin: 16px 20px 0;
+  height: 52px; background: #3B2F2A; color: #FAF7F2;
+  border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+}
+
+/* Home behind sheet (partial) */
+.home-peek {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 360px;
+  padding: 44px 20px 0;
+}
+.peek-greeting { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: rgba(250,247,242,0.6); margin-bottom: 12px; }
+.peek-cards { display: flex; gap: 10px; }
+.peek-card {
+  flex: 1; height: 76px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 12px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 11px; color: #8A7060; gap: 4px;
+}
+.peek-card-icon { font-size: 18px; }
+</style>
+</head>
+<body>
+
+<!-- Home behind sheet -->
+<div class="home-peek">
+  <div class="peek-greeting">Good morning, Sharma ji 🙏</div>
+  <div class="peek-cards">
+    <div class="peek-card"><div class="peek-card-icon">💰</div>Finance</div>
+    <div class="peek-card"><div class="peek-card-icon">👥</div>Customers</div>
+    <div class="peek-card"><div class="peek-card-icon">📦</div>Inventory</div>
+  </div>
+</div>
+
+<!-- Dim overlay -->
+<div class="home-bg"></div>
+
+<!-- Quick Actions config sheet -->
+<div class="sheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-header">
+    <div class="sheet-title">Customise Quick Actions</div>
+    <div class="sheet-close">✕</div>
+  </div>
+  <div class="qa-list">
+    <div class="qa-row">
+      <div class="drag-handle">⠿</div>
+      <div class="qa-icon-wrap gold">💰</div>
+      <div style="flex:1;"><div class="qa-label">Add Sale</div><div class="qa-sub">Record a new sale</div></div>
+      <div class="toggle on"><div class="toggle-thumb"></div></div>
+    </div>
+    <div class="qa-row">
+      <div class="drag-handle">⠿</div>
+      <div class="qa-icon-wrap olive">💳</div>
+      <div style="flex:1;"><div class="qa-label">Record Payment</div><div class="qa-sub">Cash or UPI received</div></div>
+      <div class="toggle on"><div class="toggle-thumb"></div></div>
+    </div>
+    <div class="qa-row">
+      <div class="drag-handle">⠿</div>
+      <div class="qa-icon-wrap terra">📦</div>
+      <div style="flex:1;"><div class="qa-label">Add Stock</div><div class="qa-sub">Update inventory</div></div>
+      <div class="toggle on"><div class="toggle-thumb"></div></div>
+    </div>
+    <div class="qa-row">
+      <div class="drag-handle">⠿</div>
+      <div class="qa-icon-wrap brown">🧾</div>
+      <div style="flex:1;"><div class="qa-label">Create Invoice</div><div class="qa-sub">GST invoice</div></div>
+      <div class="toggle on"><div class="toggle-thumb"></div></div>
+    </div>
+    <div class="qa-row">
+      <div class="drag-handle">⠿</div>
+      <div class="qa-icon-wrap indigo">👤</div>
+      <div style="flex:1;"><div class="qa-label">Add Customer</div><div class="qa-sub">New customer profile</div></div>
+      <div class="toggle"><div class="toggle-thumb"></div></div>
+    </div>
+    <div class="qa-row">
+      <div class="drag-handle">⠿</div>
+      <div class="qa-icon-wrap brown">📊</div>
+      <div style="flex:1;"><div class="qa-label">View Reports</div><div class="qa-sub">P&L, Sales summary</div></div>
+      <div class="toggle"><div class="toggle-thumb"></div></div>
+    </div>
+  </div>
+  <div class="done-btn">Save Changes</div>
+</div>
+
+</body>
+</html>

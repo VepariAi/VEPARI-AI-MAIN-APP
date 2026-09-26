@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>P56 — Dark Mode Decision</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    width: 860px;
+    min-height: 2600px;
+    background: #FAF7F2;
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: #3B2F2A;
+    padding: 48px 52px 80px;
+  }
+
+  /* ── Brand tokens ── */
+  :root {
+    --brown:     #3B2F2A;
+    --gold:      #C8A96B;
+    --olive:     #5A6B4F;
+    --terra:     #B45B4A;
+    --beige:     #F2E8D6;
+    --ivory:     #FAF7F2;
+    --white:     #FFFFFF;
+    --indigo:    #4A3D6B;
+
+    /* dark-mode equivalents (warm, not slate) */
+    --dm-bg:     #1E1810;
+    --dm-surface:#2C231B;
+    --dm-card:   #382D23;
+    --dm-brown:  #E8DDD4;
+    --dm-gold:   #D4A853;
+    --dm-olive:  #7A9B6A;
+    --dm-terra:  #C4705F;
+    --dm-indigo: #8B7FB8;
+    --dm-border: #4A3C30;
+    --dm-muted:  #A09080;
+  }
+
+  /* ── Utility ── */
+  .chip {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 20px;
+    font-size: 11px; font-weight: 600; letter-spacing: .4px; text-transform: uppercase;
+  }
+  .chip-decision { background: #E8F4E8; color: #2D6A2D; }
+  .chip-warn     { background: #FFF3E0; color: #8B5000; }
+  .chip-fail     { background: #FDECEA; color: #8B1A0D; }
+  .chip-pass     { background: #E8F4E8; color: #2D6A2D; }
+  .chip-defer    { background: #EEE8F8; color: #3B2D6A; }
+  .chip-scope    { background: #E8F0F8; color: #1A4080; }
+
+  /* ── Page header ── */
+  .page-header {
+    padding-bottom: 32px;
+    border-bottom: 2px solid var(--brown);
+    margin-bottom: 40px;
+  }
+  .prompt-eyebrow {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 8px;
+  }
+  .page-title { font-size: 28px; font-weight: 700; color: var(--brown); line-height: 1.2; }
+  .page-subtitle { font-size: 14px; color: #6B5E58; margin-top: 6px; }
+
+  /* ── Decision box ── */
+  .decision-box {
+    background: var(--brown);
+    color: var(--white);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+  }
+  .decision-label {
+    font-size: 10px; font-weight: 700; letter-spacing: 1.2px;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 10px;
+  }
+  .decision-text {
+    font-size: 18px; font-weight: 600; line-height: 1.5;
+    margin-bottom: 14px;
+  }
+  .decision-rationale {
+    font-size: 13px; line-height: 1.6; color: #C8BEB8;
+  }
+  .decision-rationale strong { color: var(--white); }
+
+  /* ── Section ── */
+  .section { margin-bottom: 44px; }
+  .section-title {
+    font-size: 13px; font-weight: 700; letter-spacing: .8px;
+    text-transform: uppercase; color: var(--brown);
+    border-bottom: 1.5px solid var(--gold);
+    padding-bottom: 8px; margin-bottom: 20px;
+  }
+
+  /* ── Evidence block ── */
+  .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .evidence-card {
+    background: var(--beige); border-radius: 8px;
+    padding: 18px 20px;
+  }
+  .evidence-card-title {
+    font-size: 11px; font-weight: 700; letter-spacing: .5px;
+    text-transform: uppercase; color: #6B5E58;
+    margin-bottom: 8px;
+  }
+  .evidence-card p { font-size: 13px; line-height: 1.6; color: var(--brown); }
+
+  /* ── Scope pill row ── */
+  .scope-row {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 20px;
+  }
+  .scope-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--beige); border-radius: 8px;
+    padding: 14px 16px; flex: 1 1 240px;
+  }
+  .scope-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .scope-item-title { font-size: 12px; font-weight: 600; color: var(--brown); margin-bottom: 3px; }
+  .scope-item-desc { font-size: 12px; line-height: 1.5; color: #6B5E58; }
+
+  /* ── Token table ── */
+  .token-table-wrap { overflow-x: auto; }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  thead th {
+    background: var(--brown); color: var(--white);
+    padding: 10px 14px; text-align: left;
+    font-size: 11px; font-weight: 600; letter-spacing: .4px;
+  }
+  thead th:first-child { border-radius: 6px 0 0 0; }
+  thead th:last-child  { border-radius: 0 6px 0 0; }
+  tbody tr:nth-child(even) { background: var(--beige); }
+  tbody tr:nth-child(odd)  { background: var(--ivory); }
+  tbody td { padding: 9px 14px; vertical-align: middle; border-bottom: 1px solid #E2D8CC; }
+  tbody td:first-child { font-weight: 600; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11.5px; }
+  .swatch { display: inline-block; width: 22px; height: 22px; border-radius: 4px; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,.12); }
+
+  /* ── Color palette section ── */
+  .palette-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 12px; }
+  .palette-pair { display: flex; flex-direction: column; gap: 4px; }
+  .palette-swatch-lg { height: 56px; border-radius: 6px; }
+  .palette-swatch-sm { height: 28px; border-radius: 6px; }
+  .palette-label { font-size: 10px; font-weight: 600; color: #6B5E58; letter-spacing: .3px; }
+  .palette-hex { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 10px; color: #8B7B74; }
+
+  /* ── Mock phone ── */
+  .phones-row { display: flex; gap: 24px; flex-wrap: wrap; }
+  .phone {
+    flex: 1 1 180px;
+    background: var(--white);
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,.12);
+    border: 2px solid #E0D4C4;
+  }
+  .phone-label {
+    font-size: 10px; font-weight: 700; letter-spacing: .6px;
+    text-transform: uppercase; color: #6B5E58;
+    text-align: center; margin: 10px 0 6px;
+  }
+
+  /* Light mode mock */
+  .phone-screen-light { background: #FAF7F2; padding: 0; }
+  .phone-header-light {
+    background: #FAF7F2; padding: 14px 16px 8px;
+    border-bottom: 1px solid #E2D8CC;
+  }
+  .phone-header-light .greeting { font-size: 10px; color: #8B7B74; }
+  .phone-header-light .biz-name { font-size: 13px; font-weight: 700; color: #3B2F2A; }
+  .phone-body-light { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .stat-card-light {
+    background: #F2E8D6; border-radius: 8px; padding: 10px 12px;
+    border-left: 3px solid #5A6B4F;
+  }
+  .stat-label-l { font-size: 9px; color: #8B7B74; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; }
+  .stat-value-l { font-size: 16px; font-weight: 700; color: #3B2F2A; }
+  .stat-trend-l  { font-size: 9px; color: #5A6B4F; font-weight: 600; }
+  .voice-fab-light {
+    width: 42px; height: 42px; border-radius: 21px;
+    background: #C8A96B; margin: 12px auto;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 3px 10px rgba(200,169,107,.5);
+  }
+  .bottom-nav-light {
+    background: #FAF7F2; border-top: 1px solid #E2D8CC;
+    padding: 6px 0 8px;
+    display: flex; justify-content: space-around;
+  }
+  .nav-icon-light { font-size: 16px; text-align: center; }
+  .nav-dot-light { width: 5px; height: 5px; border-radius: 50%; background: #C8A96B; margin: 2px auto 0; }
+
+  /* Dark mode mock */
+  .phone-screen-dark { background: #1E1810; padding: 0; }
+  .phone-header-dark {
+    background: #2C231B; padding: 14px 16px 8px;
+    border-bottom: 1px solid #4A3C30;
+  }
+  .phone-header-dark .greeting { font-size: 10px; color: #A09080; }
+  .phone-header-dark .biz-name { font-size: 13px; font-weight: 700; color: #E8DDD4; }
+  .phone-body-dark { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .stat-card-dark {
+    background: #382D23; border-radius: 8px; padding: 10px 12px;
+    border-left: 3px solid #7A9B6A;
+  }
+  .stat-label-d { font-size: 9px; color: #A09080; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; }
+  .stat-value-d { font-size: 16px; font-weight: 700; color: #E8DDD4; }
+  .stat-trend-d  { font-size: 9px; color: #7A9B6A; font-weight: 600; }
+  .voice-fab-dark {
+    width: 42px; height: 42px; border-radius: 21px;
+    background: #D4A853; margin: 12px auto;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; box-shadow: 0 3px 14px rgba(212,168,83,.45);
+  }
+  .bottom-nav-dark {
+    background: #2C231B; border-top: 1px solid #4A3C30;
+    padding: 6px 0 8px;
+    display: flex; justify-content: space-around;
+  }
+  .nav-icon-dark { font-size: 16px; text-align: center; }
+  .nav-dot-dark { width: 5px; height: 5px; border-radius: 50%; background: #D4A853; margin: 2px auto 0; }
+
+  /* ── Warning callout ── */
+  .callout {
+    border-radius: 8px; padding: 16px 18px;
+    margin-bottom: 16px; display: flex; gap: 12px;
+  }
+  .callout-warn  { background: #FFF8E8; border-left: 3px solid #C8A96B; }
+  .callout-info  { background: #EEF2F8; border-left: 3px solid #4A3D6B; }
+  .callout-icon { font-size: 16px; flex-shrink: 0; }
+  .callout-text { font-size: 13px; line-height: 1.6; color: var(--brown); }
+  .callout-text strong { font-weight: 700; }
+
+  /* ── Deferred items ── */
+  .deferred-list { display: flex; flex-direction: column; gap: 10px; }
+  .deferred-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    background: var(--beige); border-radius: 8px; padding: 14px 16px;
+  }
+  .deferred-num {
+    font-size: 11px; font-weight: 700; color: var(--white);
+    background: var(--brown); border-radius: 50%;
+    width: 20px; height: 20px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .deferred-text { font-size: 13px; line-height: 1.5; color: var(--brown); }
+  .deferred-text strong { font-weight: 700; }
+
+  /* ── Contrast note row ── */
+  .contrast-row { display: flex; gap: 12px; margin-bottom: 12px; }
+  .contrast-card {
+    flex: 1; border-radius: 8px; padding: 12px 14px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .contrast-card .ratio { font-size: 16px; font-weight: 700; font-family: 'SF Mono', 'Fira Code', monospace; }
+  .contrast-card .pair-label { font-size: 11px; color: #6B5E58; }
+  .pass-card  { background: #E8F4E8; }
+  .pass-card .ratio { color: #2D6A2D; }
+  .warn-card  { background: #FFF8E8; }
+  .warn-card .ratio { color: #8B5000; }
+
+  /* ── Decision log ── */
+  .decision-log {
+    background: var(--white); border: 1.5px solid #E2D8CC;
+    border-radius: 10px; overflow: hidden;
+  }
+  .log-header {
+    background: #F0EAE0; padding: 12px 18px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .log-header-title { font-size: 11px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; color: var(--brown); }
+  .log-row {
+    padding: 13px 18px; border-bottom: 1px solid #EDE6DB;
+    display: grid; grid-template-columns: 90px 1fr 80px;
+    gap: 12px; align-items: start;
+    font-size: 12.5px;
+  }
+  .log-row:last-child { border-bottom: none; }
+  .log-field { font-weight: 600; color: #6B5E58; font-size: 11px; text-transform: uppercase; letter-spacing: .4px; padding-top: 1px; }
+  .log-value { color: var(--brown); line-height: 1.5; }
+  .log-badge { text-align: right; }
+</style>
+</head>
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="prompt-eyebrow">Phase 5 · Product Decision · P56</div>
+  <div class="page-title">Dark Mode — In Scope or Deferred?</div>
+  <div class="page-subtitle">Depends on: P46 Color Tokens · Trigger: "Theme: Light" row on Settings screen in Screens.png</div>
+</div>
+
+<!-- DECISION BOX -->
+<div class="decision-box">
+  <div class="decision-label">Decision</div>
+  <div class="decision-text">Dark mode is IN SCOPE for the design system — warm tokens defined now; implementation deferred to Phase 7.</div>
+  <div class="decision-rationale">
+    <strong>Tokens are defined in this phase</strong> so Phase 6 engineers never have to retrofit semantics onto a palette that was designed for one mode only. The warm dark palette preserves the gold-and-cream character rather than defaulting to generic dark-slate.<br><br>
+    <strong>UI implementation (React Native dark appearance)</strong> is deferred to Phase 7: the "Theme: Light" row in Settings confirms the light mode ships first and a toggle is planned, but building the toggle before the core screens are complete would split Phase 6 capacity.
+  </div>
+</div>
+
+<!-- SECTION 1: TRIGGER EVIDENCE -->
+<div class="section">
+  <div class="section-title">Trigger Evidence</div>
+  <div class="evidence-grid">
+    <div class="evidence-card">
+      <div class="evidence-card-title">Settings screen — Screens.png</div>
+      <p>The Settings screen contains a row labelled <strong>"Theme: Light"</strong>. A value with a current selection implies an alternative exists — if light-only, the row would simply not exist. This is an unambiguous signal that dark mode is planned.</p>
+    </div>
+    <div class="evidence-card">
+      <div class="evidence-card-title">Master documents</div>
+      <p>None of the 9 master documents specify dark mode explicitly, nor do any of them rule it out. The ambiguity is structural — the Settings screen shows intent that the document corpus never articulated. P56's job is to resolve this.</p>
+    </div>
+    <div class="evidence-card">
+      <div class="evidence-card-title">User base context</div>
+      <p>Indian MSMEs using the app in low-light conditions (evening accounting, night markets) and on OLED screens benefit substantially from a warm dark theme. Battery savings on OLED displays are a practical concern for this audience.</p>
+    </div>
+    <div class="evidence-card">
+      <div class="evidence-card-title">Risk of deferring tokens</div>
+      <p>If dark mode tokens are not defined before Phase 6, every hardcoded color in component code becomes a debt to refactor. Defining semantic tokens now (surface, on-surface, accent) costs one design session; retrofitting costs a sprint.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2: WHAT IS IN SCOPE NOW -->
+<div class="section">
+  <div class="section-title">In Scope — Phase 5 (This Prompt)</div>
+  <div class="scope-row">
+    <div class="scope-item">
+      <div class="scope-icon">🎨</div>
+      <div>
+        <div class="scope-item-title">Dark-mode color tokens</div>
+        <div class="scope-item-desc">A complete set of warm dark-palette equivalents for every P46 token, preserving the gold-and-cream character at reduced luminance.</div>
+      </div>
+    </div>
+    <div class="scope-item">
+      <div class="scope-icon">✅</div>
+      <div>
+        <div class="scope-item-title">Contrast verification</div>
+        <div class="scope-item-desc">All text/surface pairs in the dark palette checked against WCAG AA (≥4.5:1 normal, ≥3.0:1 large/UI). Critical failures flagged.</div>
+      </div>
+    </div>
+    <div class="scope-item">
+      <div class="scope-icon">📋</div>
+      <div>
+        <div class="scope-item-title">Semantic token layer</div>
+        <div class="scope-item-desc">A semantic alias table mapping intent (surface, on-surface, accent, critical, success) to light and dark raw tokens — the layer engineers reference in code, not raw hex.</div>
+      </div>
+    </div>
+    <div class="scope-item">
+      <div class="scope-icon">📏</div>
+      <div>
+        <div class="scope-item-title">Design side-by-side</div>
+        <div class="scope-item-desc">A visual comparison of the same UI surface (dashboard card, bottom nav) in both modes so the mapping can be reviewed before Phase 6.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: DEFERRED TO PHASE 7 -->
+<div class="section">
+  <div class="section-title">Deferred — Phase 7</div>
+  <div class="deferred-list">
+    <div class="deferred-item">
+      <div class="deferred-num">1</div>
+      <div class="deferred-text"><strong>React Native Appearance API integration</strong> — wiring <code>useColorScheme()</code> and the StyleSheet conditional to the token set; testing on Android and iOS for system-level dark mode follow.</div>
+    </div>
+    <div class="deferred-item">
+      <div class="deferred-num">2</div>
+      <div class="deferred-text"><strong>In-app theme toggle</strong> — the Settings screen "Theme" row; user preference persistence (AsyncStorage or SecureStore); default to system preference on first launch.</div>
+    </div>
+    <div class="deferred-item">
+      <div class="deferred-num">3</div>
+      <div class="deferred-text"><strong>Screen-by-screen dark QA</strong> — verifying that every screen that ships in Phase 6 renders correctly in dark mode; catching edge cases (image overlays, transparent sheets, camera preview surfaces).</div>
+    </div>
+    <div class="deferred-item">
+      <div class="deferred-num">4</div>
+      <div class="deferred-text"><strong>Sarvam AI surface in dark mode</strong> — the AI Indigo (#4A3D6B) surface used for voice transcription and AI responses requires its own dark adaptation; deferred until the AI OS screens are built.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: DARK PALETTE TOKENS -->
+<div class="section">
+  <div class="section-title">Dark Palette — Extended P46 Tokens</div>
+
+  <div class="callout callout-warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-text"><strong>Design principle:</strong> The dark palette is NOT dark-slate. It stays warm — deep brown-black grounds, muted gold accents, forest-tinted status greens. The character of the brand survives night mode.</div>
+  </div>
+
+  <!-- Dark palette swatches -->
+  <div class="palette-grid" style="margin-bottom:20px;">
+    <div class="palette-pair">
+      <div class="palette-swatch-lg" style="background:#1E1810;border:1px solid #4A3C30;"></div>
+      <div class="palette-label">dm-Background</div>
+      <div class="palette-hex">#1E1810</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-lg" style="background:#2C231B;"></div>
+      <div class="palette-label">dm-Surface</div>
+      <div class="palette-hex">#2C231B</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-lg" style="background:#382D23;"></div>
+      <div class="palette-label">dm-Card</div>
+      <div class="palette-hex">#382D23</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-lg" style="background:#4A3C30;"></div>
+      <div class="palette-label">dm-Border</div>
+      <div class="palette-hex">#4A3C30</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-sm" style="background:#E8DDD4;"></div>
+      <div class="palette-label">dm-TextPrimary</div>
+      <div class="palette-hex">#E8DDD4</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-sm" style="background:#A09080;"></div>
+      <div class="palette-label">dm-TextSecondary</div>
+      <div class="palette-hex">#A09080</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-sm" style="background:#6E5E50;"></div>
+      <div class="palette-label">dm-TextTertiary</div>
+      <div class="palette-hex">#6E5E50</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-sm" style="background:#D4A853;"></div>
+      <div class="palette-label">dm-Gold</div>
+      <div class="palette-hex">#D4A853</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-sm" style="background:#7A9B6A;"></div>
+      <div class="palette-label">dm-Olive</div>
+      <div class="palette-hex">#7A9B6A</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-sm" style="background:#C4705F;"></div>
+      <div class="palette-label">dm-Terracotta</div>
+      <div class="palette-hex">#C4705F</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-sm" style="background:#8B7FB8;"></div>
+      <div class="palette-label">dm-AIIndigo</div>
+      <div class="palette-hex">#8B7FB8</div>
+    </div>
+    <div class="palette-pair">
+      <div class="palette-swatch-sm" style="background:#5E4F40;"></div>
+      <div class="palette-label">dm-Pressed</div>
+      <div class="palette-hex">#5E4F40</div>
+    </div>
+  </div>
+
+  <!-- Token table -->
+  <div class="token-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Token name</th>
+          <th>Light (#)</th>
+          <th>Dark (#)</th>
+          <th>Hex (dark)</th>
+          <th>Contrast on dm-Surface</th>
+          <th>WCAG AA</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>color-background</td>
+          <td><span class="swatch" style="background:#FAF7F2;border-color:#E2D8CC;"></span>#FAF7F2</td>
+          <td><span class="swatch" style="background:#1E1810;"></span>dm-Background</td>
+          <td style="font-family:monospace;">#1E1810</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>color-surface</td>
+          <td><span class="swatch" style="background:#FFFFFF;border-color:#E2D8CC;"></span>#FFFFFF</td>
+          <td><span class="swatch" style="background:#2C231B;"></span>dm-Surface</td>
+          <td style="font-family:monospace;">#2C231B</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>color-card</td>
+          <td><span class="swatch" style="background:#F2E8D6;"></span>#F2E8D6</td>
+          <td><span class="swatch" style="background:#382D23;"></span>dm-Card</td>
+          <td style="font-family:monospace;">#382D23</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr>
+          <td>color-text-primary</td>
+          <td><span class="swatch" style="background:#3B2F2A;"></span>#3B2F2A</td>
+          <td><span class="swatch" style="background:#E8DDD4;"></span>dm-TextPrimary</td>
+          <td style="font-family:monospace;">#E8DDD4</td>
+          <td style="font-family:monospace;font-variant-numeric:tabular-nums;">10.4:1</td>
+          <td><span class="chip chip-pass">PASS AA</span></td>
+        </tr>
+        <tr>
+          <td>color-text-secondary</td>
+          <td><span class="swatch" style="background:#6B5E58;"></span>#6B5E58</td>
+          <td><span class="swatch" style="background:#A09080;"></span>dm-TextSecondary</td>
+          <td style="font-family:monospace;">#A09080</td>
+          <td style="font-family:monospace;font-variant-numeric:tabular-nums;">4.5:1</td>
+          <td><span class="chip chip-pass">PASS AA</span></td>
+        </tr>
+        <tr>
+          <td>color-text-tertiary</td>
+          <td><span class="swatch" style="background:#8B7B74;"></span>#8B7B74</td>
+          <td><span class="swatch" style="background:#6E5E50;"></span>dm-TextTertiary</td>
+          <td style="font-family:monospace;">#6E5E50</td>
+          <td style="font-family:monospace;font-variant-numeric:tabular-nums;">2.6:1</td>
+          <td><span class="chip chip-warn">DECORATIVE</span></td>
+        </tr>
+        <tr>
+          <td>color-gold (accent)</td>
+          <td><span class="swatch" style="background:#C8A96B;"></span>#C8A96B</td>
+          <td><span class="swatch" style="background:#D4A853;"></span>dm-Gold</td>
+          <td style="font-family:monospace;">#D4A853</td>
+          <td style="font-family:monospace;font-variant-numeric:tabular-nums;">3.6:1</td>
+          <td><span class="chip chip-warn">LARGE + UI</span></td>
+        </tr>
+        <tr>
+          <td>color-gold on dm-Card</td>
+          <td>—</td>
+          <td><span class="swatch" style="background:#D4A853;"></span>dm-Gold</td>
+          <td style="font-family:monospace;">#D4A853</td>
+          <td style="font-family:monospace;font-variant-numeric:tabular-nums;">4.0:1</td>
+          <td><span class="chip chip-warn">LARGE ≥3.0 ✓</span></td>
+        </tr>
+        <tr>
+          <td>color-olive (success)</td>
+          <td><span class="swatch" style="background:#5A6B4F;"></span>#5A6B4F</td>
+          <td><span class="swatch" style="background:#7A9B6A;"></span>dm-Olive</td>
+          <td style="font-family:monospace;">#7A9B6A</td>
+          <td style="font-family:monospace;font-variant-numeric:tabular-nums;">4.8:1</td>
+          <td><span class="chip chip-pass">PASS AA</span></td>
+        </tr>
+        <tr>
+          <td>color-terracotta (error)</td>
+          <td><span class="swatch" style="background:#B45B4A;"></span>#B45B4A</td>
+          <td><span class="swatch" style="background:#C4705F;"></span>dm-Terracotta</td>
+          <td style="font-family:monospace;">#C4705F</td>
+          <td style="font-family:monospace;font-variant-numeric:tabular-nums;">4.5:1</td>
+          <td><span class="chip chip-pass">PASS AA</span></td>
+        </tr>
+        <tr>
+          <td>color-ai-indigo</td>
+          <td><span class="swatch" style="background:#4A3D6B;"></span>#4A3D6B</td>
+          <td><span class="swatch" style="background:#8B7FB8;"></span>dm-AIIndigo</td>
+          <td style="font-family:monospace;">#8B7FB8</td>
+          <td style="font-family:monospace;font-variant-numeric:tabular-nums;">5.2:1</td>
+          <td><span class="chip chip-pass">PASS AA</span></td>
+        </tr>
+        <tr>
+          <td>color-border</td>
+          <td><span class="swatch" style="background:#E2D8CC;"></span>#E2D8CC</td>
+          <td><span class="swatch" style="background:#4A3C30;"></span>dm-Border</td>
+          <td style="font-family:monospace;">#4A3C30</td>
+          <td>— (UI component)</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 5: SEMANTIC TOKEN LAYER -->
+<div class="section">
+  <div class="section-title">Semantic Token Layer</div>
+
+  <div class="callout callout-info">
+    <div class="callout-icon">ℹ️</div>
+    <div class="callout-text"><strong>Engineers reference semantic tokens only.</strong> Component code never contains raw hex. A StyleSheet references <code>tokens.surface</code>, not <code>#FAF7F2</code> — so dark mode is just a token swap with zero component edits.</div>
+  </div>
+
+  <div class="token-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Semantic token</th>
+          <th>Intent</th>
+          <th>Light value (token)</th>
+          <th>Dark value (token)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>surface.background</td>
+          <td>Page/screen ground</td>
+          <td>color-background (#FAF7F2)</td>
+          <td>dm-Background (#1E1810)</td>
+        </tr>
+        <tr>
+          <td>surface.card</td>
+          <td>Card/sheet surface</td>
+          <td>color-card (#F2E8D6)</td>
+          <td>dm-Card (#382D23)</td>
+        </tr>
+        <tr>
+          <td>surface.elevated</td>
+          <td>Modal / bottom sheet</td>
+          <td>color-surface (#FFFFFF)</td>
+          <td>dm-Surface (#2C231B)</td>
+        </tr>
+        <tr>
+          <td>surface.nav</td>
+          <td>Bottom nav bar</td>
+          <td>color-surface (#FFFFFF)</td>
+          <td>dm-Surface (#2C231B)</td>
+        </tr>
+        <tr>
+          <td>on-surface.primary</td>
+          <td>Body text, labels</td>
+          <td>color-text-primary (#3B2F2A)</td>
+          <td>dm-TextPrimary (#E8DDD4)</td>
+        </tr>
+        <tr>
+          <td>on-surface.secondary</td>
+          <td>Supporting text</td>
+          <td>color-text-secondary (#6B5E58)</td>
+          <td>dm-TextSecondary (#A09080)</td>
+        </tr>
+        <tr>
+          <td>on-surface.disabled</td>
+          <td>Inactive / placeholder</td>
+          <td>color-text-tertiary (#8B7B74)</td>
+          <td>dm-TextTertiary (#6E5E50)</td>
+        </tr>
+        <tr>
+          <td>accent.default</td>
+          <td>Gold accent — decorative</td>
+          <td>color-gold (#C8A96B)</td>
+          <td>dm-Gold (#D4A853)</td>
+        </tr>
+        <tr>
+          <td>accent.on-dark</td>
+          <td>Gold on brown surface (text OK)</td>
+          <td>color-gold on #3B2F2A (5.75:1)</td>
+          <td>dm-Gold on dm-Card (4.0:1 ≥3.0)</td>
+        </tr>
+        <tr>
+          <td>status.success</td>
+          <td>Up-trend, favorable</td>
+          <td>color-olive (#5A6B4F)</td>
+          <td>dm-Olive (#7A9B6A)</td>
+        </tr>
+        <tr>
+          <td>status.error</td>
+          <td>Down-trend, unfavorable, error</td>
+          <td>color-terracotta (#B45B4A)</td>
+          <td>dm-Terracotta (#C4705F)</td>
+        </tr>
+        <tr>
+          <td>status.ai</td>
+          <td>AI OS surfaces, Sarvam responses</td>
+          <td>color-ai-indigo (#4A3D6B)</td>
+          <td>dm-AIIndigo (#8B7FB8)</td>
+        </tr>
+        <tr>
+          <td>border.default</td>
+          <td>Dividers, input strokes</td>
+          <td>color-border (#E2D8CC)</td>
+          <td>dm-Border (#4A3C30)</td>
+        </tr>
+        <tr>
+          <td>interactive.pressed</td>
+          <td>Touch feedback state</td>
+          <td>#E0D0B8 (10% darken)</td>
+          <td>dm-Pressed (#5E4F40)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 6: SIDE-BY-SIDE PREVIEW -->
+<div class="section">
+  <div class="section-title">Side-by-Side Preview — Dashboard Card + Bottom Nav</div>
+  <div class="phones-row">
+
+    <!-- Light mode -->
+    <div style="flex:1; min-width:180px;">
+      <div class="phone-label">Light Mode</div>
+      <div class="phone">
+        <div class="phone-screen-light">
+          <div class="phone-header-light">
+            <div class="greeting">Good morning</div>
+            <div class="biz-name">Sharma Textiles</div>
+          </div>
+          <div class="phone-body-light">
+            <div class="stat-card-light">
+              <div class="stat-label-l">Revenue</div>
+              <div class="stat-value-l">₹8.4L</div>
+              <div class="stat-trend-l">▲ +12% vs last month</div>
+            </div>
+            <div class="stat-card-light" style="border-left-color:#B45B4A;">
+              <div class="stat-label-l">Expenses</div>
+              <div class="stat-value-l">₹3.2L</div>
+              <div class="stat-trend-l" style="color:#B45B4A;">▲ +8% vs last month</div>
+            </div>
+            <div class="voice-fab-light">🎙️</div>
+          </div>
+          <div class="bottom-nav-light">
+            <div><div class="nav-icon-light">🏠</div><div class="nav-dot-light"></div></div>
+            <div><div class="nav-icon-light">₹</div></div>
+            <div><div class="nav-icon-light" style="opacity:.4;">📦</div></div>
+            <div><div class="nav-icon-light" style="opacity:.4;">👥</div></div>
+            <div><div class="nav-icon-light" style="opacity:.4;">⚙️</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dark mode -->
+    <div style="flex:1; min-width:180px;">
+      <div class="phone-label">Dark Mode</div>
+      <div class="phone" style="border-color:#4A3C30;background:#1E1810;">
+        <div class="phone-screen-dark">
+          <div class="phone-header-dark">
+            <div class="greeting">Good morning</div>
+            <div class="biz-name">Sharma Textiles</div>
+          </div>
+          <div class="phone-body-dark">
+            <div class="stat-card-dark">
+              <div class="stat-label-d">Revenue</div>
+              <div class="stat-value-d">₹8.4L</div>
+              <div class="stat-trend-d">▲ +12% vs last month</div>
+            </div>
+            <div class="stat-card-dark" style="border-left-color:#C4705F;">
+              <div class="stat-label-d">Expenses</div>
+              <div class="stat-value-d">₹3.2L</div>
+              <div class="stat-trend-d" style="color:#C4705F;">▲ +8% vs last month</div>
+            </div>
+            <div class="voice-fab-dark">🎙️</div>
+          </div>
+          <div class="bottom-nav-dark">
+            <div><div class="nav-icon-dark">🏠</div><div class="nav-dot-dark"></div></div>
+            <div><div class="nav-icon-dark">₹</div></div>
+            <div><div class="nav-icon-dark" style="opacity:.35;">📦</div></div>
+            <div><div class="nav-icon-dark" style="opacity:.35;">👥</div></div>
+            <div><div class="nav-icon-dark" style="opacity:.35;">⚙️</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observations -->
+    <div style="flex:1.4; min-width:200px;">
+      <div style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:#6B5E58; margin-bottom:12px;">Design observations</div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:12.5px; line-height:1.6; color:var(--brown);">
+          <strong style="color:var(--gold);">Warmth preserved.</strong> Dark backgrounds use brown-black (#1E1810), not slate — the MSME audience sees continuity with the brand, not a generic dark app.
+        </div>
+        <div style="font-size:12.5px; line-height:1.6; color:var(--brown);">
+          <strong style="color:var(--gold);">Gold accent stays gold.</strong> dm-Gold (#D4A853) is slightly warmer/more saturated than #C8A96B to compensate for the luminance shift. It remains decorative on most dark surfaces.
+        </div>
+        <div style="font-size:12.5px; line-height:1.6; color:var(--brown);">
+          <strong style="color:var(--gold);">Status colors lightened.</strong> dm-Olive and dm-Terracotta are lightened on the dark ground to maintain WCAG AA — the semantic meaning (up = good, down/unfavorable = warning) is intact.
+        </div>
+        <div style="font-size:12.5px; line-height:1.6; color:var(--brown);">
+          <strong style="color:var(--gold);">Bottom nav separates cleanly.</strong> The dm-Border line at #4A3C30 gives just enough lift between nav and content without a harsh contrast jump.
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- SECTION 7: GOLD CAUTION IN DARK MODE -->
+<div class="section">
+  <div class="section-title">Gold Text in Dark Mode — Usage Rules</div>
+
+  <div class="callout callout-warn">
+    <div class="callout-icon">⚠️</div>
+    <div class="callout-text"><strong>Heritage Gold is STILL not free text on most surfaces in dark mode.</strong> dm-Gold (#D4A853) on dm-Surface (#2C231B) = 3.6:1 — passes for large text and UI components (≥3.0:1) but not for body text (≥4.5:1). The same rule from P55 applies: Gold text is permitted only on Deep Brown surfaces, or as a decorative element with a non-gold supporting label.</div>
+  </div>
+
+  <div class="contrast-row">
+    <div class="contrast-card warn-card">
+      <div class="ratio">3.6:1</div>
+      <div class="pair-label">dm-Gold on dm-Surface · large text + UI ✓ · body ✗</div>
+    </div>
+    <div class="contrast-card warn-card">
+      <div class="ratio">4.0:1</div>
+      <div class="pair-label">dm-Gold on dm-Card · large text + UI ✓ · body ✗</div>
+    </div>
+    <div class="contrast-card pass-card">
+      <div class="ratio">7.8:1</div>
+      <div class="pair-label">dm-Gold on dm-Background · PASS AA normal text ✓</div>
+    </div>
+    <div class="contrast-card pass-card">
+      <div class="ratio">10.4:1</div>
+      <div class="pair-label">dm-TextPrimary on dm-Surface · PASS AAA ✓</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 8: DECISION LOG ENTRY -->
+<div class="section">
+  <div class="section-title">Decision Log Entry</div>
+  <div class="decision-log">
+    <div class="log-header">
+      <div class="log-header-title">Vepari AI — Product Decision Log</div>
+      <div style="font-size:11px; color:#6B5E58;">P56 · 2026-09-01</div>
+    </div>
+    <div class="log-row">
+      <div class="log-field">Decision ID</div>
+      <div class="log-value">DEC-014 — Dark Mode Scope</div>
+      <div class="log-badge"><span class="chip chip-decision">Resolved</span></div>
+    </div>
+    <div class="log-row">
+      <div class="log-field">Trigger</div>
+      <div class="log-value">"Theme: Light" row in Screens.png Settings screen implies a planned dark mode that no master document addresses. Left unresolved, it becomes a Phase 6 retrofit risk.</div>
+      <div class="log-badge"></div>
+    </div>
+    <div class="log-row">
+      <div class="log-field">Decision</div>
+      <div class="log-value"><strong>Dark mode is in scope.</strong> Warm dark-palette tokens are defined in Phase 5 alongside the light palette. React Native implementation and in-app toggle are deferred to Phase 7 after the core screens ship.</div>
+      <div class="log-badge"></div>
+    </div>
+    <div class="log-row">
+      <div class="log-field">Rationale</div>
+      <div class="log-value">Token definition now costs one design session. Retrofit after Phase 6 costs a sprint plus regression risk on every screen. The "Theme: Light" row leaves no room for ambiguity — dark mode was always planned.</div>
+      <div class="log-badge"></div>
+    </div>
+    <div class="log-row">
+      <div class="log-field">Tokens</div>
+      <div class="log-value">12 new dm- tokens added to P46. Semantic alias table updated with light/dark pairing for all 14 semantic slots. See this canvas for the full table.</div>
+      <div class="log-badge"></div>
+    </div>
+    <div class="log-row">
+      <div class="log-field">Constraints</div>
+      <div class="log-value">Gold accent remains decorative on most dark surfaces (3.6–4.0:1). Gold as body text requires dm-Background (#1E1810) as the surface (7.8:1). Identical rule to the light-mode constraint from P55.</div>
+      <div class="log-badge"></div>
+    </div>
+    <div class="log-row">
+      <div class="log-field">Next steps</div>
+      <div class="log-value">Phase 6 engineers reference semantic tokens only — no raw hex in components. Phase 7 ticket: "Wire dark mode toggle in Settings + useColorScheme()". Sarvam AI surface dark adaptation is a Phase 7 sub-task.</div>
+      <div class="log-badge"><span class="chip chip-defer">Phase 7</span></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

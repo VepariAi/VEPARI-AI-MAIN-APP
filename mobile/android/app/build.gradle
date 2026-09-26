@@ -1,0 +1,128 @@
+apply plugin: "com.android.application"
+apply plugin: "org.jetbrains.kotlin.android"
+apply plugin: "com.facebook.react"
+
+/**
+ * React Native configuration.
+ *
+ * MONOREPO NOTE: this app lives in `mobile/` of an npm-workspaces monorepo, so
+ * node_modules is hoisted to the repository root (../../../ from this file),
+ * not to `mobile/`. The paths below point the RN Gradle plugin at the hoisted
+ * packages.
+ */
+react {
+    // Where package.json / index.js live (the mobile app root).
+    root = file("../../")
+    // Hoisted node_modules at the repository root.
+    reactNativeDir = file("../../../node_modules/react-native")
+    codegenDir = file("../../../node_modules/@react-native/codegen")
+    cliFile = file("../../../node_modules/react-native/cli.js")
+    // The RN plugin auto-detects hermesc relative to `root` (mobile/), where it
+    // is absent because react-native is hoisted to the repo root. Point at the
+    // hoisted binary explicitly; the plugin substitutes %OS-BIN% for the current
+    // OS (linux64-bin/osx-bin/win64-bin). Required for release JS→bytecode.
+    hermesCommand = file("../../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc").absolutePath
+
+    // Debug variants skip JS bundling (Metro serves the bundle). With product
+    // flavors we must enumerate every debuggable variant explicitly.
+    debuggableVariants = ["developmentDebug", "stagingDebug", "productionDebug"]
+}
+
+/**
+ * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
+ */
+def enableProguardInReleaseBuilds = false
+
+/**
+ * The preferred build flavor of JavaScriptCore (JSC). Hermes is used by default
+ * (hermesEnabled=true in gradle.properties); this is only the JSC fallback.
+ */
+def jscFlavor = 'org.webkit:android-jsc:+'
+
+android {
+    ndkVersion rootProject.ext.ndkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdk rootProject.ext.compileSdkVersion
+
+    namespace "ai.vepari.app"
+    defaultConfig {
+        applicationId "ai.vepari.app"
+        minSdkVersion rootProject.ext.minSdkVersion
+        targetSdkVersion rootProject.ext.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+    }
+
+    // Environment architecture: development / staging / production.
+    // Each flavor gets a distinct applicationId suffix (dev/staging) so all three
+    // can be installed side by side, and an APP_ENV BuildConfig field the JS layer
+    // can read. No secrets live here — only environment identity.
+    flavorDimensions "env"
+    productFlavors {
+        development {
+            dimension "env"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            resValue "string", "build_config_package", "ai.vepari.app"
+            buildConfigField "String", "APP_ENV", "\"development\""
+        }
+        staging {
+            dimension "env"
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+            buildConfigField "String", "APP_ENV", "\"staging\""
+        }
+        production {
+            dimension "env"
+            buildConfigField "String", "APP_ENV", "\"production\""
+        }
+    }
+
+    signingConfigs {
+        debug {
+            // Standard RN debug keystore. It is git-ignored and NOT committed;
+            // generate it locally / in CI (see docs/deployment/android-release.md).
+            storeFile file('debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+        release {
+            // Real upload/signing credentials come from Gradle properties / env,
+            // never from Git. Populated in CI or ~/.gradle/gradle.properties.
+            if (project.hasProperty('VEPARI_UPLOAD_STORE_FILE')) {
+                storeFile file(project.property('VEPARI_UPLOAD_STORE_FILE'))
+                storePassword project.property('VEPARI_UPLOAD_STORE_PASSWORD')
+                keyAlias project.property('VEPARI_UPLOAD_KEY_ALIAS')
+                keyPassword project.property('VEPARI_UPLOAD_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+        }
+        release {
+            // Use real release signing when credentials are provided; otherwise
+            // fall back to debug signing so the release build is structurally
+            // buildable in CI without production secrets (never ship that artifact).
+            signingConfig project.hasProperty('VEPARI_UPLOAD_STORE_FILE') ? signingConfigs.release : signingConfigs.debug
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+}
+
+dependencies {
+    // The version of react-native is set by the React Native Gradle Plugin
+    implementation("com.facebook.react:react-android")
+
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }
+}
+
+// Autolinking of native modules (monorepo: hoisted node_modules at repo root).
+apply from: file("../../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

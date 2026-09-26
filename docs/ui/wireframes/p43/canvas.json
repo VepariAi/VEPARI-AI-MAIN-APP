@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",            "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Settings List — all rows from UI-UX sec94" },
+    { "file": "BusinessProfile.dc.html", "x": 470, "y": 0, "w": 390, "h": 844, "title": "Business Profile Edit — name, type, GSTIN, address" }
+  ],
+  "annotations": [
+    { "id": "p43-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 43 — Full Settings list (Business, Operations, App sections) and Business Profile edit form (logo, business type, GSTIN, GST filing, address)." }
+  ],
+  "launch": { "view": "canvas" }
+}

@@ -1,0 +1,438 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 860px; font-family: system-ui, -apple-system, sans-serif; background: #faf7f2; color: #3b2f2a; }
+body { padding: 28px 32px 56px; }
+h1 { font-size: 22px; font-weight: 700; color: #3b2f2a; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #8a7060; margin-bottom: 24px; }
+h2 { font-size: 14px; font-weight: 700; color: #3b2f2a; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.6px; border-top: 1px solid #e8ddd0; padding-top: 16px; }
+h2:first-of-type { border-top: none; padding-top: 0; }
+.comp-card { background: #fff; border: 1px solid #e8ddd0; border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+.comp-header { background: #f2e8d6; padding: 10px 16px; display: flex; align-items: baseline; gap: 10px; }
+.comp-name { font-size: 14px; font-weight: 700; color: #3b2f2a; }
+.comp-ref { font-size: 11px; color: #8a7060; }
+.comp-body { padding: 0; }
+table { width: 100%; border-collapse: collapse; }
+th { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 14px; text-align: left; background: #faf7f2; border-bottom: 1px solid #e8ddd0; }
+td { padding: 8px 14px; border-bottom: 1px solid #f2e8d6; font-size: 12px; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.state-name { font-weight: 600; color: #3b2f2a; white-space: nowrap; }
+.token { font-family: monospace; font-size: 11px; color: #5a6b4f; background: #f0f4ee; padding: 1px 4px; border-radius: 3px; }
+.usage { color: #8a7060; }
+.anat { font-size: 12px; color: #6b4f1a; padding: 8px 14px 10px; background: #fff8e8; border-top: 1px solid #e8ddd0; line-height: 1.5; }
+.note { background: #fff8e8; border: 1px solid #c8a96b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #6b4f1a; margin-bottom: 20px; line-height: 1.5; }
+</style>
+<h1>P48 — Component Spec</h1>
+<div class="meta">Prompt 48 · Phase 5 · Depends on Prompts 45–47 — 26 components × all states per UI-UX §197–198</div>
+
+<div class="note">
+  <strong>State set (UI-UX §198):</strong> Default · Pressed · Focused · Disabled · Loading · Error · Selected · Success. Not every component has all 8 states — only states that are visually distinct from Default are listed per component. All color references use semantic tokens from P46; all spacing/radius from P47.
+</div>
+
+<!-- ═══════════════ ACTIONS ═══════════════ -->
+<h2>Actions</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Button</span><span class="comp-ref">P38–P43 (all screens)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Background</th><th>Text / icon</th><th>Border</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td><span class="token">--color-primary</span></td><td><span class="token">--color-primary-on</span></td><td>none</td><td class="usage">Height 48dp, radius --radius-sm(8), full-width or auto</td></tr>
+        <tr><td class="state-name">Pressed</td><td>#2e2420 (primary −10% lum)</td><td><span class="token">--color-primary-on</span></td><td>none</td><td class="usage">Scale 0.98, no color delay</td></tr>
+        <tr><td class="state-name">Focused</td><td><span class="token">--color-primary</span></td><td><span class="token">--color-primary-on</span></td><td>2dp <span class="token">--color-secondary</span> offset 2dp</td><td class="usage">Keyboard focus ring using Heritage Gold</td></tr>
+        <tr><td class="state-name">Disabled</td><td><span class="token">--color-surface-subtle</span></td><td><span class="token">--color-text-disabled</span></td><td>none</td><td class="usage">pointer-events: none</td></tr>
+        <tr><td class="state-name">Loading</td><td><span class="token">--color-primary</span></td><td>Spinner (24dp, white)</td><td>none</td><td class="usage">Label replaced by spinner; width locked</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> [leading-icon?] [label text --type-body-sm 600] [trailing-icon?] · Variants: Primary (filled), Secondary (outlined border 1.5dp --color-primary), Ghost (no bg/border, text --color-primary), Destructive (bg --color-error). All share same height/radius.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">IconButton</span><span class="comp-ref">P37–P43 (top-bar actions, row actions)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Background</th><th>Icon color</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td>transparent</td><td><span class="token">--color-text-primary</span></td><td class="usage">Touch target 44dp, icon 24dp centered; variants: Filled (bg --color-surface-subtle), Tonal (bg --color-secondary 15%)</td></tr>
+        <tr><td class="state-name">Pressed</td><td><span class="token">--color-surface-subtle</span></td><td><span class="token">--color-primary</span></td><td class="usage">Ripple / fill fade 120ms</td></tr>
+        <tr><td class="state-name">Focused</td><td>transparent</td><td><span class="token">--color-primary</span></td><td class="usage">2dp focus ring --color-secondary</td></tr>
+        <tr><td class="state-name">Disabled</td><td>transparent</td><td><span class="token">--color-text-disabled</span></td><td class="usage">Opacity 0.38</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ INPUTS ═══════════════ -->
+<h2>Inputs</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">TextField</span><span class="comp-ref">P38 (Add Sale), P39 (Edit Customer), P43 (Business Profile)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Border</th><th>Label</th><th>BG</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td>1dp <span class="token">--color-border</span></td><td><span class="token">--color-text-secondary</span> floating label 11sp</td><td><span class="token">--color-surface</span></td><td class="usage">Height 48dp, radius --radius-sm, padding 16dp H, 12dp V</td></tr>
+        <tr><td class="state-name">Focused</td><td>2dp <span class="token">--color-primary</span></td><td><span class="token">--color-primary</span> 11sp</td><td><span class="token">--color-surface</span></td><td class="usage">Label floats to top on focus/fill</td></tr>
+        <tr><td class="state-name">Filled (not focused)</td><td>1dp <span class="token">--color-border</span></td><td><span class="token">--color-text-secondary</span> 11sp top</td><td><span class="token">--color-surface</span></td><td class="usage">Value at --type-body</td></tr>
+        <tr><td class="state-name">Disabled</td><td>1dp <span class="token">--color-border-subtle</span> dashed</td><td><span class="token">--color-text-disabled</span></td><td><span class="token">--color-surface-subtle</span></td><td class="usage">Opacity 0.6 on value text</td></tr>
+        <tr><td class="state-name">Error</td><td>2dp <span class="token">--color-error</span></td><td><span class="token">--color-error</span></td><td><span class="token">--color-error-surface</span></td><td class="usage">Helper text below in --color-error --type-caption</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> [label (floating)] [value text] [leading-icon?] [trailing-icon: clear / visibility / status] [helper text / error message]. Supporting text 12sp below field.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">SearchField</span><span class="comp-ref">P38 (ItemAdd), P39 (lists), P40 (inventory)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Appearance</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default (idle)</td><td>BG <span class="token">--color-surface-subtle</span>, border none, radius --radius-sm, magnifier icon --color-text-secondary</td><td class="usage">Placeholder --type-body --color-text-secondary</td></tr>
+        <tr><td class="state-name">Active / typing</td><td>BG <span class="token">--color-surface</span>, border 1.5dp <span class="token">--color-primary</span></td><td class="usage">Clear (×) icon appears trailing; keyboard visible</td></tr>
+        <tr><td class="state-name">Loading results</td><td>Same as Active + skeleton rows below</td><td class="usage">Inline spinner 16dp in trailing position</td></tr>
+        <tr><td class="state-name">No results</td><td>Search bar remains; EmptyState below</td><td class="usage">EmptyState component (P44)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Select (Dropdown)</span><span class="comp-ref">P38 (reason category), P43 (GST filing)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Appearance</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td class="usage">TextField appearance + chevron-down trailing icon. Tap opens bottom sheet of options.</td></tr>
+        <tr><td class="state-name">Open</td><td class="usage">Bottom sheet (--elevation-3). Options as ListItems, selected has checkmark + --color-secondary text.</td></tr>
+        <tr><td class="state-name">Disabled</td><td class="usage">Same as TextField disabled. Chevron opacity 0.38.</td></tr>
+        <tr><td class="state-name">Error</td><td class="usage">Same as TextField error.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Checkbox</span><span class="comp-ref">P38 (item selection), P43 (settings toggles)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Box fill</th><th>Check color</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Unchecked</td><td>transparent</td><td class="usage">Border 2dp --color-border</td></tr>
+        <tr><td class="state-name">Checked</td><td><span class="token">--color-primary</span></td><td><span class="token">--color-primary-on</span> checkmark</td></tr>
+        <tr><td class="state-name">Indeterminate</td><td><span class="token">--color-primary</span></td><td><span class="token">--color-primary-on</span> dash</td></tr>
+        <tr><td class="state-name">Disabled</td><td><span class="token">--color-surface-subtle</span></td><td class="usage">Border --color-border-subtle; check --color-text-disabled</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> 20dp × 20dp box (radius --radius-xs), touch target 44dp. Label 14sp 400 to the right, gap 10dp.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Switch (Toggle)</span><span class="comp-ref">P43 (Alerts, WhatsApp, Offline mode toggles)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Track</th><th>Thumb</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Off</td><td><span class="token">--color-border</span> 36×20dp</td><td>White 16dp circle, left</td></tr>
+        <tr><td class="state-name">On</td><td><span class="token">--color-primary</span></td><td>White 16dp circle, right</td></tr>
+        <tr><td class="state-name">Disabled Off</td><td><span class="token">--color-border-subtle</span></td><td>White, opacity 0.6</td></tr>
+        <tr><td class="state-name">Disabled On</td><td><span class="token">--color-text-disabled</span></td><td>White, opacity 0.6</td></tr>
+      </tbody>
+    </table>
+    <div class="anat">Touch target 44dp tall, centered on track. Thumb slides 16dp with 150ms ease. Never uses --color-success for the On state (reserved for explicit success outcomes).</div>
+  </div>
+</div>
+
+<!-- ═══════════════ CONTAINERS ═══════════════ -->
+<h2>Containers</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Card</span><span class="comp-ref">P34–P43 (universal container)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>BG</th><th>Border</th><th>Shadow</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td><span class="token">--color-surface</span></td><td>1dp <span class="token">--color-border</span></td><td><span class="token">--elevation-1</span></td></tr>
+        <tr><td class="state-name">Pressed (tappable card)</td><td><span class="token">--color-surface-subtle</span></td><td>1dp <span class="token">--color-border</span></td><td><span class="token">--elevation-1</span></td></tr>
+        <tr><td class="state-name">Selected</td><td><span class="token">--color-surface</span></td><td>2dp <span class="token">--color-secondary</span></td><td><span class="token">--elevation-1</span></td></tr>
+        <tr><td class="state-name">Error / Warning</td><td><span class="token">--color-error-surface</span></td><td>1dp <span class="token">--color-error</span></td><td>none</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> radius --radius-md (12dp), padding --card-padding (16dp all sides). Optional: header bar (--color-surface-subtle bg, 14sp 700), divider (1dp --color-border-subtle), footer. Margin between cards: --space-3 (12dp) vertical.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">MetricCard</span><span class="comp-ref">P34 (Home KPIs), P37 (Finance), P40 (Inventory counters)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td class="usage">BG --color-surface-subtle, border none, radius --radius-md. Label --type-label (11sp 600 uppercase), value --type-display (22sp 700), trend chip optional (--type-caption green/red arrow + %)</td></tr>
+        <tr><td class="state-name">Loading</td><td class="usage">Skeleton shimmer: label bar 60% wide 8dp, value bar 80% wide 22dp. Animated gradient left-to-right over --color-border-subtle.</td></tr>
+        <tr><td class="state-name">Error / unavailable</td><td class="usage">Value replaced by "—" in --color-text-disabled. Caption "Unavailable" in --color-text-secondary.</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> [icon 24dp in --color-secondary?] [label] [value] [trend chip?]. Min-height 80dp. 2-column grid on Home, 4-column on Inventory overview. Touch-navigates to drill-down screen.</td></div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">ListItem</span><span class="comp-ref">P37–P43 (universal row)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>BG</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td>transparent</td><td class="usage">Border-bottom 1dp --color-border-subtle; height auto (min 56dp); H-padding --screen-margin (20dp)</td></tr>
+        <tr><td class="state-name">Pressed</td><td><span class="token">--color-surface-subtle</span></td><td class="usage">Instant, 120ms fade-out</td></tr>
+        <tr><td class="state-name">Selected</td><td><span class="token">--color-secondary</span> at 10%</td><td class="usage">Left border 3dp --color-secondary. Used in multi-select (Add Sale item list)</td></tr>
+        <tr><td class="state-name">Disabled</td><td>transparent</td><td class="usage">All text --color-text-disabled; no press response</td></tr>
+        <tr><td class="state-name">Swipe-reveal</td><td class="usage">Left: --color-error (delete, 72dp). Right: --color-success (quick action, 72dp)</td><td class="usage">Icon 24dp centered, label 11sp 600 white</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> [leading: avatar/icon/thumbnail 40dp] [body: primary 14sp 500, secondary 13sp 400 --color-text-secondary, tertiary caption 11sp] [trailing: value + badge/chevron]. Last row in section: no border-bottom.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ IDENTITY ═══════════════ -->
+<h2>Identity</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Avatar</span><span class="comp-ref">P39 (Customer/Supplier lists), P42 (AI chat)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Photo</td><td class="usage">Circular (--radius-full), sizes: 32/40/48/64dp. Object-fit cover. Fallback → Initials.</td></tr>
+        <tr><td class="state-name">Initials</td><td class="usage">BG derived from name hash across 4 bg options (--color-surface-subtle, --color-success-surface, --color-warning-surface, --color-ai-surface). Text --type-label 600 uppercase 2 chars.</td></tr>
+        <tr><td class="state-name">AI avatar</td><td class="usage">BG --color-ai-surface. Icon: Vepari diamond-mark 24dp in --color-ai. Used in AI chat bubbles.</td></tr>
+        <tr><td class="state-name">With badge</td><td class="usage">Status dot 8dp bottom-right, 2dp white ring. Green = active, red = blocked, amber = due.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Badge</span><span class="comp-ref">P34 (KPI), P39–P40 (status labels), P43 (New)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>BG</th><th>Text</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Success</td><td><span class="token">--color-success-surface</span></td><td><span class="token">--color-success</span> --type-overline</td></tr>
+        <tr><td class="state-name">Warning</td><td><span class="token">--color-warning-surface</span></td><td><span class="token">--color-warning</span> --type-overline</td></tr>
+        <tr><td class="state-name">Error</td><td><span class="token">--color-error-surface</span></td><td><span class="token">--color-error</span> --type-overline</td></tr>
+        <tr><td class="state-name">Info</td><td><span class="token">--color-surface-subtle</span></td><td><span class="token">--color-info</span> --type-overline</td></tr>
+        <tr><td class="state-name">AI</td><td><span class="token">--color-ai-surface</span></td><td><span class="token">--color-ai</span> --type-overline</td></tr>
+        <tr><td class="state-name">Neutral</td><td><span class="token">--color-surface-subtle</span></td><td><span class="token">--color-text-secondary</span> --type-overline</td></tr>
+        <tr><td class="state-name">New (dot)</td><td><span class="token">--color-secondary</span> 8dp dot</td><td>none</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> height 20dp, radius --radius-xs (4dp), padding 4dp × 8dp, text --type-overline (10sp 700 ALL CAPS). Optional leading icon 12dp.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Chip</span><span class="comp-ref">P35–P43 (filter tabs, period selectors, tags)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>BG</th><th>Border</th><th>Text</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td><span class="token">--color-surface-subtle</span></td><td>1dp <span class="token">--color-border</span></td><td><span class="token">--color-text-secondary</span></td></tr>
+        <tr><td class="state-name">Selected</td><td><span class="token">--color-primary</span></td><td>none</td><td><span class="token">--color-primary-on</span></td></tr>
+        <tr><td class="state-name">Selected (outline)</td><td>transparent</td><td>2dp <span class="token">--color-secondary</span></td><td><span class="token">--color-primary</span></td></tr>
+        <tr><td class="state-name">Disabled</td><td><span class="token">--color-surface-subtle</span></td><td>1dp <span class="token">--color-border-subtle</span></td><td><span class="token">--color-text-disabled</span></td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> height 32dp, radius --radius-sm (8dp), padding 0 12dp. Text --type-label-lg (12sp 600). Optional: leading icon 16dp or count badge trailing. Chip row: gap --space-2 (8dp), horizontal scroll when overflowing.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Tabs</span><span class="comp-ref">P37 (Finance), P38 (Transactions), P39 (Customer/Supplier), P40, P42</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Tab text</th><th>Underline / indicator</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default (inactive)</td><td><span class="token">--color-text-secondary</span> --type-label-lg</td><td>none</td></tr>
+        <tr><td class="state-name">Active</td><td><span class="token">--color-primary</span> --type-label-lg 700</td><td>3dp <span class="token">--color-secondary</span> bottom, radius 1.5dp</td></tr>
+        <tr><td class="state-name">Pressed</td><td><span class="token">--color-primary</span></td><td>indicator transitions; tab bg --color-surface-subtle 60%</td></tr>
+        <tr><td class="state-name">Disabled</td><td><span class="token">--color-text-disabled</span></td><td>none</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> Full-width tab row, height 44dp, divider 1dp --color-border-subtle below. Scrollable tabs when more than 4. Indicator animates slide to new active tab (200ms ease-out). Optional count badge (--badge-neutral) trailing each label.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ OVERLAYS ═══════════════ -->
+<h2>Overlays</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">BottomSheet</span><span class="comp-ref">P36 (Quick Actions config), P38 (payment, add item), P40 (stock actions)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default (open)</td><td class="usage">BG --color-surface, radius --radius-xl (20dp top corners). Handle: 32×4dp pill --color-border centered 8dp below top edge. Content padding: top 20dp, sides --screen-margin (20dp), bottom: safe area + 20dp.</td></tr>
+        <tr><td class="state-name">Loading</td><td class="usage">Content area replaced by skeleton rows.</td></tr>
+        <tr><td class="state-name">Error</td><td class="usage">ErrorState component inline.</td></tr>
+      </tbody>
+    </table>
+    <div class="anat">Shadow: --elevation-3 (Floating). Scrim behind: --scrim rgba(59,47,42,.50). Max height 90% of screen height; scrollable content area. Dismiss: tap scrim, drag handle down, or escape key. Snap points optional (P36 Quick Config uses 50% and 90% snaps).</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Modal / Dialog</span><span class="comp-ref">P38 (Add Sale confirm), P40 (stock action confirm)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Confirmation Dialog</td><td class="usage">Center-screen card 280–340dp wide. Radius --radius-lg (16dp). Title --type-title-md, body --type-body. 2 buttons: secondary (Ghost) left, primary right. Shadow --elevation-modal.</td></tr>
+        <tr><td class="state-name">Full-screen Modal</td><td class="usage">Top-bar header style + close button (×). Used for multi-step flows (Add Sale). Content scrollable. Radius 0 (full screen covers).</td></tr>
+        <tr><td class="state-name">Alert Dialog (destructive)</td><td class="usage">Same as Confirmation but primary button is Destructive variant (--color-error bg). Icon: warning triangle --color-error 32dp.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Toast / Snackbar</span><span class="comp-ref">P38 (sale confirmed), P40 (stock adjusted)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>BG</th><th>Text</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Success</td><td>#2f3d25 (dark olive)</td><td>white --type-body-sm</td></tr>
+        <tr><td class="state-name">Error</td><td>#5c1a14 (dark terracotta)</td><td>white --type-body-sm</td></tr>
+        <tr><td class="state-name">Info</td><td><span class="token">--color-primary</span></td><td><span class="token">--color-primary-on</span> --type-body-sm</td></tr>
+        <tr><td class="state-name">Neutral</td><td>#4a3c36 (dark warm)</td><td>white --type-body-sm</td></tr>
+      </tbody>
+    </table>
+    <div class="anat">Bottom of screen, 20dp from safe area. Width: screen − 40dp. Radius --radius-md. Elevation --elevation-3. Auto-dismiss 3s (success/info) or 5s (error, optional action). Optional action button: text-only in --color-secondary right-aligned. Stacks max 2.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Banner</span><span class="comp-ref">P42 (offline banner, P35 briefing tier dividers)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>BG</th><th>Left border</th><th>Icon</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Warning (offline)</td><td><span class="token">--color-warning-surface</span></td><td>3dp <span class="token">--color-warning</span></td><td>offline-cloud 20dp <span class="token">--color-warning</span></td></tr>
+        <tr><td class="state-name">Error (conflict)</td><td><span class="token">--color-error-surface</span></td><td>3dp <span class="token">--color-error</span></td><td>alert-triangle 20dp <span class="token">--color-error</span></td></tr>
+        <tr><td class="state-name">Info</td><td><span class="token">--color-surface-subtle</span></td><td>3dp <span class="token">--color-info</span></td><td>info-circle 20dp <span class="token">--color-info</span></td></tr>
+        <tr><td class="state-name">AI Briefing tier</td><td><span class="token">--color-ai-surface</span></td><td>3dp <span class="token">--color-ai</span></td><td>AI diamond 20dp <span class="token">--color-ai</span></td></tr>
+      </tbody>
+    </table>
+    <div class="anat">Full screen width (no side margins). Padding 12dp. Text: primary --type-body-sm 500, secondary --type-caption --color-text-secondary. Dismiss: × icon trailing or auto after 8s for non-persistent banners.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ FEEDBACK ═══════════════ -->
+<h2>Feedback</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Progress</span><span class="comp-ref">P39 (credit bars), P40 (stock bars)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>Track BG</th><th>Fill</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Linear determinate</td><td><span class="token">--color-border-subtle</span></td><td>Semantic color by value range</td><td class="usage">Height 6dp, radius --radius-full. Fill: OK(≥50%) --color-success, Low(20–50%) --color-warning, Out/Critical(&lt;20%) --color-error.</td></tr>
+        <tr><td class="state-name">Linear indeterminate</td><td><span class="token">--color-surface-subtle</span></td><td><span class="token">--color-secondary</span></td><td class="usage">Animated shimmer used in loading states.</td></tr>
+        <tr><td class="state-name">Circular (spinner)</td><td>transparent</td><td><span class="token">--color-primary</span></td><td class="usage">24dp diameter, 2.5dp stroke. Used in button loading, inline fetch states.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Skeleton</span><span class="comp-ref">P44 (LoadingState artboard)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Text line</td><td class="usage">Height 10dp or 14dp, radius --radius-xs, BG gradient: --color-border-subtle → --color-surface-subtle → --color-border-subtle animated 1.5s ease-in-out infinite left-to-right (shimmer).</td></tr>
+        <tr><td class="state-name">Rect block (card/chart)</td><td class="usage">Height 80–120dp, radius --radius-md. Same shimmer animation.</td></tr>
+        <tr><td class="state-name">Circle (avatar)</td><td class="usage">40dp diameter, --radius-full. Same shimmer.</td></tr>
+      </tbody>
+    </table>
+    <div class="anat">Skeleton rows mimic the real layout 1-to-1 (same widths, heights, and gaps as the loaded state). Never use spinner instead of skeleton for a list that loads row-by-row.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">EmptyState</span><span class="comp-ref">P44 EmptyState artboard — cross-screen</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Context</th><th>Icon</th><th>Headline</th><th>CTA</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">No transactions</td><td class="usage">transaction-circle --color-text-disabled 48dp</td><td class="usage">"No transactions yet"</td><td class="usage">Primary button: "Add Sale"</td></tr>
+        <tr><td class="state-name">No search results</td><td class="usage">magnifier-x --color-text-disabled 48dp</td><td class="usage">"No results for '…'"</td><td class="usage">Ghost button: "Clear search"</td></tr>
+        <tr><td class="state-name">Empty inventory</td><td class="usage">box-open --color-text-disabled 48dp</td><td class="usage">"No products yet"</td><td class="usage">Primary button: "Add Product"</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> vertically centered in available space. Icon 48dp, gap 16dp, headline --type-title-md --color-text-secondary, description --type-body --color-text-secondary (max 2 lines), gap 24dp, CTA button. Never show EmptyState while loading (use Skeleton instead).</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">ErrorState</span><span class="comp-ref">P44 ErrorState artboard — cross-screen</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Level</th><th>Appearance</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Full-screen</td><td class="usage">Error icon 48dp --color-error, headline, plain-language description, error code in --type-caption, Primary button "Retry", Ghost button "Go back". Centered vertically.</td></tr>
+        <tr><td class="state-name">Inline (within card)</td><td class="usage">Red banner with icon + message. Retry link trailing.</td></tr>
+        <tr><td class="state-name">Field-level</td><td class="usage">TextField error state (red border + helper text, no icon).</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ DATA VIZ ═══════════════ -->
+<h2>Data Visualization</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Chart</span><span class="comp-ref">P37 (bar+donut), P41 (PnL bar chart), P40 (movement sparkline)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>Colors</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Bar (grouped)</td><td class="usage">Sales: --color-success. Purchases: --color-secondary. Adjustments: --color-accent.</td><td class="usage">Axis labels --type-caption, value labels --type-label. Gap between bars 4dp.</td></tr>
+        <tr><td class="state-name">Donut</td><td class="usage">Segments use the 6 brand hex values cycled (skip ivory/beige for fill).</td><td class="usage">Center: total value --type-display, label --type-label.</td></tr>
+        <tr><td class="state-name">Sparkline</td><td class="usage">Line: --color-success (positive), --color-error (negative). Fill: 20% opacity of line color.</td><td class="usage">No axes shown. Used in MetricCard trend indicator.</td></tr>
+        <tr><td class="state-name">Loading</td><td colspan="2" class="usage">Skeleton rect block replacing chart area.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Table</span><span class="comp-ref">P37 (Accounting journal), P41 (PnL category table)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Element</th><th>Style</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Header row</td><td class="usage">BG --color-surface-subtle. Text --type-label (11sp 600 uppercase) --color-text-secondary. H-padding 12dp, V-padding 10dp. Bottom border 1dp --color-border.</td></tr>
+        <tr><td class="state-name">Data row</td><td class="usage">BG --color-surface alternating with transparent (no zebra on mobile). V-padding 10dp. Bottom border 1dp --color-border-subtle. Text --type-body-sm.</td></tr>
+        <tr><td class="state-name">Row pressed</td><td class="usage">BG --color-surface-subtle. Navigates to detail.</td></tr>
+        <tr><td class="state-name">Footer / total row</td><td class="usage">BG --color-surface-subtle. Bold values. Top border 1dp --color-border.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">DocumentPreview</span><span class="comp-ref">P37 Source artboard (receipt attachment)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td class="usage">Card --radius-md, border 1dp --color-border. Thumbnail 80dp height, cover fit. Footer: filename --type-body-sm 500, size/type --type-caption --color-text-secondary. View button trailing.</td></tr>
+        <tr><td class="state-name">Loading</td><td class="usage">Thumbnail area skeleton rect. Filename skeleton line 60%.</td></tr>
+        <tr><td class="state-name">Error / missing</td><td class="usage">Thumbnail replaced by file-error icon 32dp --color-text-disabled. Footer: "File unavailable".</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>

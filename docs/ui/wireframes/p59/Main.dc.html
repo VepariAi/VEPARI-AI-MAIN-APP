@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Screens.png — 16-Screen Inventory</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { width: 1100px; background: #FAF7F2; font-family: 'Inter', system-ui, sans-serif; color: #3B2F2A; padding: 32px; }
+h1 { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+h2 { font-size: 14px; font-weight: 700; margin: 24px 0 12px; border-bottom: 2px solid #C8A96B; padding-bottom: 5px; }
+.sub { font-size: 11px; color: #8A7060; letter-spacing: 0.2px; margin-bottom: 24px; }
+
+.screens-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.screen-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+.screen-num {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #3B2F2A;
+  color: #C8A96B;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  z-index: 2;
+}
+.screen-mock {
+  width: 100%;
+  aspect-ratio: 9/16;
+  background: #FAF7F2;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.screen-bar { height: 20px; display: flex; align-items: center; justify-content: space-between; padding: 0 6px; font-size: 7px; color: #8A7060; background: #FAF7F2; }
+.screen-header {
+  padding: 8px 10px 6px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-align: center;
+  color: #3B2F2A;
+  border-bottom: 0.5px solid #E8DDD0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.screen-content { flex: 1; padding: 8px; }
+.screen-footer { padding: 6px 10px; font-size: 8px; background: #FFFFFF; border-top: 0.5px solid #E8DDD0; }
+.screen-label {
+  padding: 8px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #3B2F2A;
+  border-top: 1px solid #F2E8D6;
+}
+.screen-tags {
+  padding: 0 10px 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.tag {
+  font-size: 8px;
+  font-weight: 600;
+  padding: 2px 5px;
+  border-radius: 3px;
+  background: #F2E8D6;
+  color: #8A7060;
+}
+.tag.nav { background: #F0EDF8; color: #4A3D6B; }
+.tag.form { background: #EEF2EB; color: #5A6B4F; }
+.tag.list { background: #FAF0EC; color: #B45B4A; }
+.tag.ai { background: #F0EDF8; color: #4A3D6B; }
+
+/* Mini screen content styles */
+.mini-row { display: flex; align-items: center; justify-content: space-between; padding: 3px 0; border-bottom: 0.5px solid #F2E8D6; font-size: 7px; color: #3B2F2A; }
+.mini-row:last-child { border-bottom: none; }
+.mini-label { color: #8A7060; }
+.mini-val { font-weight: 700; }
+.mini-val.green { color: #5A6B4F; }
+.mini-val.red { color: #B45B4A; }
+.mini-val.gold { color: #C8A96B; }
+.mini-btn { margin-top: 6px; background: #3B2F2A; color: #C8A96B; font-size: 7px; font-weight: 700; padding: 3px 8px; border-radius: 3px; text-align: center; }
+.mini-btn.gold-btn { background: #C8A96B; color: #3B2F2A; }
+.mini-tabs { display: flex; gap: 3px; margin-bottom: 5px; }
+.mini-tab { font-size: 7px; padding: 2px 5px; border-radius: 3px; background: #F2E8D6; color: #8A7060; }
+.mini-tab.active { background: #3B2F2A; color: #FAF7F2; }
+.mini-kpi { background: #F2E8D6; border-radius: 4px; padding: 4px; margin-bottom: 3px; }
+.mini-kpi-val { font-size: 9px; font-weight: 700; color: #3B2F2A; }
+.mini-kpi-lbl { font-size: 6px; color: #8A7060; }
+.mini-pill { display: inline-block; background: #FAF7F2; border: 0.5px solid #E8DDD0; border-radius: 20px; padding: 2px 6px; font-size: 7px; color: #3B2F2A; }
+.ai-ring { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #C8A96B; margin: 4px auto; display: flex; align-items: center; justify-content: center; background: radial-gradient(#FFFFFF, #FAF7F2); }
+.ai-ring-text { font-size: 5px; font-weight: 700; text-align: center; color: #3B2F2A; }
+.chat-bubble { background: #F2E8D6; border-radius: 6px 6px 6px 0; padding: 4px 6px; font-size: 6px; color: #3B2F2A; margin-bottom: 4px; line-height: 1.4; }
+.chat-user { background: #3B2F2A; color: #FAF7F2; border-radius: 6px 6px 0 6px; text-align: right; }
+.mini-nav { display: flex; justify-content: space-around; align-items: flex-end; padding: 4px 0; background: #FFFFFF; border-top: 0.5px solid #E8DDD0; }
+.mini-nav-item { display: flex; flex-direction: column; align-items: center; gap: 1px; font-size: 5px; color: #8A7060; }
+.mini-nav-item.active { color: #3B2F2A; }
+.mini-fab { width: 16px; height: 16px; border-radius: 50%; background: #3B2F2A; display: flex; align-items: center; justify-content: center; margin-bottom: 2px; }
+.badge { font-size: 6px; padding: 1px 3px; border-radius: 2px; font-weight: 700; }
+.badge.low { background: #FAF0EC; color: #B45B4A; }
+.badge.out { background: #FAECEA; color: #A0312A; }
+.badge.in { background: #EEF2EB; color: #5A6B4F; }
+</style>
+</head>
+<body>
+
+<h1>Screens.png — All 16 Screens Inventory</h1>
+<p class="sub">P59 · Per-screen documentation with token mapping. Source: Screens.png reference image.</p>
+
+<div class="screens-grid">
+
+  <!-- Screen 1: Splash -->
+  <div class="screen-card">
+    <div class="screen-num">S01</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:12px;">
+        <svg width="60" height="60" viewBox="0 0 60 60">
+          <circle cx="30" cy="30" r="28" fill="none" stroke="#C8A96B" stroke-width="1.5" stroke-dasharray="3,5" opacity="0.5"/>
+          <g transform="translate(30,30)">
+            <path d="M0,-16 C7,-9 7,0 0,4 C-7,0 -7,-9 0,-16" fill="#C8A96B" opacity="0.85"/>
+            <path d="M16,0 C9,7 0,7 -4,0 C0,-7 9,-7 16,0" fill="#C8A96B" opacity="0.85"/>
+            <path d="M0,16 C-7,9 -7,0 0,-4 C7,0 7,9 0,16" fill="#C8A96B" opacity="0.85"/>
+            <path d="M-16,0 C-9,-7 0,-7 4,0 C0,7 -9,7 -16,0" fill="#C8A96B" opacity="0.85"/>
+            <circle cx="0" cy="0" r="4" fill="#C8A96B"/>
+          </g>
+        </svg>
+        <div style="text-align:center;">
+          <div style="font-size:14px;font-weight:700;color:#3B2F2A;letter-spacing:-0.2px;">VEPARI AI</div>
+          <div style="font-size:8px;letter-spacing:0.6px;color:#8A7060;margin-bottom:4px;">BUSINESS OS</div>
+          <div style="font-size:8px;color:#8A7060;line-height:1.4;">Awakening your<br>Business Intelligence</div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">01 — Splash</div>
+    <div class="screen-tags"><span class="tag">fullscreen</span><span class="tag">logo</span></div>
+  </div>
+
+  <!-- Screen 2: AI OS Home -->
+  <div class="screen-card">
+    <div class="screen-num">S02</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div style="padding:4px 6px 2px;text-align:center;">
+        <div class="mini-pill">• AI OS ACTIVE</div>
+        <div style="font-size:11px;font-weight:700;color:#3B2F2A;">VEPARI AI OS</div>
+        <div style="font-size:6px;letter-spacing:0.5px;color:#8A7060;">BUSINESS OPERATING SYSTEM</div>
+      </div>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:2px;padding:2px 4px;">
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <div class="mini-kpi"><div class="mini-kpi-val">₹24,850</div><div class="mini-kpi-lbl">Finance</div></div>
+          <div class="mini-kpi"><div class="mini-kpi-val">12</div><div class="mini-kpi-lbl">Customer</div></div>
+          <div class="mini-kpi"><div class="mini-kpi-val">2</div><div class="mini-kpi-lbl">Supplier</div></div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:center;">
+          <div class="ai-ring"><div class="ai-ring-text">VEPARI<br>AI CORE</div></div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:2px;">
+          <div class="mini-kpi"><div class="mini-kpi-val">4</div><div class="mini-kpi-lbl">Insight</div></div>
+          <div class="mini-kpi"><div class="mini-kpi-val">7</div><div class="mini-kpi-lbl">Automation</div></div>
+          <div class="mini-kpi"><div class="mini-kpi-val">18</div><div class="mini-kpi-lbl">Operations</div></div>
+        </div>
+      </div>
+      <div style="margin:2px 4px;background:#FFFFFF;border-radius:4px;padding:4px;border:0.5px solid #E8DDD0;font-size:6px;color:#3B2F2A;">
+        <div style="font-size:6px;color:#C8A96B;font-weight:700;margin-bottom:2px;">● BUSINESS INTELLIGENCE</div>
+        <div style="font-size:7px;font-weight:700;">Good Morning, Arun</div>
+        <div style="font-size:5px;color:#8A7060;">I've been monitoring your business…</div>
+      </div>
+      <div style="background:#3B2F2A;padding:4px 6px;text-align:center;font-size:6px;color:#C8A96B;letter-spacing:0.3px;">VOICE COMMAND ACTIVE</div>
+    </div>
+    <div class="screen-label">02 — AI OS Home</div>
+    <div class="screen-tags"><span class="tag">home</span><span class="tag ai">AI core</span><span class="tag">engine cards</span></div>
+  </div>
+
+  <!-- Screen 3: AI OS Briefing -->
+  <div class="screen-card">
+    <div class="screen-num">S03</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> AI OS BRIEFING</div>
+      <div style="flex:1;padding:8px;">
+        <div style="font-size:13px;font-weight:700;color:#3B2F2A;margin-bottom:8px;line-height:1.2;">While you were away...</div>
+        <div class="mini-row"><span>Sales Recorded</span><span class="mini-val green">₹24,850 ↑18%</span></div>
+        <div class="mini-row"><span>Expense Added</span><span class="mini-val red">₹7,420 ↑6%</span></div>
+        <div class="mini-row"><span>New Customers</span><span class="mini-val">3</span></div>
+        <div class="mini-row"><span>Payment Received</span><span class="mini-val green">₹12,650 ↑34%</span></div>
+        <div class="mini-row"><span>Supplier Bill Pending</span><span class="mini-val red">₹6,500</span></div>
+        <div class="mini-row"><span>Stock Alerts</span><span class="mini-val red">3 items</span></div>
+        <div class="mini-row"><span>Opportunity</span><span class="mini-val gold">Grocery Sales ↑</span></div>
+        <div style="margin-top:8px;" class="mini-btn gold-btn">Continue</div>
+      </div>
+    </div>
+    <div class="screen-label">03 — AI OS Briefing</div>
+    <div class="screen-tags"><span class="tag ai">AI briefing</span><span class="tag list">activity list</span></div>
+  </div>
+
+  <!-- Screen 4: Dashboard Home -->
+  <div class="screen-card">
+    <div class="screen-num">S04</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> VEPARI AI <span style="color:#C8A96B;">✎</span></div>
+      <div style="padding:0 6px 2px;text-align:center;font-size:7px;color:#5A6B4F;">● AI OS ACTIVE</div>
+      <div style="flex:1;padding:4px 6px;overflow:hidden;">
+        <div style="font-size:7px;font-weight:700;margin-bottom:4px;">Today's Overview <span style="background:#EEF2EB;color:#5A6B4F;padding:1px 4px;border-radius:3px;font-size:6px;">Live</span></div>
+        <div class="mini-row"><span>Revenue</span><span class="mini-val green">₹12,450</span></div>
+        <div class="mini-row"><span>Expenses</span><span class="mini-val red">₹3,200</span></div>
+        <div class="mini-row"><span>Profit</span><span class="mini-val green">₹9,250</span></div>
+        <div style="background:#3B2F2A;border-radius:5px;padding:5px;margin:5px 0;">
+          <div style="font-size:7px;font-weight:700;color:#C8A96B;">Talk to Vepari</div>
+          <div style="font-size:6px;color:#F2E8D6;">How can I help with your business?</div>
+        </div>
+        <div style="font-size:7px;font-weight:700;margin-bottom:4px;">Quick Actions</div>
+        <div style="display:flex;gap:4px;justify-content:space-between;">
+          <div style="font-size:5px;text-align:center;color:#8A7060;">Add Sale</div>
+          <div style="font-size:5px;text-align:center;color:#8A7060;">Add Expense</div>
+          <div style="font-size:5px;text-align:center;color:#8A7060;">Add Customer</div>
+          <div style="font-size:5px;text-align:center;color:#8A7060;">More</div>
+        </div>
+      </div>
+      <div class="mini-nav">
+        <div class="mini-nav-item active"><div style="width:8px;height:8px;background:#3B2F2A;border-radius:2px;"></div>Home</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>Trans.</div>
+        <div class="mini-nav-item"><div class="mini-fab"><div style="width:6px;height:6px;background:#C8A96B;border-radius:50%;"></div></div>Voice</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>Reports</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>More</div>
+      </div>
+    </div>
+    <div class="screen-label">04 — Dashboard Home</div>
+    <div class="screen-tags"><span class="tag nav">bottom nav</span><span class="tag">KPI cards</span><span class="tag ai">Talk to Vepari</span></div>
+  </div>
+
+  <!-- Screen 5: Finance -->
+  <div class="screen-card">
+    <div class="screen-num">S05</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> FINANCE</div>
+      <div style="flex:1;padding:4px 6px;">
+        <div class="mini-pill" style="margin-bottom:5px;font-size:7px;">This Month ∨</div>
+        <div class="mini-kpi"><div class="mini-kpi-val">₹1,45,680</div><div class="mini-kpi-lbl">Total Revenue <span style="color:#5A6B4F;">↑22% vs last month</span></div></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;margin-bottom:3px;">
+          <div class="mini-kpi"><div class="mini-kpi-val" style="font-size:8px;">₹45,230</div><div class="mini-kpi-lbl">Expenses <span style="color:#B45B4A;">↓12%</span></div></div>
+          <div class="mini-kpi"><div class="mini-kpi-val" style="font-size:8px;">₹1,00,450</div><div class="mini-kpi-lbl">Net Profit <span style="color:#5A6B4F;">↑28%</span></div></div>
+        </div>
+        <div class="mini-kpi"><div class="mini-kpi-lbl">Cash Flow</div><div style="font-size:6px;color:#5A6B4F;font-weight:700;">→ Healthy</div></div>
+        <div class="mini-row"><span>Bank Balance</span><span class="mini-val">₹78,320</span></div>
+        <div class="mini-btn">View Detailed Report</div>
+      </div>
+      <div class="mini-nav">
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>Home</div>
+        <div class="mini-nav-item active"><div style="width:8px;height:8px;background:#3B2F2A;border-radius:2px;"></div>Trans.</div>
+        <div class="mini-nav-item"><div class="mini-fab"><div style="width:6px;height:6px;background:#C8A96B;border-radius:50%;"></div></div>Voice</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>Reports</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>More</div>
+      </div>
+    </div>
+    <div class="screen-label">05 — Finance</div>
+    <div class="screen-tags"><span class="tag nav">bottom nav</span><span class="tag">KPI</span><span class="tag">chart</span></div>
+  </div>
+
+  <!-- Screen 6: Transactions -->
+  <div class="screen-card">
+    <div class="screen-num">S06</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> TRANSACTIONS <span style="color:#C8A96B;margin-left:auto;">🔍 ⊞</span></div>
+      <div style="flex:1;padding:4px 6px;">
+        <div class="mini-tabs">
+          <div class="mini-tab active">All</div>
+          <div class="mini-tab">Sales</div>
+          <div class="mini-tab">Expenses</div>
+          <div class="mini-tab">Payments</div>
+        </div>
+        <div style="font-size:7px;font-weight:700;color:#8A7060;margin:4px 0 2px;">Today</div>
+        <div class="mini-row"><span>Ramesh Store • Sale</span><span class="mini-val green">+₹2,650</span></div>
+        <div class="mini-row"><span>Transport Exp.</span><span class="mini-val red">-₹620</span></div>
+        <div class="mini-row"><span>Priya Traders • Credit</span><span class="mini-val green">+₹3,240</span></div>
+        <div class="mini-row"><span>Cash Payment</span><span class="mini-val green">+₹1,500</span></div>
+        <div style="font-size:7px;font-weight:700;color:#8A7060;margin:4px 0 2px;">Yesterday</div>
+        <div class="mini-row"><span>Suresh Enterprises</span><span class="mini-val green">+₹4,850</span></div>
+        <div class="mini-row"><span>Electricity Bill</span><span class="mini-val red">-₹1,250</span></div>
+      </div>
+      <div class="mini-btn gold-btn" style="margin:0 6px 6px;">+ Add Transaction</div>
+      <div class="mini-nav">
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>Home</div>
+        <div class="mini-nav-item active"><div style="width:8px;height:8px;background:#3B2F2A;border-radius:2px;"></div>Trans.</div>
+        <div class="mini-nav-item"><div class="mini-fab"><div style="width:6px;height:6px;background:#C8A96B;border-radius:50%;"></div></div>Voice</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>Reports</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>More</div>
+      </div>
+    </div>
+    <div class="screen-label">06 — Transactions</div>
+    <div class="screen-tags"><span class="tag list">grouped list</span><span class="tag">filter tabs</span><span class="tag nav">bottom nav</span></div>
+  </div>
+
+  <!-- Screen 7: Add Sale -->
+  <div class="screen-card">
+    <div class="screen-num">S07</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> ADD SALE</div>
+      <div style="flex:1;padding:4px 6px;">
+        <div style="font-size:7px;color:#8A7060;margin-bottom:2px;">Customer (Optional)</div>
+        <div style="border:0.5px solid #E8DDD0;border-radius:4px;padding:4px 6px;font-size:7px;color:#8A7060;margin-bottom:6px;">Select or Add Customer ›</div>
+        <div style="font-size:7px;font-weight:700;margin-bottom:3px;">Items</div>
+        <div class="mini-row"><span>Toor Dal 1kg × 2</span><span class="mini-val">₹240.00</span></div>
+        <div class="mini-row"><span>Rice 5kg × 1</span><span class="mini-val">₹350.00</span></div>
+        <div style="font-size:7px;color:#C8A96B;font-weight:700;margin:3px 0;">+ Add Item</div>
+        <div style="border-top:0.5px solid #E8DDD0;padding-top:4px;margin-top:4px;">
+          <div class="mini-row"><span style="color:#8A7060;">Subtotal</span><span>₹590.00</span></div>
+          <div class="mini-row"><span style="color:#8A7060;">Discount</span><span>₹0.00</span></div>
+          <div class="mini-row"><span style="font-weight:700;">Total Amount</span><span style="font-weight:700;">₹590.00</span></div>
+        </div>
+        <div style="font-size:7px;font-weight:700;margin:4px 0 3px;">Payment Method</div>
+        <div class="mini-tabs">
+          <div class="mini-tab active">Cash</div>
+          <div class="mini-tab">UPI</div>
+          <div class="mini-tab">Card</div>
+          <div class="mini-tab">Credit</div>
+        </div>
+        <div class="mini-btn gold-btn" style="margin-top:4px;">Save Sale</div>
+      </div>
+    </div>
+    <div class="screen-label">07 — Add Sale</div>
+    <div class="screen-tags"><span class="tag form">form</span><span class="tag">item picker</span><span class="tag">payment tabs</span></div>
+  </div>
+
+  <!-- Screen 8: Customers -->
+  <div class="screen-card">
+    <div class="screen-num">S08</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> CUSTOMERS <span style="color:#C8A96B;margin-left:auto;">🔍 +</span></div>
+      <div style="flex:1;padding:4px 6px;">
+        <div class="mini-tabs">
+          <div class="mini-tab active">All</div>
+          <div class="mini-tab">Credit</div>
+          <div class="mini-tab">Active</div>
+          <div class="mini-tab">Inactive</div>
+        </div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Ramesh Store</div><div style="font-size:6px;color:#8A7060;">Active • Limit ₹10,000</div></div><span class="mini-val red">₹2,650 Due</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Priya Traders</div><div style="font-size:6px;color:#8A7060;">Active • Limit ₹15,000</div></div><span class="mini-val red">₹3,240 Due</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Suresh Enterprises</div><div style="font-size:6px;color:#8A7060;">Active • Limit ₹20,000</div></div><span class="mini-val red">₹1,800 Due</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Anand Provision</div><div style="font-size:6px;color:#8A7060;">Active</div></div><span class="mini-val">₹0</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Lakshmi Stores</div><div style="font-size:6px;color:#8A7060;">Inactive</div></div><span class="mini-val">₹0</span></div>
+      </div>
+      <div class="mini-btn gold-btn" style="margin:0 6px 6px;">+ Add Customer</div>
+    </div>
+    <div class="screen-label">08 — Customers</div>
+    <div class="screen-tags"><span class="tag list">list</span><span class="tag">filter tabs</span><span class="tag">credit status</span></div>
+  </div>
+
+  <!-- Screen 9: Suppliers -->
+  <div class="screen-card">
+    <div class="screen-num">S09</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> SUPPLIERS <span style="color:#C8A96B;margin-left:auto;">🔍 +</span></div>
+      <div style="flex:1;padding:4px 6px;">
+        <div class="mini-tabs">
+          <div class="mini-tab active">All</div>
+          <div class="mini-tab">Due</div>
+          <div class="mini-tab">Active</div>
+        </div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">ABC Distributors</div><div style="font-size:6px;color:#B45B4A;">Due Tomorrow</div></div><span class="mini-val red">₹6,500</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Shakti Traders</div><div style="font-size:6px;color:#8A7060;">Due in 5 Days</div></div><span class="mini-val">₹3,200</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Sri Balaji Suppliers</div><div style="font-size:6px;color:#5A6B4F;">Active</div></div><span class="mini-val">₹0</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Kannan &amp; Co</div><div style="font-size:6px;color:#5A6B4F;">Active</div></div><span class="mini-val">₹0</span></div>
+      </div>
+      <div class="mini-btn gold-btn" style="margin:0 6px 6px;">+ Add Supplier</div>
+    </div>
+    <div class="screen-label">09 — Suppliers</div>
+    <div class="screen-tags"><span class="tag list">list</span><span class="tag">due status</span></div>
+  </div>
+
+  <!-- Screen 10: Inventory -->
+  <div class="screen-card">
+    <div class="screen-num">S10</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> INVENTORY <span style="color:#C8A96B;margin-left:auto;">🔍 ⊞</span></div>
+      <div style="flex:1;padding:4px 6px;">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2px;margin-bottom:5px;">
+          <div class="mini-kpi"><div class="mini-kpi-val">238</div><div class="mini-kpi-lbl">Total Items</div></div>
+          <div class="mini-kpi" style="background:#FAF0EC;"><div class="mini-kpi-val" style="color:#B45B4A;">12</div><div class="mini-kpi-lbl">Low Stock</div></div>
+          <div class="mini-kpi" style="background:#FAECEA;"><div class="mini-kpi-val" style="color:#A0312A;">3</div><div class="mini-kpi-lbl">Out of Stock</div></div>
+        </div>
+        <div class="mini-tabs">
+          <div class="mini-tab active">All</div>
+          <div class="mini-tab">Low Stock</div>
+          <div class="mini-tab">Out of Stock</div>
+        </div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Basmati Rice 5kg</div><div style="font-size:6px;color:#8A7060;">6 Bags • Min: 10</div></div><span class="badge low">Low Stock</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Sunflower Oil 1L</div><div style="font-size:6px;color:#8A7060;">4 Bottles • Min: 8</div></div><span class="badge low">Low Stock</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Sugar 1kg</div><div style="font-size:6px;color:#8A7060;">0 Packs • Min: 5</div></div><span class="badge out">Out of Stock</span></div>
+        <div class="mini-row"><div><div style="font-size:7px;font-weight:700;">Toor Dal 1kg</div><div style="font-size:6px;color:#8A7060;">15 Packs • Min: 10</div></div><span class="badge in">In Stock</span></div>
+      </div>
+      <div class="mini-btn gold-btn" style="margin:0 6px 6px;">+ Add Item</div>
+    </div>
+    <div class="screen-label">10 — Inventory</div>
+    <div class="screen-tags"><span class="tag list">list</span><span class="tag">summary stats</span><span class="tag">stock badges</span></div>
+  </div>
+
+  <!-- Screen 11: Reports -->
+  <div class="screen-card">
+    <div class="screen-num">S11</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> REPORTS</div>
+      <div style="flex:1;padding:4px 6px;">
+        <div class="mini-pill" style="margin-bottom:5px;">This Month ∨</div>
+        <div class="mini-row"><span style="font-weight:700;">Profit &amp; Loss Report</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span style="font-weight:700;">Sales Report</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span style="font-weight:700;">Expense Report</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span style="font-weight:700;">Cash Flow Report</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span style="font-weight:700;">Customer Report</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span style="font-weight:700;">Inventory Report</span><span style="color:#C8A96B;">›</span></div>
+      </div>
+      <div class="mini-nav">
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>Home</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>Trans.</div>
+        <div class="mini-nav-item"><div class="mini-fab"><div style="width:6px;height:6px;background:#C8A96B;border-radius:50%;"></div></div>Voice</div>
+        <div class="mini-nav-item active"><div style="width:8px;height:8px;background:#3B2F2A;border-radius:2px;"></div>Reports</div>
+        <div class="mini-nav-item"><div style="width:8px;height:8px;background:#E8DDD0;border-radius:2px;"></div>More</div>
+      </div>
+    </div>
+    <div class="screen-label">11 — Reports</div>
+    <div class="screen-tags"><span class="tag list">list</span><span class="tag nav">bottom nav</span><span class="tag">period filter</span></div>
+  </div>
+
+  <!-- Screen 12: Insights -->
+  <div class="screen-card">
+    <div class="screen-num">S12</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> INSIGHTS</div>
+      <div style="flex:1;padding:4px 6px;">
+        <div class="mini-pill" style="margin-bottom:5px;">This Month ∨</div>
+        <div style="font-size:7px;font-weight:700;margin-bottom:4px;">AI Insights</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:3px;">
+          <div style="background:#EEF2EB;border-radius:5px;padding:5px;">
+            <div style="font-size:7px;font-weight:700;color:#5A6B4F;">↑ Profit Up</div>
+            <div style="font-size:6px;color:#3B2F2A;">Up 28% vs last month</div>
+          </div>
+          <div style="background:#F2E8D6;border-radius:5px;padding:5px;">
+            <div style="font-size:7px;font-weight:700;color:#C8A96B;">⊛ Top Category</div>
+            <div style="font-size:6px;color:#3B2F2A;">Grocery driving growth</div>
+          </div>
+          <div style="background:#FAF0EC;border-radius:5px;padding:5px;">
+            <div style="font-size:7px;font-weight:700;color:#B45B4A;">⚠ Expense Alert</div>
+            <div style="font-size:6px;color:#3B2F2A;">Transport +18%</div>
+          </div>
+          <div style="background:#F0EDF8;border-radius:5px;padding:5px;">
+            <div style="font-size:7px;font-weight:700;color:#4A3D6B;">✦ Opportunity</div>
+            <div style="font-size:6px;color:#3B2F2A;">Fast movers low</div>
+          </div>
+        </div>
+        <div style="font-size:7px;color:#C8A96B;font-weight:700;margin-top:6px;text-align:center;">View All Insights</div>
+      </div>
+    </div>
+    <div class="screen-label">12 — Insights</div>
+    <div class="screen-tags"><span class="tag ai">AI insights</span><span class="tag">2×2 grid</span><span class="tag">valence cards</span></div>
+  </div>
+
+  <!-- Screen 13: Alerts -->
+  <div class="screen-card">
+    <div class="screen-num">S13</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> ALERTS</div>
+      <div style="flex:1;padding:4px 6px;">
+        <div class="mini-tabs">
+          <div class="mini-tab active">All</div>
+          <div class="mini-tab">Important</div>
+          <div class="mini-tab">Info</div>
+        </div>
+        <div class="mini-row"><div style="display:flex;gap:4px;align-items:flex-start;"><div style="width:6px;height:6px;border-radius:50%;background:#A0312A;margin-top:1px;flex-shrink:0;"></div><div><div style="font-size:7px;font-weight:700;color:#A0312A;">Low Stock Alert</div><div style="font-size:6px;color:#8A7060;">3 items running low</div></div></div></div>
+        <div class="mini-row"><div style="display:flex;gap:4px;align-items:flex-start;"><div style="width:6px;height:6px;border-radius:50%;background:#B45B4A;margin-top:1px;flex-shrink:0;"></div><div><div style="font-size:7px;font-weight:700;">Payment Due</div><div style="font-size:6px;color:#8A7060;">ABC Distributors tomorrow</div></div></div></div>
+        <div class="mini-row"><div style="display:flex;gap:4px;align-items:flex-start;"><div style="width:6px;height:6px;border-radius:50%;background:#5A6B4F;margin-top:1px;flex-shrink:0;"></div><div><div style="font-size:7px;font-weight:700;">Price Change</div><div style="font-size:6px;color:#8A7060;">Sunflower Oil +₹5</div></div></div></div>
+        <div class="mini-row"><div style="display:flex;gap:4px;align-items:flex-start;"><div style="width:6px;height:6px;border-radius:50%;background:#B45B4A;margin-top:1px;flex-shrink:0;"></div><div><div style="font-size:7px;font-weight:700;">Unusual Expense</div><div style="font-size:6px;color:#8A7060;">Transport 18% higher</div></div></div></div>
+        <div style="font-size:7px;color:#C8A96B;font-weight:700;margin-top:6px;text-align:center;">Mark all as read</div>
+      </div>
+    </div>
+    <div class="screen-label">13 — Alerts</div>
+    <div class="screen-tags"><span class="tag list">alert list</span><span class="tag">colored severity</span></div>
+  </div>
+
+  <!-- Screen 14: Talk to Vepari AI -->
+  <div class="screen-card">
+    <div class="screen-num">S14</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> TALK TO VEPARI AI</div>
+      <div style="flex:1;padding:6px;display:flex;flex-direction:column;gap:4px;overflow:hidden;">
+        <div style="text-align:right;"><div class="chat-bubble chat-user" style="display:inline-block;max-width:80%;text-align:left;">How was my business yesterday?</div></div>
+        <div class="chat-bubble" style="max-width:90%;font-size:5.5px;line-height:1.5;">
+          Yesterday was a good day! 🎉<br>
+          • Total Sales: ₹24,850 (18% ↑)<br>
+          • Expenses: ₹7,420 (8% ↑)<br>
+          • Profit: ₹17,430 (24% ↑)<br>
+          • New Customers: 3<br>
+          • Payments: ₹12,650<br>
+          Anything else?
+        </div>
+      </div>
+      <div style="background:#FAF7F2;border-top:0.5px solid #E8DDD0;padding:5px 6px;display:flex;align-items:center;gap:6px;justify-content:center;">
+        <div style="font-size:6px;color:#8A7060;">Tap to Speak</div>
+        <div style="width:24px;height:24px;border-radius:50%;background:#C8A96B;display:flex;align-items:center;justify-content:center;">
+          <div style="width:10px;height:10px;background:#3B2F2A;border-radius:50%;"></div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-label">14 — Talk to Vepari AI</div>
+    <div class="screen-tags"><span class="tag ai">AI chat</span><span class="tag">voice input</span><span class="tag">bubbles</span></div>
+  </div>
+
+  <!-- Screen 15: Settings -->
+  <div class="screen-card">
+    <div class="screen-num">S15</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> SETTINGS</div>
+      <div style="flex:1;padding:4px 6px;">
+        <div class="mini-row"><span>Business Profile</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span>Manage Users</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span>Language</span><span style="color:#8A7060;">English ›</span></div>
+        <div class="mini-row"><span>Security &amp; PIN</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span>Backup &amp; Restore</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span>Notifications</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span>Theme</span><span style="color:#8A7060;">Light ›</span></div>
+        <div class="mini-row"><span>Help &amp; Support</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span>About Vepari AI</span><span style="color:#C8A96B;">›</span></div>
+        <div class="mini-row"><span style="color:#A0312A;font-weight:700;">Log Out</span><span></span></div>
+      </div>
+    </div>
+    <div class="screen-label">15 — Settings</div>
+    <div class="screen-tags"><span class="tag list">settings list</span><span class="tag form">form</span></div>
+  </div>
+
+  <!-- Screen 16: Business Profile -->
+  <div class="screen-card">
+    <div class="screen-num">S16</div>
+    <div class="screen-mock">
+      <div class="screen-bar">9:41<span>📶 🔋</span></div>
+      <div class="screen-header"><span style="color:#C8A96B;">←</span> BUSINESS PROFILE</div>
+      <div style="flex:1;padding:4px 6px;">
+        <div style="text-align:center;padding:8px 0;">
+          <div style="width:36px;height:36px;border-radius:50%;background:#F2E8D6;border:2px solid #C8A96B;margin:0 auto;display:flex;align-items:center;justify-content:center;font-size:16px;">🏪</div>
+        </div>
+        <div class="mini-row"><span class="mini-label">Business Name</span><span>Arun Provision Store</span></div>
+        <div class="mini-row"><span class="mini-label">Business Type</span><span>Grocery Store</span></div>
+        <div class="mini-row"><span class="mini-label">Phone</span><span>+91 98765 43210</span></div>
+        <div class="mini-row"><span class="mini-label">Email</span><span style="font-size:6px;">arunstore@gmail.com</span></div>
+        <div class="mini-row"><span class="mini-label">Address</span><span style="font-size:6px;">23, Main Road,<br>Coimbatore, TN</span></div>
+        <div class="mini-btn gold-btn" style="margin-top:5px;">Save Changes</div>
+      </div>
+    </div>
+    <div class="screen-label">16 — Business Profile</div>
+    <div class="screen-tags"><span class="tag form">form</span><span class="tag">avatar</span><span class="tag">editable fields</span></div>
+  </div>
+
+</div>
+
+</body>
+</html>

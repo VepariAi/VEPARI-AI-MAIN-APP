@@ -1,0 +1,127 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 560px; height: 780px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #fafafa; color: #171717;
+  overflow: hidden;
+  padding: 28px 28px 24px;
+}
+h1 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.sub { font-size: 12px; color: #737373; margin-bottom: 20px; }
+.section-hdr {
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.6px; color: #a3a3a3; margin-bottom: 8px;
+}
+.card-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; }
+.card {
+  background: #fff; border: 1px solid #e5e5e5;
+  border-radius: 8px; padding: 10px 12px;
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.card-badge {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.5px; padding: 3px 7px; border-radius: 4px;
+  flex-shrink: 0; margin-top: 1px;
+}
+.badge-kept { background: #f0fdf4; color: #16a34a; border: 1px solid #86efac; }
+.badge-scroll { background: #fef9ec; color: #b45309; border: 1px solid #fcd34d; }
+.badge-defer { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+.card-text { }
+.card-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.card-reason { font-size: 12px; color: #737373; line-height: 1.4; }
+.rule-box {
+  background: #f0f4ff; border: 1px solid #c7d7fc;
+  border-radius: 8px; padding: 12px 14px;
+}
+.rule-box p { font-size: 12px; color: #1d4ed8; line-height: 1.5; }
+</style>
+
+<h1>AI OS Home — Progressive Disclosure Decisions</h1>
+<div class="sub">UI-UX §144 · Prompt 34 · What fits above the fold vs. what scrolls vs. what is deferred entirely</div>
+
+<div class="section-hdr">Above fold — always visible (fits in 390 × 844 px)</div>
+<div class="card-list">
+  <div class="card">
+    <div class="card-badge badge-kept">Kept</div>
+    <div class="card-text">
+      <div class="card-title">AI OS state indicator + greeting</div>
+      <div class="card-reason">Owner needs to know the AI OS is READY before trusting the data shown. Greeting anchors the context (branch, date).</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-badge badge-kept">Kept</div>
+    <div class="card-text">
+      <div class="card-title">Briefing preview card</div>
+      <div class="card-reason">Surfaces urgent items (overdue payments, critical alerts) immediately. Single tap drills to full briefing (Prompt 35).</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-badge badge-kept">Kept</div>
+    <div class="card-text">
+      <div class="card-title">Today's KPIs — Revenue / Expenses / Profit</div>
+      <div class="card-reason">Primary decision data for any business owner. Collapsed to 3 chips (~80px). Tap drills to Finance.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-badge badge-kept">Kept</div>
+    <div class="card-text">
+      <div class="card-title">Talk to Vepari — voice entry card</div>
+      <div class="card-reason">Core value proposition. Must be reachable with one tap from home without scrolling. Mirrors elevated Voice nav tab.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-badge badge-kept">Kept</div>
+    <div class="card-text">
+      <div class="card-title">Quick Actions row (4 owner-configured)</div>
+      <div class="card-reason">PRD §46: owner sets the 4 most-used actions. Above fold because these are the most frequent write operations.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-hdr">Below fold — visible on scroll</div>
+<div class="card-list">
+  <div class="card">
+    <div class="card-badge badge-scroll">Scroll</div>
+    <div class="card-text">
+      <div class="card-title">Recent transactions (last 3)</div>
+      <div class="card-reason">Useful reference but not primary — the Transactions tab covers this fully. Placed below fold to keep home surface focused.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-badge badge-scroll">Scroll</div>
+    <div class="card-text">
+      <div class="card-title">Low-stock and overdue alerts list</div>
+      <div class="card-reason">Critical alerts already surfaced in briefing card preview. Full list below fold; tapping briefing card goes to full briefing.</div>
+    </div>
+  </div>
+</div>
+
+<div class="section-hdr">Deferred — removed from home, accessible via nav or briefing</div>
+<div class="card-list">
+  <div class="card">
+    <div class="card-badge badge-defer">Deferred</div>
+    <div class="card-text">
+      <div class="card-title">Team activity feed</div>
+      <div class="card-reason">Marketing card #6. Creates noise for single-owner businesses. Accessible via More → Team. Briefing surfaces critical team events.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-badge badge-defer">Deferred</div>
+    <div class="card-text">
+      <div class="card-title">AI-generated weekly insight card</div>
+      <div class="card-reason">Marketing card #7. Relevant but not daily-critical. Surfaced inside briefing when AI detects a pattern worth flagging.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-badge badge-defer">Deferred</div>
+    <div class="card-text">
+      <div class="card-title">Promotions / referral banner</div>
+      <div class="card-reason">Marketing card #8. Never on the primary home surface. Business data takes priority over product marketing.</div>
+    </div>
+  </div>
+</div>
+
+<div class="rule-box">
+  <p><strong>UI-UX §144 applied:</strong> Above-fold shows only data the owner acts on daily (KPIs, alerts, voice, quick writes). Everything else is one tap or one scroll away — not hidden, but not competing for attention on the primary surface.</p>
+</div>

@@ -1,0 +1,242 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 860px; font-family: system-ui, -apple-system, sans-serif; background: #faf7f2; color: #3b2f2a; }
+body { padding: 28px 32px 56px; }
+h1 { font-size: 22px; font-weight: 700; color: #3b2f2a; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #8a7060; margin-bottom: 24px; }
+h2 { font-size: 14px; font-weight: 700; color: #3b2f2a; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.6px; border-top: 1px solid #e8ddd0; padding-top: 16px; }
+h2:first-of-type { border-top: none; padding-top: 0; }
+.comp-card { background: #fff; border: 1px solid #e8ddd0; border-radius: 10px; margin-bottom: 16px; overflow: hidden; }
+.comp-header { background: #f0edf8; border-bottom: 1px solid #ddd6ee; padding: 10px 16px; display: flex; align-items: baseline; gap: 10px; }
+.comp-name { font-size: 14px; font-weight: 700; color: #4a3d6b; }
+.comp-ref { font-size: 11px; color: #8a7060; }
+table { width: 100%; border-collapse: collapse; }
+th { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 14px; text-align: left; background: #faf7f2; border-bottom: 1px solid #e8ddd0; }
+td { padding: 8px 14px; border-bottom: 1px solid #f2e8d6; font-size: 12px; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.state-name { font-weight: 600; color: #3b2f2a; white-space: nowrap; }
+.token { font-family: monospace; font-size: 11px; color: #5a6b4f; background: #f0f4ee; padding: 1px 4px; border-radius: 3px; }
+.ai-token { font-family: monospace; font-size: 11px; color: #4a3d6b; background: #f0edf8; padding: 1px 4px; border-radius: 3px; }
+.usage { color: #8a7060; }
+.anat { font-size: 12px; color: #3b2f2a; padding: 10px 14px; background: #f8f6fe; border-top: 1px solid #e8e0f0; line-height: 1.6; }
+.note { background: #f0edf8; border: 1px solid #bdb0d8; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #3b2f2a; margin-bottom: 20px; line-height: 1.6; }
+.motion-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e8ddd0; margin-bottom: 20px; }
+.ring-demo { display: flex; align-items: center; justify-content: center; height: 100px; margin: 12px 0; }
+.ring-outer { width: 80px; height: 80px; border-radius: 50%; background: radial-gradient(circle, #c8a96b22 0%, transparent 70%); border: 2.5px solid #c8a96b44; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 16px rgba(74,61,107,0.25); }
+.ring-mid { width: 60px; height: 60px; border-radius: 50%; border: 2px solid #4a3d6b66; background: radial-gradient(circle, #4a3d6b15 0%, transparent 70%); display: flex; align-items: center; justify-content: center; }
+.ring-inner { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #4a3d6b, #3b2f2a); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(74,61,107,0.35); }
+.diamond { width: 14px; height: 14px; background: #c8a96b; transform: rotate(45deg); border-radius: 2px; }
+</style>
+<h1>P49 — AI Visual Components</h1>
+<div class="meta">Prompt 49 · Phase 5 · Depends on Prompt 19, Prompt 48 — AI Core motif, physics/motion states, AI UI component set per UI-UX §199</div>
+
+<div class="note">
+  <strong>AI visual language:</strong> All AI components use <span class="ai-token">--color-ai</span> (#4A3D6B AI Indigo) and <span class="ai-token">--color-ai-surface</span> (#F0EDF8). Shadow uses <span class="ai-token">--elevation-ai</span>. Radius: <span class="ai-token">--radius-ai</span> (24dp) for card surfaces; <span class="ai-token">--radius-full</span> for the AI Core. The AI diamond mark (rotated square, 45°) is the consistent motif across all AI surfaces.
+</div>
+
+<!-- ═══════════════ AI CORE ═══════════════ -->
+<h2>AI Core — The Central Motif</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Core (AI OS Core)</span><span class="comp-ref">P34 (Home), P42 (AI Chat), AI OS.png reference</span></div>
+  <div class="comp-body">
+    <div class="ring-demo">
+      <div class="ring-outer">
+        <div class="ring-mid">
+          <div class="ring-inner">
+            <div class="diamond"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <table>
+      <thead><tr><th>Layer</th><th>Size</th><th>Style</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Outer glow ring</td><td>80dp</td><td>Border 2.5dp <span class="ai-token">--color-secondary</span> 27% opacity; radial-gradient gold 13% → transparent; box-shadow 0 0 16px <span class="ai-token">--color-ai</span> 25%</td><td class="usage">Pulses on active listening; static at rest</td></tr>
+        <tr><td class="state-name">Mid ring</td><td>60dp</td><td>Border 2dp <span class="ai-token">--color-ai</span> 40% opacity; radial-gradient <span class="ai-token">--color-ai</span> 9% → transparent</td><td class="usage">Counter-rotates slowly (20s cycle) in Processing state</td></tr>
+        <tr><td class="state-name">Inner core</td><td>40dp</td><td>linear-gradient 135° <span class="ai-token">--color-ai</span> → <span class="token">--color-primary</span>; shadow 0 4px 12px <span class="ai-token">--color-ai</span> 35%</td><td class="usage">Scales 1→1.06→1 (2s ease-in-out) in Listening state</td></tr>
+        <tr><td class="state-name">Diamond mark</td><td>14dp</td><td><span class="token">--color-secondary</span> fill, rotate 45°, radius 2dp</td><td class="usage">Static; the Vepari brand element within the core</td></tr>
+      </tbody>
+    </table>
+    <div class="anat">
+      <strong>Physics and motion states (from Prompt 16):</strong>
+      <br><br>
+      <strong>Idle:</strong> No animation. Core gradient static. Outer ring border opacity pulses gently 0.15→0.27→0.15 at 4s ease-in-out. System is ready but not engaged.
+      <br><br>
+      <strong>Listening (user speaking / mic active):</strong> Inner core scales 1.0→1.06→1.0 at 1.2s ease-in-out infinite. Outer glow ring shadow blur 16→28→16dp in sync. Mid ring static. Diamond mark brightens (opacity 1.0 always during listening).
+      <br><br>
+      <strong>Processing (AI thinking):</strong> Mid ring rotates 360° at 20s linear infinite. Outer ring rotates −360° at 30s linear infinite (counter-rotation creates interlocking feel). Inner core gradient animates: position shifts 0°→180° at 3s ease-in-out alternate. Subtle shimmer on diamond.
+      <br><br>
+      <strong>Speaking (AI audio output):</strong> Inner core scale oscillates with audio amplitude (0.95→1.08 mapped to RMS, capped at 1.1). Glow shadow blur follows amplitude (12→32dp). Mid ring rotation slows to 60s. Outer ring pulses at 0.8s matching speech rhythm.
+      <br><br>
+      <strong>Error:</strong> All rotations stop. Inner core gradient transitions to <span class="token">--color-error</span> → #5c1a14 over 300ms. Diamond mark hidden; error-triangle icon appears 14dp white. Shake animation: translateX(0→−4→4→−4→4→0dp) 400ms once. Outer glow uses rgba(160,49,42,.30).
+      <br><br>
+      <strong>Offline:</strong> All color desaturates to grayscale. All animations pause. Outer ring opacity 0.30. Diamond replaced by wifi-off icon.
+      <br><br>
+      <strong>Success (brief):</strong> Inner core flashes <span class="token">--color-success</span> → returns to default gradient over 600ms. Diamond brightens, scale 1→1.15→1.0 over 300ms. No ring rotation change.
+      <br><br>
+      <strong>Touch target:</strong> 80dp minimum (full outer ring footprint). The 56dp Voice tab FAB button in the nav bar is a smaller variant of this motif — inner core only (40dp), no visible rings, same gradient and diamond mark. It uses Floating elevation (--elevation-3) and gains the glow ring on active listening.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ AI STATUS ═══════════════ -->
+<h2>AI Status Pill</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Status Pill</span><span class="comp-ref">P34 (Home screen, below greeting)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>BG</th><th>Icon</th><th>Text</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Ready</td><td><span class="ai-token">--color-ai-surface</span></td><td>AI diamond 12dp <span class="ai-token">--color-ai</span></td><td>"Vepari AI · Ready" <span class="ai-token">--color-ai</span> --type-label-lg</td><td class="usage">Static. Tapping opens AI conversation.</td></tr>
+        <tr><td class="state-name">Listening</td><td><span class="ai-token">--color-ai</span></td><td>Mic waveform animated</td><td>"Listening…" white</td><td class="usage">Waveform bars animate with input amplitude (4 bars, height 4→16dp).</td></tr>
+        <tr><td class="state-name">Processing</td><td><span class="ai-token">--color-ai</span></td><td>Spinner 14dp white</td><td>"Thinking…" white</td><td class="usage">Spinner rotates; text loops with ellipsis.</td></tr>
+        <tr><td class="state-name">Offline</td><td><span class="token">--color-surface-subtle</span></td><td>wifi-off 12dp <span class="token">--color-text-disabled</span></td><td>"AI Offline" <span class="token">--color-text-disabled</span></td><td class="usage">No interaction. Tap shows Banner: offline AI notice.</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> Height 32dp, radius --radius-full, padding 0 12dp, gap 6dp. Border: in Ready state 1dp <span class="ai-token">--color-ai</span> 30% opacity. Transitions between states: 200ms ease color cross-fade.</div>
+  </div>
+</div>
+
+<!-- ═══════════════ AI CARDS ═══════════════ -->
+<h2>AI Card Components</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Briefing Card</span><span class="comp-ref">P35 (Briefing screen rows)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Priority tier</th><th>Left border</th><th>BG</th><th>Icon</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Critical</td><td>3dp <span class="token">--color-error</span></td><td><span class="token">--color-error-surface</span></td><td>alert-triangle 20dp <span class="token">--color-error</span></td></tr>
+        <tr><td class="state-name">Important</td><td>3dp <span class="token">--color-warning</span></td><td><span class="token">--color-warning-surface</span></td><td>clock 20dp <span class="token">--color-warning</span></td></tr>
+        <tr><td class="state-name">Actionable</td><td>3dp <span class="ai-token">--color-ai</span></td><td><span class="ai-token">--color-ai-surface</span></td><td>AI diamond 20dp <span class="ai-token">--color-ai</span></td></tr>
+        <tr><td class="state-name">Informational</td><td>3dp <span class="token">--color-info</span></td><td><span class="token">--color-surface</span></td><td>info-circle 20dp <span class="token">--color-info</span></td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> Full-width card with 3dp left border (flush with card edge). Padding 12dp. Header: icon + title (--type-title-sm 600) + time-since (--type-caption). Body: 2-line summary (--type-body-sm). Footer: optional "View details →" link in --type-label-lg --color-ai. Radius --radius-md, no shadow (banners sit in a list).</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Insight Card</span><span class="comp-ref">P39 (Customer/Supplier detail), P41 (Reports), P34 (Home 2x2 grid)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td class="usage">BG <span class="ai-token">--color-ai-surface</span>, border 1dp <span class="ai-token">--color-ai</span> 30%, radius --radius-ai (24dp), shadow --elevation-ai. Header: AI diamond 16dp + "AI Insight" label --type-label-lg <span class="ai-token">--color-ai</span>.</td></tr>
+        <tr><td class="state-name">Loading</td><td class="usage">Skeleton 2 lines at body-sm width (80%, 60%). Shimmer animation on <span class="ai-token">--color-ai-surface</span> → #e4dff4 gradient.</td></tr>
+        <tr><td class="state-name">Expanded (detail)</td><td class="usage">Additional evidence rows visible (see AI Evidence Panel below). Expand/collapse chevron trailing header.</td></tr>
+        <tr><td class="state-name">Error</td><td class="usage">Body replaced by: "Insight unavailable" --color-text-secondary + retry link. Header unchanged.</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy:</strong> [Header: diamond icon + "AI Insight" + confidence badge (High/Med/Low in olive/gold/terracotta)] [Summary: 2-3 sentences --type-body-sm --color-text-primary] [Metric row optional: value --type-display-xl --color-success or --color-error + label] [Action strip: "Ask AI" ghost button + "View report" text link]. Padding 16dp.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Evidence Panel</span><span class="comp-ref">P39 (expanded AI insight), P37 (Source record)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Element</th><th>Style</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Panel container</td><td class="usage">Inset inside AI Insight Card when expanded. BG <span class="token">--color-surface</span>, border-top 1dp <span class="ai-token">--color-ai</span> 20%, padding 12dp, radius 0 0 --radius-ai --radius-ai.</td></tr>
+        <tr><td class="state-name">Evidence row</td><td class="usage">Leading icon 16dp (source type: invoice/receipt/journal), source label --type-body-sm 500, date --type-caption --color-text-secondary trailing, amount --type-body-sm --color-success or --color-error trailing.</td></tr>
+        <tr><td class="state-name">Section label</td><td class="usage">"Based on" divider in --type-overline --color-text-secondary. Separates data-source groups.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Recommendation Card</span><span class="comp-ref">P34 (Home quick actions row), P35 (Briefing Actionable tier)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td class="usage">Same visual as AI Insight Card but action strip is PROMINENT: full-width primary button "Do it" + ghost "Dismiss". Recommended action is the headline (--type-title-sm 600). Confidence badge required (High = olive, Med = gold).</td></tr>
+        <tr><td class="state-name">Actioned</td><td class="usage">Button replaced by success checkmark + "Done" text. BG fades to <span class="token">--color-success-surface</span> over 300ms. Auto-dismiss after 2s.</td></tr>
+        <tr><td class="state-name">Dismissed</td><td class="usage">Slide-out animation 200ms, collapses height to 0 over 150ms. Logs dismissal to AI feedback.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Action Card</span><span class="comp-ref">P42 (AI chat — suggested reply chips area)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Default</td><td class="usage">Card-style action tile: BG <span class="token">--color-surface</span>, border 1dp <span class="ai-token">--color-ai</span> 40%, radius --radius-md. Icon 24dp <span class="ai-token">--color-ai</span>. Action label --type-body-sm 600. Subtitle --type-caption. Used for suggested quick actions (e.g. "Record ₹500 sale", "Check Priya's balance").</td></tr>
+        <tr><td class="state-name">Pressed</td><td class="usage">BG <span class="ai-token">--color-ai-surface</span>, border 1.5dp <span class="ai-token">--color-ai</span>.</td></tr>
+        <tr><td class="state-name">Loading</td><td class="usage">Label replaced by spinner 16dp <span class="ai-token">--color-ai</span>. Width locked.</td></tr>
+        <tr><td class="state-name">Success</td><td class="usage">Icon → checkmark <span class="token">--color-success</span>. Label updated to result ("₹500 recorded"). Auto-close 2s.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Approval</span><span class="comp-ref">P42 (AI chat — high-confidence action confirmation)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Pending</td><td class="usage">Banner + action strip. BG <span class="ai-token">--color-ai-surface</span>, border-top 3dp <span class="ai-token">--color-ai</span>. Body: proposed action summary --type-body-sm. Strip: "Confirm" primary button + "Cancel" ghost. Shows consequence: "This will create Invoice #1052 for ₹4,800".</td></tr>
+        <tr><td class="state-name">Confirmed</td><td class="usage">BG animates to <span class="token">--color-success-surface</span>. "Confirmed" badge replaces buttons. Result shown below.</td></tr>
+        <tr><td class="state-name">Cancelled</td><td class="usage">Collapses to "Action cancelled" toast. Strip disappears.</td></tr>
+      </tbody>
+    </table>
+    <div class="anat">Appears only for irreversible or high-value actions (create transaction, send payment reminder, adjust stock). Low-risk AI actions execute immediately without Approval.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Result</span><span class="comp-ref">P42 (AI chat — post-action confirmation bubble)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Variant</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Success result</td><td class="usage">AI bubble (left-aligned) with checkmark icon <span class="token">--color-success</span> + "Done — [action summary]" --type-body-sm. BG <span class="token">--color-success-surface</span>, radius --radius-ai bottom-right 4dp (speech bubble shape). Source links below as underlined --type-caption.</td></tr>
+        <tr><td class="state-name">Error result</td><td class="usage">Same shape, BG <span class="token">--color-error-surface</span>, icon alert-triangle <span class="token">--color-error</span>. Plain-language error. Retry action chip below.</td></tr>
+        <tr><td class="state-name">Info result</td><td class="usage">BG <span class="ai-token">--color-ai-surface</span>, icon AI diamond <span class="ai-token">--color-ai</span>. Data answer with evidence collapse toggle.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════ AI VOICE ═══════════════ -->
+<h2>AI Voice and Conversation</h2>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Voice Waveform</span><span class="comp-ref">P42 (AI Chat voice bar, Voice tab active state)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Visual</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">Idle (mic not active)</td><td class="usage">5 bars: heights [4, 6, 8, 6, 4]dp static. Color <span class="ai-token">--color-ai</span> 30% opacity. Width 3dp each, gap 3dp, radius 2dp caps.</td></tr>
+        <tr><td class="state-name">Listening (mic active)</td><td class="usage">5 bars animate: height driven by audio input RMS per bar. Each bar independently: min 4dp, max 24dp, spring physics (stiffness 200, damping 20). Color <span class="ai-token">--color-ai</span> full opacity. Bars animate at ~30fps.</td></tr>
+        <tr><td class="state-name">AI speaking</td><td class="usage">Same bar animation driven by AI audio output amplitude. Color <span class="token">--color-secondary</span> (Heritage Gold) — distinguishes AI output from user input.</td></tr>
+        <tr><td class="state-name">Processing (no audio)</td><td class="usage">3 center bars do a slow wave: heights [8, 16, 8]dp → [16, 8, 16]dp → [8, 16, 8]dp at 1.5s ease-in-out infinite. Color <span class="ai-token">--color-ai</span> 60%.</td></tr>
+      </tbody>
+    </table>
+    <div class="anat"><strong>Anatomy in Voice Bar (P42):</strong> 390dp wide, 72dp tall bar. Left: text input field (flex-grow, 48dp height, --radius-sm). Center: waveform visualization (80dp wide). Right: hold-to-speak mic button (--radius-full, 48dp, --color-primary). Waveform is decorative — never an interactive element itself.</div>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">AI Conversation Bubble</span><span class="comp-ref">P42 (AIChat.dc.html)</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>Side</th><th>BG</th><th>Radius</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td class="state-name">User (right-aligned)</td><td><span class="token">--color-primary</span></td><td>--radius-ai all corners except bottom-right = 4dp</td><td class="usage">Text <span class="token">--color-primary-on</span> --type-body. Max width 75% screen. Voice transcription shown with mic icon prefix.</td></tr>
+        <tr><td class="state-name">AI (left-aligned)</td><td><span class="ai-token">--color-ai-surface</span></td><td>--radius-ai all except bottom-left = 4dp</td><td class="usage">Text <span class="token">--color-text-primary</span> --type-body. AI avatar (40dp) leading, gap 8dp. Includes evidence chips and action chips below text.</td></tr>
+        <tr><td class="state-name">AI loading</td><td><span class="ai-token">--color-ai-surface</span></td><td>same</td><td class="usage">Three animated dots: diameter 6dp, <span class="ai-token">--color-ai</span>, bounce at 0.4s stagger intervals.</td></tr>
+        <tr><td class="state-name">System message</td><td>transparent</td><td>none</td><td class="usage">Centered text --type-caption --color-text-secondary. Used for timestamps and session dividers.</td></tr>
+      </tbody>
+    </table>
+    <div class="anat">Conversation list: bottom-pinned, newest message at bottom. Message gap 8dp same-side, 16dp between turns. Timestamp visible on long-press (system message style). Suggested reply chips: horizontal scroll row above voice bar, chips use --chip-selected-outline style in --color-ai palette.</div>
+  </div>
+</div>

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI OS.png — AI Core Ring Structure</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  width: 760px;
+  background: #FAF7F2;
+  font-family: 'Inter', system-ui, sans-serif;
+  color: #3B2F2A;
+  padding: 32px;
+}
+h1 { font-size: 20px; font-weight: 700; color: #3B2F2A; margin-bottom: 4px; }
+h2 { font-size: 14px; font-weight: 700; color: #3B2F2A; margin: 20px 0 10px; border-bottom: 2px solid #C8A96B; padding-bottom: 5px; }
+.subtitle { font-size: 11px; letter-spacing: 0.3px; color: #8A7060; margin-bottom: 24px; }
+
+.ann-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.ann-title {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #C8A96B;
+  margin-bottom: 10px;
+}
+.token-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid #F2E8D6;
+  font-size: 11px;
+}
+.token-row:last-child { border-bottom: none; }
+.token-label { color: #8A7060; flex: 0 0 160px; }
+.token-value { color: #3B2F2A; font-weight: 500; flex: 1; }
+.token-code { font-family: 'Courier New', monospace; font-size: 10px; color: #4A3D6B; background: #F0EDF8; padding: 1px 5px; border-radius: 3px; }
+
+/* AI Core ring diagram */
+.ring-demo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 32px;
+  background: radial-gradient(ellipse at center, #F2E8D6, #FAF7F2 60%);
+  border-radius: 12px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.ring-container {
+  position: relative;
+  width: 260px;
+  height: 260px;
+}
+.ring-annotation-container {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+.ring-labels {
+  flex: 1;
+  padding-top: 20px;
+}
+.layer-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  font-size: 11px;
+}
+.layer-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #3B2F2A;
+  color: #C8A96B;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.layer-text { color: #3B2F2A; }
+.layer-sub { font-size: 10px; color: #8A7060; margin-top: 1px; }
+
+.code-block {
+  background: #2C231B;
+  color: #C8A96B;
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  padding: 16px;
+  border-radius: 8px;
+  line-height: 1.8;
+  overflow-x: auto;
+  margin-top: 4px;
+}
+.code-comment { color: #8A7060; }
+.code-prop { color: #E8DDD4; }
+.code-val { color: #C8A96B; }
+.code-string { color: #7A9B6A; }
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.motion-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  gap: 10px;
+}
+.state-ring {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.state-label { font-size: 10px; font-weight: 700; letter-spacing: 0.3px; color: #C8A96B; text-transform: uppercase; }
+.state-values { font-size: 10px; color: #8A7060; text-align: center; }
+
+.note {
+  background: #F0EDF8;
+  border-left: 3px solid #4A3D6B;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  font-size: 11px;
+  color: #3B2F2A;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.note strong { color: #4A3D6B; }
+</style>
+</head>
+<body>
+
+<h1>AI Core Ring — Detailed Structure</h1>
+<p class="subtitle">P58 · Layer-by-layer anatomy mapped to Phase 5 motion tokens</p>
+
+<h2>1. Ring Layer Anatomy</h2>
+<div class="ring-annotation-container">
+  <div style="flex-shrink:0;">
+    <div class="ring-demo" style="width:300px; padding:24px;">
+      <div class="ring-container" style="width:240px;height:240px;">
+        <!-- Layer 5: outer dashed orbit -->
+        <svg style="position:absolute;top:0;left:0;" width="240" height="240" viewBox="0 0 240 240">
+          <!-- Outer dashed ring (layer 5) -->
+          <circle cx="120" cy="120" r="115" fill="none" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="3,6" opacity="0.4"/>
+          <!-- Gold segmented ring (layer 4) -->
+          <circle cx="120" cy="120" r="95" fill="none" stroke="url(#goldGrad)" stroke-width="14" stroke-dasharray="4,2" opacity="0.9"/>
+          <!-- Inner glow ring (layer 3) -->
+          <circle cx="120" cy="120" r="72" fill="none" stroke="#C8A96B" stroke-width="2" opacity="0.3"/>
+          <!-- Core fill (layer 2) -->
+          <circle cx="120" cy="120" r="60" fill="url(#coreGrad)" opacity="0.95"/>
+          <!-- Center node (layer 1) -->
+          <circle cx="120" cy="120" r="32" fill="white" opacity="0.9"/>
+          <!-- Lotus/mandala simplified -->
+          <g transform="translate(120,120)">
+            <path d="M0,-18 C8,-10 8,0 0,4 C-8,0 -8,-10 0,-18" fill="#C8A96B" opacity="0.8"/>
+            <path d="M18,0 C10,8 0,8 -4,0 C0,-8 10,-8 18,0" fill="#C8A96B" opacity="0.8"/>
+            <path d="M0,18 C-8,10 -8,0 0,-4 C8,0 8,10 0,18" fill="#C8A96B" opacity="0.8"/>
+            <path d="M-18,0 C-10,-8 0,-8 4,0 C0,8 -10,8 -18,0" fill="#C8A96B" opacity="0.8"/>
+            <circle cx="0" cy="0" r="5" fill="#C8A96B" opacity="0.9"/>
+          </g>
+          <!-- Arc text placeholder area -->
+          <path id="arcText" d="M 40,120 A 80,80 0 0 1 200,120" fill="none"/>
+          <!-- Layer number labels -->
+          <text x="120" y="113" text-anchor="middle" font-size="7" fill="#3B2F2A" font-weight="700">VEPARI AI</text>
+          <text x="120" y="124" text-anchor="middle" font-size="6" fill="#C8A96B" letter-spacing="0.5">AI OS CORE</text>
+          <!-- Connecting lines -->
+          <line x1="10" y1="80" x2="10" y2="80" stroke="#C8A96B" stroke-width="1"/>
+          <!-- Particle dots -->
+          <circle cx="50" cy="30" r="1.5" fill="#C8A96B" opacity="0.7"/>
+          <circle cx="190" cy="45" r="1" fill="#C8A96B" opacity="0.6"/>
+          <circle cx="210" cy="160" r="1.5" fill="#C8A96B" opacity="0.5"/>
+          <circle cx="30" cy="170" r="1" fill="#C8A96B" opacity="0.6"/>
+          <circle cx="120" cy="12" r="2" fill="#FAF7F2" opacity="0.8"/>
+          <!-- Holographic ground (below ring) -->
+          <ellipse cx="120" cy="220" rx="90" ry="12" fill="none" stroke="#C8A96B" stroke-width="0.5" opacity="0.3"/>
+          <ellipse cx="120" cy="225" rx="70" ry="8" fill="none" stroke="#C8A96B" stroke-width="0.5" opacity="0.4"/>
+          <ellipse cx="120" cy="229" rx="50" ry="5" fill="none" stroke="#C8A96B" stroke-width="1" opacity="0.5"/>
+          <!-- Light beam -->
+          <path d="M100,156 L90,220 L150,220 L140,156" fill="url(#beamGrad)" opacity="0.25"/>
+          <defs>
+            <radialGradient id="coreGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#FFFFFF"/>
+              <stop offset="60%" stop-color="#FAF7F2"/>
+              <stop offset="100%" stop-color="#F2E8D6"/>
+            </radialGradient>
+            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#D4A853"/>
+              <stop offset="50%" stop-color="#C8A96B"/>
+              <stop offset="100%" stop-color="#B8914A"/>
+            </linearGradient>
+            <linearGradient id="beamGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#C8A96B" stop-opacity="0.8"/>
+              <stop offset="100%" stop-color="#C8A96B" stop-opacity="0"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="ring-labels">
+    <div class="layer-label">
+      <div class="layer-num">5</div>
+      <div>
+        <div class="layer-text">Outer dashed orbit ring</div>
+        <div class="layer-sub">r≈115dp, stroke 0.5px, Heritage Gold 40% opacity, dasharray 3,6</div>
+      </div>
+    </div>
+    <div class="layer-label">
+      <div class="layer-num">4</div>
+      <div>
+        <div class="layer-text">Gold segmented gauge ring</div>
+        <div class="layer-sub">r≈95dp, stroke 14px thick, metallic gold gradient, dasharray segments, contains tick marks</div>
+      </div>
+    </div>
+    <div class="layer-label">
+      <div class="layer-num">3</div>
+      <div>
+        <div class="layer-text">Inner glow halo ring</div>
+        <div class="layer-sub">r≈72dp, stroke 2px, Heritage Gold 30% opacity, blurred outward</div>
+      </div>
+    </div>
+    <div class="layer-label">
+      <div class="layer-num">2</div>
+      <div>
+        <div class="layer-text">White → beige core fill</div>
+        <div class="layer-sub">r≈60dp, radial gradient white→ivory→beige, luminous center</div>
+      </div>
+    </div>
+    <div class="layer-label">
+      <div class="layer-num">1</div>
+      <div>
+        <div class="layer-text">Lotus / mandala icon + labels</div>
+        <div class="layer-sub">r≈32dp white disc; 4-petal lotus in Heritage Gold; "VEPARI AI" 15sp + "AI OS CORE" 12sp Heritage Gold</div>
+      </div>
+    </div>
+    <div class="layer-label">
+      <div class="layer-num" style="background:#B8914A;">↓</div>
+      <div>
+        <div class="layer-text">Holographic ground projection</div>
+        <div class="layer-sub">Concentric ellipses below sphere center; light beam cone; particle sparkles around ring</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>2. Motion States (Phase 5 spring tokens)</h2>
+<div class="grid-2">
+  <div class="motion-state">
+    <div class="state-label">● IDLE</div>
+    <div class="state-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#C8A96B" stroke-width="6" stroke-dasharray="4,2" opacity="0.6"/>
+        <circle cx="60" cy="60" r="35" fill="none" stroke="#C8A96B" stroke-width="1" opacity="0.3"/>
+        <circle cx="60" cy="60" r="24" fill="url(#coreG1)"/>
+        <circle cx="60" cy="60" r="14" fill="white" opacity="0.9"/>
+        <defs>
+          <radialGradient id="coreG1"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="state-values">
+      scale: 1.0<br/>
+      glowBlur: 12dp<br/>
+      glowOpacity: 0.12<br/>
+      <span style="font-family:monospace;font-size:9px;color:#4A3D6B;">motion.aiCore.idle</span>
+    </div>
+  </div>
+
+  <div class="motion-state">
+    <div class="state-label" style="color:#D4A853;">◉ LISTENING</div>
+    <div class="state-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#C8A96B" stroke-width="8" stroke-dasharray="4,2" opacity="0.85"/>
+        <circle cx="60" cy="60" r="38" fill="none" stroke="#C8A96B" stroke-width="2" opacity="0.5"/>
+        <circle cx="60" cy="60" r="26" fill="url(#coreG2)"/>
+        <circle cx="60" cy="60" r="14" fill="white" opacity="0.95"/>
+        <!-- pulse ring -->
+        <circle cx="60" cy="60" r="55" fill="none" stroke="#C8A96B" stroke-width="1" opacity="0.2"/>
+        <defs>
+          <radialGradient id="coreG2"><stop offset="0%" stop-color="#fff"/><stop offset="70%" stop-color="#FAF7F2"/><stop offset="100%" stop-color="#C8A96B" stop-opacity="0.3"/></radialGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="state-values">
+      scale: 1.06<br/>
+      glowBlur: 28dp<br/>
+      glowOpacity: 0.27<br/>
+      <span style="font-family:monospace;font-size:9px;color:#4A3D6B;">motion.aiCore.listening</span><br/>
+      <span style="font-family:monospace;font-size:9px;color:#4A3D6B;">spring3 (stiffness 80)</span>
+    </div>
+  </div>
+
+  <div class="motion-state">
+    <div class="state-label" style="color:#B45B4A;">◈ SPEAKING</div>
+    <div class="state-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="51" fill="none" stroke="#C8A96B" stroke-width="7" stroke-dasharray="4,2" opacity="0.8"/>
+        <circle cx="60" cy="60" r="37" fill="none" stroke="#C8A96B" stroke-width="1.5" opacity="0.4"/>
+        <circle cx="60" cy="60" r="25" fill="url(#coreG3)"/>
+        <circle cx="60" cy="60" r="14" fill="white" opacity="0.92"/>
+        <!-- waveform overlay -->
+        <path d="M 42,60 Q 48,50 54,60 Q 60,70 66,60 Q 72,50 78,60" stroke="#C8A96B" stroke-width="1.5" fill="none" opacity="0.7"/>
+        <defs>
+          <radialGradient id="coreG3"><stop offset="0%" stop-color="#fff"/><stop offset="60%" stop-color="#FAF7F2"/><stop offset="100%" stop-color="#C8A96B" stop-opacity="0.2"/></radialGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="state-values">
+      scale: 1.04<br/>
+      glowBlur: 22dp<br/>
+      glowOpacity: 0.22<br/>
+      <span style="font-family:monospace;font-size:9px;color:#4A3D6B;">motion.aiCore.speaking</span><br/>
+      <span style="font-family:monospace;font-size:9px;color:#4A3D6B;">spring4 (voice amplitude)</span>
+    </div>
+  </div>
+
+  <div class="motion-state">
+    <div class="state-label" style="color:#5A6B4F;">✦ PROCESSING</div>
+    <div class="state-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#C8A96B" stroke-width="6" stroke-dasharray="2,4" opacity="0.7"/>
+        <!-- Spinning segments indicator -->
+        <path d="M 60,10 A 50,50 0 0 1 110,60" stroke="#C8A96B" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.9"/>
+        <circle cx="60" cy="60" r="35" fill="none" stroke="#C8A96B" stroke-width="1" opacity="0.3"/>
+        <circle cx="60" cy="60" r="24" fill="url(#coreG4)"/>
+        <circle cx="60" cy="60" r="14" fill="white" opacity="0.9"/>
+        <defs>
+          <radialGradient id="coreG4"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="state-values">
+      ring: rotate 360° continuously<br/>
+      glowBlur: 18dp (pulsing)<br/>
+      <span style="font-family:monospace;font-size:9px;color:#4A3D6B;">spring3 breathing cycle</span><br/>
+      <span style="font-family:monospace;font-size:9px;color:#4A3D6B;">+ Easing.linear rotation</span>
+    </div>
+  </div>
+</div>
+
+<h2>3. React Native Implementation Sketch</h2>
+<div class="ann-card">
+  <div class="ann-title">AI Core Ring — Component Structure</div>
+  <div class="code-block">
+<span class="code-comment">// AICoreRing.tsx — conceptual structure</span>
+<span class="code-prop">const</span> <span class="code-val">AICoreRing</span> = ({ state }: { state: <span class="code-string">'idle'|'listening'|'speaking'|'processing'</span> }) => {
+  <span class="code-comment">// Animated values (Reanimated)</span>
+  <span class="code-prop">const</span> scale = useSharedValue(<span class="code-val">1.0</span>);
+  <span class="code-prop">const</span> glowOpacity = useSharedValue(<span class="code-val">0.12</span>);
+  <span class="code-prop">const</span> glowBlur = useSharedValue(<span class="code-val">12</span>);
+  <span class="code-prop">const</span> outerRotation = useSharedValue(<span class="code-val">0</span>);
+
+  useEffect(() => {
+    <span class="code-prop">const</span> target = motion.aiCore[state] ?? motion.aiCore.idle;
+    scale.value = withSpring(target.scale, motion.<span class="code-val">spring3</span>);  <span class="code-comment">// AI Breath spring</span>
+    glowOpacity.value = withSpring(target.glowOpacity, motion.<span class="code-val">spring3</span>);
+    <span class="code-comment">// glowBlur via expo-blur BlurView intensity prop</span>
+    <span class="code-comment">// outerRotation: continuous for 'processing', stops for others</span>
+    <span class="code-prop">if</span> (state === <span class="code-string">'processing'</span>) {
+      outerRotation.value = withRepeat(withTiming(<span class="code-val">360</span>, { duration: <span class="code-val">4000</span>, easing: Easing.linear }), <span class="code-val">-1</span>);
+    }
+  }, [state]);
+
+  <span class="code-comment">// Layer rendering order (back → front):</span>
+  <span class="code-comment">// 1. Holographic ground ellipses + light beam</span>
+  <span class="code-comment">// 2. Outer dashed orbit (layer 5) — not animated</span>
+  <span class="code-comment">// 3. Gold gauge ring (layer 4) — rotates when processing</span>
+  <span class="code-comment">// 4. Glow halo (layer 3) — BlurView intensity = glowBlur</span>
+  <span class="code-comment">// 5. Core fill disc (layer 2) — radial gradient</span>
+  <span class="code-comment">// 6. Center disc + lotus icon + labels (layer 1)</span>
+  <span class="code-comment">// 7. Particle sparkles (Lottie or manual SVG animation)</span>
+}
+
+<span class="code-comment">// Diameter recommendation for 390dp screen:</span>
+<span class="code-prop">const</span> RING_DIAMETER = <span class="code-val">260</span>; <span class="code-comment">// 66% of screen width</span>
+<span class="code-prop">const</span> GAUGE_RING_STROKE = <span class="code-val">16</span>;  <span class="code-comment">// dp</span>
+<span class="code-prop">const</span> GAUGE_RING_RADIUS = RING_DIAMETER / <span class="code-val">2</span> - <span class="code-val">20</span>; <span class="code-comment">// 110dp</span>
+  </div>
+</div>
+
+<h2>4. "ANALYZE · LEARN · OPTIMIZE" Arc Text</h2>
+<div class="ann-card">
+  <div class="ann-title">Arc Text Specification</div>
+  <div class="token-row"><div class="token-label">Text content</div><div class="token-value">ANALYZE · LEARN · OPTIMIZE (centered dots as separators)</div></div>
+  <div class="token-row"><div class="token-label">Typography</div><div class="token-value"><span class="token-code">typeScale.label</span> — 11sp, weight 600, letterSpacing +0.3</div></div>
+  <div class="token-row"><div class="token-label">Color</div><div class="token-value"><span class="token-code">colors.secondary #C8A96B</span> Heritage Gold</div></div>
+  <div class="token-row"><div class="token-label">Arc radius</div><div class="token-value">Follows outer edge of the gauge ring — ~110dp radius</div></div>
+  <div class="token-row"><div class="token-label">Arc sweep</div><div class="token-value">Upper 120° arc (top of ring, slightly past 10 o'clock to 2 o'clock)</div></div>
+  <div class="token-row"><div class="token-label">Implementation</div><div class="token-value">SVG textPath on a path arc, or react-native-svg TextPath component</div></div>
+  <div class="token-row"><div class="token-label">Opacity</div><div class="token-value">0.7 at rest, 1.0 when AI is active (listening/speaking)</div></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e5e5e5; }
+.back { font-size: 14px; color: #2563eb; font-weight: 500; flex-shrink: 0; }
+.top-title { font-size: 16px; font-weight: 700; flex: 1; text-align: center; }
+.step-label { font-size: 12px; color: #a3a3a3; flex-shrink: 0; }
+.progress-bar { background: #fff; padding: 10px 16px 12px; border-bottom: 1px solid #e5e5e5; }
+.steps { display: flex; gap: 4px; }
+.step { flex: 1; height: 4px; border-radius: 2px; }
+.step.done { background: #2563eb; }
+.step.curr { background: #93c5fd; }
+.step.todo { background: #e5e5e5; }
+.step-labels { display: flex; margin-top: 6px; }
+.sl { flex: 1; font-size: 10px; color: #a3a3a3; text-align: center; }
+.sl.done { color: #2563eb; }
+.sl.act { color: #2563eb; font-weight: 600; }
+.customer-chip { background: #fff; margin: 10px 14px 0; border-radius: 8px; padding: 7px 12px; border: 1px solid #e5e5e5; font-size: 13px; color: #404040; display: inline-flex; align-items: center; gap: 6px; }
+.content { flex: 1; overflow: hidden; padding: 10px 14px; display: flex; flex-direction: column; gap: 10px; }
+.section-lbl { font-size: 11px; font-weight: 700; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.5px; }
+.order-card { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden; }
+.order-row { display: flex; align-items: center; padding: 11px 14px; border-bottom: 1px solid #f5f5f5; }
+.order-row:last-child { border-bottom: none; }
+.order-name { flex: 1; font-size: 14px; }
+.order-qty { font-size: 12px; color: #a3a3a3; }
+.order-val { font-size: 14px; font-weight: 500; color: #171717; }
+.divider-row { height: 1px; background: #e5e5e5; margin: 0; }
+.calc-row { display: flex; align-items: center; padding: 11px 14px; border-bottom: 1px solid #f5f5f5; }
+.calc-row:last-child { border-bottom: none; }
+.calc-lbl { flex: 1; font-size: 14px; color: #404040; }
+.calc-val { font-size: 14px; color: #404040; }
+.calc-edit { font-size: 12px; color: #2563eb; margin-left: 8px; }
+.total-row { display: flex; align-items: center; padding: 13px 14px; background: #fafafa; }
+.total-lbl { flex: 1; font-size: 16px; font-weight: 700; }
+.total-val { font-size: 22px; font-weight: 700; color: #2563eb; }
+.gst-note { background: #f0fdf4; border: 1px solid #86efac; border-radius: 10px; padding: 10px 12px; font-size: 12px; color: #15803d; }
+.discount-toggle { background: #fff; border-radius: 10px; border: 1px solid #e5e5e5; padding: 12px 14px; display: flex; align-items: center; gap: 10px; font-size: 14px; color: #404040; }
+.toggle-pill { width: 38px; height: 22px; border-radius: 11px; background: #e5e5e5; display: flex; align-items: center; padding: 2px; margin-left: auto; }
+.toggle-knob { width: 18px; height: 18px; border-radius: 9px; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+.footer { padding: 12px 14px; background: #fff; border-top: 1px solid #e5e5e5; }
+.next-btn { width: 100%; padding: 14px; background: #2563eb; color: #fff; border-radius: 12px; font-size: 15px; font-weight: 600; text-align: center; }
+</style>
+<div class="top-bar">
+  <div class="back">← Items</div>
+  <div class="top-title">New Sale</div>
+  <div class="step-label">Step 3 of 4</div>
+</div>
+<div class="progress-bar">
+  <div class="steps">
+    <div class="step done"></div>
+    <div class="step done"></div>
+    <div class="step curr"></div>
+    <div class="step todo"></div>
+  </div>
+  <div class="step-labels">
+    <div class="sl done">Customer</div>
+    <div class="sl done">Items</div>
+    <div class="sl act">Pricing</div>
+    <div class="sl">Payment</div>
+  </div>
+</div>
+<div class="customer-chip">👤 Walk-in customer</div>
+<div class="content">
+  <div class="section-lbl">Order summary</div>
+  <div class="order-card">
+    <div class="order-row">
+      <div class="order-name">Amul Butter 500g<div class="order-qty">₹180 × 5 units</div></div>
+      <div class="order-val">₹900</div>
+    </div>
+    <div class="order-row">
+      <div class="order-name">Tata Salt 1 kg<div class="order-qty">₹60 × 10 units</div></div>
+      <div class="order-val">₹600</div>
+    </div>
+    <div class="order-row" style="background:#fafafa">
+      <div class="calc-lbl" style="font-weight:600">Sub-total</div>
+      <div class="calc-val" style="font-weight:600">₹1,500</div>
+    </div>
+    <div class="divider-row"></div>
+    <div class="calc-row">
+      <div class="calc-lbl">Discount</div>
+      <div class="calc-val">₹0<span class="calc-edit">Edit</span></div>
+    </div>
+    <div class="calc-row">
+      <div class="calc-lbl">GST</div>
+      <div class="calc-val" style="color:#a3a3a3">Not applicable</div>
+    </div>
+    <div class="total-row">
+      <div class="total-lbl">Total</div>
+      <div class="total-val">₹1,500</div>
+    </div>
+  </div>
+  <div class="gst-note">ℹ No GST applied — walk-in customer is unregistered. Enable GST for business customers with GSTIN.</div>
+  <div class="discount-toggle">
+    <span>Add discount</span>
+    <div class="toggle-pill"><div class="toggle-knob"></div></div>
+  </div>
+</div>
+<div class="footer">
+  <div class="next-btn">Next: Payment →</div>
+</div>

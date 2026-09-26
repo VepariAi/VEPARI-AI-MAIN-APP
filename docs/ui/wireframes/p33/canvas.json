@@ -1,0 +1,15 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",            "x": 0,   "y": 0,    "w": 390, "h": 844, "title": "App Launch" },
+    { "file": "SessionCheck.dc.html",    "x": 470, "y": 0,    "w": 390, "h": 844, "title": "Session Check" },
+    { "file": "Biometric.dc.html",       "x": 0,   "y": 924,  "w": 390, "h": 844, "title": "Biometric Prompt" },
+    { "file": "BiometricFail.dc.html",   "x": 470, "y": 924,  "w": 390, "h": 844, "title": "Biometric Fail" },
+    { "file": "PIN.dc.html",             "x": 0,   "y": 1848, "w": 390, "h": 844, "title": "PIN Entry" },
+    { "file": "PINLockout.dc.html",      "x": 470, "y": 1848, "w": 390, "h": 844, "title": "PIN Lockout 30s" },
+    { "file": "PINAccountLocked.dc.html","x": 235, "y": 2772, "w": 390, "h": 844, "title": "Account Locked" }
+  ],
+  "annotations": [
+    { "id": "flow-note", "x": 0, "y": -80, "w": 860, "text": "Flow: Launch → Session Check → [<15min: Home] or [>15min: Biometric → PIN → Lockout chain]" }
+  ],
+  "launch": { "view": "canvas" }
+}

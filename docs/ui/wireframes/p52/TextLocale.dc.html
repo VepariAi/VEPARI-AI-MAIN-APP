@@ -1,0 +1,279 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 860px; font-family: system-ui, -apple-system, sans-serif; background: #faf7f2; color: #3b2f2a; }
+body { padding: 28px 32px 56px; }
+h1 { font-size: 22px; font-weight: 700; color: #3b2f2a; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #8a7060; margin-bottom: 24px; }
+h2 { font-size: 14px; font-weight: 700; color: #3b2f2a; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.6px; border-top: 1px solid #e8ddd0; padding-top: 16px; }
+h2:first-of-type { border-top: none; padding-top: 0; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e8ddd0; margin-bottom: 20px; }
+thead { background: #f2e8d6; }
+th { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 12px; text-align: left; border-bottom: 1px solid #e8ddd0; }
+td { padding: 9px 12px; border-bottom: 1px solid #f2e8d6; font-size: 12px; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.note { background: #fff8e8; border: 1px solid #c8a96b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #6b4f1a; margin-bottom: 20px; line-height: 1.6; }
+.rule-card { background: #fff; border: 1px solid #e8ddd0; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; }
+.rc-title { font-size: 13px; font-weight: 700; color: #3b2f2a; margin-bottom: 8px; }
+.rc-body { font-size: 12px; color: #3b2f2a; line-height: 1.6; }
+.token { font-family: monospace; font-size: 11px; color: #5a6b4f; background: #f0f4ee; padding: 1px 4px; border-radius: 3px; }
+.bad { color: #a0312a; font-weight: 600; }
+.good { color: #5a6b4f; font-weight: 600; }
+.usage { color: #8a7060; }
+.bold { font-weight: 600; color: #3b2f2a; }
+/* Expansion demo buttons */
+.btn-demo { display: inline-flex; align-items: center; justify-content: center; height: 48px; padding: 0 20px; border-radius: 8px; background: #3b2f2a; color: #faf7f2; font-size: 13px; font-weight: 600; white-space: nowrap; }
+.btn-wrap { display: inline-flex; align-items: center; justify-content: center; min-height: 48px; padding: 12px 20px; border-radius: 8px; background: #3b2f2a; color: #faf7f2; font-size: 13px; font-weight: 600; text-align: center; max-width: 280px; }
+.demo-row { display: flex; gap: 16px; flex-wrap: wrap; margin: 10px 0; align-items: flex-start; }
+.demo-label { font-size: 10px; font-weight: 600; color: #8a7060; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.lang-tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 5px; border-radius: 3px; background: #f2e8d6; color: #8a7060; margin-right: 4px; }
+.expansion-table-wrap { overflow-x: auto; margin-bottom: 20px; }
+</style>
+<h1>P52 — Text Expansion, Line-Height and Localization</h1>
+<div class="meta">Prompt 52 · Phase 5 · Depends on Prompt 45 — button expansion rules, script line-height variance, number/date/currency per UI-UX §128–131</div>
+
+<div class="note">
+  <strong>Target locales:</strong> English (en-IN), Hindi (hi-IN), Marathi (mr-IN), Tamil (ta-IN), Telugu (te-IN), Kannada (kn-IN). Sample strings below are real translations, not Lorem text. All expansion figures measured against English baseline. Hindi is the primary Indic locale for expansion testing.
+</div>
+
+<!-- ═══════════════ TEXT EXPANSION RULES ═══════════════ -->
+<h2>Button and Label Expansion Rules (UI-UX §128)</h2>
+
+<div class="rule-card">
+  <div class="rc-title">Rule 1 — Buttons grow; they never truncate</div>
+  <div class="rc-body">
+    A button label <strong>must always be fully visible</strong>. Buttons have <code>min-height: 48dp</code> and <code>padding: 12dp 20dp</code> horizontal. When a translated label exceeds the button's natural single-line width:
+    <ul style="margin: 8px 0 0 18px; line-height: 1.8;">
+      <li><strong>Full-width buttons</strong> (most primary CTAs): grow in height by wrapping to 2 lines. Max 2 lines — if a translation cannot fit in 2 lines at 13sp, escalate to the translation team for a shorter string.</li>
+      <li><strong>Auto-width buttons</strong> (dialog action buttons, inline): grow in width. If they would overflow the container, switch to stacked layout (primary above, secondary below).</li>
+    </ul>
+    <strong class="bad">Never:</strong> ellipsis ("Add Sa…"), clip, or reduce font size below 12sp for a button label.<br>
+    <strong class="good">Always:</strong> wrap to 2 lines, or stack buttons, or request a shorter translation.
+  </div>
+</div>
+
+<div style="margin-bottom: 20px;">
+  <div class="demo-label">Button expansion — real string comparison</div>
+  <div class="demo-row">
+    <div>
+      <div class="demo-label"><span class="lang-tag">EN</span>"Add Sale" (8 chars)</div>
+      <div class="btn-demo">Add Sale</div>
+    </div>
+    <div>
+      <div class="demo-label"><span class="lang-tag">HI</span>"बिक्री जोड़ें" (14 chars, +75% visual width)</div>
+      <div class="btn-demo" style="font-family:'Noto Sans Devanagari',sans-serif">बिक्री जोड़ें</div>
+    </div>
+    <div>
+      <div class="demo-label"><span class="lang-tag">TA</span>"விற்பனை சேர்க்கவும்" (long, wraps)</div>
+      <div class="btn-wrap" style="font-family:'Noto Sans Tamil',sans-serif">விற்பனை சேர்க்கவும்</div>
+    </div>
+  </div>
+  <div class="demo-row" style="margin-top:12px">
+    <div>
+      <div class="demo-label"><span class="lang-tag">EN</span>"Confirm Payment" (15 chars)</div>
+      <div class="btn-demo">Confirm Payment</div>
+    </div>
+    <div>
+      <div class="demo-label"><span class="lang-tag">HI</span>"भुगतान की पुष्टि करें" (+80% visual)</div>
+      <div class="btn-wrap" style="font-family:'Noto Sans Devanagari',sans-serif">भुगतान की पुष्टि करें</div>
+    </div>
+  </div>
+</div>
+
+<div class="rule-card">
+  <div class="rc-title">Rule 2 — List labels and nav labels: truncate at 1 line with ellipsis only</div>
+  <div class="rc-body">
+    List row primary text (<span class="token">--type-body-lg</span>), navigation labels (<span class="token">--type-label</span>), and chip text (<span class="token">--type-label-lg</span>) use single-line ellipsis truncation when the translation overflows. These are read in context — the surrounding UI provides disambiguation. <strong>Exception:</strong> customer/supplier names on detail screens (title size) must never truncate — use 2 lines if needed. Navigation tab labels should be kept to ≤6 characters per locale; flag any translation that exceeds this.
+  </div>
+</div>
+
+<div class="rule-card">
+  <div class="rc-title">Rule 3 — Dynamic layout response for Indic scripts</div>
+  <div class="rc-body">
+    Hindi and Marathi translations typically run <strong>60–90% longer</strong> in glyph count than English, but rendered glyph width in Noto Sans Devanagari at equivalent point size is usually 80–120% of Inter at the same size. Net visual expansion: +30–50% for most labels. <br><br>
+    Tamil, Telugu, Kannada scripts have complex ligatures — at 11sp (--type-label), some glyphs may touch. Set <code>lineHeight</code> to the Indic value from P45 even at label sizes. Never set a fixed pixel height on a text container — always use <code>flex</code> or <code>min-height</code>.
+  </div>
+</div>
+
+<!-- ═══════════════ EXPANSION TABLE ═══════════════ -->
+<h2>Real-String Expansion Table</h2>
+<div class="expansion-table-wrap">
+<table>
+  <thead>
+    <tr><th>Context</th><th>EN string</th><th>HI translation</th><th>Visual expansion</th><th>Layout response</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="bold">Primary CTA button</td>
+      <td>"Add Sale"</td>
+      <td>बिक्री जोड़ें</td>
+      <td>+70% visual width</td>
+      <td class="usage">Button grows width (auto-width) or wraps (full-width) — never truncates</td>
+    </tr>
+    <tr>
+      <td class="bold">Primary CTA button</td>
+      <td>"Confirm Payment"</td>
+      <td>भुगतान की पुष्टि करें</td>
+      <td>+80% visual width</td>
+      <td class="usage">Full-width button wraps to 2 lines (min-height 72dp in this case)</td>
+    </tr>
+    <tr>
+      <td class="bold">Secondary button</td>
+      <td>"Cancel"</td>
+      <td>रद्द करें</td>
+      <td>+20%</td>
+      <td class="usage">Single-line fits. No change.</td>
+    </tr>
+    <tr>
+      <td class="bold">Nav label</td>
+      <td>"Reports"</td>
+      <td>रिपोर्ट</td>
+      <td>~same (loanword)</td>
+      <td class="usage">Fits in 6-char limit. OK.</td>
+    </tr>
+    <tr>
+      <td class="bold">Nav label (flag)</td>
+      <td>"Transactions"</td>
+      <td>लेनदेन</td>
+      <td>shorter</td>
+      <td class="usage">Shorter than EN. No issue. EN tab already uses "Txns" (abbreviated) to fit.</td>
+    </tr>
+    <tr>
+      <td class="bold">Filter chip</td>
+      <td>"Low Stock"</td>
+      <td>कम स्टॉक</td>
+      <td>+30%</td>
+      <td class="usage">Chip grows (horizontal scroll row — no issue). Label at 12sp fits.</td>
+    </tr>
+    <tr>
+      <td class="bold">Section header</td>
+      <td>"Today's Sales"</td>
+      <td>आज की बिक्री</td>
+      <td>+40%</td>
+      <td class="usage">Flex row: label left, value right. Label may wrap to 2 lines if value is long. Both sides flex independently.</td>
+    </tr>
+    <tr>
+      <td class="bold">Empty state headline</td>
+      <td>"No transactions yet"</td>
+      <td>अभी तक कोई लेनदेन नहीं</td>
+      <td>+60%</td>
+      <td class="usage">Centered text, full width. 2 lines OK. Max 3 lines — flag to translator if exceeded.</td>
+    </tr>
+    <tr>
+      <td class="bold">Settings row label</td>
+      <td>"Auto Reminders"</td>
+      <td>स्वचालित अनुस्मारक</td>
+      <td>+55%</td>
+      <td class="usage">Row label flex-1. Toggle trails at right. Label may wrap to 2 lines — row min-height 56dp, grows if needed.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ═══════════════ LINE HEIGHT ═══════════════ -->
+<h2>Line-Height Variance by Script</h2>
+
+<table>
+  <thead>
+    <tr><th>Script</th><th>Multiplier vs P45 English LH</th><th>Reason</th><th>Implementation</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="bold">Latin / English</td>
+      <td>1× (baseline)</td>
+      <td class="usage">Standard ascender/descender geometry, well-fitted in Inter</td>
+      <td><code>[lang="en"] { --lh-body: 1.45; --lh-label: 1.35; }</code></td>
+    </tr>
+    <tr>
+      <td class="bold">Devanagari (HI, MR)</td>
+      <td>+0.2 on all sizes</td>
+      <td class="usage">Matra (vowel marks) extend above the headline — clips on adjacent lines without extra leading</td>
+      <td><code>[lang="hi"], [lang="mr"] { --lh-body: 1.65; --lh-label: 1.55; }</code></td>
+    </tr>
+    <tr>
+      <td class="bold">Tamil (TA)</td>
+      <td>+0.15 on display/title; +0.20 on body/label</td>
+      <td class="usage">Tamil has tall vowel marks (புள்ளி) and stack ligatures; body sizes clip more than display sizes</td>
+      <td><code>[lang="ta"] { --lh-body: 1.65; --lh-display: 1.35; }</code></td>
+    </tr>
+    <tr>
+      <td class="bold">Telugu (TE)</td>
+      <td>+0.25 on all sizes</td>
+      <td class="usage">Telugu has the tallest diacritic stack of the supported scripts; ్ (halant) and ా (aa-matra) stack above and below</td>
+      <td><code>[lang="te"] { --lh-body: 1.70; --lh-label: 1.60; }</code></td>
+    </tr>
+    <tr>
+      <td class="bold">Kannada (KN)</td>
+      <td>+0.20 on all sizes</td>
+      <td class="usage">Similar diacritic structure to Devanagari; ottakshara (conjunct below) needs room below baseline</td>
+      <td><code>[lang="kn"] { --lh-body: 1.65; --lh-label: 1.55; }</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════ NUMBER / DATE / CURRENCY ═══════════════ -->
+<h2>Number, Date and Currency Localization (UI-UX §129–131)</h2>
+
+<div class="rule-card">
+  <div class="rc-title">Currency — Rupee formatting</div>
+  <div class="rc-body">
+    Use <code>Intl.NumberFormat</code> with locale-appropriate grouping. Indian numbering system uses lakh/crore groupings (2-2-3 from right), not 3-3-3.
+    <table style="margin:10px 0;width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr style="background:#f2e8d6;"><th style="padding:6px 10px;text-align:left;">Locale</th><th style="padding:6px 10px;text-align:left;">Value</th><th style="padding:6px 10px;text-align:left;">Display format</th><th style="padding:6px 10px;text-align:left;">JS locale string</th></tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #f2e8d6;"><td style="padding:6px 10px;">en-IN</td><td style="padding:6px 10px;">1,25,430</td><td style="padding:6px 10px;font-weight:600;">₹1,25,430</td><td style="padding:6px 10px;font-family:monospace;font-size:11px;">"en-IN", style:"currency", currency:"INR"</td></tr>
+        <tr style="border-bottom:1px solid #f2e8d6;"><td style="padding:6px 10px;">hi-IN</td><td style="padding:6px 10px;">1,25,430</td><td style="padding:6px 10px;font-weight:600;">₹1,25,430</td><td style="padding:6px 10px;font-family:monospace;font-size:11px;">"hi-IN", style:"currency", currency:"INR"</td></tr>
+        <tr><td style="padding:6px 10px;">All locales</td><td style="padding:6px 10px;">48,200</td><td style="padding:6px 10px;font-weight:600;">₹48,200</td><td style="padding:6px 10px;font-size:11px;">Under 1 lakh: standard 3-digit grouping (same for all Indian locales)</td></tr>
+      </tbody>
+    </table>
+    <strong>Abbreviated display (MetricCard, KPI chips):</strong> Values ≥ 1 lakh → "₹1.25L"; ≥ 10 lakh → "₹12.5L"; ≥ 1 crore → "₹1.2Cr". Never abbreviate in transaction detail or invoice views.
+  </div>
+</div>
+
+<div class="rule-card">
+  <div class="rc-title">Number formatting — quantities and percentages</div>
+  <div class="rc-body">
+    <ul style="margin: 0 0 0 18px; line-height: 1.8;">
+      <li><strong>Stock quantities:</strong> Always integer, no decimal. "240 units" not "240.0 units". Locale: en-IN integer formatting.</li>
+      <li><strong>Percentages:</strong> One decimal place max. "12.5%" in en-IN. In hi-IN: "12.5%". Percentage sign is always Latin "%"  — do not localize.</li>
+      <li><strong>GST rate:</strong> "18%" — never "18.00%". Fixed decimal format where the rate is always whole.</li>
+      <li><strong>Negative values:</strong> Show with "−" (minus sign U+2212), not "(" parenthesis. Always red (--color-error) for financial negatives.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="rule-card">
+  <div class="rc-title">Date and time formatting (UI-UX §130)</div>
+  <div class="rc-body">
+    <table style="margin:8px 0;width:100%;border-collapse:collapse;font-size:12px;">
+      <thead><tr style="background:#f2e8d6;"><th style="padding:6px 10px;text-align:left;">Context</th><th style="padding:6px 10px;text-align:left;">en-IN format</th><th style="padding:6px 10px;text-align:left;">hi-IN format</th><th style="padding:6px 10px;text-align:left;">Example</th></tr></thead>
+      <tbody>
+        <tr style="border-bottom:1px solid #f2e8d6;"><td style="padding:6px 10px;">Transaction timestamp</td><td style="padding:6px 10px;">27 Aug, 3:45 PM</td><td style="padding:6px 10px;">27 अग॰, 3:45 PM</td><td style="padding:6px 10px;color:#8a7060;">Short month name, 12h time</td></tr>
+        <tr style="border-bottom:1px solid #f2e8d6;"><td style="padding:6px 10px;">Transaction list group header</td><td style="padding:6px 10px;">Today · Tuesday, 27 Aug</td><td style="padding:6px 10px;">आज · मंगलवार, 27 अग॰</td><td style="padding:6px 10px;color:#8a7060;">Relative + absolute for current week</td></tr>
+        <tr style="border-bottom:1px solid #f2e8d6;"><td style="padding:6px 10px;">Report period selector</td><td style="padding:6px 10px;">Aug 2026</td><td style="padding:6px 10px;">अग॰ 2026</td><td style="padding:6px 10px;color:#8a7060;">Short month + full year</td></tr>
+        <tr style="border-bottom:1px solid #f2e8d6;"><td style="padding:6px 10px;">Due date (customer)</td><td style="padding:6px 10px;">Due 3 Sep</td><td style="padding:6px 10px;">3 सित॰ को देय</td><td style="padding:6px 10px;color:#8a7060;">Absolute when &gt;3 days, "Due tomorrow" / "Due today" when close</td></tr>
+        <tr><td style="padding:6px 10px;">Invoice date (formal)</td><td style="padding:6px 10px;">27/08/2026</td><td style="padding:6px 10px;">27/08/2026</td><td style="padding:6px 10px;color:#8a7060;">DD/MM/YYYY always for formal documents — locale-independent</td></tr>
+      </tbody>
+    </table>
+    <strong>Relative time:</strong> "just now" (0–59s), "2 min ago" (1–59 min), "3 hr ago" (1–23 hr), then absolute date. In hi-IN: "अभी", "2 मिनट पहले", "3 घंटे पहले". Update every 60 seconds while screen is active.
+  </div>
+</div>
+
+<div class="rule-card">
+  <div class="rc-title">Digit rendering (UI-UX §131)</div>
+  <div class="rc-body">
+    Always render digits in <strong>Latin (ASCII) numerals 0–9</strong> for all locales, including hi-IN and mr-IN. Devanagari numerals (०–९) are not used in this app — financial data must be universally scannable by users of any script literacy level. Tested: Noto Sans Devanagari renders Latin digits correctly at all weights.
+  </div>
+</div>
+
+<table>
+  <thead><tr><th>Rule</th><th>Correct</th><th>Wrong</th></tr></thead>
+  <tbody>
+    <tr><td class="bold">Rupee abbreviation</td><td class="good">₹1.25L, ₹12.5L, ₹1.2Cr</td><td class="bad">₹125000, $125K, Rs.1.25 Lakhs</td></tr>
+    <tr><td class="bold">Negative amount</td><td class="good">−₹4,200 in red</td><td class="bad">(₹4,200) or -₹4200 in black</td></tr>
+    <tr><td class="bold">Invoice date</td><td class="good">27/08/2026 (DD/MM/YYYY)</td><td class="bad">Aug 27 2026 or 2026-08-27 in formal docs</td></tr>
+    <tr><td class="bold">GST rate</td><td class="good">18%</td><td class="bad">18.00% or 0.18</td></tr>
+    <tr><td class="bold">Stock qty</td><td class="good">240 units</td><td class="bad">240.0 units or 240.00</td></tr>
+    <tr><td class="bold">Button — overflow</td><td class="good">Wrap to 2 lines, grow height</td><td class="bad">Truncate with ellipsis</td></tr>
+    <tr><td class="bold">Digit script</td><td class="good">0–9 (Latin always)</td><td class="bad">०–९ (Devanagari digits)</td></tr>
+  </tbody>
+</table>

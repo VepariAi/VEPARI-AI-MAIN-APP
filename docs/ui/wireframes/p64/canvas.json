@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Level1.dc.html", "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Finance — Level 1 Summary" },
+    { "file": "Level4.dc.html", "x": 470, "y": 0, "w": 390, "h": 844, "title": "Finance — Level 4 Transaction" }
+  ],
+  "annotations": [
+    { "id": "p64-note", "x": 0, "y": -120, "w": 650, "text": "P64 — Finance Drill-down canvas. Depends on P37, P59. Phase 5 tokens. 5-level drill: Level 1 Summary (KPI tiles + 6-month chart + category list), Level 4 Transaction Detail (hero card + line items + totals + actions). Breadcrumb navigation shows depth." }
+  ],
+  "launch": { "view": "canvas" }
+}

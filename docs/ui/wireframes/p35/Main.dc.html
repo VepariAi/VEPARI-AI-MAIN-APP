@@ -1,0 +1,255 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 1100px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f5f5f5; color: #171717;
+  overflow: hidden;
+}
+body { display: flex; flex-direction: column; }
+
+.top-bar {
+  background: #fff; padding: 14px 16px 12px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.back { font-size: 14px; color: #2563eb; font-weight: 500; }
+.top-title { font-size: 16px; font-weight: 700; }
+.done-btn { font-size: 14px; color: #2563eb; font-weight: 600; }
+
+.brief-header {
+  background: #fff; padding: 16px 16px 14px;
+  border-bottom: 1px solid #e5e5e5;
+}
+.brief-title { font-size: 20px; font-weight: 700; }
+.brief-meta { font-size: 13px; color: #737373; margin-top: 4px; }
+.tier-legend {
+  display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap;
+}
+.legend-chip {
+  display: flex; align-items: center; gap: 4px;
+  padding: 3px 8px; border-radius: 12px;
+  font-size: 11px; font-weight: 600;
+}
+
+.list {
+  flex: 1; overflow: hidden;
+  padding: 12px 14px;
+  display: flex; flex-direction: column;
+  gap: 8px;
+}
+
+/* Tier section header */
+.tier-hdr {
+  display: flex; align-items: center; gap: 8px;
+  padding: 2px 0 4px;
+}
+.tier-dot { width: 8px; height: 8px; border-radius: 50%; }
+.tier-name { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; }
+.tier-count { font-size: 11px; color: #a3a3a3; }
+
+/* Briefing item */
+.item {
+  background: #fff; border-radius: 10px;
+  border: 1px solid #e5e5e5;
+  border-left: 3px solid;
+  padding: 12px 12px 10px;
+  overflow: hidden;
+}
+.item-row { display: flex; align-items: flex-start; gap: 10px; }
+.item-icon {
+  width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+}
+.item-body { flex: 1; }
+.item-title { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.item-sub { font-size: 12px; color: #737373; margin-top: 3px; line-height: 1.4; }
+.item-actions { display: flex; gap: 8px; margin-top: 10px; padding-top: 8px; border-top: 1px solid #f0f0f0; }
+.act-primary {
+  padding: 6px 12px; border-radius: 7px;
+  font-size: 12px; font-weight: 600;
+  border: none; color: #fff;
+}
+.act-secondary {
+  padding: 6px 12px; border-radius: 7px;
+  font-size: 12px; font-weight: 500;
+  background: #f5f5f5; border: 1px solid #e5e5e5; color: #404040;
+}
+
+/* Critical */
+.item.critical { border-left-color: #ef4444; background: #fff9f9; }
+.item.critical .item-icon { background: #fef2f2; }
+.act-primary.crit { background: #ef4444; }
+
+/* Important */
+.item.important { border-left-color: #f59e0b; background: #fffdf5; }
+.item.important .item-icon { background: #fef9ec; }
+
+/* Actionable */
+.item.actionable { border-left-color: #2563eb; background: #f8faff; }
+.item.actionable .item-icon { background: #f0f4ff; }
+.act-primary.act { background: #2563eb; }
+
+/* Informational */
+.item.info { border-left-color: #a3a3a3; }
+.item.info .item-icon { background: #f5f5f5; }
+
+.footer-btns {
+  background: #fff; border-top: 1px solid #e5e5e5;
+  padding: 14px 16px 16px;
+  display: flex; gap: 10px;
+}
+.btn-ghost {
+  flex: 1; padding: 13px;
+  border: 1px solid #e5e5e5; border-radius: 12px;
+  font-size: 14px; font-weight: 600; color: #404040;
+  text-align: center; background: #fff;
+}
+.btn-primary {
+  flex: 1; padding: 13px;
+  background: #2563eb; border: none; border-radius: 12px;
+  font-size: 14px; font-weight: 600; color: #fff;
+  text-align: center;
+}
+</style>
+
+<div class="top-bar">
+  <div class="back">← Home</div>
+  <div class="top-title">Briefing</div>
+  <div class="done-btn">Done</div>
+</div>
+
+<div class="brief-header">
+  <div class="brief-title">While you were away</div>
+  <div class="brief-meta">Away for 3h 24m · Tue, 1 Sep 2026 · Main Store</div>
+  <div class="tier-legend">
+    <div class="legend-chip" style="background:#fef2f2;color:#dc2626;border:1px solid #fca5a5">● Critical</div>
+    <div class="legend-chip" style="background:#fef9ec;color:#b45309;border:1px solid #fcd34d">● Important</div>
+    <div class="legend-chip" style="background:#f0f4ff;color:#2563eb;border:1px solid #c7d7fc">● Actionable</div>
+    <div class="legend-chip" style="background:#f5f5f5;color:#737373;border:1px solid #e5e5e5">● Informational</div>
+  </div>
+</div>
+
+<div class="list">
+
+  <!-- CRITICAL (1 item) -->
+  <div class="tier-hdr">
+    <div class="tier-dot" style="background:#ef4444"></div>
+    <div class="tier-name" style="color:#dc2626">Critical</div>
+    <div class="tier-count">1 item</div>
+  </div>
+
+  <div class="item critical">
+    <div class="item-row">
+      <div class="item-icon">⚠</div>
+      <div class="item-body">
+        <div class="item-title">Priya Textiles — ₹12,400 overdue</div>
+        <div class="item-sub">4 days past due. Last contact: 28 Aug. Credit limit at risk.</div>
+      </div>
+    </div>
+    <div class="item-actions">
+      <button class="act-primary crit">Collect now</button>
+      <button class="act-secondary">Send reminder</button>
+    </div>
+  </div>
+
+  <!-- IMPORTANT (2 items) -->
+  <div class="tier-hdr">
+    <div class="tier-dot" style="background:#f59e0b"></div>
+    <div class="tier-name" style="color:#b45309">Important</div>
+    <div class="tier-count">2 items</div>
+  </div>
+
+  <div class="item important">
+    <div class="item-row">
+      <div class="item-icon">📦</div>
+      <div class="item-body">
+        <div class="item-title">Amul 5 kg — 3 units remaining</div>
+        <div class="item-sub">Below reorder threshold (10). Usually sells 6–8 units daily.</div>
+      </div>
+    </div>
+    <div class="item-actions">
+      <button class="act-primary" style="background:#f59e0b">Order now</button>
+      <button class="act-secondary">Dismiss</button>
+    </div>
+  </div>
+
+  <div class="item important">
+    <div class="item-row">
+      <div class="item-icon">📉</div>
+      <div class="item-body">
+        <div class="item-title">Sales down 18% vs. yesterday</div>
+        <div class="item-sub">₹4,200 today · ₹5,120 yesterday at same time of day.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIONABLE (2 items) -->
+  <div class="tier-hdr">
+    <div class="tier-dot" style="background:#2563eb"></div>
+    <div class="tier-name" style="color:#2563eb">Actionable</div>
+    <div class="tier-count">2 items</div>
+  </div>
+
+  <div class="item actionable">
+    <div class="item-row">
+      <div class="item-icon">👥</div>
+      <div class="item-body">
+        <div class="item-title">3 customers visited, no purchase</div>
+        <div class="item-sub">Meena, Kanika, Suresh — all regulars. Want to follow up?</div>
+      </div>
+    </div>
+    <div class="item-actions">
+      <button class="act-primary act">View customers</button>
+      <button class="act-secondary">Not now</button>
+    </div>
+  </div>
+
+  <div class="item actionable">
+    <div class="item-row">
+      <div class="item-icon">💡</div>
+      <div class="item-body">
+        <div class="item-title">Tuesday is your busiest day</div>
+        <div class="item-sub">AI suggests: stock up on Tata Salt and Amul Butter before noon.</div>
+      </div>
+    </div>
+    <div class="item-actions">
+      <button class="act-primary act">Create purchase order</button>
+      <button class="act-secondary">Dismiss</button>
+    </div>
+  </div>
+
+  <!-- INFORMATIONAL (2 items) -->
+  <div class="tier-hdr">
+    <div class="tier-dot" style="background:#a3a3a3"></div>
+    <div class="tier-name" style="color:#737373">Informational</div>
+    <div class="tier-count">2 items</div>
+  </div>
+
+  <div class="item info">
+    <div class="item-row">
+      <div class="item-icon">👤</div>
+      <div class="item-body">
+        <div class="item-title">Sanjay recorded 6 sales while you were away</div>
+        <div class="item-sub">Total: ₹2,840 · All transactions synced.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item info">
+    <div class="item-row">
+      <div class="item-icon">💬</div>
+      <div class="item-body">
+        <div class="item-title">WhatsApp from Priya Textiles read 2h ago</div>
+        <div class="item-sub">Message opened by Sanjay. No reply sent.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer-btns">
+  <div class="btn-ghost">Skip to home</div>
+  <div class="btn-primary">Review all</div>
+</div>

@@ -1,0 +1,1352 @@
+<title>Vepari AI Prototype</title>
+<style>
+/* ── PAGE FRAME ── */
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --brown:#3B2F2A;--gold:#C8A96B;--ivory:#FAF7F2;--beige:#F2E8D6;
+  --olive:#5A6B4F;--terra:#B45B4A;--indigo:#4A3D6B;--border:#EDE5D8;
+  --muted:#8A7060;--dim:#C0AFA5;--white:#FFFFFF;
+}
+html,body{
+  min-height:100vh;
+  background:linear-gradient(135deg,#1A1410 0%,#0E0A06 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  font-family:'Inter',system-ui,sans-serif;
+  padding:32px 0 48px;
+}
+.proto-bar{
+  display:flex;align-items:center;gap:16px;margin-bottom:20px;
+}
+.proto-label{
+  font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
+  color:rgba(255,255,255,0.3);
+}
+.proto-badge{
+  padding:3px 10px;border-radius:20px;
+  border:1px solid rgba(200,169,107,0.3);
+  font-size:10px;font-weight:600;color:rgba(200,169,107,0.7);letter-spacing:.5px;
+}
+.phone-frame{
+  width:390px;height:844px;border-radius:36px;overflow:hidden;position:relative;
+  box-shadow:0 0 0 1.5px rgba(255,255,255,0.1),0 0 0 8px rgba(0,0,0,0.35),0 40px 100px rgba(0,0,0,0.7);
+}
+.proto-hint{
+  margin-top:20px;font-size:11px;color:rgba(255,255,255,0.2);letter-spacing:.3px;
+  text-align:center;line-height:1.6;
+}
+.proto-hint strong{color:rgba(200,169,107,0.5);}
+
+/* ── SCREENS ── */
+.screen{
+  position:absolute;inset:0;width:390px;height:844px;
+  display:none;flex-direction:column;
+  background:var(--ivory);color:var(--brown);
+  font-family:'Inter',system-ui,sans-serif;overflow:hidden;
+}
+.screen.active{display:flex;}
+
+/* ── SHARED: STATUS BAR ── */
+.sb{
+  height:44px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;font-size:11px;color:var(--muted);
+}
+.sb-icons{display:flex;gap:4px;align-items:center;}
+
+/* ── SHARED: PROGRESS ── */
+.prog-track{height:3px;background:#E8DDD0;margin:0 20px;border-radius:2px;}
+.prog-fill{height:3px;background:var(--gold);border-radius:2px;}
+.step-lbl{padding:8px 20px 0;font-size:11px;color:var(--muted);letter-spacing:.2px;}
+
+/* ── SHARED: BOTTOM NAV ── */
+.bnav{
+  height:80px;flex-shrink:0;background:var(--white);
+  border-top:1px solid var(--border);
+  display:flex;align-items:flex-start;padding-top:8px;position:relative;
+}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding-top:4px;cursor:pointer;}
+.ni-icon{font-size:20px;}
+.ni-lbl{font-size:9px;font-weight:600;letter-spacing:.3px;color:var(--dim);}
+.ni.on .ni-lbl{color:var(--brown);}
+.ni-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);margin-top:1px;}
+.vfab-wrap{position:absolute;top:-24px;left:50%;transform:translateX(-50%);}
+.vfab{
+  width:48px;height:48px;border-radius:50%;background:var(--brown);
+  box-shadow:0 0 0 3px var(--white),0 4px 14px rgba(59,47,42,.25);
+  display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;
+}
+
+/* ── VOICE SCREEN NAV OVERRIDE ── */
+#sv .bnav{background:var(--brown);border-top-color:rgba(255,255,255,.1);}
+#sv .ni-lbl{color:rgba(250,247,242,.35);}
+#sv .ni.on .ni-lbl{color:var(--gold);}
+#sv .ni-icon{opacity:.5;}
+#sv .ni.on .ni-icon{opacity:1;}
+#sv .vfab{width:56px;height:56px;background:var(--gold);font-size:24px;
+  box-shadow:0 0 0 3px var(--brown),0 0 0 5px rgba(200,169,107,.4),0 4px 20px rgba(200,169,107,.4);}
+
+/* ── SHARED: SCREEN HEADER ── */
+.shdr{
+  height:56px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;border-bottom:1px solid var(--border);
+}
+.shdr-back{font-size:20px;color:var(--gold);cursor:pointer;width:32px;}
+.shdr-title{font-size:16px;font-weight:700;}
+.shdr-action{font-size:16px;color:var(--gold);font-weight:600;cursor:pointer;}
+
+/* ── SHARED: CONTINUE BTN ── */
+.cta{
+  margin:0 0 16px;height:52px;background:var(--brown);color:var(--ivory);
+  border:none;border-radius:10px;font-size:15px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;
+}
+.cta-arrow{color:var(--gold);font-size:18px;}
+.skip-lnk{text-align:center;font-size:13px;color:var(--dim);padding-bottom:12px;cursor:pointer;}
+
+/* ══════════════════════════════
+   SCREEN 1: SPLASH
+══════════════════════════════ */
+#ss{background:var(--ivory);}
+#ss .lotus-ring{
+  width:120px;height:120px;border-radius:50%;
+  border:1.5px solid rgba(200,169,107,.3);
+  display:flex;align-items:center;justify-content:center;position:relative;margin-bottom:28px;
+}
+#ss .lotus-ring::before{
+  content:'';position:absolute;width:100px;height:100px;border-radius:50%;
+  border:1px solid rgba(200,169,107,.5);
+}
+#ss .lotus-ring::after{
+  content:'';position:absolute;width:136px;height:136px;border-radius:50%;
+  border:.5px dashed rgba(200,169,107,.2);
+}
+#ss .wordmark{font-size:32px;font-weight:700;color:var(--brown);letter-spacing:-.5px;margin-bottom:4px;}
+#ss .wordmark span{color:var(--gold);}
+#ss .tagline-sub{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);margin-bottom:40px;}
+#ss .tagline-main{font-size:14px;color:var(--muted);text-align:center;line-height:1.5;max-width:240px;margin-bottom:48px;}
+#ss .ldots{display:flex;gap:8px;align-items:center;}
+#ss .ld{width:8px;height:8px;border-radius:50%;background:#E8DDD0;}
+#ss .ld.on{background:var(--gold);}
+#ss .ld.semi{background:rgba(200,169,107,.4);}
+#ss .version{position:absolute;bottom:28px;font-size:11px;color:var(--dim);}
+
+/* ══════════════════════════════
+   SCREEN 2: LANGUAGE
+══════════════════════════════ */
+#sl .lang-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;}
+#sl .lc{
+  background:var(--white);border:1.5px solid #E8DDD0;border-radius:12px;
+  padding:16px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  cursor:pointer;position:relative;
+}
+#sl .lc.sel{border-color:var(--gold);background:var(--ivory);}
+#sl .lc.sel::after{content:'✓';position:absolute;top:10px;right:12px;color:var(--gold);font-size:14px;font-weight:700;}
+#sl .ls{font-size:22px;color:var(--brown);font-weight:600;line-height:1.2;}
+#sl .ln{font-size:12px;font-weight:600;color:var(--muted);}
+#sl .lnat{font-size:10px;color:var(--dim);}
+
+/* ══════════════════════════════
+   SCREEN 3: BUSINESS SETUP
+══════════════════════════════ */
+#sb2 .fld{font-size:11px;font-weight:600;color:var(--muted);letter-spacing:.4px;text-transform:uppercase;margin-bottom:8px;}
+#sb2 .tinput{
+  width:100%;height:52px;background:var(--white);border:1.5px solid #E8DDD0;border-radius:10px;
+  padding:0 16px;font-size:15px;color:var(--brown);display:flex;align-items:center;margin-bottom:20px;
+}
+#sb2 .tinput.filled{border-color:var(--gold);}
+#sb2 .phone-row{display:flex;gap:10px;margin-bottom:20px;}
+#sb2 .cc{
+  height:52px;min-width:88px;background:var(--white);border:1.5px solid #E8DDD0;border-radius:10px;
+  padding:0 14px;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--brown);font-weight:500;
+}
+#sb2 .pi{flex:1;height:52px;background:var(--white);border:1.5px solid #E8DDD0;border-radius:10px;padding:0 16px;font-size:15px;color:var(--brown);display:flex;align-items:center;}
+#sb2 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+#sb2 .chip{padding:8px 14px;background:var(--white);border:1.5px solid #E8DDD0;border-radius:20px;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;}
+#sb2 .chip.on{background:var(--ivory);border-color:var(--gold);color:var(--brown);}
+
+/* ══════════════════════════════
+   SCREEN 4: SECURITY PIN
+══════════════════════════════ */
+#spin .pin-dots{display:flex;gap:16px;margin-bottom:40px;}
+#spin .pd{width:18px;height:18px;border-radius:50%;border:2px solid #E8DDD0;background:transparent;}
+#spin .pd.filled{background:var(--brown);border-color:var(--brown);}
+#spin .pd.gold{background:var(--gold);border-color:var(--gold);}
+#spin .numpad{width:100%;max-width:320px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px;}
+#spin .nk{height:70px;background:var(--white);border:1.5px solid #E8DDD0;border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;}
+#spin .nk .digit{font-size:24px;font-weight:600;color:var(--brown);line-height:1;}
+#spin .nk .letters{font-size:9px;letter-spacing:1px;color:var(--dim);margin-top:2px;}
+#spin .nk.empty{background:transparent;border:none;}
+#spin .nk.del{background:transparent;border:1.5px solid transparent;}
+#spin .nk.del .digit{font-size:18px;color:var(--muted);}
+#spin .bio{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding-bottom:20px;cursor:pointer;}
+
+/* ══════════════════════════════
+   SCREEN 5: AI INTRO
+══════════════════════════════ */
+#sai .ai-ring-wrap{margin:8px 0 24px;display:flex;align-items:center;justify-content:center;}
+#sai .fl{width:100%;display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
+#sai .fr{display:flex;align-items:flex-start;gap:14px;background:var(--white);border:1.5px solid #EDE5D8;border-radius:12px;padding:14px 16px;}
+#sai .fi{width:36px;height:36px;background:#F2E8D6;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;}
+#sai .fi.ai{background:rgba(74,61,107,.1);position:relative;}
+#sai .fi.ai::after{content:'';position:absolute;inset:-3px;border-radius:12px;border:1.5px solid rgba(200,169,107,.4);}
+#sai .ft h3{font-size:14px;font-weight:600;color:var(--brown);margin-bottom:2px;}
+#sai .ft p{font-size:12px;color:var(--muted);line-height:1.4;}
+#sai .act-btn{
+  width:100%;height:52px;background:linear-gradient(135deg,#3B2F2A 0%,#4A3D6B 100%);color:var(--ivory);
+  border:none;border-radius:10px;font-size:15px;font-weight:600;
+  display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;
+  margin-bottom:32px;box-shadow:0 4px 16px rgba(74,61,107,.25);
+}
+#sai .adot{width:8px;height:8px;border-radius:50%;background:var(--gold);}
+
+/* ══════════════════════════════
+   SCREEN 6: PERMISSIONS
+══════════════════════════════ */
+#sp .plist{display:flex;flex-direction:column;gap:12px;margin-bottom:24px;}
+#sp .pc{background:var(--white);border:1.5px solid #E8DDD0;border-radius:14px;padding:16px;display:flex;align-items:center;gap:14px;}
+#sp .pc.on{border-color:var(--gold);background:var(--ivory);}
+#sp .piw{width:44px;height:44px;border-radius:12px;background:#F2E8D6;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+#sp .piw.on{background:rgba(200,169,107,.15);}
+#sp .pt{flex:1;}
+#sp .pt h3{font-size:14px;font-weight:600;color:var(--brown);margin-bottom:3px;}
+#sp .pt p{font-size:12px;color:var(--muted);line-height:1.4;}
+#sp .tog{width:44px;height:26px;border-radius:13px;background:#E8DDD0;position:relative;flex-shrink:0;cursor:pointer;}
+#sp .tog.on{background:var(--gold);}
+#sp .tt{width:20px;height:20px;border-radius:50%;background:var(--white);position:absolute;top:3px;left:3px;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+#sp .tog.on .tt{transform:translateX(18px);}
+#sp .notice{background:rgba(90,107,79,.08);border:1px solid rgba(90,107,79,.2);border-radius:10px;padding:12px 14px;font-size:12px;color:var(--olive);line-height:1.5;margin-bottom:20px;display:flex;gap:8px;}
+
+/* ══════════════════════════════
+   SCREEN 7: READY
+══════════════════════════════ */
+#sr .sr-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 20px 40px;text-align:center;position:relative;}
+#sr .succ-ring{width:140px;height:140px;position:relative;margin-bottom:32px;display:flex;align-items:center;justify-content:center;}
+#sr h1{font-size:28px;font-weight:700;color:var(--brown);line-height:1.2;margin-bottom:10px;}
+#sr .sub{font-size:14px;color:var(--muted);line-height:1.6;max-width:280px;margin-bottom:36px;}
+#sr .sumrow{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:40px;}
+#sr .sumchip{background:var(--white);border:1.5px solid #E8DDD0;border-radius:20px;padding:8px 14px;font-size:12px;font-weight:500;color:var(--brown);display:flex;align-items:center;gap:6px;}
+#sr .sumchip .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+#sr .enter-btn{
+  width:100%;height:56px;background:linear-gradient(135deg,#3B2F2A 0%,#4A3D6B 100%);color:var(--ivory);
+  border:none;border-radius:12px;font-size:16px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;gap:10px;cursor:pointer;
+  box-shadow:0 6px 20px rgba(59,47,42,.25);letter-spacing:.2px;
+}
+#sr .enter-btn .gold{color:var(--gold);font-size:20px;}
+#sr .step-lbl-ok{padding:8px 20px 0;font-size:11px;color:var(--olive);letter-spacing:.2px;font-weight:600;}
+
+/* ══════════════════════════════
+   SCREEN 8: HOME
+══════════════════════════════ */
+#sh .greeting{padding:4px 20px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
+#sh .gr-text{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);}
+#sh .notif-btn{width:32px;height:32px;border-radius:50%;background:var(--white);border:1px solid #E8DDD0;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+#sh .core-hero{flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:10px 0 0;}
+#sh .core-ring-outer{width:260px;height:260px;position:relative;display:flex;align-items:center;justify-content:center;}
+#sh .core-wm{margin-top:8px;text-align:center;}
+#sh .core-wm .brand{font-size:14px;font-weight:700;color:var(--brown);letter-spacing:.5px;}
+#sh .core-wm .brand span{color:var(--gold);}
+#sh .core-wm .sub{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--dim);margin-top:2px;}
+#sh .sec-hdr{padding:12px 20px 8px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+#sh .sec-ttl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);}
+#sh .sec-act{font-size:11px;color:var(--gold);font-weight:500;cursor:pointer;}
+#sh .cards-wrap{flex:1;overflow:hidden;padding:0 20px;}
+#sh .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+#sh .ec{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:13px 13px 10px;position:relative;overflow:hidden;cursor:pointer;}
+#sh .ec::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:14px 14px 0 0;}
+#sh .ec.finance::before{background:var(--gold);}
+#sh .ec.customer::before{background:var(--olive);}
+#sh .ec.supplier::before{background:var(--terra);}
+#sh .ec.inventory::before{background:var(--muted);}
+#sh .ec.insight::before{background:var(--indigo);}
+#sh .ec.automation::before{background:var(--gold);}
+#sh .ct{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;}
+#sh .ci{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;}
+#sh .ci.gold{background:rgba(200,169,107,.15);}
+#sh .ci.olive{background:rgba(90,107,79,.12);}
+#sh .ci.terra{background:rgba(180,91,74,.12);}
+#sh .ci.brown{background:rgba(138,112,96,.12);}
+#sh .ci.indigo{background:rgba(74,61,107,.12);}
+#sh .clbl{font-size:9px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);}
+#sh .cval{font-size:20px;font-weight:700;color:var(--brown);line-height:1;font-variant-numeric:tabular-nums;}
+#sh .cval .cur{font-size:12px;font-weight:500;color:var(--muted);}
+#sh .cchg{font-size:10px;font-weight:600;color:var(--olive);}
+#sh .cchg.dn{color:var(--terra);}
+#sh .sparkline{display:flex;align-items:flex-end;gap:2px;height:18px;margin-top:6px;}
+#sh .sb2{width:4px;border-radius:1px;}
+#sh .sb2.g{background:rgba(200,169,107,.8);}
+#sh .sb2.d{background:rgba(200,169,107,.25);}
+
+/* ══════════════════════════════
+   SCREEN 9: VOICE ACTIVE
+══════════════════════════════ */
+#sv .greeting{padding:4px 20px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;}
+#sv .gr-text{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);}
+#sv .core-hero{flex-shrink:0;display:flex;flex-direction:column;align-items:center;padding:10px 0 0;}
+#sv .core-ring-outer{width:260px;height:260px;position:relative;display:flex;align-items:center;justify-content:center;}
+#sv .core-wm{margin-top:8px;text-align:center;}
+#sv .core-wm .brand{font-size:14px;font-weight:700;color:var(--brown);letter-spacing:.5px;}
+#sv .core-wm .brand span{color:var(--gold);}
+#sv .core-wm .sub{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold);margin-top:2px;}
+#sv .vov{flex:1;display:flex;flex-direction:column;align-items:center;padding:20px 20px 0;}
+#sv .lpill{display:flex;align-items:center;gap:8px;background:var(--brown);color:var(--ivory);border-radius:20px;padding:8px 18px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;margin-bottom:20px;}
+#sv .pdot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
+#sv .waveform{display:flex;align-items:center;gap:3px;height:52px;margin-bottom:20px;}
+#sv .wb{width:4px;border-radius:2px;background:var(--gold);}
+#sv .transcript{width:100%;background:var(--white);border:1.5px solid #E8DDD0;border-radius:16px;padding:16px;margin-bottom:16px;}
+#sv .trlbl{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:8px;}
+#sv .trtext{font-size:15px;color:var(--brown);line-height:1.5;}
+#sv .trcursor{display:inline-block;width:2px;height:16px;background:var(--gold);margin-left:2px;vertical-align:middle;}
+#sv .qas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:20px;}
+#sv .qc{background:var(--white);border:1px solid #E8DDD0;border-radius:16px;padding:7px 12px;font-size:12px;color:var(--muted);cursor:pointer;}
+#sv .vbar{background:var(--brown);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
+#sv .vbar-l{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--gold);}
+#sv .vbar-r{font-size:12px;color:rgba(250,247,242,.5);}
+
+/* ══════════════════════════════
+   SCREEN 10: DAILY BRIEFING
+══════════════════════════════ */
+#sdb .date-banner{flex-shrink:0;padding:16px 20px 12px;background:var(--ivory);}
+#sdb .date-row{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px;}
+#sdb .date-main{font-size:22px;font-weight:700;color:var(--brown);}
+#sdb .date-day{font-size:12px;color:var(--muted);}
+#sdb .date-sub{font-size:11px;color:var(--dim);}
+#sdb .sumcard{margin:0 20px 12px;flex-shrink:0;background:linear-gradient(135deg,#3B2F2A 0%,#4A3D6B 100%);border-radius:16px;padding:18px;}
+#sdb .sum-ey{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+#sdb .sum-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+#sdb .sum-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(200,169,107,.8);}
+#sdb .sum-text{font-size:14px;color:rgba(250,247,242,.9);line-height:1.6;}
+#sdb .sum-text strong{color:var(--gold);font-weight:600;}
+#sdb .vplay{flex-shrink:0;margin:0 20px 12px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:12px;}
+#sdb .pbtn{width:36px;height:36px;border-radius:50%;background:var(--brown);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;cursor:pointer;}
+#sdb .vwav{flex:1;display:flex;align-items:center;gap:2px;height:28px;}
+#sdb .vb{width:3px;border-radius:1.5px;background:#E8DDD0;}
+#sdb .vb.p{background:var(--gold);}
+#sdb .vdur{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;}
+#sdb .sec-hdr2{flex-shrink:0;padding:8px 20px 6px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);}
+#sdb .secs{flex:1;overflow:hidden;padding:0 20px;display:flex;flex-direction:column;gap:10px;}
+#sdb .sc{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;flex-shrink:0;}
+#sdb .sc-hd{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+#sdb .sc-ic{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+#sdb .sc-ic.fin{background:rgba(200,169,107,.15);}
+#sdb .sc-ic.ops{background:rgba(180,91,74,.1);}
+#sdb .sc-ic.cus{background:rgba(90,107,79,.1);}
+#sdb .sc-tr{flex:1;}
+#sdb .sc-ttl{font-size:13px;font-weight:600;color:var(--brown);}
+#sdb .sc-meta{font-size:10px;color:var(--muted);}
+#sdb .sc-val{font-size:13px;font-weight:700;color:var(--brown);font-variant-numeric:tabular-nums;}
+#sdb .blist{display:flex;flex-direction:column;gap:6px;}
+#sdb .bi{display:flex;gap:10px;align-items:flex-start;}
+#sdb .bico{font-size:12px;flex-shrink:0;margin-top:1px;color:var(--gold);font-weight:700;}
+#sdb .bt{font-size:12px;color:var(--muted);line-height:1.4;}
+#sdb .bt strong{color:var(--brown);font-weight:600;}
+#sdb .bt .up{color:var(--olive);}
+#sdb .bt .dn{color:var(--terra);}
+
+/* ══════════════════════════════
+   SCREEN 11: REPORTS
+══════════════════════════════ */
+#srp .ptabs{display:flex;gap:6px;padding:10px 20px;overflow-x:auto;}
+#srp .ptab{padding:5px 12px;border-radius:14px;font-size:12px;font-weight:600;white-space:nowrap;background:var(--white);border:1.5px solid #E8DDD0;color:var(--muted);}
+#srp .ptab.on{background:var(--brown);border-color:var(--brown);color:var(--ivory);}
+#srp .kpi-row{display:flex;gap:8px;padding:0 20px 12px;}
+#srp .kt{flex:1;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:12px 10px;position:relative;overflow:hidden;}
+#srp .kt::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;border-radius:12px 12px 0 0;}
+#srp .kt.rev::before{background:var(--olive);}
+#srp .kt.exp::before{background:var(--terra);}
+#srp .kt.prof::before{background:var(--gold);}
+#srp .kl{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:5px;}
+#srp .kv{font-size:17px;font-weight:700;color:var(--brown);font-variant-numeric:tabular-nums;line-height:1;}
+#srp .kc{font-size:10px;font-weight:600;margin-top:3px;}
+#srp .kc.up{color:var(--olive);} #srp .kc.dn{color:var(--terra);}
+#srp .slbl{padding:2px 20px 8px;font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);}
+#srp .rgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px 14px;}
+#srp .rc{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:14px 12px;cursor:pointer;}
+#srp .rc-ico{font-size:22px;margin-bottom:8px;}
+#srp .rc-ttl{font-size:13px;font-weight:700;color:var(--brown);margin-bottom:3px;}
+#srp .rc-sub{font-size:11px;color:var(--muted);line-height:1.4;}
+#srp .rc-arr{font-size:12px;color:var(--gold);margin-top:8px;font-weight:600;}
+#srp .rrow{display:flex;align-items:center;gap:12px;padding:10px 20px;border-bottom:1px solid #F5EFE6;}
+#srp .ri{width:34px;height:34px;border-radius:10px;background:rgba(200,169,107,.15);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+#srp .rinfo{flex:1;}
+#srp .rname{font-size:13px;font-weight:500;color:var(--brown);}
+#srp .rmeta{font-size:11px;color:var(--muted);margin-top:2px;}
+#srp .rarr{font-size:16px;color:var(--dim);}
+
+/* ══════════════════════════════
+   SCREEN 12: RETURNING USER LOCK
+══════════════════════════════ */
+#srl{background:var(--brown);color:var(--ivory);}
+#srl .sb{color:rgba(250,247,242,.5);}
+#srl .rl-welcome{text-align:center;padding:32px 20px 16px;font-size:22px;font-weight:700;color:var(--ivory);}
+#srl .rl-sub{text-align:center;font-size:13px;color:rgba(250,247,242,.5);margin-bottom:32px;}
+#srl .rl-pin-dots{display:flex;gap:16px;justify-content:center;margin-bottom:40px;}
+#srl .rl-pd{width:18px;height:18px;border-radius:50%;border:2px solid rgba(250,247,242,.3);background:transparent;}
+#srl .rl-pd.filled{background:var(--gold);border-color:var(--gold);}
+#srl .rl-numpad{width:100%;max-width:320px;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px;margin-bottom:20px;}
+#srl .rl-nk{height:70px;background:rgba(250,247,242,.07);border:1.5px solid rgba(250,247,242,.12);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;}
+#srl .rl-nk .digit{font-size:24px;font-weight:600;color:var(--ivory);line-height:1;}
+#srl .rl-nk .letters{font-size:9px;letter-spacing:1px;color:rgba(250,247,242,.4);margin-top:2px;}
+#srl .rl-nk.empty{background:transparent;border:none;}
+#srl .rl-nk.del{background:transparent;border:1.5px solid transparent;}
+#srl .rl-nk.del .digit{font-size:18px;color:rgba(250,247,242,.5);}
+#srl .rl-bio{display:flex;align-items:center;gap:8px;justify-content:center;font-size:13px;color:rgba(250,247,242,.4);padding-bottom:20px;cursor:pointer;}
+
+/* ══════════════════════════════
+   SCREEN 13: AI OS AWAKENING
+══════════════════════════════ */
+#sao{background:var(--ivory);}
+#sao .aw-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;}
+#sao .aw-ring{width:200px;height:200px;margin-bottom:24px;}
+#sao .aw-title{font-size:20px;font-weight:700;color:var(--brown);margin-bottom:8px;text-align:center;}
+#sao .aw-sub{font-size:13px;color:var(--muted);margin-bottom:28px;text-align:center;}
+#sao .aw-dots{display:flex;gap:8px;align-items:center;}
+#sao .aw-dot{width:7px;height:7px;border-radius:50%;background:var(--gold);}
+@keyframes awPulse{0%,100%{opacity:.3;transform:scale(.95)}50%{opacity:.9;transform:scale(1.03)}}
+#sao .aw-ring svg{animation:awPulse 1.8s ease-in-out infinite;}
+
+/* ══════════════════════════════
+   SCREEN 14: VOICE OFFLINE
+══════════════════════════════ */
+#svo .vo-hero{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px;text-align:center;}
+#svo .vo-icon{font-size:64px;margin-bottom:20px;}
+#svo .vo-title{font-size:22px;font-weight:700;color:var(--brown);margin-bottom:8px;}
+#svo .vo-sub{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:28px;}
+#svo .vo-input{width:100%;height:48px;background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:0 16px;font-size:14px;color:var(--muted);display:flex;align-items:center;margin-bottom:20px;gap:8px;}
+#svo .vo-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;}
+#svo .vo-chip{background:var(--white);border:1px solid var(--border);border-radius:16px;padding:7px 12px;font-size:12px;color:var(--muted);}
+
+/* ══════════════════════════════
+   SCREEN 15: AI CHAT / ANSWER
+══════════════════════════════ */
+#schat .chat-body{flex:1;overflow:hidden;padding:16px 20px;display:flex;flex-direction:column;gap:16px;}
+#schat .user-bubble{align-self:flex-end;background:var(--brown);color:var(--ivory);border-radius:18px 18px 4px 18px;padding:12px 16px;font-size:14px;max-width:80%;line-height:1.4;}
+#schat .ai-card{background:linear-gradient(135deg,#3B2F2A 0%,#4A3D6B 100%);border-radius:16px;padding:16px;}
+#schat .ai-ey{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+#schat .ai-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+#schat .ai-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(200,169,107,.8);}
+#schat .stat-row{display:flex;gap:10px;margin-bottom:12px;}
+#schat .stat-tile{flex:1;background:rgba(250,247,242,.08);border-radius:10px;padding:10px;}
+#schat .stat-val{font-size:18px;font-weight:700;color:var(--gold);font-variant-numeric:tabular-nums;}
+#schat .stat-lbl{font-size:10px;color:rgba(250,247,242,.6);margin-top:2px;}
+#schat .stat-chg{font-size:10px;font-weight:600;color:rgba(90,107,79,.9);margin-top:2px;}
+#schat .ai-bullets{display:flex;flex-direction:column;gap:6px;}
+#schat .ai-bi{display:flex;gap:8px;align-items:flex-start;}
+#schat .ai-bico{color:var(--gold);font-size:11px;font-weight:700;margin-top:1px;}
+#schat .ai-bt{font-size:12px;color:rgba(250,247,242,.8);line-height:1.4;}
+#schat .ai-bt strong{color:var(--ivory);}
+#schat .chat-actions{display:flex;gap:10px;padding:0 20px 20px;}
+#schat .ca-ghost{flex:1;height:48px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-weight:600;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+#schat .ca-gold{flex:1.4;height:48px;background:var(--gold);border-radius:10px;font-size:13px;font-weight:700;color:var(--brown);display:flex;align-items:center;justify-content:center;cursor:pointer;gap:6px;}
+
+/* ══════════════════════════════
+   SCREEN 16: ACTION APPROVAL
+══════════════════════════════ */
+#sapc .apc-body{flex:1;overflow:hidden;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+#sapc .apc-card{background:linear-gradient(135deg,#3B2F2A 0%,#4A3D6B 100%);border-radius:16px;padding:18px;}
+#sapc .apc-ey{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+#sapc .apc-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);}
+#sapc .apc-lbl{font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:rgba(200,169,107,.8);}
+#sapc .apc-action{font-size:16px;font-weight:700;color:var(--ivory);line-height:1.3;margin-bottom:6px;}
+#sapc .apc-detail{font-size:13px;color:rgba(250,247,242,.6);}
+#sapc .apc-records{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;}
+#sapc .apc-rec-hdr{font-size:10px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+#sapc .apc-rec{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid #F5EFE6;}
+#sapc .apc-rec:last-child{border-bottom:none;padding-bottom:0;}
+#sapc .apc-ri{width:28px;height:28px;background:rgba(200,169,107,.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+#sapc .apc-rname{font-size:13px;font-weight:500;color:var(--brown);}
+#sapc .apc-rmeta{font-size:11px;color:var(--muted);margin-top:1px;}
+#sapc .apc-impact{background:rgba(90,107,79,.08);border:1px solid rgba(90,107,79,.25);border-radius:10px;padding:10px 14px;display:flex;align-items:center;gap:10px;}
+#sapc .apc-impact-ico{font-size:18px;}
+#sapc .apc-impact-txt{font-size:12px;color:var(--olive);line-height:1.4;}
+#sapc .apc-impact-txt strong{font-weight:700;}
+#sapc .apc-btns{display:flex;flex-direction:column;gap:8px;padding:0 20px 20px;}
+#sapc .approve-btn{height:52px;background:var(--gold);border-radius:12px;font-size:15px;font-weight:700;color:var(--brown);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;}
+#sapc .decline-btn{height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* ══════════════════════════════
+   SCREEN 17: ACTION CONFIRMED
+══════════════════════════════ */
+#sack{background:var(--ivory);}
+#sack .ack-content{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 28px 40px;text-align:center;}
+#sack .ack-ring{width:120px;height:120px;margin-bottom:24px;}
+#sack .ack-title{font-size:24px;font-weight:700;color:var(--brown);margin-bottom:8px;}
+#sack .ack-sub{font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.5;}
+#sack .ack-summary{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:16px;text-align:left;margin-bottom:28px;}
+#sack .ack-row{display:flex;justify-content:space-between;padding:5px 0;font-size:13px;border-bottom:1px solid #F5EFE6;}
+#sack .ack-row:last-child{border-bottom:none;}
+#sack .ack-k{color:var(--muted);}
+#sack .ack-v{font-weight:600;color:var(--brown);}
+#sack .ack-btn{width:100%;height:52px;background:var(--brown);color:var(--ivory);border-radius:12px;font-size:15px;font-weight:600;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+
+/* ══════════════════════════════
+   SCREEN 18: SYNC CONFLICT
+══════════════════════════════ */
+#sconf .conf-body{flex:1;overflow:hidden;padding:16px 20px;display:flex;flex-direction:column;gap:14px;}
+#sconf .conf-warn{background:rgba(180,91,74,.08);border:1px solid rgba(180,91,74,.3);border-radius:12px;padding:12px 16px;display:flex;align-items:center;gap:10px;}
+#sconf .conf-warn-ico{font-size:20px;}
+#sconf .conf-warn-txt{font-size:13px;font-weight:600;color:var(--terra);line-height:1.4;}
+#sconf .conf-ver{background:var(--white);border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;border-left:4px solid var(--terra);}
+#sconf .conf-ver.srv{border-left-color:var(--olive);}
+#sconf .conf-ver-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+#sconf .conf-ver-ttl{font-size:12px;font-weight:700;color:var(--brown);}
+#sconf .conf-ver-ts{font-size:10px;color:var(--muted);}
+#sconf .conf-ver-val{font-size:14px;color:var(--muted);line-height:1.4;}
+#sconf .conf-ver-val strong{color:var(--brown);}
+#sconf .conf-btns{padding:0 20px 20px;display:flex;flex-direction:column;gap:8px;}
+#sconf .conf-keep{height:52px;background:var(--gold);border-radius:12px;font-size:15px;font-weight:700;color:var(--brown);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+#sconf .conf-srv{height:44px;background:transparent;border:1.5px solid var(--border);border-radius:10px;font-size:14px;font-weight:600;color:var(--muted);display:flex;align-items:center;justify-content:center;cursor:pointer;}
+#sconf .conf-link{text-align:center;font-size:12px;color:var(--dim);padding-bottom:8px;cursor:pointer;}
+</style>
+
+<!-- ════════════════════════════════════════════
+     PHONE FRAME
+════════════════════════════════════════════ -->
+<div class="proto-bar">
+  <div class="proto-label">VEPARI AI</div>
+  <div class="proto-badge" style="cursor:pointer;border-color:rgba(200,169,107,.5);" onclick="go('ss')">New User</div>
+  <div class="proto-badge">P76 · Phase 7</div>
+  <div class="proto-badge" style="cursor:pointer;border-color:rgba(200,169,107,.5);" onclick="go('srl')">Returning User</div>
+</div>
+
+<div class="phone-frame">
+
+<!-- ════ SCREEN 1: SPLASH ════ -->
+<div class="screen active" id="ss">
+  <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:.4;" viewBox="0 0 390 844">
+    <g opacity=".5">
+      <path d="M24 50L24 24L50 24" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+      <circle cx="24" cy="37" r="2" fill="#C8A96B"/>
+      <circle cx="37" cy="24" r="2" fill="#C8A96B"/>
+      <path d="M366 50L366 24L340 24" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+      <circle cx="366" cy="37" r="2" fill="#C8A96B"/>
+      <circle cx="353" cy="24" r="2" fill="#C8A96B"/>
+      <path d="M24 794L24 820L50 820" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+      <path d="M366 794L366 820L340 820" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+    </g>
+    <g opacity=".3">
+      <circle cx="40" cy="200" r="1.5" fill="#C8A96B"/>
+      <circle cx="350" cy="200" r="1.5" fill="#C8A96B"/>
+      <circle cx="40" cy="640" r="1.5" fill="#C8A96B"/>
+      <circle cx="350" cy="640" r="1.5" fill="#C8A96B"/>
+    </g>
+  </svg>
+  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;position:relative;cursor:pointer;" onclick="go('sl')">
+    <div class="lotus-ring">
+      <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
+        <path d="M36 10C46 20 46 30 36 34C26 30 26 20 36 10" fill="#C8A96B" opacity=".9"/>
+        <path d="M62 36C52 46 42 46 38 36C42 26 52 26 62 36" fill="#C8A96B" opacity=".9"/>
+        <path d="M36 62C26 52 26 42 36 38C46 42 46 52 36 62" fill="#C8A96B" opacity=".9"/>
+        <path d="M10 36C20 26 30 26 34 36C30 46 20 46 10 36" fill="#C8A96B" opacity=".9"/>
+        <path d="M56 16C50 28 42 32 36 28C38 20 46 14 56 16" fill="#C8A96B" opacity=".5"/>
+        <path d="M56 56C44 50 40 42 44 36C52 38 58 46 56 56" fill="#C8A96B" opacity=".5"/>
+        <path d="M16 56C22 44 30 40 36 44C34 52 26 58 16 56" fill="#C8A96B" opacity=".5"/>
+        <path d="M16 16C28 22 32 30 28 36C20 34 14 26 16 16" fill="#C8A96B" opacity=".5"/>
+        <circle cx="36" cy="36" r="8" fill="#C8A96B"/>
+        <circle cx="36" cy="36" r="4" fill="#FAF7F2"/>
+        <circle cx="36" cy="36" r="2" fill="#C8A96B"/>
+      </svg>
+    </div>
+    <div class="wordmark">VEPARI <span>AI</span></div>
+    <div class="tagline-sub">Business OS</div>
+    <div class="tagline-main">Awakening your<br>Business Intelligence</div>
+    <div class="ldots">
+      <div class="ld on"></div>
+      <div class="ld semi"></div>
+      <div class="ld"></div>
+    </div>
+    <div class="version">v1.0 · Tap to begin</div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 2: LANGUAGE ════ -->
+<div class="screen" id="sl">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="prog-track"><div class="prog-fill" style="width:16.7%;"></div></div>
+  <div class="step-lbl">Step 1 of 6</div>
+  <div style="flex:1;padding:24px 20px 0;display:flex;flex-direction:column;">
+    <div style="font-size:26px;font-weight:700;line-height:1.2;margin-bottom:8px;">Choose your<br>language</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:32px;line-height:1.5;">Vepari AI works in your language. You can change this later in Settings.</div>
+    <div class="lang-grid">
+      <div class="lc" onclick="selectLang(this)">
+        <div class="ls">हिंदी</div><div class="ln">Hindi</div><div class="lnat">हिन्दी</div>
+      </div>
+      <div class="lc sel" onclick="selectLang(this)">
+        <div class="ls">English</div><div class="ln">English</div><div class="lnat">English</div>
+      </div>
+      <div class="lc" onclick="selectLang(this)">
+        <div class="ls" style="font-family:'Noto Sans Tamil',sans-serif;">தமிழ்</div><div class="ln">Tamil</div><div class="lnat">தமிழ்</div>
+      </div>
+      <div class="lc" onclick="selectLang(this)">
+        <div class="ls" style="font-family:'Noto Sans Telugu',sans-serif;">తెలుగు</div><div class="ln">Telugu</div><div class="lnat">తెలుగు</div>
+      </div>
+      <div class="lc" onclick="selectLang(this)">
+        <div class="ls" style="font-family:'Noto Sans Kannada',sans-serif;">ಕನ್ನಡ</div><div class="ln">Kannada</div><div class="lnat">ಕನ್ನಡ</div>
+      </div>
+      <div class="lc" onclick="selectLang(this)">
+        <div class="ls">मराठी</div><div class="ln">Marathi</div><div class="lnat">मराठी</div>
+      </div>
+    </div>
+    <div style="flex:1;"></div>
+    <div class="cta" onclick="go('sb2')">Continue <span class="cta-arrow">›</span></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 3: BUSINESS SETUP ════ -->
+<div class="screen" id="sb2">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="prog-track"><div class="prog-fill" style="width:33.3%;"></div></div>
+  <div class="step-lbl">Step 2 of 6</div>
+  <div style="flex:1;padding:24px 20px 0;display:flex;flex-direction:column;overflow:hidden;">
+    <div style="font-size:26px;font-weight:700;line-height:1.2;margin-bottom:8px;">Tell us about<br>your business</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.5;">This helps Vepari AI personalise insights and reports for you.</div>
+    <div class="fld">Business Name</div>
+    <div class="tinput filled">Sharma Kirana Store</div>
+    <div class="fld">Business Type</div>
+    <div class="chips">
+      <div class="chip on">🛒 Retail</div>
+      <div class="chip">🍽️ Restaurant</div>
+      <div class="chip">⚙️ Services</div>
+      <div class="chip">🏭 Manufacturing</div>
+      <div class="chip">📦 Distribution</div>
+      <div class="chip">Other</div>
+    </div>
+    <div class="fld">Mobile Number</div>
+    <div class="phone-row">
+      <div class="cc"><span style="font-size:16px;">🇮🇳</span><span>+91</span><span style="font-size:10px;color:var(--dim);">▾</span></div>
+      <div class="pi">98765 43210</div>
+    </div>
+    <div style="flex:1;"></div>
+    <div class="cta" onclick="go('spin')">Continue <span class="cta-arrow">›</span></div>
+    <div class="skip-lnk" onclick="go('spin')">Skip for now</div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 4: SECURITY PIN ════ -->
+<div class="screen" id="spin">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="prog-track"><div class="prog-fill" style="width:50%;"></div></div>
+  <div class="step-lbl">Step 3 of 6</div>
+  <div style="flex:1;padding:24px 20px 0;display:flex;flex-direction:column;align-items:center;">
+    <div style="font-size:26px;font-weight:700;line-height:1.2;margin-bottom:8px;text-align:center;width:100%;">Create your<br>security PIN</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:40px;line-height:1.5;text-align:center;">Keep your business data safe. You'll use this to unlock Vepari AI.</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pd"></div><div class="pd"></div><div class="pd"></div>
+      <div class="pd"></div><div class="pd"></div><div class="pd"></div>
+    </div>
+    <div class="numpad">
+      <div class="nk" onclick="pinKey()"><div class="digit">1</div><div class="letters"></div></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">2</div><div class="letters">ABC</div></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">3</div><div class="letters">DEF</div></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">4</div><div class="letters">GHI</div></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">5</div><div class="letters">JKL</div></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">6</div><div class="letters">MNO</div></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">7</div><div class="letters">PQRS</div></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">8</div><div class="letters">TUV</div></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">9</div><div class="letters">WXYZ</div></div>
+      <div class="nk empty"></div>
+      <div class="nk" onclick="pinKey()"><div class="digit">0</div></div>
+      <div class="nk del" onclick="pinDel()"><div class="digit">⌫</div></div>
+    </div>
+    <div class="bio">
+      <span style="font-size:20px;">👆</span>
+      <span>Or use fingerprint / Face ID</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 5: AI INTRO ════ -->
+<div class="screen" id="sai">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="prog-track"><div class="prog-fill" style="width:66.7%;"></div></div>
+  <div class="step-lbl">Step 4 of 6</div>
+  <div style="flex:1;padding:20px 20px 0;display:flex;flex-direction:column;align-items:center;">
+    <div class="ai-ring-wrap">
+      <svg width="110" height="110" viewBox="0 0 110 110" fill="none">
+        <circle cx="55" cy="55" r="52" stroke="#C8A96B" stroke-width=".5" stroke-dasharray="3 6" opacity=".3"/>
+        <circle cx="55" cy="55" r="44" stroke="#E8DDD0" stroke-width="3" fill="none"/>
+        <circle cx="55" cy="55" r="44" stroke="#C8A96B" stroke-width="10" fill="none" stroke-dasharray="220 57" stroke-dashoffset="-14" stroke-linecap="round" opacity=".9"/>
+        <circle cx="55" cy="55" r="34" stroke="#C8A96B" stroke-width="1.5" fill="none" opacity=".3"/>
+        <circle cx="55" cy="55" r="28" fill="url(#cg1)"/>
+        <path d="M55 32C62 40 62 48 55 51C48 48 48 40 55 32" fill="#C8A96B" opacity=".9"/>
+        <path d="M78 55C70 62 62 62 59 55C62 48 70 48 78 55" fill="#C8A96B" opacity=".9"/>
+        <path d="M55 78C48 70 48 62 55 59C62 62 62 70 55 78" fill="#C8A96B" opacity=".9"/>
+        <path d="M32 55C40 48 48 48 51 55C48 62 40 62 32 55" fill="#C8A96B" opacity=".9"/>
+        <circle cx="55" cy="55" r="8" fill="#C8A96B"/>
+        <circle cx="55" cy="55" r="4" fill="#FAF7F2"/>
+        <circle cx="55" cy="55" r="2" fill="#C8A96B"/>
+        <defs><radialGradient id="cg1" cx="50%" cy="40%" r="60%"><stop offset="0%" stop-color="#FFF"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient></defs>
+      </svg>
+    </div>
+    <div style="font-size:26px;font-weight:700;line-height:1.2;margin-bottom:8px;text-align:center;width:100%;">Meet your<br>AI Business OS</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.5;text-align:center;max-width:280px;">Vepari AI learns your business and works silently to give you intelligence when you need it.</div>
+    <div class="fl">
+      <div class="fr">
+        <div class="fi ai">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 2L10.5 7H16L11.5 10.5L13 15.5L9 12L5 15.5L6.5 10.5L2 7H7.5L9 2Z" fill="#4A3D6B" opacity=".8"/></svg>
+        </div>
+        <div class="ft"><h3>Always learning</h3><p>Analyses your transactions, customers and suppliers to build a live picture of your business.</p></div>
+      </div>
+      <div class="fr">
+        <div class="fi">🎙️</div>
+        <div class="ft"><h3>Voice first</h3><p>Speak in Hindi, English or your regional language — Vepari AI understands and acts instantly.</p></div>
+      </div>
+      <div class="fr">
+        <div class="fi">📋</div>
+        <div class="ft"><h3>Daily Briefings</h3><p>Every morning, a smart summary of what happened and what needs your attention today.</p></div>
+      </div>
+    </div>
+    <div style="flex:1;"></div>
+    <div class="act-btn" onclick="go('sp')">
+      <span class="adot"></span>Activate Vepari AI<span class="adot"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 6: PERMISSIONS ════ -->
+<div class="screen" id="sp">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="prog-track"><div class="prog-fill" style="width:83.3%;"></div></div>
+  <div class="step-lbl">Step 5 of 6</div>
+  <div style="flex:1;padding:24px 20px 0;display:flex;flex-direction:column;">
+    <div style="font-size:26px;font-weight:700;line-height:1.2;margin-bottom:8px;">Enable key<br>features</div>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:28px;line-height:1.5;">These permissions help Vepari AI work at its best for your business.</div>
+    <div class="plist">
+      <div class="pc on">
+        <div class="piw on">🔔</div>
+        <div class="pt"><h3>Notifications</h3><p>Daily briefings, payment alerts and urgent business updates.</p></div>
+        <div class="tog on"><div class="tt"></div></div>
+      </div>
+      <div class="pc on">
+        <div class="piw on">🎙️</div>
+        <div class="pt"><h3>Microphone</h3><p>Required for voice commands in Hindi and English.</p></div>
+        <div class="tog on"><div class="tt"></div></div>
+      </div>
+      <div class="pc">
+        <div class="piw">📞</div>
+        <div class="pt"><h3>Contacts</h3><p>Quickly add customers and suppliers from your phonebook.</p></div>
+        <div class="tog"><div class="tt"></div></div>
+      </div>
+      <div class="pc">
+        <div class="piw">📷</div>
+        <div class="pt"><h3>Camera</h3><p>Scan GST invoices and receipts automatically.</p></div>
+        <div class="tog"><div class="tt"></div></div>
+      </div>
+    </div>
+    <div class="notice">
+      <span style="font-size:14px;flex-shrink:0;">🔒</span>
+      <span>Your data stays private. Vepari AI never shares your business information with third parties.</span>
+    </div>
+    <div style="flex:1;"></div>
+    <div class="cta" onclick="go('sr')">Continue <span class="cta-arrow">›</span></div>
+    <div class="skip-lnk" onclick="go('sr')">Skip all for now</div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 7: READY ════ -->
+<div class="screen" id="sr">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="prog-track"><div class="prog-fill" style="width:100%;"></div></div>
+  <div class="step-lbl-ok">✓ Setup complete</div>
+  <div class="sr-content">
+    <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" viewBox="0 0 390 750">
+      <circle cx="40" cy="120" r="3" fill="#C8A96B" opacity=".4"/>
+      <circle cx="350" cy="100" r="2" fill="#C8A96B" opacity=".3"/>
+      <circle cx="70" cy="620" r="2" fill="#C8A96B" opacity=".35"/>
+      <circle cx="320" cy="580" r="3" fill="#C8A96B" opacity=".3"/>
+      <circle cx="195" cy="60" r="2" fill="#C8A96B" opacity=".4"/>
+      <g opacity=".35">
+        <path d="M20 60L20 24L56 24" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+        <path d="M370 60L370 24L334 24" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+        <path d="M20 690L20 726L56 726" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+        <path d="M370 690L370 726L334 726" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+      </g>
+    </svg>
+    <div class="succ-ring">
+      <svg width="140" height="140" viewBox="0 0 140 140" fill="none">
+        <circle cx="70" cy="70" r="68" stroke="#C8A96B" stroke-width=".5" stroke-dasharray="4 8" opacity=".25"/>
+        <circle cx="70" cy="70" r="58" stroke="#C8A96B" stroke-width="3" fill="none" opacity=".3"/>
+        <circle cx="70" cy="70" r="58" stroke="#C8A96B" stroke-width="10" fill="none" stroke-dasharray="364.4 0" stroke-dashoffset="-91" stroke-linecap="round" opacity=".85"/>
+        <circle cx="70" cy="70" r="42" fill="url(#rg)"/>
+        <path d="M70 42C76 50 76 58 70 61C64 58 64 50 70 42" fill="#C8A96B" opacity=".7"/>
+        <path d="M98 70C90 76 82 76 79 70C82 64 90 64 98 70" fill="#C8A96B" opacity=".7"/>
+        <path d="M70 98C64 90 64 82 70 79C76 82 76 90 70 98" fill="#C8A96B" opacity=".7"/>
+        <path d="M42 70C50 64 58 64 61 70C58 76 50 76 42 70" fill="#C8A96B" opacity=".7"/>
+        <circle cx="70" cy="70" r="14" fill="#C8A96B"/>
+        <path d="M63 70L68 75L77 65" stroke="#FAF7F2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><radialGradient id="rg" cx="50%" cy="35%" r="65%"><stop offset="0%" stop-color="#FFF"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient></defs>
+      </svg>
+    </div>
+    <h1>You're all set,<br>Sharma ji! 🙏</h1>
+    <p class="sub">Vepari AI is learning your business. Your first daily briefing will be ready tomorrow morning.</p>
+    <div class="sumrow">
+      <div class="sumchip"><span class="dot"></span>Retail business</div>
+      <div class="sumchip"><span class="dot"></span>Hindi + English</div>
+      <div class="sumchip"><span class="dot"></span>Alerts enabled</div>
+      <div class="sumchip"><span class="dot"></span>Voice ready</div>
+    </div>
+    <div class="enter-btn" onclick="go('sh')">
+      Enter Vepari AI <span class="gold">›</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 8: HOME ════ -->
+<div class="screen" id="sh">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span style="font-size:10px;">▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="greeting">
+    <div class="gr-text">Good morning, Sharma ji 🙏</div>
+    <div class="notif-btn">🔔</div>
+  </div>
+  <div style="margin:6px 20px 0;background:rgba(180,91,74,.1);border:1px solid rgba(180,91,74,.3);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--terra);font-weight:600;cursor:pointer;flex-shrink:0;" onclick="go('sconf')">⚠ Sync conflict detected — tap to resolve ›</div>
+  <div class="core-hero">
+    <div class="core-ring-outer">
+      <svg width="260" height="260" viewBox="0 0 260 260" fill="none">
+        <ellipse cx="130" cy="248" rx="90" ry="8" fill="rgba(200,169,107,.12)"/>
+        <circle cx="130" cy="130" r="127" stroke="#C8A96B" stroke-width=".5" stroke-dasharray="3 6" opacity=".2"/>
+        <circle cx="130" cy="130" r="110" stroke="#E8DDD0" stroke-width="12" fill="none"/>
+        <circle cx="130" cy="130" r="110" stroke="url(#hgg)" stroke-width="12" fill="none" stroke-dasharray="512 178" stroke-dashoffset="-44" stroke-linecap="round" opacity=".95"/>
+        <circle cx="130" cy="130" r="88" stroke="#C8A96B" stroke-width="1.5" fill="none" opacity=".25"/>
+        <circle cx="130" cy="130" r="74" fill="url(#hcg)"/>
+        <path d="M130 72C142 88 142 106 130 112C118 106 118 88 130 72" fill="#C8A96B" opacity=".9"/>
+        <path d="M188 130C172 142 154 142 148 130C154 118 172 118 188 130" fill="#C8A96B" opacity=".9"/>
+        <path d="M130 188C118 172 118 154 130 148C142 154 142 172 130 188" fill="#C8A96B" opacity=".9"/>
+        <path d="M72 130C88 118 106 118 112 130C106 142 88 142 72 130" fill="#C8A96B" opacity=".9"/>
+        <path d="M175 85C165 100 155 104 145 100C148 90 158 82 175 85" fill="#C8A96B" opacity=".45"/>
+        <path d="M175 175C160 165 156 155 160 145C170 148 178 158 175 175" fill="#C8A96B" opacity=".45"/>
+        <path d="M85 175C95 160 105 156 115 160C112 170 102 178 85 175" fill="#C8A96B" opacity=".45"/>
+        <path d="M85 85C100 95 104 105 100 115C90 112 82 102 85 85" fill="#C8A96B" opacity=".45"/>
+        <circle cx="130" cy="130" r="16" fill="#C8A96B"/>
+        <circle cx="130" cy="130" r="9" fill="#FAF7F2"/>
+        <circle cx="130" cy="130" r="4.5" fill="#C8A96B"/>
+        <circle cx="130" cy="3" r="2.5" fill="#C8A96B" opacity=".4"/>
+        <circle cx="257" cy="130" r="1.5" fill="#C8A96B" opacity=".25"/>
+        <circle cx="3" cy="130" r="1.5" fill="#C8A96B" opacity=".25"/>
+        <defs>
+          <radialGradient id="hcg" cx="50%" cy="38%" r="65%"><stop offset="0%" stop-color="#FFF"/><stop offset="60%" stop-color="#FAF7F2"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient>
+          <linearGradient id="hgg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#C8A96B"/><stop offset="100%" stop-color="#8A7060"/></linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="core-wm">
+      <div class="brand">VEPARI <span>AI</span></div>
+      <div class="sub">Business OS · 7 Engines Active</div>
+    </div>
+  </div>
+  <div class="sec-hdr">
+    <div class="sec-ttl">Business Engines</div>
+    <div class="sec-act" onclick="go('srp')">View all ›</div>
+  </div>
+  <div class="cards-wrap">
+    <div class="cards-grid">
+      <div class="ec finance" onclick="go('srp')">
+        <div class="ct"><div class="ci gold">💰</div><div style="text-align:right;"><div class="clbl">Finance</div><div class="cchg">▲ 12%</div></div></div>
+        <div class="cval"><span class="cur">₹</span>24,850</div>
+        <div class="sparkline"><div class="sb2 g" style="height:8px;"></div><div class="sb2 g" style="height:12px;"></div><div class="sb2 d" style="height:6px;"></div><div class="sb2 g" style="height:14px;"></div><div class="sb2 g" style="height:10px;"></div><div class="sb2 d" style="height:7px;"></div><div class="sb2 g" style="height:16px;"></div><div class="sb2 g" style="height:18px;"></div></div>
+      </div>
+      <div class="ec customer" onclick="go('srp')">
+        <div class="ct"><div class="ci olive">👥</div><div style="text-align:right;"><div class="clbl">Customers</div><div class="cchg">▲ 3</div></div></div>
+        <div class="cval">12</div>
+        <div class="sparkline"><div class="sb2 g" style="height:6px;"></div><div class="sb2 g" style="height:9px;"></div><div class="sb2 g" style="height:11px;"></div><div class="sb2 d" style="height:7px;"></div><div class="sb2 g" style="height:10px;"></div><div class="sb2 g" style="height:13px;"></div><div class="sb2 g" style="height:14px;"></div><div class="sb2 g" style="height:16px;"></div></div>
+      </div>
+      <div class="ec supplier" onclick="go('srp')">
+        <div class="ct"><div class="ci terra">🤝</div><div style="text-align:right;"><div class="clbl">Suppliers</div><div class="cchg dn">▼ 1</div></div></div>
+        <div class="cval">2</div>
+        <div class="sparkline"><div class="sb2 g" style="height:14px;"></div><div class="sb2 g" style="height:16px;"></div><div class="sb2 d" style="height:8px;"></div><div class="sb2 d" style="height:6px;"></div><div class="sb2 d" style="height:5px;"></div><div class="sb2 d" style="height:7px;"></div><div class="sb2 d" style="height:6px;"></div><div class="sb2 d" style="height:5px;"></div></div>
+      </div>
+      <div class="ec inventory" onclick="go('srp')">
+        <div class="ct"><div class="ci brown">📦</div><div style="text-align:right;"><div class="clbl">Inventory</div><div class="cchg">▲ 2%</div></div></div>
+        <div class="cval">3</div>
+        <div class="sparkline"><div class="sb2 d" style="height:10px;"></div><div class="sb2 d" style="height:8px;"></div><div class="sb2 g" style="height:12px;"></div><div class="sb2 g" style="height:14px;"></div><div class="sb2 d" style="height:9px;"></div><div class="sb2 g" style="height:13px;"></div><div class="sb2 g" style="height:15px;"></div><div class="sb2 g" style="height:16px;"></div></div>
+      </div>
+      <div class="ec insight" onclick="go('schat')">
+        <div class="ct"><div class="ci indigo">✨</div><div style="text-align:right;"><div class="clbl">Insights</div><div class="cchg">4 new</div></div></div>
+        <div class="cval">4</div>
+        <div class="sparkline"><div class="sb2 d" style="height:5px;"></div><div class="sb2 d" style="height:7px;"></div><div class="sb2 g" style="height:10px;"></div><div class="sb2 d" style="height:8px;"></div><div class="sb2 g" style="height:12px;"></div><div class="sb2 g" style="height:14px;"></div><div class="sb2 g" style="height:16px;"></div><div class="sb2 g" style="height:18px;"></div></div>
+      </div>
+      <div class="ec automation" onclick="go('srp')">
+        <div class="ct"><div class="ci gold">⚡</div><div style="text-align:right;"><div class="clbl">Automation</div><div class="cchg">7 run</div></div></div>
+        <div class="cval">7</div>
+        <div class="sparkline"><div class="sb2 g" style="height:10px;"></div><div class="sb2 g" style="height:14px;"></div><div class="sb2 g" style="height:12px;"></div><div class="sb2 g" style="height:16px;"></div><div class="sb2 d" style="height:8px;"></div><div class="sb2 g" style="height:12px;"></div><div class="sb2 g" style="height:15px;"></div><div class="sb2 g" style="height:18px;"></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="vfab-wrap"><div class="vfab" onclick="go('sv')">🎙️</div></div>
+    <div class="ni on"><div class="ni-icon">🏠</div><div class="ni-lbl">Home</div><div class="ni-dot"></div></div>
+    <div class="ni" onclick="go('srp')"><div class="ni-icon">📊</div><div class="ni-lbl">Engines</div></div>
+    <div class="ni" style="flex:1.2;"></div>
+    <div class="ni" onclick="go('sdb')"><div class="ni-icon">📋</div><div class="ni-lbl">Briefing</div></div>
+    <div class="ni" onclick="showToast('Settings coming soon')"><div class="ni-icon">⚙️</div><div class="ni-lbl">Settings</div></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 9: VOICE ACTIVE ════ -->
+<div class="screen" id="sv">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="greeting">
+    <div class="gr-text">Good morning, Sharma ji 🙏</div>
+  </div>
+  <div class="core-hero">
+    <div class="core-ring-outer">
+      <svg width="260" height="260" viewBox="0 0 260 260" fill="none">
+        <ellipse cx="130" cy="248" rx="110" ry="12" fill="rgba(200,169,107,.2)"/>
+        <circle cx="130" cy="130" r="127" stroke="#C8A96B" stroke-width=".5" stroke-dasharray="3 6" opacity=".35"/>
+        <circle cx="130" cy="130" r="110" stroke="#C8A96B" stroke-width="14" fill="none" opacity=".9"/>
+        <circle cx="130" cy="130" r="88" stroke="#C8A96B" stroke-width="2" fill="none" opacity=".4"/>
+        <circle cx="130" cy="130" r="74" fill="url(#vcg)"/>
+        <path d="M130 72C142 88 142 106 130 112C118 106 118 88 130 72" fill="#C8A96B"/>
+        <path d="M188 130C172 142 154 142 148 130C154 118 172 118 188 130" fill="#C8A96B"/>
+        <path d="M130 188C118 172 118 154 130 148C142 154 142 172 130 188" fill="#C8A96B"/>
+        <path d="M72 130C88 118 106 118 112 130C106 142 88 142 72 130" fill="#C8A96B"/>
+        <path d="M175 85C165 100 155 104 145 100C148 90 158 82 175 85" fill="#C8A96B" opacity=".6"/>
+        <path d="M175 175C160 165 156 155 160 145C170 148 178 158 175 175" fill="#C8A96B" opacity=".6"/>
+        <path d="M85 175C95 160 105 156 115 160C112 170 102 178 85 175" fill="#C8A96B" opacity=".6"/>
+        <path d="M85 85C100 95 104 105 100 115C90 112 82 102 85 85" fill="#C8A96B" opacity=".6"/>
+        <circle cx="130" cy="130" r="20" fill="#C8A96B"/>
+        <circle cx="130" cy="130" r="12" fill="#FAF7F2"/>
+        <rect x="127" y="119" width="6" height="12" rx="3" fill="#3B2F2A"/>
+        <path d="M123 129Q123 136 130 136Q137 136 137 129" stroke="#3B2F2A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <line x1="130" y1="136" x2="130" y2="140" stroke="#3B2F2A" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="127" y1="140" x2="133" y2="140" stroke="#3B2F2A" stroke-width="1.5" stroke-linecap="round"/>
+        <defs><radialGradient id="vcg" cx="50%" cy="38%" r="65%"><stop offset="0%" stop-color="#FAF7F2"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient></defs>
+      </svg>
+    </div>
+    <div class="core-wm">
+      <div class="brand">VEPARI <span>AI</span></div>
+      <div class="sub">Voice Command Active</div>
+    </div>
+  </div>
+  <div class="vov">
+    <div class="lpill"><div class="pdot"></div>Listening</div>
+    <div class="waveform">
+      <div class="wb" style="height:8px;opacity:.3;"></div><div class="wb" style="height:16px;opacity:.5;"></div>
+      <div class="wb" style="height:10px;opacity:.4;"></div><div class="wb" style="height:32px;"></div>
+      <div class="wb" style="height:22px;opacity:.8;"></div><div class="wb" style="height:40px;"></div>
+      <div class="wb" style="height:48px;"></div><div class="wb" style="height:36px;opacity:.9;"></div>
+      <div class="wb" style="height:44px;"></div><div class="wb" style="height:28px;opacity:.7;"></div>
+      <div class="wb" style="height:20px;opacity:.6;"></div><div class="wb" style="height:12px;opacity:.4;"></div>
+      <div class="wb" style="height:6px;opacity:.25;"></div>
+    </div>
+    <div class="transcript">
+      <div class="trlbl">Saying</div>
+      <div class="trtext">"Aaj kitna sale hua?"<span class="trcursor"></span></div>
+    </div>
+    <div class="qas">
+      <div class="qc">Kitna bachat hua?</div>
+      <div class="qc">Customer list dikho</div>
+      <div class="qc">Briefing sunao</div>
+      <div class="qc" onclick="go('svo')">No connection? ›</div>
+    </div>
+  </div>
+  <div class="vbar" onclick="go('sh')">
+    <div class="vbar-l">Voice Command Active</div>
+    <div class="vbar-r">Tap to cancel →</div>
+  </div>
+  <div class="bnav">
+    <div class="vfab-wrap"><div class="vfab" onclick="go('sh')">🎙️</div></div>
+    <div class="ni on" onclick="go('sh')"><div class="ni-icon">🏠</div><div class="ni-lbl">Home</div><div class="ni-dot"></div></div>
+    <div class="ni"><div class="ni-icon">📊</div><div class="ni-lbl">Engines</div></div>
+    <div class="ni" style="flex:1.2;"></div>
+    <div class="ni"><div class="ni-icon">📋</div><div class="ni-lbl">Briefing</div></div>
+    <div class="ni"><div class="ni-icon">⚙️</div><div class="ni-lbl">Settings</div></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 10: DAILY BRIEFING ════ -->
+<div class="screen" id="sdb">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="shdr">
+    <div class="shdr-back" onclick="go('sh')">‹</div>
+    <div class="shdr-title">Daily Briefing</div>
+    <div class="shdr-action">⋯</div>
+  </div>
+  <div style="flex:1;overflow:hidden;display:flex;flex-direction:column;">
+    <div class="date-banner">
+      <div class="date-row"><div class="date-main">Tuesday, 2 Sep</div><div class="date-day">7 engines active</div></div>
+      <div class="date-sub">Generated at 7:00 AM · Based on yesterday's data</div>
+    </div>
+    <div class="sumcard">
+      <div class="sum-ey"><div class="sum-dot"></div><div class="sum-lbl">AI Summary</div></div>
+      <div class="sum-text">Yesterday was a <strong>strong day</strong> — revenue up ₹3,200 vs Monday. Your top customer Ravi Ji paid the ₹8,500 outstanding. One supplier delayed — Meena Traders haven't confirmed this week's order. <strong>4 new insights</strong> ready for you.</div>
+    </div>
+    <div class="vplay">
+      <div class="pbtn">▶</div>
+      <div class="vwav">
+        <div class="vb p" style="height:14px;"></div><div class="vb p" style="height:20px;"></div><div class="vb p" style="height:12px;"></div>
+        <div class="vb p" style="height:22px;"></div><div class="vb p" style="height:16px;"></div><div class="vb" style="height:10px;"></div>
+        <div class="vb" style="height:18px;"></div><div class="vb" style="height:8px;"></div><div class="vb" style="height:14px;"></div>
+        <div class="vb" style="height:20px;"></div><div class="vb" style="height:12px;"></div><div class="vb" style="height:16px;"></div>
+        <div class="vb" style="height:10px;"></div><div class="vb" style="height:18px;"></div><div class="vb" style="height:14px;"></div>
+      </div>
+      <div class="vdur">1:32</div>
+    </div>
+    <div class="sec-hdr2">Key Updates</div>
+    <div class="secs">
+      <div class="sc" style="cursor:pointer;" onclick="go('schat')">
+        <div class="sc-hd"><div class="sc-ic fin">💰</div><div class="sc-tr"><div class="sc-ttl">Finance</div><div class="sc-meta">Yesterday's summary</div></div><div class="sc-val">₹24,850</div></div>
+        <div class="blist">
+          <div class="bi"><div class="bico">✦</div><div class="bt">Revenue <strong class="up">₹24,850</strong> — <span class="up">▲ 12%</span> vs Monday</div></div>
+          <div class="bi"><div class="bico">✦</div><div class="bt">Ravi Ji paid outstanding <strong>₹8,500</strong> — dues cleared</div></div>
+          <div class="bi"><div class="bico">✦</div><div class="bt">Cash in hand: <strong>₹12,200</strong> · UPI: <strong>₹9,400</strong></div></div>
+        </div>
+      </div>
+      <div class="sc">
+        <div class="sc-hd"><div class="sc-ic ops">⚙️</div><div class="sc-tr"><div class="sc-ttl">Operations</div><div class="sc-meta">Needs attention</div></div><div class="sc-val" style="color:var(--terra);">⚠ 1</div></div>
+        <div class="blist">
+          <div class="bi"><div class="bico">✦</div><div class="bt"><strong>Meena Traders</strong> haven't confirmed this week's order</div></div>
+          <div class="bi"><div class="bico">✦</div><div class="bt">Stock running low: <strong>Basmati 5 kg</strong> — 3 units left</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="vfab-wrap"><div class="vfab" onclick="go('sv')">🎙️</div></div>
+    <div class="ni" onclick="go('sh')"><div class="ni-icon">🏠</div><div class="ni-lbl">Home</div></div>
+    <div class="ni"><div class="ni-icon">📊</div><div class="ni-lbl">Engines</div></div>
+    <div class="ni" style="flex:1.2;"></div>
+    <div class="ni on"><div class="ni-icon">📋</div><div class="ni-lbl">Briefing</div><div class="ni-dot"></div></div>
+    <div class="ni" onclick="showToast('Settings coming soon')"><div class="ni-icon">⚙️</div><div class="ni-lbl">Settings</div></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 11: REPORTS & INSIGHTS ════ -->
+<div class="screen" id="srp">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="shdr">
+    <div class="shdr-back" onclick="go('sh')">‹</div>
+    <div class="shdr-title">Reports & Insights</div>
+    <div class="shdr-action">↑ Export</div>
+  </div>
+  <div class="ptabs">
+    <div class="ptab">Today</div><div class="ptab on">Month</div>
+    <div class="ptab">Quarter</div><div class="ptab">Year</div><div class="ptab">Custom</div>
+  </div>
+  <div class="kpi-row">
+    <div class="kt rev"><div class="kl">Revenue</div><div class="kv">₹1.84L</div><div class="kc up">▲ 14%</div></div>
+    <div class="kt exp"><div class="kl">Expenses</div><div class="kv">₹1.12L</div><div class="kc dn">▲ 8%</div></div>
+    <div class="kt prof"><div class="kl">Net Profit</div><div class="kv">₹72K</div><div class="kc up">▲ 24%</div></div>
+  </div>
+  <div class="slbl">Report Types</div>
+  <div class="rgrid">
+    <div class="rc"><div class="rc-ico">📊</div><div class="rc-ttl">P&L Report</div><div class="rc-sub">Income & expense breakdown</div><div class="rc-arr">View ›</div></div>
+    <div class="rc"><div class="rc-ico">📈</div><div class="rc-ttl">Sales Analysis</div><div class="rc-sub">Product & category trends</div><div class="rc-arr">View ›</div></div>
+    <div class="rc"><div class="rc-ico">👥</div><div class="rc-ttl">Customer Report</div><div class="rc-sub">RFM, retention, top buyers</div><div class="rc-arr">View ›</div></div>
+    <div class="rc"><div class="rc-ico">🧾</div><div class="rc-ttl">GST Summary</div><div class="rc-sub">GSTR-1 ready export</div><div class="rc-arr">View ›</div></div>
+  </div>
+  <div class="slbl">Recent Reports</div>
+  <div style="flex:1;overflow:hidden;">
+    <div class="rrow"><div class="ri">📊</div><div class="rinfo"><div class="rname">P&L · August 2026</div><div class="rmeta">Generated 1 Sep · PDF + Excel</div></div><div class="rarr">›</div></div>
+    <div class="rrow"><div class="ri">📈</div><div class="rinfo"><div class="rname">Sales Analysis · Q2 2026</div><div class="rmeta">Generated 15 Aug · PDF</div></div><div class="rarr">›</div></div>
+  </div>
+  <div class="bnav">
+    <div class="vfab-wrap"><div class="vfab" onclick="go('sv')">🎙️</div></div>
+    <div class="ni" onclick="go('sh')"><div class="ni-icon">🏠</div><div class="ni-lbl">Home</div></div>
+    <div class="ni on"><div class="ni-icon">📊</div><div class="ni-lbl">Engines</div><div class="ni-dot"></div></div>
+    <div class="ni" style="flex:1.2;"></div>
+    <div class="ni" onclick="go('sdb')"><div class="ni-icon">📋</div><div class="ni-lbl">Briefing</div></div>
+    <div class="ni" onclick="showToast('Settings coming soon')"><div class="ni-icon">⚙️</div><div class="ni-lbl">Settings</div></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 12: RETURNING USER LOCK ════ -->
+<div class="screen" id="srl">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span style="color:rgba(250,247,242,.5);">▲▲▲ WiFi 🔋</span></div></div>
+  <div class="rl-welcome">Welcome back,<br>Sharma ji 🙏</div>
+  <div class="rl-sub">Enter your PIN to continue</div>
+  <div class="rl-pin-dots" id="rl-pin-dots">
+    <div class="rl-pd"></div><div class="rl-pd"></div><div class="rl-pd"></div>
+    <div class="rl-pd"></div><div class="rl-pd"></div><div class="rl-pd"></div>
+  </div>
+  <div style="display:flex;justify-content:center;">
+    <div class="rl-numpad">
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">1</div><div class="letters"></div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">2</div><div class="letters">ABC</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">3</div><div class="letters">DEF</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">4</div><div class="letters">GHI</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">5</div><div class="letters">JKL</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">6</div><div class="letters">MNO</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">7</div><div class="letters">PQRS</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">8</div><div class="letters">TUV</div></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">9</div><div class="letters">WXYZ</div></div>
+      <div class="rl-nk empty"></div>
+      <div class="rl-nk" onclick="rlPinKey()"><div class="digit">0</div></div>
+      <div class="rl-nk del" onclick="rlPinDel()"><div class="digit">⌫</div></div>
+    </div>
+  </div>
+  <div class="rl-bio"><span style="font-size:20px;">👆</span><span>Or use fingerprint / Face ID</span></div>
+</div>
+
+<!-- ════ SCREEN 13: AI OS AWAKENING ════ -->
+<div class="screen" id="sao">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="aw-hero">
+    <div class="aw-ring">
+      <svg width="200" height="200" viewBox="0 0 200 200" fill="none">
+        <circle cx="100" cy="100" r="97" stroke="#C8A96B" stroke-width=".5" stroke-dasharray="3 6" opacity=".3"/>
+        <circle cx="100" cy="100" r="84" stroke="#C8A96B" stroke-width="14" fill="none" opacity=".85"/>
+        <circle cx="100" cy="100" r="67" stroke="#C8A96B" stroke-width="1.5" fill="none" opacity=".25"/>
+        <circle cx="100" cy="100" r="56" fill="url(#awGrad)"/>
+        <path d="M100 56C110 68 110 80 100 84C90 80 90 68 100 56" fill="#C8A96B" opacity=".9"/>
+        <path d="M144 100C132 110 120 110 116 100C120 90 132 90 144 100" fill="#C8A96B" opacity=".9"/>
+        <path d="M100 144C90 132 90 120 100 116C110 120 110 132 100 144" fill="#C8A96B" opacity=".9"/>
+        <path d="M56 100C68 90 80 90 84 100C80 110 68 110 56 100" fill="#C8A96B" opacity=".9"/>
+        <circle cx="100" cy="100" r="14" fill="#C8A96B"/>
+        <circle cx="100" cy="100" r="8" fill="#FAF7F2"/>
+        <circle cx="100" cy="100" r="4" fill="#C8A96B"/>
+        <defs><radialGradient id="awGrad" cx="50%" cy="38%" r="65%"><stop offset="0%" stop-color="#FFF"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient></defs>
+      </svg>
+    </div>
+    <div class="aw-title">Vepari AI is waking up…</div>
+    <div class="aw-sub">Syncing your engines</div>
+    <div class="aw-dots">
+      <div class="aw-dot" style="animation:awPulse 1.2s ease-in-out infinite;"></div>
+      <div class="aw-dot" style="animation:awPulse 1.2s ease-in-out .3s infinite;"></div>
+      <div class="aw-dot" style="animation:awPulse 1.2s ease-in-out .6s infinite;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 14: VOICE OFFLINE ════ -->
+<div class="screen" id="svo">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="greeting" style="padding:4px 20px 0;flex-shrink:0;display:flex;align-items:center;justify-content:space-between;">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);">Good morning, Sharma ji 🙏</div>
+    <div style="font-size:16px;color:var(--gold);cursor:pointer;" onclick="go('sv')">‹ Back</div>
+  </div>
+  <div class="vo-hero">
+    <div class="vo-icon">📡</div>
+    <div class="vo-title">Voice needs connection</div>
+    <div class="vo-sub">No internet detected. You can type your query below and we'll process it when you're back online.</div>
+    <div class="vo-input"><span style="font-size:16px;">⌨️</span><span>Type your query here…</span></div>
+    <div class="vo-chips">
+      <div class="vo-chip">Kitna sale hua?</div>
+      <div class="vo-chip">Customer list</div>
+      <div class="vo-chip">Stock status</div>
+      <div class="vo-chip">Aaj ki briefing</div>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="vfab-wrap"><div class="vfab" style="opacity:.4;cursor:default;">🎙️</div></div>
+    <div class="ni on" onclick="go('sh')"><div class="ni-icon">🏠</div><div class="ni-lbl">Home</div><div class="ni-dot"></div></div>
+    <div class="ni"><div class="ni-icon">📊</div><div class="ni-lbl">Engines</div></div>
+    <div class="ni" style="flex:1.2;"></div>
+    <div class="ni" onclick="go('sdb')"><div class="ni-icon">📋</div><div class="ni-lbl">Briefing</div></div>
+    <div class="ni"><div class="ni-icon">⚙️</div><div class="ni-lbl">Settings</div></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 15: AI CHAT / ANSWER ════ -->
+<div class="screen" id="schat">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="shdr">
+    <div class="shdr-back" onclick="go('sh')">‹</div>
+    <div class="shdr-title">AI Insights</div>
+    <div class="shdr-action">⋯</div>
+  </div>
+  <div class="chat-body">
+    <div style="display:flex;justify-content:flex-end;">
+      <div class="user-bubble">"Aaj kitna sale hua?"</div>
+    </div>
+    <div class="ai-card">
+      <div class="ai-ey"><div class="ai-dot"></div><div class="ai-lbl">AI Answer</div></div>
+      <div class="stat-row">
+        <div class="stat-tile">
+          <div class="stat-val">₹24,850</div>
+          <div class="stat-lbl">Revenue Today</div>
+          <div class="stat-chg">▲ 12% vs yesterday</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-val">12</div>
+          <div class="stat-lbl">Customers</div>
+          <div class="stat-chg">▲ 3 new</div>
+        </div>
+      </div>
+      <div class="ai-bullets">
+        <div class="ai-bi"><div class="ai-bico">✦</div><div class="ai-bt">Top item sold: <strong>Basmati 5kg</strong> — 18 units</div></div>
+        <div class="ai-bi"><div class="ai-bico">✦</div><div class="ai-bt">UPI payments: <strong>₹9,400</strong> · Cash: <strong>₹12,200</strong></div></div>
+        <div class="ai-bi"><div class="ai-bico">✦</div><div class="ai-bt">Pending order from <strong>Meena Traders</strong> — create PO?</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="chat-actions">
+    <div class="ca-ghost" onclick="go('sh')">OK thanks</div>
+    <div class="ca-gold" onclick="go('sapc')">Take action <span>›</span></div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 16: ACTION APPROVAL ════ -->
+<div class="screen" id="sapc">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="shdr">
+    <div class="shdr-back" onclick="go('schat')">‹</div>
+    <div class="shdr-title">AI Action</div>
+    <div class="shdr-action"></div>
+  </div>
+  <div class="apc-body">
+    <div class="apc-card">
+      <div class="apc-ey"><div class="apc-dot"></div><div class="apc-lbl">Proposed Action</div></div>
+      <div class="apc-action">Create purchase order</div>
+      <div class="apc-detail">Meena Traders · ₹45,000 · This week's stock replenishment</div>
+    </div>
+    <div class="apc-records">
+      <div class="apc-rec-hdr">Records affected</div>
+      <div class="apc-rec">
+        <div class="apc-ri">🏭</div>
+        <div><div class="apc-rname">Meena Traders</div><div class="apc-rmeta">Supplier · Outstanding ₹0</div></div>
+      </div>
+      <div class="apc-rec">
+        <div class="apc-ri">📦</div>
+        <div><div class="apc-rname">Purchase Order #PO-2026-089</div><div class="apc-rmeta">New record will be created</div></div>
+      </div>
+    </div>
+    <div class="apc-impact">
+      <div class="apc-impact-ico">📈</div>
+      <div class="apc-impact-txt">Estimated impact: <strong>Replenishes Basmati 5kg stock for ~14 days.</strong> Cash impact: ₹45,000 outflow.</div>
+    </div>
+  </div>
+  <div class="apc-btns">
+    <div class="approve-btn" onclick="go('sack')">✓ Approve &amp; Execute</div>
+    <div class="decline-btn" onclick="go('sh')">Decline</div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 17: ACTION CONFIRMED ════ -->
+<div class="screen" id="sack">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="ack-content">
+    <div class="ack-ring">
+      <svg width="120" height="120" viewBox="0 0 120 120" fill="none">
+        <circle cx="60" cy="60" r="57" stroke="#C8A96B" stroke-width=".5" stroke-dasharray="4 8" opacity=".25"/>
+        <circle cx="60" cy="60" r="48" stroke="#C8A96B" stroke-width="8" fill="none" opacity=".85"/>
+        <circle cx="60" cy="60" r="36" fill="url(#ackGrad)"/>
+        <path d="M60 36C66 43 66 50 60 53C54 50 54 43 60 36" fill="#C8A96B" opacity=".7"/>
+        <path d="M84 60C77 66 70 66 67 60C70 54 77 54 84 60" fill="#C8A96B" opacity=".7"/>
+        <path d="M60 84C54 77 54 70 60 67C66 70 66 77 60 84" fill="#C8A96B" opacity=".7"/>
+        <path d="M36 60C43 54 50 54 53 60C50 66 43 66 36 60" fill="#C8A96B" opacity=".7"/>
+        <circle cx="60" cy="60" r="14" fill="#5A6B4F"/>
+        <path d="M54 60L59 65L67 54" stroke="#FAF7F2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <defs><radialGradient id="ackGrad" cx="50%" cy="35%" r="65%"><stop offset="0%" stop-color="#FFF"/><stop offset="100%" stop-color="#F2E8D6"/></radialGradient></defs>
+      </svg>
+    </div>
+    <div class="ack-title">Order Created ✓</div>
+    <div class="ack-sub">Your purchase order has been created and sent to Meena Traders.</div>
+    <div class="ack-summary">
+      <div class="ack-row"><span class="ack-k">Supplier</span><span class="ack-v">Meena Traders</span></div>
+      <div class="ack-row"><span class="ack-k">PO Number</span><span class="ack-v">PO-2026-089</span></div>
+      <div class="ack-row"><span class="ack-k">Amount</span><span class="ack-v">₹45,000</span></div>
+      <div class="ack-row"><span class="ack-k">Status</span><span class="ack-v" style="color:var(--olive);">Sent ✓</span></div>
+    </div>
+    <div class="ack-btn" onclick="go('sh')">Back to Home</div>
+  </div>
+</div>
+
+<!-- ════ SCREEN 18: SYNC CONFLICT ════ -->
+<div class="screen" id="sconf">
+  <div class="sb"><span>9:41</span><div class="sb-icons"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></div></div>
+  <div class="shdr">
+    <div class="shdr-back" onclick="go('sh')">‹</div>
+    <div class="shdr-title">Sync Conflict</div>
+    <div class="shdr-action"></div>
+  </div>
+  <div class="conf-body">
+    <div class="conf-warn">
+      <div class="conf-warn-ico">⚠️</div>
+      <div class="conf-warn-txt">Data conflict detected — 2 versions found for Sharma Kirana Store inventory.</div>
+    </div>
+    <div style="font-size:11px;color:var(--muted);padding:0 2px;">Choose which version to keep. The other will be discarded.</div>
+    <div class="conf-ver">
+      <div class="conf-ver-hdr">
+        <div class="conf-ver-ttl">Your version (local)</div>
+        <div class="conf-ver-ts">Today, 9:38 AM</div>
+      </div>
+      <div class="conf-ver-val">Basmati 5kg: <strong>3 units</strong> · Toor Dal 1kg: <strong>12 units</strong></div>
+    </div>
+    <div class="conf-ver srv">
+      <div class="conf-ver-hdr">
+        <div class="conf-ver-ttl">Server version</div>
+        <div class="conf-ver-ts">Today, 9:35 AM</div>
+      </div>
+      <div class="conf-ver-val">Basmati 5kg: <strong>5 units</strong> · Toor Dal 1kg: <strong>10 units</strong></div>
+    </div>
+  </div>
+  <div class="conf-btns">
+    <div class="conf-keep" onclick="go('sh');showToast('Local version kept')">Keep my version</div>
+    <div class="conf-srv" onclick="go('sh');showToast('Server version applied')">Use server version</div>
+    <div class="conf-link">Review both side-by-side ›</div>
+  </div>
+</div>
+
+<!-- Toast notification -->
+<div id="toast" style="position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:#3B2F2A;color:#FAF7F2;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;transition:transform .3s;pointer-events:none;z-index:9999;white-space:nowrap;"></div>
+
+</div><!-- /phone-frame -->
+
+<div class="proto-hint">
+  <strong>New User:</strong> Tap Splash → Continue through onboarding → Home<br>
+  <strong>Returning User:</strong> Tap badge above → PIN → AI awakening → Briefing<br>
+  <strong>Voice:</strong> 🎙️ FAB → Voice Active → "No connection?" chip → Offline<br>
+  <strong>Action:</strong> Home Insights card → AI Answer → Take action → Approve → Confirmed<br>
+  <strong>Conflict:</strong> Home sync banner → Resolve conflict
+</div>
+
+<script>
+let current = 'ss';
+let awakeTimer;
+
+function go(id) {
+  document.getElementById(current).classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  current = id;
+  if (id === 'sao') {
+    clearTimeout(awakeTimer);
+    awakeTimer = setTimeout(function(){ if (current === 'sao') go('sdb'); }, 2500);
+  }
+}
+
+function selectLang(el) {
+  document.querySelectorAll('#sl .lc').forEach(function(c){ c.classList.remove('sel'); });
+  el.classList.add('sel');
+}
+
+let pinCount = 0;
+function pinKey() {
+  const dots = document.querySelectorAll('#pin-dots .pd');
+  if (pinCount < 6) {
+    dots[pinCount].classList.add('filled');
+    if (pinCount === 5) dots[5].classList.add('gold');
+    pinCount++;
+    if (pinCount === 6) {
+      setTimeout(function(){ pinCount = 0; dots.forEach(function(d){ d.classList.remove('filled','gold'); }); go('sai'); }, 400);
+    }
+  }
+}
+function pinDel() {
+  if (pinCount > 0) { pinCount--; document.querySelectorAll('#pin-dots .pd')[pinCount].classList.remove('filled','gold'); }
+}
+
+let rlPinCount = 0;
+function rlPinKey() {
+  const dots = document.querySelectorAll('#rl-pin-dots .rl-pd');
+  if (rlPinCount < 6) {
+    dots[rlPinCount].classList.add('filled');
+    rlPinCount++;
+    if (rlPinCount === 6) {
+      setTimeout(function(){ rlPinCount = 0; dots.forEach(function(d){ d.classList.remove('filled'); }); go('sao'); }, 400);
+    }
+  }
+}
+function rlPinDel() {
+  if (rlPinCount > 0) { rlPinCount--; document.querySelectorAll('#rl-pin-dots .rl-pd')[rlPinCount].classList.remove('filled'); }
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.transform = 'translateX(-50%) translateY(0)';
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ t.style.transform = 'translateX(-50%) translateY(80px)'; }, 2000);
+}
+
+setTimeout(function(){ if (current === 'ss') go('sl'); }, 2500);
+</script>

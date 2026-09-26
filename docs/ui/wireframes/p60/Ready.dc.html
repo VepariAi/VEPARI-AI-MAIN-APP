@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Onboarding — Ready</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2;
+  color: #3B2F2A;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.progress-bar { height: 3px; background: #E8DDD0; margin: 0 20px; border-radius: 2px; }
+.progress-fill { height: 3px; background: #C8A96B; border-radius: 2px; width: 100%; }
+.step-label { padding: 8px 20px 0; font-size: 11px; color: #5A6B4F; letter-spacing: 0.2px; font-weight: 600; }
+
+.content {
+  flex: 1;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 0 20px 40px;
+  text-align: center;
+  position: relative;
+}
+
+/* Celebration mandala */
+.success-ring {
+  width: 140px; height: 140px;
+  position: relative;
+  margin-bottom: 32px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.check-ring {
+  position: absolute;
+  inset: 0;
+}
+
+h1 { font-size: 28px; font-weight: 700; color: #3B2F2A; line-height: 1.2; margin-bottom: 10px; }
+.subtitle { font-size: 14px; color: #8A7060; line-height: 1.6; max-width: 280px; margin-bottom: 36px; }
+
+/* Summary chips */
+.summary-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; margin-bottom: 40px; }
+.summary-chip {
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 20px;
+  padding: 8px 14px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #3B2F2A;
+  display: flex; align-items: center; gap: 6px;
+}
+.summary-chip .dot { width: 6px; height: 6px; border-radius: 50%; background: #C8A96B; }
+
+.enter-btn {
+  width: 100%;
+  height: 56px;
+  background: linear-gradient(135deg, #3B2F2A 0%, #4A3D6B 100%);
+  color: #FAF7F2;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(59,47,42,0.25);
+  letter-spacing: 0.2px;
+}
+.enter-btn .gold { color: #C8A96B; font-size: 20px; }
+
+/* Floating particles */
+.particles {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;font-size:11px;color:#8A7060;">
+    <span>▲▲▲</span><span>WiFi</span><span>🔋</span>
+  </span>
+</div>
+
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<div class="step-label">✓ Setup complete</div>
+
+<div class="content">
+  <!-- Floating sparkles -->
+  <svg class="particles" viewBox="0 0 390 750" preserveAspectRatio="xMidYMid meet">
+    <circle cx="40"  cy="120" r="3" fill="#C8A96B" opacity="0.4"/>
+    <circle cx="350" cy="100" r="2" fill="#C8A96B" opacity="0.3"/>
+    <circle cx="70"  cy="620" r="2" fill="#C8A96B" opacity="0.35"/>
+    <circle cx="320" cy="580" r="3" fill="#C8A96B" opacity="0.3"/>
+    <circle cx="195" cy="60"  r="2" fill="#C8A96B" opacity="0.4"/>
+    <circle cx="30"  cy="380" r="1.5" fill="#C8A96B" opacity="0.25"/>
+    <circle cx="360" cy="400" r="1.5" fill="#C8A96B" opacity="0.25"/>
+    <!-- Corner brackets -->
+    <g opacity="0.35">
+      <path d="M20 60 L20 24 L56 24" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+      <path d="M370 60 L370 24 L334 24" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+      <path d="M20 690 L20 726 L56 726" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+      <path d="M370 690 L370 726 L334 726" stroke="#C8A96B" stroke-width="1.5" fill="none"/>
+    </g>
+  </svg>
+
+  <!-- Celebration mandala with checkmark -->
+  <div class="success-ring">
+    <svg width="140" height="140" viewBox="0 0 140 140" fill="none">
+      <!-- Outer dashed orbit -->
+      <circle cx="70" cy="70" r="68" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="4 8" opacity="0.25"/>
+      <!-- Gold ring -->
+      <circle cx="70" cy="70" r="58" stroke="#C8A96B" stroke-width="3" fill="none" opacity="0.3"/>
+      <!-- Filled arc (full circle = complete) -->
+      <circle cx="70" cy="70" r="58" stroke="#C8A96B" stroke-width="10" fill="none"
+        stroke-dasharray="364.4 0" stroke-dashoffset="-91" stroke-linecap="round" opacity="0.85"/>
+      <!-- Core -->
+      <circle cx="70" cy="70" r="42" fill="url(#readyGrad)"/>
+      <!-- Lotus petals small -->
+      <path d="M70 42 C76 50 76 58 70 61 C64 58 64 50 70 42" fill="#C8A96B" opacity="0.7"/>
+      <path d="M98 70 C90 76 82 76 79 70 C82 64 90 64 98 70" fill="#C8A96B" opacity="0.7"/>
+      <path d="M70 98 C64 90 64 82 70 79 C76 82 76 90 70 98" fill="#C8A96B" opacity="0.7"/>
+      <path d="M42 70 C50 64 58 64 61 70 C58 76 50 76 42 70" fill="#C8A96B" opacity="0.7"/>
+      <!-- Diagonal petals -->
+      <path d="M92 48 C86 57 80 59 70 57 C72 50 80 44 92 48" fill="#C8A96B" opacity="0.3"/>
+      <path d="M92 92 C83 86 81 80 83 70 C90 72 96 80 92 92" fill="#C8A96B" opacity="0.3"/>
+      <path d="M48 92 C54 83 60 81 70 83 C68 90 60 96 48 92" fill="#C8A96B" opacity="0.3"/>
+      <path d="M48 48 C57 54 59 60 57 70 C50 68 44 60 48 48" fill="#C8A96B" opacity="0.3"/>
+      <!-- Center gold circle -->
+      <circle cx="70" cy="70" r="14" fill="#C8A96B"/>
+      <!-- Checkmark -->
+      <path d="M63 70 L68 75 L77 65" stroke="#FAF7F2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <defs>
+        <radialGradient id="readyGrad" cx="50%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="100%" stop-color="#F2E8D6"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <h1>You're all set,<br>Sharma ji! 🙏</h1>
+  <p class="subtitle">Vepari AI is learning your business. Your first daily briefing will be ready tomorrow morning.</p>
+
+  <div class="summary-row">
+    <div class="summary-chip"><span class="dot"></span>Retail business</div>
+    <div class="summary-chip"><span class="dot"></span>Hindi + English</div>
+    <div class="summary-chip"><span class="dot"></span>Alerts enabled</div>
+    <div class="summary-chip"><span class="dot"></span>Voice ready</div>
+  </div>
+
+  <div class="enter-btn">
+    Enter Vepari AI <span class="gold">›</span>
+  </div>
+</div>
+
+</body>
+</html>

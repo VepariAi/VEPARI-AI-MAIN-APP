@@ -1,0 +1,96 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e5e5e5; }
+.back { font-size: 14px; color: #2563eb; font-weight: 500; flex-shrink: 0; }
+.top-title { font-size: 16px; font-weight: 700; flex: 1; text-align: center; }
+.step-label { font-size: 12px; color: #a3a3a3; flex-shrink: 0; }
+.progress-bar { background: #fff; padding: 10px 16px 12px; border-bottom: 1px solid #e5e5e5; }
+.steps { display: flex; gap: 4px; }
+.step { flex: 1; height: 4px; border-radius: 2px; }
+.step.done { background: #2563eb; }
+.step.curr { background: #93c5fd; }
+.step.todo { background: #e5e5e5; }
+.step-labels { display: flex; margin-top: 6px; }
+.sl { flex: 1; font-size: 10px; color: #a3a3a3; text-align: center; }
+.sl.done { color: #2563eb; }
+.sl.act { color: #2563eb; font-weight: 600; }
+.customer-chip { background: #fff; margin: 10px 14px 0; border-radius: 8px; padding: 7px 12px; border: 1px solid #e5e5e5; font-size: 13px; color: #404040; display: inline-flex; align-items: center; gap: 6px; }
+.content { flex: 1; overflow: hidden; padding: 10px 14px; display: flex; flex-direction: column; gap: 10px; }
+.section-lbl { font-size: 11px; font-weight: 700; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.5px; }
+.item-list { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden; }
+.item-row { display: flex; align-items: center; padding: 12px 14px; border-bottom: 1px solid #f5f5f5; }
+.item-row:last-child { border-bottom: none; }
+.item-info { flex: 1; }
+.item-name { font-size: 14px; font-weight: 500; }
+.item-qty { font-size: 12px; color: #737373; margin-top: 2px; }
+.item-val { font-size: 14px; font-weight: 600; color: #171717; margin-right: 10px; }
+.item-actions { display: flex; gap: 6px; }
+.ia-btn { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+.edit { background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe; }
+.remove { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+.subtotal-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px; background: #fafafa; border-top: 1px solid #e5e5e5; font-size: 14px; font-weight: 600; }
+.add-item-btn { background: #fff; border: 2px dashed #2563eb; border-radius: 12px; padding: 16px; text-align: center; font-size: 14px; font-weight: 600; color: #2563eb; }
+.add-sub { font-size: 12px; color: #6b9de8; margin-top: 4px; font-weight: 400; }
+.footer { padding: 12px 14px; background: #fff; border-top: 1px solid #e5e5e5; display: flex; gap: 8px; }
+.next-btn { flex: 1; padding: 14px; background: #2563eb; color: #fff; border-radius: 12px; font-size: 15px; font-weight: 600; text-align: center; }
+</style>
+<div class="top-bar">
+  <div class="back">← Customer</div>
+  <div class="top-title">New Sale</div>
+  <div class="step-label">Step 2 of 4</div>
+</div>
+<div class="progress-bar">
+  <div class="steps">
+    <div class="step done"></div>
+    <div class="step curr"></div>
+    <div class="step todo"></div>
+    <div class="step todo"></div>
+  </div>
+  <div class="step-labels">
+    <div class="sl done">Customer</div>
+    <div class="sl act">Items</div>
+    <div class="sl">Pricing</div>
+    <div class="sl">Payment</div>
+  </div>
+</div>
+<div class="customer-chip">👤 Walk-in customer · Change</div>
+<div class="content">
+  <div class="section-lbl">Items added (2)</div>
+  <div class="item-list">
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-name">Amul Butter 500g</div>
+        <div class="item-qty">₹180/unit × 5 units</div>
+      </div>
+      <div class="item-val">₹900</div>
+      <div class="item-actions">
+        <div class="ia-btn edit">Edit</div>
+        <div class="ia-btn remove">✕</div>
+      </div>
+    </div>
+    <div class="item-row">
+      <div class="item-info">
+        <div class="item-name">Tata Salt 1 kg</div>
+        <div class="item-qty">₹60/unit × 10 units</div>
+      </div>
+      <div class="item-val">₹600</div>
+      <div class="item-actions">
+        <div class="ia-btn edit">Edit</div>
+        <div class="ia-btn remove">✕</div>
+      </div>
+    </div>
+    <div class="subtotal-row">
+      <span>Sub-total</span>
+      <span>₹1,500</span>
+    </div>
+  </div>
+  <div class="add-item-btn">
+    + Add item
+    <div class="add-sub">Search product or scan barcode</div>
+  </div>
+</div>
+<div class="footer">
+  <div class="next-btn">Next: Pricing →</div>
+</div>

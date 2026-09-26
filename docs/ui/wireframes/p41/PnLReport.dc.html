@@ -1,0 +1,139 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #e5e5e5; }
+.back { font-size: 14px; color: #2563eb; font-weight: 500; }
+.top-title { font-size: 16px; font-weight: 700; flex: 1; }
+.icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e5e5e5; background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.summary-band { background: #fff; padding: 14px 16px; border-bottom: 1px solid #e5e5e5; }
+.summary-row-3 { display: flex; gap: 0; }
+.s-card { flex: 1; text-align: center; padding: 8px 0; border-right: 1px solid #e5e5e5; }
+.s-card:last-child { border-right: none; }
+.s-lbl { font-size: 11px; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 3px; }
+.s-val { font-size: 16px; font-weight: 700; }
+.s-trend { font-size: 11px; font-weight: 500; margin-top: 2px; }
+.trend-up { color: #16a34a; }
+.trend-dn { color: #dc2626; }
+.chart-band { background: #fff; padding: 10px 16px 0; border-bottom: 1px solid #e5e5e5; }
+.chart-lbl { font-size: 11px; color: #a3a3a3; margin-bottom: 6px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 4px; height: 60px; }
+.bar-grp { flex: 1; display: flex; gap: 2px; align-items: flex-end; }
+.bar { border-radius: 3px 3px 0 0; }
+.bar-rev { background: #bfdbfe; }
+.bar-exp { background: #fca5a5; }
+.bar-profit { background: #86efac; }
+.chart-months { display: flex; gap: 4px; padding: 4px 0 8px; }
+.chart-months span { flex: 1; text-align: center; font-size: 10px; color: #a3a3a3; }
+.chart-legend { display: flex; gap: 12px; padding-bottom: 8px; }
+.legend-item { display: flex; align-items: center; gap: 4px; font-size: 10px; color: #737373; }
+.legend-dot { width: 8px; height: 8px; border-radius: 2px; }
+.content { flex: 1; overflow: hidden; padding: 10px 14px; display: flex; flex-direction: column; gap: 10px; }
+.ai-ask { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+.ai-text { font-size: 13px; color: #1d4ed8; flex: 1; }
+.ai-btn { font-size: 12px; font-weight: 600; color: #fff; background: #2563eb; padding: 5px 10px; border-radius: 6px; white-space: nowrap; }
+.table-card { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden; flex: 1; }
+.table-hdr { display: flex; padding: 8px 14px; background: #f5f5f5; border-bottom: 1px solid #e5e5e5; }
+.th { font-size: 11px; font-weight: 600; color: #737373; }
+.th-name { flex: 1; }
+.th-amt { width: 80px; text-align: right; }
+.th-pct { width: 50px; text-align: right; }
+.table-row { display: flex; padding: 10px 14px; border-bottom: 1px solid #f5f5f5; align-items: center; }
+.table-row:last-child { border-bottom: none; }
+.table-row.total { background: #f0fdf4; font-weight: 700; }
+.td-name { flex: 1; font-size: 13px; }
+.td-amt { width: 80px; text-align: right; font-size: 13px; font-weight: 600; }
+.td-pct { width: 50px; text-align: right; font-size: 11px; color: #737373; }
+.drill-hint { font-size: 11px; color: #a3a3a3; text-decoration: underline; }
+.export-row { display: flex; gap: 8px; }
+.export-btn { flex: 1; padding: 10px; border-radius: 9px; text-align: center; font-size: 13px; font-weight: 600; background: #f5f5f5; color: #404040; border: 1px solid #e5e5e5; }
+</style>
+<div class="top-bar">
+  <div class="back">← Reports</div>
+  <div class="top-title">Profit and Loss</div>
+  <div class="icon-btn">⬇</div>
+  <div class="icon-btn">⋯</div>
+</div>
+<div class="summary-band">
+  <div class="summary-row-3">
+    <div class="s-card">
+      <div class="s-lbl">Revenue</div>
+      <div class="s-val">₹2,14,600</div>
+      <div class="s-trend trend-up">↑ 8%</div>
+    </div>
+    <div class="s-card">
+      <div class="s-lbl">Expenses</div>
+      <div class="s-val">₹1,66,400</div>
+      <div class="s-trend trend-dn">↑ 4%</div>
+    </div>
+    <div class="s-card">
+      <div class="s-lbl">Net Profit</div>
+      <div class="s-val" style="color:#16a34a">₹48,200</div>
+      <div class="s-trend trend-up">↑ 12%</div>
+    </div>
+  </div>
+</div>
+<div class="chart-band">
+  <div class="chart-lbl">6-month trend</div>
+  <div class="chart-bars">
+    <div class="bar-grp"><div class="bar bar-rev" style="height:32px"></div><div class="bar bar-exp" style="height:28px"></div><div class="bar bar-profit" style="height:8px"></div></div>
+    <div class="bar-grp"><div class="bar bar-rev" style="height:38px"></div><div class="bar bar-exp" style="height:30px"></div><div class="bar bar-profit" style="height:12px"></div></div>
+    <div class="bar-grp"><div class="bar bar-rev" style="height:44px"></div><div class="bar bar-exp" style="height:36px"></div><div class="bar bar-profit" style="height:14px"></div></div>
+    <div class="bar-grp"><div class="bar bar-rev" style="height:40px"></div><div class="bar bar-exp" style="height:32px"></div><div class="bar bar-profit" style="height:12px"></div></div>
+    <div class="bar-grp"><div class="bar bar-rev" style="height:52px"></div><div class="bar bar-exp" style="height:40px"></div><div class="bar bar-profit" style="height:18px"></div></div>
+    <div class="bar-grp"><div class="bar bar-rev" style="height:58px"></div><div class="bar bar-exp" style="height:44px"></div><div class="bar bar-profit" style="height:20px"></div></div>
+  </div>
+  <div class="chart-months"><span>Mar</span><span>Apr</span><span>May</span><span>Jun</span><span>Jul</span><span>Aug</span></div>
+  <div class="chart-legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#bfdbfe"></div>Revenue</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#fca5a5"></div>Expenses</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#86efac"></div>Profit</div>
+  </div>
+</div>
+<div class="content">
+  <div class="ai-ask">
+    <div class="ai-text">✦ Ask AI about this report</div>
+    <div class="ai-btn">Ask AI</div>
+  </div>
+  <div class="table-card">
+    <div class="table-hdr">
+      <div class="th th-name">Category</div>
+      <div class="th th-amt">Amount</div>
+      <div class="th th-pct">% Rev</div>
+    </div>
+    <div class="table-row">
+      <div class="td-name">💰 Revenue <span class="drill-hint">tap to drill →</span></div>
+      <div class="td-amt">₹2,14,600</div>
+      <div class="td-pct">100%</div>
+    </div>
+    <div class="table-row">
+      <div class="td-name">  ├ Sales — Dairy</div>
+      <div class="td-amt">₹86,200</div>
+      <div class="td-pct">40%</div>
+    </div>
+    <div class="table-row">
+      <div class="td-name">  ├ Sales — FMCG</div>
+      <div class="td-amt">₹74,600</div>
+      <div class="td-pct">35%</div>
+    </div>
+    <div class="table-row">
+      <div class="td-name">  └ Sales — Other</div>
+      <div class="td-amt">₹53,800</div>
+      <div class="td-pct">25%</div>
+    </div>
+    <div class="table-row">
+      <div class="td-name">📉 Expenses</div>
+      <div class="td-amt" style="color:#dc2626">₹1,66,400</div>
+      <div class="td-pct">77%</div>
+    </div>
+    <div class="table-row total">
+      <div class="td-name">Net Profit</div>
+      <div class="td-amt" style="color:#16a34a">₹48,200</div>
+      <div class="td-pct" style="color:#16a34a">22%</div>
+    </div>
+  </div>
+  <div class="export-row">
+    <div class="export-btn">📄 Export PDF</div>
+    <div class="export-btn">📊 Export Excel</div>
+  </div>
+</div>

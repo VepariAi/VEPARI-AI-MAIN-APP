@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "AIVisuals.dc.html", "x": 0, "y": 0, "w": 860, "h": 2200, "title": "AI Visual Components — Core motif, 6 motion states, AI cards, Voice, Chat bubbles" }
+  ],
+  "annotations": [
+    { "id": "p49-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 49 — AI visual components per UI-UX §199. AI Core layered-rings motif with 6 motion states: Idle/Listening/Processing/Speaking/Error/Offline. All AI components use --color-ai (#4A3D6B) and --color-ai-surface (#F0EDF8). AI diamond mark is the consistent brand motif." }
+  ],
+  "launch": { "view": "canvas" }
+}

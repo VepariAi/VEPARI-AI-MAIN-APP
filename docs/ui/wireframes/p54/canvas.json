@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "StatCard.dc.html", "x": 0, "y": 0, "w": 860, "h": 2200, "title": "Stat Card with Trend Indicator — grayscale-safe, icon+percent+label, Revenue/Expenses/Profit" }
+  ],
+  "annotations": [
+    { "id": "p54-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 54 — Stat card with trend indicator. Color-blind accessible: icon + percentage + label = 3 independent cues. Expenses valence is inverse (down is favorable). Grayscale test section included. React Native props interface shown." }
+  ],
+  "launch": { "view": "canvas" }
+}

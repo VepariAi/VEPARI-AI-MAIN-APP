@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Inventory — Overview</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.back-btn { font-size: 20px; color: #C8A96B; width: 32px; }
+.header-title { font-size: 16px; font-weight: 700; }
+.header-action { font-size: 16px; color: #C8A96B; font-weight: 600; }
+
+.filter-row { display: flex; gap: 8px; padding: 10px 20px; }
+.search-box { flex: 1; height: 36px; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 10px; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 13px; color: #C0AFA5; }
+.scan-btn { width: 36px; height: 36px; background: #3B2F2A; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+/* Alert strip */
+.alert-strip { margin: 0 20px 10px; background: rgba(180,91,74,0.08); border: 1.5px solid rgba(180,91,74,0.2); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 10px; }
+.alert-icon { font-size: 18px; }
+.alert-text { flex: 1; font-size: 12px; color: #B45B4A; font-weight: 500; line-height: 1.4; }
+.alert-see { font-size: 12px; color: #B45B4A; font-weight: 700; }
+
+/* KPI row */
+.kpi-row { display: flex; gap: 8px; padding: 0 20px 12px; }
+.kpi-tile { flex: 1; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 12px 10px; }
+.kpi-label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #8A7060; margin-bottom: 6px; }
+.kpi-value { font-size: 17px; font-weight: 700; color: #3B2F2A; font-variant-numeric: tabular-nums; line-height: 1; }
+.kpi-sub { font-size: 10px; color: #8A7060; margin-top: 3px; }
+
+/* Category tabs */
+.cat-tabs { display: flex; gap: 6px; padding: 0 20px 10px; overflow-x: auto; }
+.ctab { padding: 5px 12px; border-radius: 14px; font-size: 12px; font-weight: 600; white-space: nowrap; background: #FFFFFF; border: 1.5px solid #E8DDD0; color: #8A7060; }
+.ctab.active { background: #3B2F2A; border-color: #3B2F2A; color: #FAF7F2; }
+
+/* Item rows */
+.item-row { display: flex; align-items: center; gap: 12px; padding: 10px 20px; border-bottom: 1px solid #F5EFE6; }
+.item-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.item-icon.rice { background: rgba(200,169,107,0.15); }
+.item-icon.dal { background: rgba(90,107,79,0.12); }
+.item-icon.oil { background: rgba(180,91,74,0.1); }
+.item-info { flex: 1; }
+.item-name { font-size: 13px; font-weight: 600; color: #3B2F2A; margin-bottom: 3px; }
+.item-meta { font-size: 11px; color: #8A7060; }
+.item-right { text-align: right; }
+.item-stock { font-size: 14px; font-weight: 700; color: #3B2F2A; font-variant-numeric: tabular-nums; }
+.stock-bar-wrap { width: 60px; height: 3px; background: #E8DDD0; border-radius: 2px; margin-top: 4px; margin-left: auto; }
+.stock-bar { height: 3px; border-radius: 2px; }
+.low-badge { display: inline-block; padding: 2px 6px; background: rgba(180,91,74,0.1); color: #B45B4A; border-radius: 6px; font-size: 9px; font-weight: 700; margin-top: 3px; }
+.ok-badge { display: inline-block; padding: 2px 6px; background: rgba(90,107,79,0.1); color: #5A6B4F; border-radius: 6px; font-size: 9px; font-weight: 700; margin-top: 3px; }
+
+/* FAB */
+.fab { position: absolute; bottom: 96px; right: 20px; width: 52px; height: 52px; border-radius: 16px; background: #3B2F2A; box-shadow: 0 4px 16px rgba(59,47,42,0.3); display: flex; align-items: center; justify-content: center; font-size: 22px; }
+
+/* Bottom nav */
+.bottom-nav { height: 80px; flex-shrink: 0; background: #FFFFFF; border-top: 1px solid #EDE5D8; display: flex; align-items: flex-start; padding-top: 8px; position: relative; margin-top: auto; }
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 4px; }
+.nav-icon { font-size: 20px; }
+.nav-label { font-size: 9px; font-weight: 600; color: #C0AFA5; }
+.nav-item.active .nav-label { color: #3B2F2A; }
+.nav-active-dot { width: 4px; height: 4px; border-radius: 50%; background: #C8A96B; margin-top: 1px; }
+.voice-fab-wrap { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); }
+.voice-fab { width: 48px; height: 48px; border-radius: 50%; background: #3B2F2A; box-shadow: 0 0 0 3px #FFFFFF, 0 4px 14px rgba(59,47,42,0.25); display: flex; align-items: center; justify-content: center; font-size: 20px; }
+</style>
+</head>
+<body style="position:relative;">
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="back-btn">‹</div>
+  <div class="header-title">Inventory</div>
+  <div class="header-action">+ Add</div>
+</div>
+
+<div class="filter-row">
+  <div class="search-box">🔍 &nbsp;Search items…</div>
+  <div class="scan-btn">📷</div>
+</div>
+
+<div class="alert-strip">
+  <div class="alert-icon">📦</div>
+  <div class="alert-text"><strong>3 items</strong> are running low — reorder needed</div>
+  <div class="alert-see">Reorder ›</div>
+</div>
+
+<div class="kpi-row">
+  <div class="kpi-tile">
+    <div class="kpi-label">Total Items</div>
+    <div class="kpi-value">84</div>
+    <div class="kpi-sub">SKUs</div>
+  </div>
+  <div class="kpi-tile">
+    <div class="kpi-label">Stock Value</div>
+    <div class="kpi-value">₹2.6L</div>
+    <div class="kpi-sub">At cost</div>
+  </div>
+  <div class="kpi-tile">
+    <div class="kpi-label">Low Stock</div>
+    <div class="kpi-value" style="color:#B45B4A;">3</div>
+    <div class="kpi-sub">Items</div>
+  </div>
+</div>
+
+<div class="cat-tabs">
+  <div class="ctab active">All</div>
+  <div class="ctab">Grains</div>
+  <div class="ctab">Pulses</div>
+  <div class="ctab">Oils</div>
+  <div class="ctab">Spices</div>
+</div>
+
+<div style="flex:1;overflow:hidden;">
+  <div class="item-row">
+    <div class="item-icon oil">🛢️</div>
+    <div class="item-info">
+      <div class="item-name">Sunflower Oil 1 L</div>
+      <div class="item-meta">₹144/unit · 6 bottles left</div>
+    </div>
+    <div class="item-right">
+      <div class="item-stock">6 units</div>
+      <div class="stock-bar-wrap"><div class="stock-bar" style="width:15%;background:#B45B4A;"></div></div>
+      <div class="low-badge">LOW</div>
+    </div>
+  </div>
+  <div class="item-row">
+    <div class="item-icon dal">🫘</div>
+    <div class="item-info">
+      <div class="item-name">Toor Dal 1 kg</div>
+      <div class="item-meta">₹180/unit · 8 kg left</div>
+    </div>
+    <div class="item-right">
+      <div class="item-stock">8 units</div>
+      <div class="stock-bar-wrap"><div class="stock-bar" style="width:20%;background:#B45B4A;"></div></div>
+      <div class="low-badge">LOW</div>
+    </div>
+  </div>
+  <div class="item-row">
+    <div class="item-icon rice">🌾</div>
+    <div class="item-info">
+      <div class="item-name">Basmati Rice 5 kg</div>
+      <div class="item-meta">₹620/unit · 24 bags left</div>
+    </div>
+    <div class="item-right">
+      <div class="item-stock">24 units</div>
+      <div class="stock-bar-wrap"><div class="stock-bar" style="width:60%;background:#5A6B4F;"></div></div>
+      <div class="ok-badge">OK</div>
+    </div>
+  </div>
+  <div class="item-row">
+    <div class="item-icon rice">🌾</div>
+    <div class="item-info">
+      <div class="item-name">Atta 10 kg</div>
+      <div class="item-meta">₹900/unit · 16 bags left</div>
+    </div>
+    <div class="item-right">
+      <div class="item-stock">16 units</div>
+      <div class="stock-bar-wrap"><div class="stock-bar" style="width:40%;background:#C8A96B;"></div></div>
+      <div class="ok-badge">OK</div>
+    </div>
+  </div>
+</div>
+
+<div class="fab">+</div>
+
+<div class="bottom-nav">
+  <div class="voice-fab-wrap"><div class="voice-fab">🎙️</div></div>
+  <div class="nav-item"><div class="nav-icon">🏠</div><div class="nav-label">Home</div></div>
+  <div class="nav-item active"><div class="nav-icon">📊</div><div class="nav-label">Engines</div><div class="nav-active-dot"></div></div>
+  <div class="nav-item" style="flex:1.2;"></div>
+  <div class="nav-item"><div class="nav-icon">📋</div><div class="nav-label">Briefing</div></div>
+  <div class="nav-item"><div class="nav-icon">⚙️</div><div class="nav-label">Settings</div></div>
+</div>
+
+</body>
+</html>

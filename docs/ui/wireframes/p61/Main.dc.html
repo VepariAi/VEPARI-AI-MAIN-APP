@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI OS Home — Default</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2;
+  color: #3B2F2A;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+/* ── Status bar ── */
+.status-bar {
+  height: 44px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; font-size: 11px; color: #8A7060;
+}
+.status-icons { display: flex; gap: 4px; align-items: center; }
+
+/* ── Greeting ── */
+.greeting {
+  padding: 4px 20px 0;
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.greeting-text { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #8A7060; }
+.notif-btn { width: 32px; height: 32px; border-radius: 50%; background: #FFFFFF; border: 1px solid #E8DDD0; display: flex; align-items: center; justify-content: center; }
+
+/* ── AI Core hero area ── */
+.core-hero {
+  flex-shrink: 0;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 0 0;
+}
+.core-ring-outer {
+  width: 260px; height: 260px;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* Ground ellipses behind ring */
+.core-ground {
+  position: absolute;
+  bottom: -8px; left: 50%;
+  transform: translateX(-50%);
+  width: 200px; height: 14px;
+  background: radial-gradient(ellipse at center, rgba(200,169,107,0.15) 0%, transparent 70%);
+}
+
+/* Core wordmark below ring */
+.core-wordmark {
+  margin-top: 8px; text-align: center;
+}
+.core-wordmark .brand { font-size: 14px; font-weight: 700; color: #3B2F2A; letter-spacing: 0.5px; }
+.core-wordmark .brand span { color: #C8A96B; }
+.core-wordmark .sub { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #C0AFA5; margin-top: 2px; }
+
+/* ── Section divider ── */
+.section-header {
+  padding: 12px 20px 8px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.section-title { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #8A7060; }
+.section-action { font-size: 11px; color: #C8A96B; font-weight: 500; }
+
+/* ── Engine cards grid ── */
+.cards-scroll {
+  flex: 1;
+  overflow: hidden; /* static mockup — no scroll shown */
+  padding: 0 20px;
+}
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.engine-card {
+  background: #FFFFFF;
+  border: 1.5px solid #EDE5D8;
+  border-radius: 14px;
+  padding: 13px 13px 10px;
+  position: relative;
+  overflow: hidden;
+}
+.engine-card::before {
+  /* color stripe accent */
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 14px 14px 0 0;
+}
+.engine-card.finance::before { background: #C8A96B; }
+.engine-card.customer::before { background: #5A6B4F; }
+.engine-card.supplier::before { background: #B45B4A; }
+.engine-card.inventory::before { background: #8A7060; }
+.engine-card.insight::before { background: #4A3D6B; }
+.engine-card.automation::before { background: #C8A96B; }
+.engine-card.operations::before { background: #B45B4A; }
+.engine-card.security::before { background: #5A6B4F; }
+
+.card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 8px; }
+.card-icon {
+  width: 28px; height: 28px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px;
+}
+.card-icon.gold { background: rgba(200,169,107,0.15); }
+.card-icon.olive { background: rgba(90,107,79,0.12); }
+.card-icon.terra { background: rgba(180,91,74,0.12); }
+.card-icon.brown { background: rgba(138,112,96,0.12); }
+.card-icon.indigo { background: rgba(74,61,107,0.12); }
+
+.card-label { font-size: 9px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #8A7060; }
+.card-value { font-size: 20px; font-weight: 700; color: #3B2F2A; line-height: 1; font-variant-numeric: tabular-nums; }
+.card-value .currency { font-size: 12px; font-weight: 500; color: #8A7060; }
+.card-change { font-size: 10px; font-weight: 600; color: #5A6B4F; }
+.card-change.down { color: #B45B4A; }
+
+/* Sparkline */
+.sparkline {
+  display: flex; align-items: flex-end; gap: 2px;
+  height: 18px; margin-top: 6px;
+}
+.spark-bar { width: 4px; border-radius: 1px; }
+.spark-bar.gold { background: rgba(200,169,107,0.8); }
+.spark-bar.dim { background: rgba(200,169,107,0.25); }
+
+/* Security special */
+.card-value.secure { font-size: 13px; font-weight: 700; color: #5A6B4F; letter-spacing: 0.5px; }
+.security-dot { width: 6px; height: 6px; border-radius: 50%; background: #5A6B4F; display: inline-block; margin-right: 4px; }
+
+/* ── Bottom nav ── */
+.bottom-nav {
+  height: 80px; flex-shrink: 0;
+  background: #FFFFFF;
+  border-top: 1px solid #EDE5D8;
+  display: flex; align-items: flex-start;
+  padding-top: 8px;
+  position: relative;
+}
+.nav-item {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding-top: 4px; cursor: pointer;
+}
+.nav-icon { font-size: 20px; }
+.nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.3px; color: #C0AFA5; }
+.nav-item.active .nav-label { color: #3B2F2A; }
+.nav-active-dot {
+  width: 4px; height: 4px; border-radius: 50%; background: #C8A96B;
+  margin-top: 1px;
+}
+
+/* Voice FAB */
+.voice-fab-wrap {
+  position: absolute;
+  top: -24px; left: 50%; transform: translateX(-50%);
+}
+.voice-fab {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: #3B2F2A;
+  box-shadow: 0 0 0 3px #FFFFFF, 0 4px 14px rgba(59,47,42,0.25);
+  display: flex; align-items: center; justify-content: center;
+}
+.voice-fab-icon { font-size: 20px; }
+</style>
+</head>
+<body>
+
+<!-- Status bar -->
+<div class="status-bar">
+  <span>9:41</span>
+  <div class="status-icons">
+    <span style="font-size:10px;">▲▲▲</span>
+    <span>WiFi</span>
+    <span>🔋</span>
+  </div>
+</div>
+
+<!-- Greeting -->
+<div class="greeting">
+  <div class="greeting-text">Good morning, Sharma ji 🙏</div>
+  <div class="notif-btn">🔔</div>
+</div>
+
+<!-- AI Core hero -->
+<div class="core-hero">
+  <div class="core-ring-outer">
+    <svg width="260" height="260" viewBox="0 0 260 260" fill="none">
+      <!-- Ground glow -->
+      <ellipse cx="130" cy="248" rx="90" ry="8" fill="rgba(200,169,107,0.12)"/>
+
+      <!-- Layer 5: outer dashed orbit -->
+      <circle cx="130" cy="130" r="127" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="3 6" opacity="0.2"/>
+
+      <!-- Layer 4: gauge ring background -->
+      <circle cx="130" cy="130" r="110" stroke="#E8DDD0" stroke-width="12" fill="none"/>
+      <!-- Gauge fill ~74% (finance engine loaded + healthy) -->
+      <circle cx="130" cy="130" r="110" stroke="url(#gaugeGrad)" stroke-width="12" fill="none"
+        stroke-dasharray="512 178" stroke-dashoffset="-44" stroke-linecap="round" opacity="0.95"/>
+      <!-- Gauge tick marks -->
+      <line x1="130" y1="20" x2="130" y2="14" stroke="#C8A96B" stroke-width="1.5" opacity="0.4"/>
+      <line x1="238" y1="82" x2="243" y2="79" stroke="#C8A96B" stroke-width="1" opacity="0.3"/>
+      <line x1="22" y1="82" x2="17" y2="79" stroke="#C8A96B" stroke-width="1" opacity="0.3"/>
+      <line x1="238" y1="178" x2="243" y2="181" stroke="#C8A96B" stroke-width="1" opacity="0.3"/>
+      <line x1="22" y1="178" x2="17" y2="181" stroke="#C8A96B" stroke-width="1" opacity="0.3"/>
+
+      <!-- Layer 3: inner halo -->
+      <circle cx="130" cy="130" r="88" stroke="#C8A96B" stroke-width="1.5" fill="none" opacity="0.25"/>
+      <circle cx="130" cy="130" r="84" stroke="#C8A96B" stroke-width="0.5" fill="none" opacity="0.12"/>
+
+      <!-- Layer 2: core gradient fill -->
+      <circle cx="130" cy="130" r="74" fill="url(#coreGrad)"/>
+
+      <!-- Layer 1: lotus mandala -->
+      <!-- Main cardinal petals -->
+      <path d="M130 72 C142 88 142 106 130 112 C118 106 118 88 130 72" fill="#C8A96B" opacity="0.9"/>
+      <path d="M188 130 C172 142 154 142 148 130 C154 118 172 118 188 130" fill="#C8A96B" opacity="0.9"/>
+      <path d="M130 188 C118 172 118 154 130 148 C142 154 142 172 130 188" fill="#C8A96B" opacity="0.9"/>
+      <path d="M72 130 C88 118 106 118 112 130 C106 142 88 142 72 130" fill="#C8A96B" opacity="0.9"/>
+      <!-- Diagonal petals (lighter) -->
+      <path d="M175 85 C165 100 155 104 145 100 C148 90 158 82 175 85" fill="#C8A96B" opacity="0.45"/>
+      <path d="M175 175 C160 165 156 155 160 145 C170 148 178 158 175 175" fill="#C8A96B" opacity="0.45"/>
+      <path d="M85 175 C95 160 105 156 115 160 C112 170 102 178 85 175" fill="#C8A96B" opacity="0.45"/>
+      <path d="M85 85 C100 95 104 105 100 115 C90 112 82 102 85 85" fill="#C8A96B" opacity="0.45"/>
+      <!-- Center circles -->
+      <circle cx="130" cy="130" r="16" fill="#C8A96B"/>
+      <circle cx="130" cy="130" r="9" fill="#FAF7F2"/>
+      <circle cx="130" cy="130" r="4.5" fill="#C8A96B"/>
+
+      <!-- Sparkle particles -->
+      <circle cx="130" cy="3" r="2.5" fill="#C8A96B" opacity="0.4"/>
+      <circle cx="257" cy="130" r="1.5" fill="#C8A96B" opacity="0.25"/>
+      <circle cx="3" cy="130" r="1.5" fill="#C8A96B" opacity="0.25"/>
+      <circle cx="92" cy="18" r="1.5" fill="#C8A96B" opacity="0.3"/>
+      <circle cx="168" cy="18" r="1.5" fill="#C8A96B" opacity="0.3"/>
+      <circle cx="32" cy="180" r="1" fill="#C8A96B" opacity="0.2"/>
+      <circle cx="228" cy="180" r="1" fill="#C8A96B" opacity="0.2"/>
+
+      <defs>
+        <radialGradient id="coreGrad" cx="50%" cy="38%" r="65%">
+          <stop offset="0%" stop-color="#FFFFFF"/>
+          <stop offset="60%" stop-color="#FAF7F2"/>
+          <stop offset="100%" stop-color="#F2E8D6"/>
+        </radialGradient>
+        <linearGradient id="gaugeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#C8A96B"/>
+          <stop offset="50%" stop-color="#C8A96B"/>
+          <stop offset="100%" stop-color="#8A7060"/>
+        </linearGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="core-wordmark">
+    <div class="brand">VEPARI <span>AI</span></div>
+    <div class="sub">Business OS · 7 Engines Active</div>
+  </div>
+</div>
+
+<!-- Section header -->
+<div class="section-header">
+  <div class="section-title">Business Engines</div>
+  <div class="section-action">View all ›</div>
+</div>
+
+<!-- Engine cards grid -->
+<div class="cards-scroll">
+  <div class="cards-grid">
+
+    <!-- Finance -->
+    <div class="engine-card finance">
+      <div class="card-top">
+        <div class="card-icon gold">💰</div>
+        <div style="text-align:right;">
+          <div class="card-label">Finance</div>
+          <div class="card-change">▲ 12%</div>
+        </div>
+      </div>
+      <div class="card-value"><span class="currency">₹</span>24,850</div>
+      <div class="sparkline">
+        <div class="spark-bar gold" style="height:8px;"></div>
+        <div class="spark-bar gold" style="height:12px;"></div>
+        <div class="spark-bar dim" style="height:6px;"></div>
+        <div class="spark-bar gold" style="height:14px;"></div>
+        <div class="spark-bar gold" style="height:10px;"></div>
+        <div class="spark-bar dim" style="height:7px;"></div>
+        <div class="spark-bar gold" style="height:16px;"></div>
+        <div class="spark-bar gold" style="height:18px;"></div>
+      </div>
+    </div>
+
+    <!-- Customer -->
+    <div class="engine-card customer">
+      <div class="card-top">
+        <div class="card-icon olive">👥</div>
+        <div style="text-align:right;">
+          <div class="card-label">Customers</div>
+          <div class="card-change">▲ 3</div>
+        </div>
+      </div>
+      <div class="card-value">12</div>
+      <div class="sparkline">
+        <div class="spark-bar gold" style="height:6px;"></div>
+        <div class="spark-bar gold" style="height:9px;"></div>
+        <div class="spark-bar gold" style="height:11px;"></div>
+        <div class="spark-bar dim" style="height:7px;"></div>
+        <div class="spark-bar gold" style="height:10px;"></div>
+        <div class="spark-bar gold" style="height:13px;"></div>
+        <div class="spark-bar gold" style="height:14px;"></div>
+        <div class="spark-bar gold" style="height:16px;"></div>
+      </div>
+    </div>
+
+    <!-- Supplier -->
+    <div class="engine-card supplier">
+      <div class="card-top">
+        <div class="card-icon terra">🤝</div>
+        <div style="text-align:right;">
+          <div class="card-label">Suppliers</div>
+          <div class="card-change down">▼ 1</div>
+        </div>
+      </div>
+      <div class="card-value">2</div>
+      <div class="sparkline">
+        <div class="spark-bar gold" style="height:14px;"></div>
+        <div class="spark-bar gold" style="height:16px;"></div>
+        <div class="spark-bar gold" style="height:12px;"></div>
+        <div class="spark-bar dim" style="height:8px;"></div>
+        <div class="spark-bar dim" style="height:6px;"></div>
+        <div class="spark-bar dim" style="height:5px;"></div>
+        <div class="spark-bar dim" style="height:7px;"></div>
+        <div class="spark-bar dim" style="height:6px;"></div>
+      </div>
+    </div>
+
+    <!-- Inventory -->
+    <div class="engine-card inventory">
+      <div class="card-top">
+        <div class="card-icon brown">📦</div>
+        <div style="text-align:right;">
+          <div class="card-label">Inventory</div>
+          <div class="card-change">▲ 2%</div>
+        </div>
+      </div>
+      <div class="card-value">3</div>
+      <div class="sparkline">
+        <div class="spark-bar dim" style="height:10px;"></div>
+        <div class="spark-bar dim" style="height:8px;"></div>
+        <div class="spark-bar gold" style="height:12px;"></div>
+        <div class="spark-bar gold" style="height:14px;"></div>
+        <div class="spark-bar dim" style="height:9px;"></div>
+        <div class="spark-bar gold" style="height:13px;"></div>
+        <div class="spark-bar gold" style="height:15px;"></div>
+        <div class="spark-bar gold" style="height:16px;"></div>
+      </div>
+    </div>
+
+    <!-- Insight -->
+    <div class="engine-card insight">
+      <div class="card-top">
+        <div class="card-icon indigo">✨</div>
+        <div style="text-align:right;">
+          <div class="card-label">Insights</div>
+          <div class="card-change">4 new</div>
+        </div>
+      </div>
+      <div class="card-value">4</div>
+      <div class="sparkline">
+        <div class="spark-bar dim" style="height:5px;"></div>
+        <div class="spark-bar dim" style="height:7px;"></div>
+        <div class="spark-bar gold" style="height:10px;"></div>
+        <div class="spark-bar dim" style="height:8px;"></div>
+        <div class="spark-bar gold" style="height:12px;"></div>
+        <div class="spark-bar gold" style="height:14px;"></div>
+        <div class="spark-bar gold" style="height:16px;"></div>
+        <div class="spark-bar gold" style="height:18px;"></div>
+      </div>
+    </div>
+
+    <!-- Automation -->
+    <div class="engine-card automation">
+      <div class="card-top">
+        <div class="card-icon gold">⚡</div>
+        <div style="text-align:right;">
+          <div class="card-label">Automation</div>
+          <div class="card-change">7 run</div>
+        </div>
+      </div>
+      <div class="card-value">7</div>
+      <div class="sparkline">
+        <div class="spark-bar gold" style="height:10px;"></div>
+        <div class="spark-bar gold" style="height:14px;"></div>
+        <div class="spark-bar gold" style="height:12px;"></div>
+        <div class="spark-bar gold" style="height:16px;"></div>
+        <div class="spark-bar dim" style="height:8px;"></div>
+        <div class="spark-bar gold" style="height:12px;"></div>
+        <div class="spark-bar gold" style="height:15px;"></div>
+        <div class="spark-bar gold" style="height:18px;"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Bottom nav -->
+<div class="bottom-nav">
+  <!-- Voice FAB -->
+  <div class="voice-fab-wrap">
+    <div class="voice-fab">
+      <span class="voice-fab-icon">🎙️</span>
+    </div>
+  </div>
+
+  <div class="nav-item active">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">Home</div>
+    <div class="nav-active-dot"></div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">Engines</div>
+  </div>
+  <!-- Voice FAB placeholder -->
+  <div class="nav-item" style="flex:1.2;"></div>
+  <div class="nav-item">
+    <div class="nav-icon">📋</div>
+    <div class="nav-label">Briefing</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">⚙️</div>
+    <div class="nav-label">Settings</div>
+  </div>
+</div>
+
+</body>
+</html>

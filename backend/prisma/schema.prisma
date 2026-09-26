@@ -1,0 +1,665 @@
+// Vepari AI — Prisma Schema
+// All monetary amounts stored as paise (integer, never float)
+// Language-independent: UI language is a user preference, not a data property
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ────────────────────────────────────────────────────────────────────
+
+enum UserRole {
+  OWNER
+  MANAGER
+  STAFF
+}
+
+enum BusinessType {
+  RETAIL
+  RESTAURANT
+  SERVICES
+  MANUFACTURING
+  DISTRIBUTION
+  OTHER
+}
+
+enum TransactionType {
+  SALE
+  EXPENSE
+  PURCHASE
+  PAYMENT
+  CREDIT_ISSUED
+  CREDIT_RECEIVED
+}
+
+enum PaymentMethod {
+  CASH
+  UPI
+  CARD
+  BANK_TRANSFER
+  CREDIT
+}
+
+enum OtpPurpose {
+  LOGIN
+  REGISTER
+  CHANGE_PHONE
+}
+
+enum SyncStatus {
+  PENDING
+  SYNCED
+  CONFLICT
+  FAILED
+}
+
+// ── Identity Domain ──────────────────────────────────────────────────────────
+
+model User {
+  id         String   @id @default(uuid())
+  phone      String   @unique
+  name       String
+  language   String   @default("en")
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relations
+  businessMembers BusinessMember[]
+  refreshTokens   RefreshToken[]
+  auditLogs       AuditLog[]
+  voiceQueries    VoiceQuery[]
+  userMemory      UserMemory?
+
+  @@map("users")
+}
+
+model OtpCode {
+  id        String     @id @default(uuid())
+  phone     String
+  code      String
+  purpose   OtpPurpose
+  expiresAt DateTime
+  usedAt    DateTime?
+  attempts  Int        @default(0)
+  createdAt DateTime   @default(now())
+
+  @@index([phone, purpose])
+  @@map("otp_codes")
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+// ── Business Domain ──────────────────────────────────────────────────────────
+
+model Business {
+  id          String       @id @default(uuid())
+  name        String
+  type        BusinessType @default(RETAIL)
+  gstNumber   String?
+  phone       String
+  addressLine1 String?
+  addressLine2 String?
+  city        String?
+  state       String?
+  pincode     String?
+  isActive    Boolean      @default(true)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  // Relations
+  members     BusinessMember[]
+  customers   Customer[]
+  suppliers   Supplier[]
+  products    Product[]
+  transactions Transaction[]
+  salesOrders  SaleOrder[]
+  expenses     Expense[]
+  purchases    Purchase[]
+  documents    Document[]
+  voiceQueries VoiceQuery[]
+  bankStatementImports BankStatementImport[]
+  businessMemory       BusinessMemory?
+  stockMovements       StockMovement[]
+
+  @@map("businesses")
+}
+
+model BusinessMember {
+  id         String   @id @default(uuid())
+  businessId String
+  userId     String
+  role       UserRole @default(STAFF)
+  joinedAt   DateTime @default(now())
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([businessId, userId])
+  @@map("business_members")
+}
+
+// ── Core Business Domain ─────────────────────────────────────────────────────
+
+model Customer {
+  id          String   @id @default(uuid())
+  businessId  String
+  name        String
+  phone       String?
+  email       String?
+  // Credit balance in paise (positive = customer owes us, negative = we owe them)
+  creditBalance Int    @default(0)
+  notes       String?
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  syncStatus  SyncStatus @default(PENDING)
+  syncedAt    DateTime?
+
+  business     Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  saleOrders   SaleOrder[]
+  transactions Transaction[]
+
+  @@index([businessId])
+  @@map("customers")
+}
+
+model Supplier {
+  id           String   @id @default(uuid())
+  businessId   String
+  name         String
+  phone        String?
+  email        String?
+  // Payable balance in paise (positive = we owe them, negative = they owe us)
+  payableBalance Int    @default(0)
+  notes        String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  syncStatus   SyncStatus @default(PENDING)
+  syncedAt     DateTime?
+
+  business    Business      @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  purchases   Purchase[]
+  transactions Transaction[]
+
+  @@index([businessId])
+  @@map("suppliers")
+}
+
+model Product {
+  id                String   @id @default(uuid())
+  businessId        String
+  name              String
+  sku               String?
+  // Price in paise
+  priceInPaise      Int      @default(0)
+  // Cost price in paise
+  costPriceInPaise  Int      @default(0)
+  stock             Int      @default(0)
+  unit              String   @default("unit")
+  lowStockThreshold Int?
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  syncStatus        SyncStatus @default(PENDING)
+  syncedAt          DateTime?
+
+  business        Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  saleOrderItems  SaleOrderItem[]
+  purchaseItems   PurchaseItem[]
+  stockMovements  StockMovement[]
+
+  @@index([businessId])
+  @@map("products")
+}
+
+// ── Transactions Domain ──────────────────────────────────────────────────────
+
+model Transaction {
+  id            String          @id @default(uuid())
+  businessId    String
+  customerId    String?
+  supplierId    String?
+  type          TransactionType
+  // Amount in paise
+  amountInPaise Int
+  description   String?
+  notes         String?
+  date          DateTime
+  paymentMethod PaymentMethod   @default(CASH)
+  referenceId   String?         // invoice/order id
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  syncStatus    SyncStatus      @default(PENDING)
+  syncedAt      DateTime?
+
+  business  Business  @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer  Customer? @relation(fields: [customerId], references: [id])
+  supplier  Supplier? @relation(fields: [supplierId], references: [id])
+  bankStatementEntries BankStatementEntry[]
+
+  @@index([businessId, date])
+  @@index([businessId, type])
+  @@map("transactions")
+}
+
+model SaleOrder {
+  id              String        @id @default(uuid())
+  businessId      String
+  customerId      String?
+  // Total in paise
+  totalInPaise    Int
+  // Tax in paise
+  taxInPaise      Int           @default(0)
+  // Discount in paise
+  discountInPaise Int           @default(0)
+  paymentMethod   PaymentMethod @default(CASH)
+  status          String        @default("completed")
+  notes           String?
+  date            DateTime
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  syncStatus      SyncStatus    @default(PENDING)
+  syncedAt        DateTime?
+
+  business Business        @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  customer Customer?       @relation(fields: [customerId], references: [id])
+  items    SaleOrderItem[]
+
+  @@index([businessId, date])
+  @@map("sale_orders")
+}
+
+model SaleOrderItem {
+  id            String @id @default(uuid())
+  saleOrderId   String
+  productId     String
+  quantity      Int
+  // Unit price in paise at time of sale
+  unitPriceInPaise Int
+  // Total for this line in paise
+  totalInPaise  Int
+
+  saleOrder SaleOrder @relation(fields: [saleOrderId], references: [id], onDelete: Cascade)
+  product   Product   @relation(fields: [productId], references: [id])
+
+  @@map("sale_order_items")
+}
+
+model Expense {
+  id            String        @id @default(uuid())
+  businessId    String
+  category      String
+  // Amount in paise
+  amountInPaise Int
+  description   String?
+  notes         String?
+  date          DateTime
+  paymentMethod PaymentMethod @default(CASH)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  syncStatus    SyncStatus    @default(PENDING)
+  syncedAt      DateTime?
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, date])
+  @@map("expenses")
+}
+
+model Purchase {
+  id              String        @id @default(uuid())
+  businessId      String
+  supplierId      String?
+  // Total in paise
+  totalInPaise    Int
+  // Tax in paise
+  taxInPaise      Int           @default(0)
+  paymentMethod   PaymentMethod @default(CASH)
+  status          String        @default("completed")
+  notes           String?
+  date            DateTime
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  syncStatus      SyncStatus    @default(PENDING)
+  syncedAt        DateTime?
+
+  business  Business       @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  supplier  Supplier?      @relation(fields: [supplierId], references: [id])
+  items     PurchaseItem[]
+
+  @@index([businessId, date])
+  @@map("purchases")
+}
+
+model PurchaseItem {
+  id           String @id @default(uuid())
+  purchaseId   String
+  productId    String
+  quantity     Int
+  // Unit cost in paise
+  unitCostInPaise Int
+  // Total for this line in paise
+  totalInPaise Int
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id])
+
+  @@map("purchase_items")
+}
+
+// ── AI / Voice Domain ────────────────────────────────────────────────────────
+
+model VoiceQuery {
+  id          String   @id @default(uuid())
+  businessId  String
+  userId      String
+  transcript  String
+  language    String
+  intent      String?
+  entities    Json?
+  response    String?
+  actionTaken String?
+  processingMs Int?
+  createdAt   DateTime @default(now())
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id])
+
+  @@index([businessId])
+  @@map("voice_queries")
+}
+
+// ── Documents ────────────────────────────────────────────────────────────────
+
+model Document {
+  id         String   @id @default(uuid())
+  businessId String
+  type       String   // invoice, receipt, purchase_order, etc.
+  title      String
+  url        String?
+  metadata   Json?
+  date       DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@index([businessId])
+  @@map("documents")
+}
+
+// ── Audit ─────────────────────────────────────────────────────────────────────
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  userId     String?
+  action     String
+  resource   String
+  resourceId String?
+  metadata   Json?
+  ipAddress  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([resource, resourceId])
+  @@map("audit_logs")
+}
+
+// ── Business Brain Memory ─────────────────────────────────────────────────────
+
+// Layer 1 — User Memory: personal preferences & patterns, refreshed every 7 days
+model UserMemory {
+  id          String   @id @default(uuid())
+  userId      String   @unique
+  // Serialized memory snapshot (preferences, communication style, behavior patterns)
+  snapshot    Json
+  refreshedAt DateTime @default(now())
+  version     Int      @default(1)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_memories")
+}
+
+// Layer 2 — Business Memory: customer/supplier patterns & top products, refreshed every 24h
+model BusinessMemory {
+  id          String   @id @default(uuid())
+  businessId  String   @unique
+  // Serialized memory snapshot (top customers, supplier patterns, top products, recent trends)
+  snapshot    Json
+  refreshedAt DateTime @default(now())
+  version     Int      @default(1)
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+
+  @@map("business_memories")
+}
+
+// ── Bank Reconciliation ───────────────────────────────────────────────────────
+
+model BankStatementImport {
+  id         String   @id @default(uuid())
+  businessId String
+  label      String
+  importedAt DateTime @default(now())
+
+  business Business             @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  entries  BankStatementEntry[]
+
+  @@index([businessId])
+  @@map("bank_statement_imports")
+}
+
+model BankStatementEntry {
+  id            String    @id @default(uuid())
+  importId      String
+  date          DateTime
+  // Positive = credit to account (money in), negative = debit (money out) — paise
+  amountInPaise Int
+  description   String?
+  reference     String?
+  // Null means unmatched
+  matchedTransactionId String?
+  matchedAt            DateTime?
+
+  import             BankStatementImport @relation(fields: [importId], references: [id], onDelete: Cascade)
+  matchedTransaction Transaction?        @relation(fields: [matchedTransactionId], references: [id])
+
+  @@index([importId])
+  @@map("bank_statement_entries")
+}
+
+// ── Inventory ─────────────────────────────────────────────────────────────────
+
+enum StockMovementReason {
+  PURCHASE
+  SALE
+  ADJUSTMENT
+  RETURN_IN
+  RETURN_OUT
+  TRANSFER_IN
+  TRANSFER_OUT
+  OPENING_STOCK
+}
+
+model StockMovement {
+  id         String               @id @default(uuid())
+  businessId String
+  productId  String
+  // Positive = stock in, negative = stock out
+  quantity   Int
+  reason     StockMovementReason
+  referenceId String?              // sale/purchase/return id
+  notes      String?
+  createdAt  DateTime             @default(now())
+
+  business Business @relation(fields: [businessId], references: [id], onDelete: Cascade)
+  product  Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([businessId, productId])
+  @@index([businessId, createdAt])
+  @@map("stock_movements")
+}
+
+// ── Sync ──────────────────────────────────────────────────────────────────────
+
+model SyncCheckpoint {
+  id          String   @id @default(uuid())
+  businessId  String
+  deviceId    String
+  lastSyncAt  DateTime
+  checkpoint  Json
+
+  @@unique([businessId, deviceId])
+  @@map("sync_checkpoints")
+}
+
+// ── Security (5-layer defense-in-depth: Layer 5 — audit) ────────────────────────
+
+model SecurityEvent {
+  id         String   @id @default(uuid())
+  businessId String?
+  userId     String?
+  // e.g. AUTH_FAILURE, RATE_LIMIT_BLOCK, INJECTION_ATTEMPT, WEBHOOK_REJECTED,
+  //      UPLOAD_REJECTED, TENANT_VIOLATION, DECRYPTION_FAILURE
+  type       String
+  severity   String   // info | warning | critical
+  ipAddress  String?
+  detail     String?  @db.Text
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([type, createdAt])
+  @@index([businessId, createdAt])
+  @@map("security_events")
+}
+
+// ── Returns & Refunds (persisted; DL-011 MySQL) ─────────────────────────────────
+
+model Return {
+  id                 String    @id @default(uuid())
+  businessId         String
+  type               String    // SALE_RETURN | PURCHASE_RETURN
+  status             String    @default("PENDING") // PENDING|APPROVED|REJECTED|REFUNDED
+  referenceId        String
+  customerId         String?
+  supplierId         String?
+  items              Json      // ReturnLineItem[]
+  totalRefundInPaise Int
+  notes              String?   @db.Text
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  resolvedAt         DateTime?
+
+  @@index([businessId, status])
+  @@index([businessId, createdAt])
+  @@map("returns")
+}
+
+// ── Operations: work orders & tasks (persisted; DL-011 MySQL) ───────────────────
+
+model Operation {
+  id                    String    @id @default(uuid())
+  businessId            String
+  type                  String    // ORDER|TASK|SERVICE_REQUEST|REPAIR|DELIVERY
+  title                 String
+  description           String?   @db.Text
+  status                String    @default("OPEN") // OPEN|IN_PROGRESS|COMPLETED|CANCELLED
+  priority              String    @default("NORMAL") // LOW|NORMAL|HIGH|URGENT
+  customerId            String?
+  assignedToUserId      String?
+  dueDate               DateTime?
+  estimatedValueInPaise Int?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  completedAt           DateTime?
+
+  @@index([businessId, status])
+  @@index([businessId, createdAt])
+  @@map("operations")
+}
+
+// ── Usage & cost tracking (persisted; DL-011 MySQL) ─────────────────────────────
+// One row per business per billing period (month). A new period is a new row,
+// so counters "reset" automatically without mutation.
+
+model UsageCounter {
+  id                     String   @id @default(uuid())
+  businessId             String
+  periodStart            DateTime // first day of the billing month
+  aiChatRequests         Int      @default(0)
+  sttRequests            Int      @default(0)
+  ttsRequests            Int      @default(0)
+  totalApiCalls          Int      @default(0)
+  inputTokens            Int      @default(0)
+  outputTokens           Int      @default(0)
+  estimatedAiCostInPaise Int      @default(0)
+  updatedAt              DateTime @updatedAt
+
+  @@unique([businessId, periodStart])
+  @@map("usage_counters")
+}
+
+// ── Market intelligence (persisted; DL-011 MySQL) ───────────────────────────────
+
+model MarketObservation {
+  id                     String   @id @default(uuid())
+  businessId             String
+  type                   String   // PRICE_BENCHMARK|DEMAND_SIGNAL|NEW_COMPETITOR|SCHEME_OPPORTUNITY|SUPPLY_SHORTAGE|SEASONAL_TREND
+  subject                String
+  description            String   @db.Text
+  priceInPaise           Int?
+  competitorPriceInPaise Int?
+  competitorName         String?
+  locality               String?
+  confidence             String   @default("MEDIUM") // LOW|MEDIUM|HIGH
+  source                 String   @default("MANUAL") // VOICE|MANUAL
+  observedAt             DateTime
+  createdAt              DateTime @default(now())
+
+  @@index([businessId, type])
+  @@index([businessId, observedAt])
+  @@map("market_observations")
+}
+
+// ── Connection Portfolio (persisted; DL-011 MySQL) ──────────────────────────────
+// `credentials` holds a map of AES-256-GCM-encrypted secret values (keys clear,
+// values ciphertext). Raw secrets are never stored or returned to clients.
+
+model Connection {
+  id           String    @id @default(uuid())
+  businessId   String
+  providerId   String
+  providerName String
+  status       String    @default("PENDING") // CONNECTED|DISCONNECTED|ERROR|PENDING
+  credentials  Json?     // { key: encryptedValue } — values are ciphertext
+  connectedAt  DateTime?
+  lastSyncAt   DateTime?
+  errorMessage String?   @db.Text
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([businessId, status])
+  @@map("connections")
+}

@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "IconSpec.dc.html", "x": 0, "y": 0, "w": 860, "h": 2400, "title": "Icon Set Spec — 10 engine icons, nav icons, module icons, construction rules, label-pairing rule" }
+  ],
+  "annotations": [
+    { "id": "p50-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 50 — Icon set specification. 24dp grid, 2dp stroke, round cap/join, 2dp corner radius. 10 AI Engine brand icons (confirmed PNG assets). 5 nav icons. 30+ module and action icons. Label-pairing rule per UI-UX §194: icons never stand alone where ambiguous." }
+  ],
+  "launch": { "view": "canvas" }
+}

@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vepari AI — Design System Catalog</title>
+<style>
+/* ── Reset + base ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --brown:  #3B2F2A;
+  --gold:   #C8A96B;
+  --olive:  #5A6B4F;
+  --terra:  #B45B4A;
+  --beige:  #F2E8D6;
+  --ivory:  #FAF7F2;
+  --white:  #FFFFFF;
+  --indigo: #4A3D6B;
+  --text2:  #8A7060;
+  --brd:    #E8DDD0;
+  --brd2:   #F2E8D6;
+}
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--ivory);
+  color: var(--brown);
+  min-height: 100vh;
+}
+
+/* ── Layout ── */
+.shell { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 220px; flex-shrink: 0;
+  background: var(--brown);
+  color: var(--ivory);
+  padding: 24px 0;
+  position: fixed; top: 0; left: 0; height: 100vh;
+  overflow-y: auto;
+}
+.sidebar-brand {
+  padding: 0 20px 20px;
+  border-bottom: 1px solid rgba(200,169,107,0.3);
+  margin-bottom: 16px;
+}
+.sidebar-brand h1 { font-size: 14px; font-weight: 700; color: var(--gold); line-height: 1.3; }
+.sidebar-brand p { font-size: 10px; color: rgba(250,247,242,0.5); margin-top: 2px; }
+.nav-section { padding: 0 12px; margin-bottom: 4px; }
+.nav-section-label {
+  font-size: 9px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: rgba(200,169,107,0.7);
+  padding: 0 8px; margin-bottom: 4px; margin-top: 12px;
+}
+.nav-link {
+  display: block; padding: 7px 8px; border-radius: 6px;
+  font-size: 12px; color: rgba(250,247,242,0.75);
+  text-decoration: none; cursor: pointer;
+  transition: background 120ms, color 120ms;
+}
+.nav-link:hover, .nav-link.active {
+  background: rgba(200,169,107,0.15);
+  color: var(--ivory);
+}
+.main { margin-left: 220px; flex: 1; }
+.top-bar {
+  background: var(--white); border-bottom: 1px solid var(--brd);
+  padding: 16px 32px; position: sticky; top: 0; z-index: 10;
+}
+.top-bar h2 { font-size: 18px; font-weight: 700; }
+.top-bar p { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.content { padding: 32px; max-width: 1100px; }
+
+/* ── Section ── */
+.section { margin-bottom: 56px; }
+.section-header {
+  font-size: 11px; font-weight: 700; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--text2);
+  padding-bottom: 8px; border-bottom: 1px solid var(--brd);
+  margin-bottom: 20px;
+}
+h3 { font-size: 14px; font-weight: 700; color: var(--brown); margin: 24px 0 10px; }
+
+/* ── Token table ── */
+table { width: 100%; border-collapse: collapse; background: var(--white); border-radius: 10px; overflow: hidden; border: 1px solid var(--brd); margin-bottom: 16px; font-size: 12px; }
+thead { background: var(--beige); }
+th { font-size: 10px; font-weight: 700; color: var(--brown); text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--brd); }
+td { padding: 9px 12px; border-bottom: 1px solid var(--brd2); vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.tok { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: var(--olive); background: #f0f4ee; padding: 2px 5px; border-radius: 3px; }
+.val { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 11px; color: var(--text2); }
+.usage { font-size: 11px; color: var(--text2); }
+.dot { display: inline-block; width: 16px; height: 16px; border-radius: 3px; vertical-align: middle; margin-right: 6px; border: 1px solid rgba(0,0,0,0.10); }
+.badge { display: inline-block; font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 3px; text-transform: uppercase; letter-spacing: 0.3px; }
+.pass  { background: #EEF2EB; color: #2D5A1E; }
+.fail  { background: #FAECEA; color: #7A1E14; }
+.warn  { background: #FFF3E0; color: #7A4500; }
+.defer { background: #EEE8F8; color: #3B2D6A; }
+
+/* ── Palette grid ── */
+.palette-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.swatch-card { border-radius: 10px; overflow: hidden; border: 1px solid var(--brd); }
+.swatch-color { height: 72px; }
+.swatch-info { background: var(--white); padding: 9px 11px; }
+.sw-name { font-size: 11px; font-weight: 700; color: var(--brown); }
+.sw-hex  { font-size: 11px; font-family: monospace; color: var(--text2); }
+.sw-role { font-size: 10px; color: #a38070; margin-top: 2px; }
+
+/* ── Type specimens ── */
+.type-specimen { background: var(--white); border: 1px solid var(--brd); border-radius: 10px; padding: 12px 16px; margin-bottom: 8px; display: flex; align-items: baseline; gap: 16px; }
+.type-meta { font-size: 10px; color: var(--text2); width: 180px; flex-shrink: 0; line-height: 1.6; }
+.type-sample { color: var(--brown); }
+
+/* ── Spacing bars ── */
+.space-bar-wrap { display: flex; align-items: center; gap: 10px; padding: 6px 0; }
+.space-bar { height: 14px; background: var(--gold); border-radius: 2px; flex-shrink: 0; }
+.space-label { font-size: 11px; color: var(--text2); font-family: monospace; }
+
+/* ── Radius demos ── */
+.radius-grid { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.radius-demo { background: var(--beige); border: 1.5px solid var(--gold); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: var(--text2); }
+
+/* ── Elevation demos ── */
+.elev-grid { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+.elev-card { background: var(--white); border-radius: 10px; padding: 16px; min-width: 140px; }
+.elev-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text2); margin-bottom: 3px; }
+.elev-tok { font-size: 10px; font-family: monospace; color: var(--olive); }
+
+/* ── Component demos ── */
+.comp-card { background: var(--white); border: 1px solid var(--brd); border-radius: 10px; overflow: hidden; margin-bottom: 12px; }
+.comp-header { background: var(--beige); padding: 9px 14px; display: flex; align-items: baseline; gap: 10px; border-bottom: 1px solid var(--brd); }
+.comp-name { font-size: 13px; font-weight: 700; }
+.comp-ref { font-size: 10px; color: var(--text2); }
+.comp-body { padding: 0; }
+
+/* ── Motion spring cards ── */
+.spring-card { background: var(--white); border: 1px solid var(--brd); border-radius: 8px; padding: 12px 16px; margin-bottom: 10px; }
+.spring-title { font-size: 12px; font-weight: 700; margin-bottom: 6px; }
+.spring-row { display: flex; gap: 8px; margin-bottom: 3px; align-items: baseline; }
+.spring-key { font-size: 10px; font-weight: 600; color: var(--text2); width: 110px; flex-shrink: 0; }
+.spring-val { font-size: 11px; font-family: monospace; color: var(--brown); }
+.spring-rm { font-size: 10px; color: var(--terra); }
+
+/* ── Note ── */
+.note { background: #fff8e8; border: 1px solid var(--gold); border-radius: 8px; padding: 10px 14px; font-size: 11px; color: #6b4f1a; margin-bottom: 16px; line-height: 1.5; }
+.alert { background: #FAECEA; border: 1px solid #e0a0a0; border-radius: 8px; padding: 10px 14px; font-size: 11px; color: #7A1E14; margin-bottom: 16px; line-height: 1.5; }
+
+/* ── Nav bar mockup ── */
+.nav-mockup {
+  background: var(--white); border: 2px solid var(--brd); border-radius: 14px;
+  overflow: hidden; width: 320px; box-shadow: 0 4px 16px rgba(59,47,42,0.12);
+}
+.nav-screen { background: var(--ivory); height: 60px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: var(--text2); }
+.nav-bar { display: flex; align-items: flex-end; justify-content: space-around; background: var(--white); border-top: 1px solid #EDE5DC; padding: 0 8px; height: 72px; position: relative; box-shadow: 0 -2px 12px rgba(59,47,42,0.08); }
+.nav-tab { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 10px; gap: 3px; flex: 1; cursor: pointer; }
+.nav-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.nav-label { font-size: 9px; font-weight: 500; color: #9A8A82; }
+.nav-tab.active .nav-label { color: var(--brown); font-weight: 700; }
+.nav-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); }
+.nav-voice-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 8px; }
+.nav-voice-btn { width: 48px; height: 48px; border-radius: 50%; background: var(--brown); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(59,47,42,0.35); outline: 3px solid #fff; outline-offset: 1px; }
+.nav-voice-label { font-size: 9px; font-weight: 500; color: #9A8A82; margin-top: 3px; }
+
+/* ── Stat card mockup ── */
+.stat-card { background: var(--white); border: 1px solid var(--brd); border-radius: 12px; padding: 16px; width: 200px; box-shadow: 0 1px 3px rgba(59,47,42,0.10); }
+.stat-label { font-size: 11px; font-weight: 600; color: var(--text2); text-transform: uppercase; letter-spacing: 0.3px; margin-bottom: 6px; }
+.stat-value { font-size: 22px; font-weight: 700; color: var(--brown); margin-bottom: 4px; }
+.stat-trend { font-size: 11px; font-weight: 600; display: flex; align-items: center; gap: 4px; }
+.stat-period { font-size: 10px; color: var(--text2); margin-top: 2px; }
+
+/* ── Dark mode preview ── */
+.dm-preview { border-radius: 10px; overflow: hidden; border: 1px solid #4A3C30; margin-bottom: 16px; }
+.dm-header { background: #3B2F2A; color: #E8DDD4; padding: 10px 16px; font-size: 11px; font-weight: 700; }
+.dm-body { background: #1E1810; padding: 16px; }
+.dm-card { background: #2C231B; border: 1px solid #4A3C30; border-radius: 10px; padding: 12px 14px; margin-bottom: 8px; }
+.dm-label { font-size: 10px; color: #A09080; margin-bottom: 4px; }
+.dm-value { font-size: 15px; font-weight: 700; color: #E8DDD4; }
+
+/* ── Accessibility table ── */
+.a11y-pass { color: #2D5A1E; font-weight: 600; }
+.a11y-fail { color: #7A1E14; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+<!-- ── Sidebar ── -->
+<nav class="sidebar">
+  <div class="sidebar-brand">
+    <h1>Vepari AI<br>Design System</h1>
+    <p>Phase 5 — Single Source of Truth</p>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Foundations</div>
+    <a class="nav-link active" href="#colors">Color Tokens</a>
+    <a class="nav-link" href="#typography">Typography</a>
+    <a class="nav-link" href="#spacing">Spacing &amp; Sizing</a>
+    <a class="nav-link" href="#radius">Corner Radius</a>
+    <a class="nav-link" href="#elevation">Elevation</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Motion</div>
+    <a class="nav-link" href="#motion">Spring Presets</a>
+    <a class="nav-link" href="#haptics">Haptics</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Components</div>
+    <a class="nav-link" href="#actions">Actions (Button, IconButton)</a>
+    <a class="nav-link" href="#inputs">Inputs</a>
+    <a class="nav-link" href="#containers">Containers</a>
+    <a class="nav-link" href="#bottom-nav">Bottom Navigation</a>
+    <a class="nav-link" href="#stat-card">StatCard</a>
+  </div>
+  <div class="nav-section">
+    <div class="nav-section-label">Global</div>
+    <a class="nav-link" href="#dark-mode">Dark Mode Tokens</a>
+    <a class="nav-link" href="#accessibility">WCAG AA Audit</a>
+    <a class="nav-link" href="#localization">Localization Rules</a>
+  </div>
+</nav>
+
+<!-- ── Main ── -->
+<main class="main">
+<div class="top-bar">
+  <h2>Design System Catalog</h2>
+  <p>Vepari AI · Phase 5 complete · Single source of truth for Phase 6 &amp; Phase 9 · No token defined twice</p>
+</div>
+<div class="content">
+
+<!-- ══════════════ COLORS ══════════════ -->
+<div class="section" id="colors">
+<div class="section-header">Color Tokens — P46</div>
+
+<h3>Brand Primitives (6 official hex values)</h3>
+<div class="note">These 6 values are the ONLY primitives. No component code uses raw hex — only semantic tokens below. The 6 values are locked and must not change without a new DEC-0xx decision.</div>
+<div class="palette-grid">
+  <div class="swatch-card"><div class="swatch-color" style="background:#3B2F2A"></div><div class="swatch-info"><div class="sw-name">Deep Brown</div><div class="sw-hex">#3B2F2A</div><div class="sw-role">Primary brand</div></div></div>
+  <div class="swatch-card"><div class="swatch-color" style="background:#C8A96B"></div><div class="swatch-info"><div class="sw-name">Heritage Gold</div><div class="sw-hex">#C8A96B</div><div class="sw-role">Secondary accent</div></div></div>
+  <div class="swatch-card"><div class="swatch-color" style="background:#5A6B4F"></div><div class="swatch-info"><div class="sw-name">Olive Green</div><div class="sw-hex">#5A6B4F</div><div class="sw-role">Success / positive</div></div></div>
+  <div class="swatch-card"><div class="swatch-color" style="background:#B45B4A"></div><div class="swatch-info"><div class="sw-name">Terracotta</div><div class="sw-hex">#B45B4A</div><div class="sw-role">Warning / alert</div></div></div>
+  <div class="swatch-card"><div class="swatch-color" style="background:#F2E8D6"></div><div class="swatch-info"><div class="sw-name">Warm Beige</div><div class="sw-hex">#F2E8D6</div><div class="sw-role">Subtle surface</div></div></div>
+  <div class="swatch-card"><div class="swatch-color" style="background:#FAF7F2; border-bottom:1px solid #e8ddd0"></div><div class="swatch-info"><div class="sw-name">Ivory White</div><div class="sw-hex">#FAF7F2</div><div class="sw-role">Screen canvas</div></div></div>
+</div>
+
+<h3>Semantic Color Tokens — Light Mode (21 slots)</h3>
+<table>
+  <thead><tr><th>Token</th><th>Hex</th><th>Role</th><th>Usage examples</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tok">colors.primary</span></td><td><span class="dot" style="background:#3B2F2A"></span><span class="val">#3B2F2A</span></td><td>Brand primary action</td><td class="usage">Primary buttons, top-bar bg (themed), active nav underline</td></tr>
+    <tr><td><span class="tok">colors.primaryOn</span></td><td><span class="dot" style="background:#FAF7F2;border-color:#bbb"></span><span class="val">#FAF7F2</span></td><td>Text on primary</td><td class="usage">Button label, nav icon on dark bar</td></tr>
+    <tr><td><span class="tok">colors.secondary</span></td><td><span class="dot" style="background:#C8A96B"></span><span class="val">#C8A96B</span></td><td>Secondary action / highlight</td><td class="usage">AI Core ring glow, premium badge, selected chip border, icon accent</td></tr>
+    <tr><td><span class="tok">colors.accent</span></td><td><span class="dot" style="background:#B45B4A"></span><span class="val">#B45B4A</span></td><td>Warm accent / destructive-light</td><td class="usage">Overdue badge, warning banner, reorder button, alert icon</td></tr>
+    <tr><td><span class="tok">colors.success</span></td><td><span class="dot" style="background:#5A6B4F"></span><span class="val">#5A6B4F</span></td><td>Positive outcome</td><td class="usage">Stock OK badge, paid pill, positive trend arrow</td></tr>
+    <tr><td><span class="tok">colors.successSurface</span></td><td><span class="dot" style="background:#EEF2EB"></span><span class="val">#EEF2EB</span></td><td>Success tinted surface</td><td class="usage">OK badge bg, success toast bg, paid chip bg</td></tr>
+    <tr><td><span class="tok">colors.warning</span></td><td><span class="dot" style="background:#B45B4A"></span><span class="val">#B45B4A</span></td><td>Caution / low stock</td><td class="usage">Low stock label, due-soon badge, offline banner text</td></tr>
+    <tr><td><span class="tok">colors.warningSurface</span></td><td><span class="dot" style="background:#FAF0EC"></span><span class="val">#FAF0EC</span></td><td>Warning tinted surface</td><td class="usage">Low stock icon bg, offline banner bg</td></tr>
+    <tr><td><span class="tok">colors.error</span></td><td><span class="dot" style="background:#A0312A"></span><span class="val">#A0312A</span></td><td>Error / out-of-stock</td><td class="usage">Out of stock label, overdue amount, error icon</td></tr>
+    <tr><td><span class="tok">colors.errorSurface</span></td><td><span class="dot" style="background:#FAECEA"></span><span class="val">#FAECEA</span></td><td>Error tinted surface</td><td class="usage">Out-of-stock icon bg, error banner bg</td></tr>
+    <tr><td><span class="tok">colors.info</span></td><td><span class="dot" style="background:#C8A96B"></span><span class="val">#C8A96B</span></td><td>Neutral informational</td><td class="usage">Info alert, "due in 3 days" badge</td></tr>
+    <tr><td><span class="tok">colors.ai</span></td><td><span class="dot" style="background:#4A3D6B"></span><span class="val">#4A3D6B</span></td><td>AI-specific brand surface</td><td class="usage">AI Core ring, AI insight icon, AI status pill — INTERNAL ONLY</td></tr>
+    <tr><td><span class="tok">colors.aiSurface</span></td><td><span class="dot" style="background:#F0EDF8"></span><span class="val">#F0EDF8</span></td><td>AI tinted surface</td><td class="usage">AI insight card bg, AI chat bubble bg</td></tr>
+    <tr><td><span class="tok">colors.background</span></td><td><span class="dot" style="background:#FAF7F2;border-color:#bbb"></span><span class="val">#FAF7F2</span></td><td>App canvas</td><td class="usage">Screen background</td></tr>
+    <tr><td><span class="tok">colors.surface</span></td><td><span class="dot" style="background:#FFFFFF;border-color:#bbb"></span><span class="val">#FFFFFF</span></td><td>Card / panel surface</td><td class="usage">Cards, list backgrounds, form inputs, modal sheets</td></tr>
+    <tr><td><span class="tok">colors.surfaceSubtle</span></td><td><span class="dot" style="background:#F2E8D6"></span><span class="val">#F2E8D6</span></td><td>Subtle alternate surface</td><td class="usage">Counter card bg, chip bg, filter tab bg</td></tr>
+    <tr><td><span class="tok">colors.textPrimary</span></td><td><span class="dot" style="background:#3B2F2A"></span><span class="val">#3B2F2A</span></td><td>Primary text</td><td class="usage">All headings, primary labels</td></tr>
+    <tr><td><span class="tok">colors.textSecondary</span></td><td><span class="dot" style="background:#8A7060"></span><span class="val">#8A7060</span></td><td>Secondary / muted text</td><td class="usage">Subtitles, metadata, timestamps</td></tr>
+    <tr><td><span class="tok">colors.textDisabled</span></td><td><span class="dot" style="background:#C0AFA5"></span><span class="val">#C0AFA5</span></td><td>Disabled / inactive</td><td class="usage">Disabled form labels, inactive tab labels</td></tr>
+    <tr><td><span class="tok">colors.border</span></td><td><span class="dot" style="background:#E8DDD0"></span><span class="val">#E8DDD0</span></td><td>Default border</td><td class="usage">Card borders, input borders, dividers</td></tr>
+    <tr><td><span class="tok">colors.borderSubtle</span></td><td><span class="dot" style="background:#F2E8D6"></span><span class="val">#F2E8D6</span></td><td>Subtle divider</td><td class="usage">List row bottom border, subtle section divider</td></tr>
+  </tbody>
+</table>
+
+<div class="note"><strong>Rule:</strong> Every color rendered in the app must map to one of the 21 semantic tokens above. No raw hex value may appear in component code. The 6 brand hex values are the only primitives; derived values are pre-computed into tokens and not re-derived at runtime.</div>
+<div class="alert"><strong>Teal dropped (DEC-P46):</strong> A cool blue-green (~#2A8C8C) appears once in Screens.png on a secondary AI action chip. Decision: DROP. It conflicts with the warm earthy palette. Use <span class="tok">colors.ai</span> (#4A3D6B) for AI-specific styling instead.</div>
+</div>
+
+<!-- ══════════════ TYPOGRAPHY ══════════════ -->
+<div class="section" id="typography">
+<div class="section-header">Typography — P45</div>
+<div class="note">English: <strong>Inter Variable</strong> (wght 400–700). Indic: <strong>Noto Sans Devanagari</strong> (hi/mr), <strong>Noto Sans Tamil</strong> (ta), <strong>Noto Sans Telugu</strong> (te), <strong>Noto Sans Kannada</strong> (kn). Fonts loaded via app bundle, not @font-face inline.</div>
+
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.displayXl</strong><br>28sp / 700 / lh 1.2 (en)<br>lh 1.4 (hi) / ls −0.5px</div><div class="type-sample" style="font-size:28px;font-weight:700">₹48,200</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.display</strong><br>22sp / 700 / lh 1.2 (en)<br>lh 1.4 (hi) / ls −0.3px</div><div class="type-sample" style="font-size:22px;font-weight:700">0 units</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.titleXl</strong><br>20sp / 700 / lh 1.25 (en)<br>lh 1.45 (hi) / ls −0.2px</div><div class="type-sample" style="font-size:20px;font-weight:700">Ram Traders</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.titleLg</strong><br>18sp / 700 / lh 1.3 (en)<br>lh 1.5 (hi) / ls −0.1px</div><div class="type-sample" style="font-size:18px;font-weight:700">Inventory</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.titleMd</strong><br>16sp / 700 / lh 1.35 (en)<br>lh 1.55 (hi) / ls 0px</div><div class="type-sample" style="font-size:16px;font-weight:700">Profit and Loss</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.titleSm</strong><br>15sp / 600 / lh 1.4 (en)<br>lh 1.6 (hi) / ls 0px</div><div class="type-sample" style="font-size:15px;font-weight:600">Vepari AI</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.bodyLg</strong><br>14sp / 500 / lh 1.4 (en)<br>lh 1.6 (hi) / ls 0px</div><div class="type-sample" style="font-size:14px;font-weight:500">Amul Butter 500g</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.body</strong><br>14sp / 400 / lh 1.45 (en)<br>lh 1.65 (hi) / ls 0px</div><div class="type-sample" style="font-size:14px;font-weight:400">Search products…</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.bodySm</strong><br>13sp / 400 / lh 1.45 (en)<br>lh 1.65 (hi) / ls 0px</div><div class="type-sample" style="font-size:13px;font-weight:400">Collect payment</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.labelLg</strong><br>12sp / 600 / lh 1.35 (en)<br>lh 1.5 (hi) / ls +0.1px</div><div class="type-sample" style="font-size:12px;font-weight:600">Low Stock (18)</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.label</strong><br>11sp / 600 / lh 1.3 (en)<br>lh 1.5 (hi) / ls +0.3px</div><div class="type-sample" style="font-size:11px;font-weight:600;letter-spacing:0.3px">TOTAL SKUs</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.caption</strong><br>11sp / 400 / lh 1.4 (en)<br>lh 1.6 (hi) / ls +0.2px</div><div class="type-sample" style="font-size:11px;font-weight:400">Last purchase: 27 Aug</div></div>
+<div class="type-specimen"><div class="type-meta"><strong>typeScale.overline</strong><br>10sp / 700 ALL-CAPS / lh 1.3<br>lh 1.5 (hi) / ls +0.8px</div><div class="type-sample" style="font-size:10px;font-weight:700;letter-spacing:0.8px;text-transform:uppercase">Out of Stock</div></div>
+
+<div class="note"><strong>Noto Sans Devanagari weight fallback:</strong> 400→400, 500→400 (no 500 bundled — do NOT synthesize bold), 600→700 (heavier is acceptable for Indic labels), 700→700. Apply Indic line-height even at label sizes due to matra ascenders.</div>
+</div>
+
+<!-- ══════════════ SPACING ══════════════ -->
+<div class="section" id="spacing">
+<div class="section-header">Spacing &amp; Sizing — P47</div>
+<div class="note">Base unit: <strong>4dp</strong>. All spacing tokens are multiples of 4. Screen width: 390dp canvas. Screen margins: 20dp each side.</div>
+
+<table>
+  <thead><tr><th>Token</th><th>Value</th><th>Visual</th><th>Usage</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tok">space[1]</span></td><td class="val">4dp</td><td><span class="space-bar" style="width:4px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Icon inner padding, micro gap, border-width</td></tr>
+    <tr><td><span class="tok">space[2]</span></td><td class="val">8dp</td><td><span class="space-bar" style="width:8px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Chip padding, badge padding, icon-to-text gap</td></tr>
+    <tr><td><span class="tok">space[3]</span></td><td class="val">12dp</td><td><span class="space-bar" style="width:12px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">List row vertical padding, button vertical padding</td></tr>
+    <tr><td><span class="tok">space[4]</span></td><td class="val">16dp</td><td><span class="space-bar" style="width:16px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Card padding, form field, section gap</td></tr>
+    <tr><td><span class="tok">space[5] / spacing.screenMargin</span></td><td class="val">20dp</td><td><span class="space-bar" style="width:20px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Screen horizontal margin, FAB bottom offset</td></tr>
+    <tr><td><span class="tok">space[6] / spacing.sectionGap</span></td><td class="val">24dp</td><td><span class="space-bar" style="width:24px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Section header top margin, card-to-card vertical gap</td></tr>
+    <tr><td><span class="tok">space[8]</span></td><td class="val">32dp</td><td><span class="space-bar" style="width:32px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Large section gap</td></tr>
+    <tr><td><span class="tok">space[10]</span></td><td class="val">40dp</td><td><span class="space-bar" style="width:40px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">AI Core inner ring diameter, bottom sheet handle</td></tr>
+    <tr><td><span class="tok">space[12] / spacing.buttonHeight / spacing.inputHeight</span></td><td class="val">48dp</td><td><span class="space-bar" style="width:48px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Button height, input height, list row min-height</td></tr>
+    <tr><td><span class="tok">space[14] / spacing.navBarHeight</span></td><td class="val">56dp</td><td><span class="space-bar" style="width:56px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Top app-bar height; nav bar conceptual height</td></tr>
+    <tr><td><span class="tok">space[16]</span></td><td class="val">64dp</td><td><span class="space-bar" style="width:64px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">Large avatar, AI Core outer ring diameter</td></tr>
+    <tr><td><span class="tok">space[20]</span></td><td class="val">80dp</td><td><span class="space-bar" style="width:80px;height:12px;display:inline-block;background:#c8a96b;border-radius:2px"></span></td><td class="usage">AI Core total footprint (ring + glow)</td></tr>
+  </tbody>
+</table>
+
+<table>
+  <thead><tr><th>Semantic alias</th><th>Value</th><th>Role</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tok">spacing.screenMargin</span></td><td class="val">20dp</td><td class="usage">Left/right screen edge inset — all lists and forms</td></tr>
+    <tr><td><span class="tok">spacing.cardPadding</span></td><td class="val">16dp</td><td class="usage">Card content inset (H and V)</td></tr>
+    <tr><td><span class="tok">spacing.listRowPaddingV</span></td><td class="val">12dp</td><td class="usage">List row vertical padding per side</td></tr>
+    <tr><td><span class="tok">spacing.listRowPaddingH</span></td><td class="val">20dp</td><td class="usage">List row left/right aligns with screen margin</td></tr>
+    <tr><td><span class="tok">spacing.sectionGap</span></td><td class="val">24dp</td><td class="usage">Gap between major sections on a screen</td></tr>
+    <tr><td><span class="tok">spacing.buttonHeight</span></td><td class="val">48dp</td><td class="usage">All primary and full-width buttons</td></tr>
+    <tr><td><span class="tok">spacing.inputHeight</span></td><td class="val">48dp</td><td class="usage">Text fields, search bars, select fields</td></tr>
+    <tr><td><span class="tok">spacing.chipHeight</span></td><td class="val">32dp</td><td class="usage">Filter tabs, period chips, tag chips</td></tr>
+    <tr><td><span class="tok">spacing.icon</span></td><td class="val">24dp</td><td class="usage">Standard action icons, nav icons</td></tr>
+    <tr><td><span class="tok">spacing.iconSm</span></td><td class="val">16dp</td><td class="usage">Inline icons next to text</td></tr>
+    <tr><td><span class="tok">spacing.iconLg</span></td><td class="val">32dp</td><td class="usage">Card leading icons, badge icons</td></tr>
+    <tr><td><span class="tok">spacing.touchTargetMin</span></td><td class="val">44dp</td><td class="usage">Minimum touch area (iOS HIG / WCAG 2.1)</td></tr>
+    <tr><td><span class="tok">spacing.voiceFabSize</span></td><td class="val">56dp</td><td class="usage">Voice FAB canonical diameter</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ══════════════ RADIUS ══════════════ -->
+<div class="section" id="radius">
+<div class="section-header">Corner Radius — P47</div>
+<div class="radius-grid">
+  <div><div class="radius-demo" style="width:48px;height:28px;border-radius:4px">xs 4</div></div>
+  <div><div class="radius-demo" style="width:64px;height:28px;border-radius:8px">sm 8</div></div>
+  <div><div class="radius-demo" style="width:80px;height:36px;border-radius:12px">md 12</div></div>
+  <div><div class="radius-demo" style="width:80px;height:36px;border-radius:16px">lg 16</div></div>
+  <div><div class="radius-demo" style="width:80px;height:36px;border-radius:20px 20px 0 0">xl 20 (top)</div></div>
+  <div><div class="radius-demo" style="width:80px;height:36px;border-radius:24px;background:#f0edf8;border-color:#4a3d6b">ai 24</div></div>
+  <div><div class="radius-demo" style="width:40px;height:40px;border-radius:9999px">full</div></div>
+</div>
+<table>
+  <thead><tr><th>Token</th><th>Value</th><th>Components</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tok">radius.xs</span></td><td class="val">4dp</td><td class="usage">Badge, pill label, code token bg</td></tr>
+    <tr><td><span class="tok">radius.sm</span></td><td class="val">8dp</td><td class="usage">Button, chip, filter tab, text field, search bar, icon button</td></tr>
+    <tr><td><span class="tok">radius.md</span></td><td class="val">12dp</td><td class="usage">Card, MetricCard, ListItem card, alert banner, toast</td></tr>
+    <tr><td><span class="tok">radius.lg</span></td><td class="val">16dp</td><td class="usage">Dialog, modal container, bottom sheet inner area</td></tr>
+    <tr><td><span class="tok">radius.xl</span></td><td class="val">20dp (top-only)</td><td class="usage">Bottom sheet top corners, drawer, full-screen modal top corners</td></tr>
+    <tr><td><span class="tok">radius.ai</span></td><td class="val">24dp</td><td class="usage">AI Briefing card, AI Insight, AI chat bubble</td></tr>
+    <tr><td><span class="tok">radius.full</span></td><td class="val">9999dp</td><td class="usage">Avatar, Voice FAB, progress track, toggle thumb</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ══════════════ ELEVATION ══════════════ -->
+<div class="section" id="elevation">
+<div class="section-header">Elevation — P47</div>
+<div class="note">Shadows use Deep Brown #3B2F2A at low opacity — not pure black — to stay warm and on-brand. AI Overlay uses AI Indigo #4A3D6B tinted shadow.</div>
+<div class="elev-grid">
+  <div class="elev-card" style="border:1px solid #e8ddd0"><div class="elev-label">Base</div><div class="elev-tok">elevation[0]</div><p class="usage" style="font-size:10px;margin-top:4px">Canvas, body</p></div>
+  <div class="elev-card" style="box-shadow:0 1px 3px rgba(59,47,42,0.10)"><div class="elev-label">Surface</div><div class="elev-tok">elevation[1]</div><p class="usage" style="font-size:10px;margin-top:4px">Cards, inputs</p></div>
+  <div class="elev-card" style="box-shadow:0 4px 8px rgba(59,47,42,0.10)"><div class="elev-label">Elevated</div><div class="elev-tok">elevation[2]</div><p class="usage" style="font-size:10px;margin-top:4px">Dropdowns, menus</p></div>
+  <div class="elev-card" style="box-shadow:0 8px 16px rgba(59,47,42,0.12)"><div class="elev-label">Floating</div><div class="elev-tok">elevation[3]</div><p class="usage" style="font-size:10px;margin-top:4px">FAB, bottom sheet, toast</p></div>
+  <div class="elev-card" style="box-shadow:0 8px 24px rgba(74,61,107,0.20)"><div class="elev-label">AI Overlay</div><div class="elev-tok">elevation.ai</div><p class="usage" style="font-size:10px;margin-top:4px">AI Core, AI Briefing</p></div>
+  <div class="elev-card" style="box-shadow:0 16px 32px rgba(59,47,42,0.16)"><div class="elev-label">Modal</div><div class="elev-tok">elevation.modal</div><p class="usage" style="font-size:10px;margin-top:4px">Modal dialogs, sheets</p></div>
+</div>
+<div class="note"><strong>Scrim:</strong> <span class="tok">colors.scrim</span> = rgba(59,47,42,0.50) — behind elevation.modal only. <span class="tok">colors.scrimAi</span> = rgba(74,61,107,0.04) — ambient tint for AI overlay, not a blocking scrim.</div>
+</div>
+
+<!-- ══════════════ MOTION ══════════════ -->
+<div class="section" id="motion">
+<div class="section-header">Spring Presets — P51</div>
+<div class="note">All animation in Vepari AI uses spring curves (React Native Reanimated withSpring). Never linear or ease-out tweens for UI interactions. Reduced-motion MUST preserve semantic meaning — never simply remove feedback.</div>
+
+<div class="spring-card">
+  <div class="spring-title">Spring 1 — Snappy (UI controls)</div>
+  <div class="spring-row"><div class="spring-key">Stiffness / Damping / Mass</div><div class="spring-val">400 / 40 / 1</div></div>
+  <div class="spring-row"><div class="spring-key">Settle time</div><div class="spring-val">~180ms, ~2% overshoot</div></div>
+  <div class="spring-row"><div class="spring-key">Used for</div><div class="spring-val">Button press scale, chip select, tab indicator slide, checkbox check</div></div>
+  <div class="spring-row"><div class="spring-key">Reduced-motion</div><div class="spring-rm">opacity 0→1 over 100ms, no scale — or instant cut for micro-interactions</div></div>
+</div>
+<div class="spring-card">
+  <div class="spring-title">Spring 2 — Gentle (cards and sheets)</div>
+  <div class="spring-row"><div class="spring-key">Stiffness / Damping / Mass</div><div class="spring-val">200 / 28 / 1</div></div>
+  <div class="spring-row"><div class="spring-key">Settle time</div><div class="spring-val">~320ms, ~4% overshoot</div></div>
+  <div class="spring-row"><div class="spring-key">Used for</div><div class="spring-val">Bottom sheet open/close, card expand, modal entry, screen push/pop</div></div>
+  <div class="spring-row"><div class="spring-key">Reduced-motion</div><div class="spring-rm">opacity 0→1 over 200ms ease-out, no translate — sheet appears in place</div></div>
+</div>
+<div class="spring-card">
+  <div class="spring-title">Spring 3 — AI Breath (AI Core ring pulse)</div>
+  <div class="spring-row"><div class="spring-key">Stiffness / Damping / Mass</div><div class="spring-val">80 / 12 / 1</div></div>
+  <div class="spring-row"><div class="spring-key">Settle time</div><div class="spring-val">~1200ms, ~8–10% overshoot (intentional "breathing" feel)</div></div>
+  <div class="spring-row"><div class="spring-key">Listening state</div><div class="spring-val">scale 1.0→1.06→1.0 (looping), glow shadowBlur 12→28dp</div></div>
+  <div class="spring-row"><div class="spring-key">Reduced-motion</div><div class="spring-rm">Static AI Core. Status pill text → "Listening…" with slow opacity blink (0.6→1.0 at 1.5s ease-in-out)</div></div>
+</div>
+<div class="spring-card">
+  <div class="spring-title">Spring 4 — Voice Amplitude (waveform bars)</div>
+  <div class="spring-row"><div class="spring-key">Stiffness / Damping / Mass</div><div class="spring-val">200 / 20 / 0.8</div></div>
+  <div class="spring-row"><div class="spring-key">Update</div><div class="spring-val">30fps driven by RMS amplitude</div></div>
+  <div class="spring-row"><div class="spring-key">Reduced-motion</div><div class="spring-rm">Solid horizontal line, opacity changes (0.4→1.0) on voice activity — no bar movement</div></div>
+</div>
+<div class="spring-card">
+  <div class="spring-title">Spring 5 — Inertial Scroll</div>
+  <div class="spring-row"><div class="spring-key">Implementation</div><div class="spring-val">React Native ScrollView default (decay 0.998). Do not override.</div></div>
+  <div class="spring-row"><div class="spring-key">Rubber-band</div><div class="spring-val">iOS native. Android EdgeEffect. No custom implementation.</div></div>
+  <div class="spring-row"><div class="spring-key">Reduced-motion</div><div class="spring-rm">No change needed — scroll inertia is system behavior</div></div>
+</div>
+</div>
+
+<!-- ══════════════ HAPTICS ══════════════ -->
+<div class="section" id="haptics">
+<div class="section-header">Haptics — P51</div>
+<table>
+  <thead><tr><th>Event</th><th>iOS (Taptic Engine)</th><th>Android (VibrationEffect)</th><th>Trigger</th></tr></thead>
+  <tbody>
+    <tr><td>Primary action (Add, Confirm)</td><td class="val">impact.medium</td><td class="val">EFFECT_HEAVY_CLICK (40ms)</td><td class="usage">Button tap for primary CTA</td></tr>
+    <tr><td>Voice activation</td><td class="val">impact.heavy</td><td class="val">EFFECT_HEAVY_CLICK (60ms)</td><td class="usage">Voice FAB tap (mic on)</td></tr>
+    <tr><td>Voice deactivation</td><td class="val">impact.medium</td><td class="val">EFFECT_CLICK (30ms)</td><td class="usage">Tap to stop listening</td></tr>
+    <tr><td>AI response complete</td><td class="val">notification.success</td><td class="val">EFFECT_TICK (2×15ms, 50ms gap)</td><td class="usage">AI finishes speaking</td></tr>
+    <tr><td>Destructive / error</td><td class="val">notification.error</td><td class="val">createWaveform([0,50,50,80])</td><td class="usage">Delete confirm, payment fail</td></tr>
+    <tr><td>Selection / toggle</td><td class="val">selection</td><td class="val">EFFECT_CLICK (10ms)</td><td class="usage">Checkbox, switch, chip toggle</td></tr>
+    <tr><td>Long press / swipe reveal</td><td class="val">impact.light</td><td class="val">EFFECT_TICK (15ms)</td><td class="usage">Long-press context menu, swipe reveal</td></tr>
+    <tr><td>Toast / success banner</td><td class="val">notification.success</td><td class="val">EFFECT_TICK (15ms)</td><td class="usage">Payment success toast, stock updated</td></tr>
+  </tbody>
+</table>
+<div class="note">Haptics are disabled when user has reduced-motion / vibration OFF in OS accessibility settings. Always check <code>AccessibilityInfo.isReduceMotionEnabled()</code> and <code>Platform.OS</code> before triggering.</div>
+</div>
+
+<!-- ══════════════ ACTIONS ══════════════ -->
+<div class="section" id="actions">
+<div class="section-header">Component: Actions — P48</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Button</span><span class="comp-ref">Height 48dp · radius.sm (8dp) · font typeScale.bodySm 600</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Background</th><th>Text / Icon</th><th>Border</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Default</td><td><span class="tok">colors.primary</span></td><td><span class="tok">colors.primaryOn</span></td><td>none</td><td class="usage">Full-width or auto</td></tr>
+        <tr><td>Pressed</td><td>#2e2420 (primary −10% lum)</td><td><span class="tok">colors.primaryOn</span></td><td>none</td><td class="usage">Scale 0.98, Spring 1</td></tr>
+        <tr><td>Focused</td><td><span class="tok">colors.primary</span></td><td><span class="tok">colors.primaryOn</span></td><td>2dp <span class="tok">colors.secondary</span> offset 2dp</td><td class="usage">Keyboard focus ring (Heritage Gold)</td></tr>
+        <tr><td>Disabled</td><td><span class="tok">colors.surfaceSubtle</span></td><td><span class="tok">colors.textDisabled</span></td><td>none</td><td class="usage">pointer-events: none</td></tr>
+        <tr><td>Loading</td><td><span class="tok">colors.primary</span></td><td>Spinner 24dp white</td><td>none</td><td class="usage">Label replaced by spinner; width locked</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="note"><strong>Variants:</strong> Primary (filled), Secondary (outlined 1.5dp border colors.primary), Ghost (no bg/border, text colors.primary), Destructive (bg colors.error). All share same height (48dp) and radius (8dp).</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">IconButton</span><span class="comp-ref">Touch target 44dp · icon 24dp centered</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Background</th><th>Icon color</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Default</td><td>transparent</td><td><span class="tok">colors.textPrimary</span></td><td class="usage">Variants: Filled (bg surfaceSubtle), Tonal (bg secondary 15%)</td></tr>
+        <tr><td>Pressed</td><td><span class="tok">colors.surfaceSubtle</span></td><td><span class="tok">colors.primary</span></td><td class="usage">Ripple/fill fade 120ms</td></tr>
+        <tr><td>Focused</td><td>transparent</td><td><span class="tok">colors.primary</span></td><td class="usage">2dp focus ring colors.secondary</td></tr>
+        <tr><td>Disabled</td><td>transparent</td><td><span class="tok">colors.textDisabled</span></td><td class="usage">Opacity 0.38</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ INPUTS ══════════════ -->
+<div class="section" id="inputs">
+<div class="section-header">Component: Inputs — P48</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">TextField</span><span class="comp-ref">Height 48dp · radius.sm · padding 16dp H / 12dp V</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Border</th><th>Label</th><th>Background</th></tr></thead>
+      <tbody>
+        <tr><td>Default</td><td>1dp <span class="tok">colors.border</span></td><td><span class="tok">colors.textSecondary</span> floating 11sp</td><td><span class="tok">colors.surface</span></td></tr>
+        <tr><td>Focused</td><td>2dp <span class="tok">colors.primary</span></td><td><span class="tok">colors.primary</span> 11sp (floated)</td><td><span class="tok">colors.surface</span></td></tr>
+        <tr><td>Filled (unfocused)</td><td>1dp <span class="tok">colors.border</span></td><td><span class="tok">colors.textSecondary</span> 11sp top</td><td><span class="tok">colors.surface</span></td></tr>
+        <tr><td>Disabled</td><td>1dp <span class="tok">colors.borderSubtle</span> dashed</td><td><span class="tok">colors.textDisabled</span></td><td><span class="tok">colors.surfaceSubtle</span></td></tr>
+        <tr><td>Error</td><td>2dp <span class="tok">colors.error</span></td><td><span class="tok">colors.error</span></td><td><span class="tok">colors.errorSurface</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Switch (Toggle)</span><span class="comp-ref">Track 36×20dp · Thumb 16dp circle · Touch target 44dp</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Track</th><th>Thumb</th></tr></thead>
+      <tbody>
+        <tr><td>Off</td><td><span class="tok">colors.border</span></td><td>White, left</td></tr>
+        <tr><td>On</td><td><span class="tok">colors.primary</span></td><td>White, right — slide 150ms ease</td></tr>
+        <tr><td>Disabled Off</td><td><span class="tok">colors.borderSubtle</span></td><td>White, opacity 0.6</td></tr>
+        <tr><td>Disabled On</td><td><span class="tok">colors.textDisabled</span></td><td>White, opacity 0.6</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ CONTAINERS ══════════════ -->
+<div class="section" id="containers">
+<div class="section-header">Component: Containers — P48</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">Card</span><span class="comp-ref">radius.md (12dp) · padding cardPadding (16dp) · margin-bottom 12dp</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Background</th><th>Border</th><th>Shadow</th></tr></thead>
+      <tbody>
+        <tr><td>Default</td><td><span class="tok">colors.surface</span></td><td>1dp <span class="tok">colors.border</span></td><td><span class="tok">elevation[1]</span></td></tr>
+        <tr><td>Pressed (tappable)</td><td><span class="tok">colors.surfaceSubtle</span></td><td>1dp <span class="tok">colors.border</span></td><td><span class="tok">elevation[1]</span></td></tr>
+        <tr><td>Selected</td><td><span class="tok">colors.surface</span></td><td>2dp <span class="tok">colors.secondary</span></td><td><span class="tok">elevation[1]</span></td></tr>
+        <tr><td>Error / Warning</td><td><span class="tok">colors.errorSurface</span></td><td>1dp <span class="tok">colors.error</span></td><td>none</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="comp-card">
+  <div class="comp-header"><span class="comp-name">ListItem</span><span class="comp-ref">min-height 56dp · H-padding 20dp (screenMargin) · border-bottom 1dp borderSubtle</span></div>
+  <div class="comp-body">
+    <table>
+      <thead><tr><th>State</th><th>Background</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Default</td><td>transparent</td><td class="usage">Height auto (min 56dp)</td></tr>
+        <tr><td>Pressed</td><td><span class="tok">colors.surfaceSubtle</span></td><td class="usage">Instant, 120ms fade-out</td></tr>
+        <tr><td>Selected</td><td><span class="tok">colors.secondary</span> at 10%</td><td class="usage">Left border 3dp colors.secondary</td></tr>
+        <tr><td>Disabled</td><td>transparent</td><td class="usage">All text colors.textDisabled; no press response</td></tr>
+        <tr><td>Swipe-reveal (Left)</td><td><span class="tok">colors.error</span> (delete, 72dp)</td><td class="usage">Icon 24dp centered, label 11sp 600 white</td></tr>
+        <tr><td>Swipe-reveal (Right)</td><td><span class="tok">colors.success</span> (quick action, 72dp)</td><td class="usage">Icon 24dp centered, label 11sp 600 white</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+</div>
+
+<!-- ══════════════ BOTTOM NAV ══════════════ -->
+<div class="section" id="bottom-nav">
+<div class="section-header">Component: Bottom Navigation — P53</div>
+
+<div style="display:flex; gap:24px; align-items:flex-start; flex-wrap:wrap; margin-bottom:20px;">
+  <!-- Default state -->
+  <div>
+    <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Home active</div>
+    <div class="nav-mockup">
+      <div class="nav-screen">Screen content</div>
+      <div class="nav-bar">
+        <div class="nav-tab active">
+          <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B2F2A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
+          <div class="nav-label" style="color:#3B2F2A;font-weight:700">Home</div>
+          <div class="nav-dot"></div>
+        </div>
+        <div class="nav-tab">
+          <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9A8A82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
+          <div class="nav-label">Stock</div>
+        </div>
+        <div class="nav-voice-wrap">
+          <div class="nav-voice-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAF7F2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></div>
+          <div class="nav-voice-label">Voice</div>
+        </div>
+        <div class="nav-tab">
+          <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9A8A82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div>
+          <div class="nav-label">Sales</div>
+        </div>
+        <div class="nav-tab">
+          <div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9A8A82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg></div>
+          <div class="nav-label">More</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Voice active state -->
+  <div>
+    <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">Voice active</div>
+    <div class="nav-mockup">
+      <div class="nav-screen">Screen content</div>
+      <div class="nav-bar">
+        <div class="nav-tab"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9A8A82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div><div class="nav-label">Home</div></div>
+        <div class="nav-tab"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9A8A82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div><div class="nav-label">Stock</div></div>
+        <div class="nav-voice-wrap active">
+          <div class="nav-voice-btn active" style="background:#C8A96B;box-shadow:0 4px 10px rgba(200,169,107,0.45)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAF7F2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"/></svg></div>
+          <div class="nav-voice-label" style="color:#3B2F2A;font-weight:700">Voice</div>
+        </div>
+        <div class="nav-tab"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9A8A82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div class="nav-label">Sales</div></div>
+        <div class="nav-tab"><div class="nav-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9A8A82" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2"/></svg></div><div class="nav-label">More</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<table>
+  <thead><tr><th>Spec</th><th>Value</th></tr></thead>
+  <tbody>
+    <tr><td>Bar height (total)</td><td class="val">80dp (inc. Voice FAB footprint)</td></tr>
+    <tr><td>Bar background</td><td><span class="dot" style="background:#fff;border-color:#bbb"></span><span class="val">#FFFFFF</span></td></tr>
+    <tr><td>Border top</td><td class="val">1dp #EDE5DC</td></tr>
+    <tr><td>Tab icon size</td><td class="val">24dp</td></tr>
+    <tr><td>Tab label size</td><td class="val">9sp / 500 (default) · 700 (active)</td></tr>
+    <tr><td>Active label color</td><td><span class="dot" style="background:#3B2F2A"></span><span class="val">colors.primary (#3B2F2A)</span></td></tr>
+    <tr><td>Active indicator</td><td class="val">4dp dot · colors.secondary (#C8A96B)</td></tr>
+    <tr><td>Voice FAB size</td><td class="val">48dp button (56dp canonical spec)</td></tr>
+    <tr><td>Voice FAB bg (idle)</td><td><span class="dot" style="background:#3B2F2A"></span><span class="val">colors.primary</span></td></tr>
+    <tr><td>Voice FAB bg (active)</td><td><span class="dot" style="background:#C8A96B"></span><span class="val">colors.secondary</span></td></tr>
+    <tr><td>Voice FAB ring</td><td class="val">3dp white outline, 1dp offset</td></tr>
+    <tr><td>Voice FAB elevation</td><td class="val">10dp · shadow rgba(59,47,42,.35)</td></tr>
+    <tr><td>React Navigation</td><td class="val">tabBarStyle: overflow: 'visible' (required for FAB)</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ══════════════ STAT CARD ══════════════ -->
+<div class="section" id="stat-card">
+<div class="section-header">Component: StatCard — P54</div>
+
+<div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px;">
+  <div>
+    <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">favorable / up</div>
+    <div class="stat-card">
+      <div class="stat-label">Revenue</div>
+      <div class="stat-value">₹8.4L</div>
+      <div class="stat-trend" style="color:#5A6B4F">▲ 12.4% <span style="color:#8A7060;font-weight:400">vs last month</span></div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">unfavorable / down</div>
+    <div class="stat-card">
+      <div class="stat-label">Expenses</div>
+      <div class="stat-value">₹3.2L</div>
+      <div class="stat-trend" style="color:#A0312A">▼ 5.1% <span style="color:#8A7060;font-weight:400">vs last month</span></div>
+    </div>
+  </div>
+  <div>
+    <div style="font-size:10px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px">neutral</div>
+    <div class="stat-card">
+      <div class="stat-label">Net Profit</div>
+      <div class="stat-value">₹5.2L</div>
+      <div class="stat-trend" style="color:#8A7060">– 0% <span style="color:#8A7060;font-weight:400">vs last month</span></div>
+    </div>
+  </div>
+</div>
+
+<table>
+  <thead><tr><th>StatCardProps</th><th>Type</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td>label</td><td class="val">string</td><td class="usage">'Revenue' | 'Expenses' | 'Net Profit'</td></tr>
+    <tr><td>value</td><td class="val">string</td><td class="usage">Pre-formatted: '₹8.4L', '₹1.2Cr'</td></tr>
+    <tr><td>direction</td><td class="val">'up' | 'down' | 'neutral'</td><td class="usage">Arrow direction</td></tr>
+    <tr><td>valence</td><td class="val">'favorable' | 'unfavorable' | 'neutral'</td><td class="usage">Color coding (favorable=green, unfavorable=red, neutral=muted)</td></tr>
+    <tr><td>changePercent</td><td class="val">number</td><td class="usage">e.g. 12.4</td></tr>
+    <tr><td>period</td><td class="val">string</td><td class="usage">'vs last month'</td></tr>
+    <tr><td>onPress</td><td class="val">() =&gt; void | undefined</td><td class="usage">Optional drill-down navigation</td></tr>
+  </tbody>
+</table>
+<div class="note"><strong>Valence ≠ Direction:</strong> A down-arrow on Expenses is <em>favorable</em> (spending decreased). A up-arrow on Expenses is <em>unfavorable</em>. Always pass both independently.</div>
+</div>
+
+<!-- ══════════════ DARK MODE ══════════════ -->
+<div class="section" id="dark-mode">
+<div class="section-header">Dark Mode Tokens — P56 (Phase 7 implementation)</div>
+<div class="note"><strong>Decision DEC-014:</strong> Dark mode is IN SCOPE. Tokens defined in Phase 5. Toggle implementation (useColorScheme, Settings screen) deferred to Phase 7.</div>
+
+<div class="dm-preview">
+  <div class="dm-header">Vepari AI — Dark Mode preview</div>
+  <div class="dm-body">
+    <div class="dm-card">
+      <div class="dm-label">Revenue</div>
+      <div class="dm-value">₹8.4L</div>
+      <div style="font-size:11px;color:#7A9B6A;font-weight:600;margin-top:3px">▲ 12.4% vs last month</div>
+    </div>
+    <div class="dm-card">
+      <div class="dm-label">Inventory alert</div>
+      <div class="dm-value" style="color:#C4705F">Amul Butter 500g — Low Stock</div>
+    </div>
+  </div>
+</div>
+
+<table>
+  <thead><tr><th>dm- token</th><th>Hex</th><th>Maps to light token</th></tr></thead>
+  <tbody>
+    <tr><td><span class="tok">brandDark.dmBg</span></td><td><span class="dot" style="background:#1E1810"></span><span class="val">#1E1810</span></td><td class="usage">colors.background</td></tr>
+    <tr><td><span class="tok">brandDark.dmSurface</span></td><td><span class="dot" style="background:#2C231B"></span><span class="val">#2C231B</span></td><td class="usage">colors.surface</td></tr>
+    <tr><td><span class="tok">brandDark.dmCard</span></td><td><span class="dot" style="background:#382D23"></span><span class="val">#382D23</span></td><td class="usage">colors.surfaceSubtle</td></tr>
+    <tr><td><span class="tok">brandDark.dmBrown</span></td><td><span class="dot" style="background:#E8DDD4"></span><span class="val">#E8DDD4</span></td><td class="usage">colors.textPrimary</td></tr>
+    <tr><td><span class="tok">brandDark.dmGold</span></td><td><span class="dot" style="background:#D4A853"></span><span class="val">#D4A853</span></td><td class="usage">colors.secondary — 4.5:1 on dm-surface ✓</td></tr>
+    <tr><td><span class="tok">brandDark.dmOlive</span></td><td><span class="dot" style="background:#7A9B6A"></span><span class="val">#7A9B6A</span></td><td class="usage">colors.success</td></tr>
+    <tr><td><span class="tok">brandDark.dmTerra</span></td><td><span class="dot" style="background:#C4705F"></span><span class="val">#C4705F</span></td><td class="usage">colors.warning / colors.accent</td></tr>
+    <tr><td><span class="tok">brandDark.dmIndigo</span></td><td><span class="dot" style="background:#8B7FB8"></span><span class="val">#8B7FB8</span></td><td class="usage">colors.ai</td></tr>
+    <tr><td><span class="tok">brandDark.dmBorder</span></td><td><span class="dot" style="background:#4A3C30"></span><span class="val">#4A3C30</span></td><td class="usage">colors.border</td></tr>
+    <tr><td><span class="tok">brandDark.dmMuted</span></td><td><span class="dot" style="background:#A09080"></span><span class="val">#A09080</span></td><td class="usage">colors.textSecondary</td></tr>
+  </tbody>
+</table>
+
+<div class="alert"><strong>Gold text restriction in dark mode:</strong> dm-gold (#D4A853) passes WCAG AA on dm-bg (5.1:1) and dm-surface (4.5:1), but FAILS on dm-card (3.9:1 — large text only at ≥18sp or 14sp bold). Never use gold as normal-size label text on dm-card.</div>
+</div>
+
+<!-- ══════════════ ACCESSIBILITY ══════════════ -->
+<div class="section" id="accessibility">
+<div class="section-header">WCAG AA Accessibility Audit — P55</div>
+<div class="note">WCAG 2.1 AA thresholds: Normal text ≥4.5:1 · Large text ≥3.0:1 · UI components ≥3.0:1 · Touch targets ≥44dp.</div>
+
+<table>
+  <thead><tr><th>Combination</th><th>Contrast ratio</th><th>Normal text</th><th>Large text</th><th>UI component</th></tr></thead>
+  <tbody>
+    <tr><td>Deep Brown on Ivory White</td><td class="val">12.4:1</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td></tr>
+    <tr><td>Deep Brown on White</td><td class="val">14.1:1</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td></tr>
+    <tr><td>Brown 55% (#8A7060) on Ivory</td><td class="val">5.2:1</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td></tr>
+    <tr><td>Olive Green on Ivory White</td><td class="val">4.9:1</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td></tr>
+    <tr><td>Heritage Gold on Brown</td><td class="val">4.78:1</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td><td class="a11y-pass">PASS</td></tr>
+    <tr style="background:#fff8f8"><td><strong>Heritage Gold on Ivory White</strong></td><td class="val">2.25:1</td><td class="a11y-fail">FAIL</td><td class="a11y-fail">FAIL</td><td class="a11y-fail">FAIL</td></tr>
+    <tr style="background:#fff8f8"><td><strong>Heritage Gold on White</strong></td><td class="val">2.10:1</td><td class="a11y-fail">FAIL</td><td class="a11y-fail">FAIL</td><td class="a11y-fail">FAIL</td></tr>
+    <tr style="background:#fff8f8"><td><strong>Heritage Gold on Beige</strong></td><td class="val">1.85:1</td><td class="a11y-fail">FAIL</td><td class="a11y-fail">FAIL</td><td class="a11y-fail">FAIL</td></tr>
+    <tr><td>Terracotta on Ivory White</td><td class="val">4.33:1</td><td class="a11y-fail">FAIL (4.33 &lt; 4.5)</td><td class="a11y-pass">PASS (≥3.0)</td><td class="a11y-pass">PASS</td></tr>
+  </tbody>
+</table>
+<div class="alert"><strong>Heritage Gold FAILS as text on all light surfaces.</strong> Use it only for: decorative icons, borders, badge backgrounds, active indicator dots, and text on the Deep Brown primary background. Never use Heritage Gold as body text or label text on ivory/white/beige surfaces.</div>
+</div>
+
+<!-- ══════════════ LOCALIZATION ══════════════ -->
+<div class="section" id="localization">
+<div class="section-header">Localization Rules — P52</div>
+<div class="note">Target locales: en-IN, hi-IN, mr-IN, ta-IN, te-IN, kn-IN. Primary Indic locale for testing: hi-IN (Hindi).</div>
+
+<table>
+  <thead><tr><th>Context</th><th>EN string</th><th>HI translation</th><th>Expansion</th><th>Layout response</th></tr></thead>
+  <tbody>
+    <tr><td>Primary CTA button</td><td>"Add Sale"</td><td>बिक्री जोड़ें</td><td>+70% visual width</td><td class="usage">Button grows width (auto) or wraps to 2 lines (full-width)</td></tr>
+    <tr><td>Primary CTA button</td><td>"Confirm Payment"</td><td>भुगतान की पुष्टि करें</td><td>+80% visual width</td><td class="usage">Full-width wraps to 2 lines (min-height ~72dp)</td></tr>
+    <tr><td>Nav tab label</td><td>"Home" (4 chars)</td><td>होम (3 chars)</td><td>~same</td><td class="usage">Max 6 chars per locale — escalate to translation team if exceeded</td></tr>
+    <tr><td>Customer name (detail)</td><td>"Ram Traders"</td><td>राम ट्रेडर्स</td><td>+30%</td><td class="usage">Never truncate — allow 2 lines at 20sp</td></tr>
+  </tbody>
+</table>
+
+<table>
+  <thead><tr><th>Rule</th><th>Applies to</th><th>Action</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Buttons never truncate</strong></td><td>All button labels</td><td class="usage">Full-width: wrap to max 2 lines. Auto-width: grow or stack. Never ellipsis, never reduce font below 12sp.</td></tr>
+    <tr><td><strong>List/nav/chip: ellipsis 1 line</strong></td><td>List row primary, nav labels, chips</td><td class="usage">Single-line truncation with ellipsis. Exception: customer/supplier names on detail screens — 2 lines allowed.</td></tr>
+    <tr><td><strong>Indic line-height</strong></td><td>All Indic text (even at label sizes)</td><td class="usage">Apply lineHeight = typeScale.*.lineHeightHi even at 11sp. Never fixed pixel height on text containers.</td></tr>
+    <tr><td><strong>Number format</strong></td><td>Currency, quantities</td><td class="usage">₹ prefix for INR. L/Cr suffix (₹8.4L = ₹8,40,000). Indian number system (2+2+2 commas): 1,00,00,000 not 10,000,000.</td></tr>
+    <tr><td><strong>Date format</strong></td><td>All dates</td><td class="usage">DD MMM YYYY (27 Aug 2024) for en-IN. Locale-specific for Indic: use Intl.DateTimeFormat('hi-IN') or dayjs locale.</td></tr>
+  </tbody>
+</table>
+</div>
+
+</div><!-- /content -->
+</main>
+</div><!-- /shell -->
+
+<script>
+// Sidebar active state
+document.querySelectorAll('.nav-link').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+  });
+});
+
+// Update active link on scroll
+const sections = document.querySelectorAll('.section[id]');
+const links = document.querySelectorAll('.nav-link');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(sec => {
+    if (window.scrollY + 100 >= sec.offsetTop) current = sec.id;
+  });
+  links.forEach(l => {
+    l.classList.remove('active');
+    if (l.getAttribute('href') === '#' + current) l.classList.add('active');
+  });
+}, { passive: true });
+</script>
+</body>
+</html>

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Screens.png — Cross-Screen Patterns</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { width: 900px; background: #FAF7F2; font-family: 'Inter', system-ui, sans-serif; color: #3B2F2A; padding: 32px; }
+h1 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+h2 { font-size: 14px; font-weight: 700; margin: 20px 0 10px; border-bottom: 2px solid #C8A96B; padding-bottom: 5px; }
+.sub { font-size: 11px; color: #8A7060; margin-bottom: 24px; }
+.ann-card { background: #FFFFFF; border: 1.5px solid #E8DDD0; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+.ann-title { font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #C8A96B; margin-bottom: 12px; }
+.token-row { display: flex; align-items: flex-start; gap: 10px; padding: 6px 0; border-bottom: 1px solid #F2E8D6; font-size: 11px; }
+.token-row:last-child { border-bottom: none; }
+.tl { color: #8A7060; flex: 0 0 180px; }
+.tv { color: #3B2F2A; font-weight: 500; flex: 1; }
+.tc { font-family: 'Courier New', monospace; font-size: 10px; color: #4A3D6B; background: #F0EDF8; padding: 1px 5px; border-radius: 3px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+
+/* Demo components */
+.demo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 10px;
+  margin-bottom: 8px;
+}
+.back-btn { color: #C8A96B; font-size: 18px; line-height: 1; }
+.header-title { font-size: 15px; font-weight: 700; letter-spacing: 0.2px; }
+.header-actions { display: flex; gap: 10px; color: #C8A96B; font-size: 14px; }
+
+.tab-strip {
+  display: flex;
+  gap: 6px;
+  padding: 3px;
+  background: #F2E8D6;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+.tab-item {
+  flex: 1;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  text-align: center;
+  color: #8A7060;
+}
+.tab-item.active { background: #3B2F2A; color: #FAF7F2; }
+
+/* List row demo */
+.list-row {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #F2E8D6;
+  gap: 12px;
+}
+.row-icon { width: 36px; height: 36px; border-radius: 8px; background: #F2E8D6; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.row-main { flex: 1; }
+.row-title { font-size: 14px; font-weight: 600; color: #3B2F2A; }
+.row-sub { font-size: 12px; color: #8A7060; margin-top: 1px; }
+.row-right { text-align: right; }
+.row-amount { font-size: 14px; font-weight: 700; }
+.row-amount.positive { color: #5A6B4F; }
+.row-amount.negative { color: #B45B4A; }
+.row-amount.neutral { color: #3B2F2A; }
+.row-time { font-size: 11px; color: #8A7060; }
+
+/* Button variants */
+.btn-demo { display: flex; flex-direction: column; gap: 8px; }
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 20px;
+  height: 48px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+.btn-primary { background: #3B2F2A; color: #FAF7F2; }
+.btn-gold { background: #C8A96B; color: #3B2F2A; }
+.btn-outline { background: transparent; border: 1.5px solid #3B2F2A; color: #3B2F2A; }
+.btn-ghost { background: transparent; color: #C8A96B; font-size: 13px; height: 36px; }
+
+/* Bottom nav demo */
+.nav-bar {
+  display: flex;
+  align-items: center;
+  background: #FFFFFF;
+  border-top: 1px solid #E8DDD0;
+  height: 80px;
+  border-radius: 0 0 12px 12px;
+  padding: 0 4px;
+  position: relative;
+  overflow: visible;
+}
+.nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding-top: 12px;
+  font-size: 9px;
+  color: #9A8A82;
+}
+.nav-item.active { color: #3B2F2A; }
+.nav-icon { width: 24px; height: 24px; background: #E8DDD0; border-radius: 4px; }
+.nav-icon.active-icon { background: #3B2F2A; }
+.nav-fab-wrapper { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+.nav-fab { width: 48px; height: 48px; border-radius: 50%; background: #3B2F2A; border: 3px solid #FFFFFF; margin-top: -16px; display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 16px rgba(59,47,42,0.2); }
+.nav-fab-label { font-size: 9px; color: #9A8A82; margin-top: 4px; }
+.active-dot { width: 4px; height: 4px; border-radius: 50%; background: #C8A96B; margin-top: -2px; }
+
+/* StatCard demo */
+.stat-card {
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 12px;
+  padding: 16px;
+}
+.stat-label { font-size: 11px; font-weight: 600; letter-spacing: 0.1px; color: #8A7060; text-transform: uppercase; margin-bottom: 4px; }
+.stat-value { font-size: 22px; font-weight: 700; color: #3B2F2A; margin-bottom: 6px; }
+.stat-change { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; }
+.stat-arrow-up { color: #5A6B4F; }
+.stat-arrow-down-bad { color: #B45B4A; }
+.stat-arrow-down-good { color: #5A6B4F; }
+.stat-period { font-size: 11px; color: #8A7060; }
+
+/* Insight card demo */
+.insight-card {
+  border-radius: 10px;
+  padding: 12px;
+}
+.insight-title { font-size: 12px; font-weight: 700; margin-bottom: 4px; }
+.insight-body { font-size: 11px; line-height: 1.5; }
+
+table { width: 100%; border-collapse: collapse; font-size: 11px; }
+th { background: #F2E8D6; color: #3B2F2A; font-weight: 700; padding: 6px 10px; text-align: left; font-size: 10px; letter-spacing: 0.3px; }
+td { padding: 6px 10px; border-bottom: 1px solid #F2E8D6; vertical-align: top; }
+td.mono { font-family: 'Courier New', monospace; font-size: 10px; color: #4A3D6B; }
+</style>
+</head>
+<body>
+
+<h1>Cross-Screen Patterns — Token Mapping</h1>
+<p class="sub">P59 · Recurring patterns extracted from all 16 screens</p>
+
+<h2>1. Header Pattern (all 16 screens)</h2>
+<div class="demo-header">
+  <div class="back-btn">‹</div>
+  <div class="header-title">SCREEN TITLE</div>
+  <div class="header-actions">🔍 +</div>
+</div>
+<div class="ann-card">
+  <div class="ann-title">Header Spec</div>
+  <div class="token-row"><div class="tl">Back button</div><div class="tv">‹ chevron, Heritage Gold, <span class="tc">spacing.icon 24dp</span> touch target 44dp</div></div>
+  <div class="token-row"><div class="tl">Title style</div><div class="tv"><span class="tc">typeScale.titleMd</span> 16sp/700, letterSpacing 0, centered, Deep Brown</div></div>
+  <div class="token-row"><div class="tl">Title casing</div><div class="tv">ALL CAPS on engine screens; Title Case on action screens</div></div>
+  <div class="token-row"><div class="tl">Action icons</div><div class="tv">Heritage Gold, 24dp, right-aligned. Common: 🔍 Search, ⊞ Filter, + Add, ✎ Edit</div></div>
+  <div class="token-row"><div class="tl">Height</div><div class="tv">56dp, white background, bottom border 1px <span class="tc">colors.border</span></div></div>
+  <div class="token-row"><div class="tl">Padding H</div><div class="tv"><span class="tc">spacing.screenMargin 20dp</span></div></div>
+</div>
+
+<h2>2. Filter Tab Strip</h2>
+<div class="tab-strip">
+  <div class="tab-item active">All</div>
+  <div class="tab-item">Sales</div>
+  <div class="tab-item">Expenses</div>
+  <div class="tab-item">Payments</div>
+</div>
+<div class="ann-card">
+  <div class="ann-title">Filter Tabs — Used in: Transactions, Customers, Suppliers, Inventory, Alerts</div>
+  <div class="token-row"><div class="tl">Strip background</div><div class="tv"><span class="tc">brand.beige #F2E8D6</span></div></div>
+  <div class="token-row"><div class="tl">Strip padding</div><div class="tv">3dp internal, <span class="tc">radius.sm 8dp</span> outer corners</div></div>
+  <div class="token-row"><div class="tl">Active tab bg</div><div class="tv"><span class="tc">colors.primary #3B2F2A</span></div></div>
+  <div class="token-row"><div class="tl">Active tab text</div><div class="tv"><span class="tc">colors.primaryOn #FAF7F2</span>, <span class="tc">typeScale.labelLg</span> 12sp/600</div></div>
+  <div class="token-row"><div class="tl">Inactive tab text</div><div class="tv"><span class="tc">colors.textSecondary #8A7060</span></div></div>
+  <div class="token-row"><div class="tl">Tab radius</div><div class="tv"><span class="tc">radius.sm 8dp</span> (inner tabs slightly less than strip)</div></div>
+  <div class="token-row"><div class="tl">Tab height</div><div class="tv">34dp (strip = 40dp with padding)</div></div>
+  <div class="token-row"><div class="tl">Transition</div><div class="tv">Active indicator slides — <span class="tc">motion.spring1</span> (snappy ~180ms)</div></div>
+</div>
+
+<h2>3. List Row Anatomy</h2>
+<div class="ann-card">
+  <div style="border-radius:8px;background:#FFFFFF;padding:0 4px;">
+    <div class="list-row">
+      <div class="row-icon">🏪</div>
+      <div class="row-main"><div class="row-title">Ramesh Store</div><div class="row-sub">Sale • Grocery · 10:45 AM</div></div>
+      <div class="row-right"><div class="row-amount positive">+₹2,650</div></div>
+    </div>
+    <div class="list-row">
+      <div class="row-icon" style="background:#FAF0EC;">🚛</div>
+      <div class="row-main"><div class="row-title">Transport Expense</div><div class="row-sub">Expense · 09:30 AM</div></div>
+      <div class="row-right"><div class="row-amount negative">−₹620</div></div>
+    </div>
+    <div class="list-row" style="border-bottom:none;">
+      <div class="row-icon" style="background:#EEF2EB;">👥</div>
+      <div class="row-main"><div class="row-title">Cash Payment</div><div class="row-sub">Payment Received · 09:48 AM</div></div>
+      <div class="row-right"><div class="row-amount positive">+₹1,500</div></div>
+    </div>
+  </div>
+</div>
+<div class="ann-card">
+  <div class="ann-title">List Row — Token Spec</div>
+  <div class="token-row"><div class="tl">Row height</div><div class="tv">min 60dp, auto-grow for wrapping text</div></div>
+  <div class="token-row"><div class="tl">Row padding V</div><div class="tv"><span class="tc">spacing.listRowPaddingV 12dp</span></div></div>
+  <div class="token-row"><div class="tl">Row padding H</div><div class="tv"><span class="tc">spacing.listRowPaddingH 20dp</span></div></div>
+  <div class="token-row"><div class="tl">Row separator</div><div class="tv">1px <span class="tc">colors.borderSubtle</span> (NOT full separator line — inset 68dp from left to skip icon)</div></div>
+  <div class="token-row"><div class="tl">Icon badge size</div><div class="tv">36×36dp, <span class="tc">radius.sm 8dp</span></div></div>
+  <div class="token-row"><div class="tl">Icon badge bg (Sale)</div><div class="tv"><span class="tc">colors.successSurface</span></div></div>
+  <div class="token-row"><div class="tl">Icon badge bg (Expense)</div><div class="tv"><span class="tc">colors.warningSurface</span></div></div>
+  <div class="token-row"><div class="tl">Icon badge bg (Payment)</div><div class="tv"><span class="tc">colors.aiSurface</span></div></div>
+  <div class="token-row"><div class="tl">Primary text</div><div class="tv"><span class="tc">typeScale.bodyLg</span> 14sp/500 textPrimary</div></div>
+  <div class="token-row"><div class="tl">Secondary text</div><div class="tv"><span class="tc">typeScale.caption</span> 11sp/400 textSecondary</div></div>
+  <div class="token-row"><div class="tl">Amount positive</div><div class="tv"><span class="tc">typeScale.bodyLg</span> 14sp/700 <span class="tc">colors.success #5A6B4F</span></div></div>
+  <div class="token-row"><div class="tl">Amount negative</div><div class="tv"><span class="tc">typeScale.bodyLg</span> 14sp/700 <span class="tc">colors.accent #B45B4A</span></div></div>
+  <div class="token-row"><div class="tl">Amount neutral</div><div class="tv"><span class="tc">typeScale.bodyLg</span> 14sp/700 textPrimary</div></div>
+</div>
+
+<h2>4. Button Variants (all screens)</h2>
+<div class="grid-2">
+  <div class="btn-demo">
+    <div class="btn btn-primary">View Detailed Report</div>
+    <div class="btn btn-gold">Save Sale</div>
+    <div class="btn btn-outline">Add Customer</div>
+    <div class="btn btn-ghost">View All Insights ›</div>
+  </div>
+  <div class="ann-card">
+    <div class="ann-title">Button Hierarchy</div>
+    <div class="token-row"><div class="tl">Primary (dark fill)</div><div class="tv">bg <span class="tc">colors.primary</span>, text <span class="tc">colors.primaryOn</span>. Used: View Report, Continue</div></div>
+    <div class="token-row"><div class="tl">Gold fill (CTA)</div><div class="tv">bg <span class="tc">colors.secondary #C8A96B</span>, text <span class="tc">colors.primary #3B2F2A</span>. Used: Save Sale, Add Item, Add Customer</div></div>
+    <div class="token-row"><div class="tl">Outline</div><div class="tv">border <span class="tc">colors.primary</span>, text <span class="tc">colors.primary</span>. Used: secondary actions</div></div>
+    <div class="token-row"><div class="tl">Ghost / text link</div><div class="tv">No bg, text <span class="tc">colors.secondary</span> Heritage Gold. Used: "View All Insights", "Mark all as read"</div></div>
+    <div class="token-row"><div class="tl">All button height</div><div class="tv"><span class="tc">spacing.buttonHeight 48dp</span></div></div>
+    <div class="token-row"><div class="tl">All button radius</div><div class="tv"><span class="tc">radius.sm 8dp</span></div></div>
+    <div class="token-row"><div class="tl">Full-width CTAs</div><div class="tv">Bottom of scroll content, padding <span class="tc">spacing.screenMargin</span> H, marginBottom 16dp</div></div>
+  </div>
+</div>
+
+<h2>5. Bottom Navigation (S04, S05, S06, S11)</h2>
+<div style="background:#FFFFFF;border:1.5px solid #E8DDD0;border-radius:12px;overflow:visible;margin-bottom:16px;padding-bottom:0;">
+  <div class="nav-bar">
+    <div class="nav-item active">
+      <div class="nav-icon active-icon"></div>
+      Home
+      <div class="active-dot"></div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon"></div>
+      Transactions
+    </div>
+    <div class="nav-fab-wrapper">
+      <div class="nav-fab">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+          <rect x="8" y="4" width="6" height="9" rx="3" stroke="#C8A96B" stroke-width="1.8"/>
+          <path d="M5 11c0 3.3 2.7 6 6 6s6-2.7 6-6" stroke="#C8A96B" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="11" y1="17" x2="11" y2="20" stroke="#C8A96B" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="nav-fab-label">Voice</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon"></div>
+      Reports
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon"></div>
+      More
+    </div>
+  </div>
+</div>
+<div class="ann-card">
+  <div class="ann-title">Bottom Nav — Full Token Spec (from P53)</div>
+  <div class="token-row"><div class="tl">Total bar height</div><div class="tv"><span class="tc">spacing.navBarHeight 80dp</span></div></div>
+  <div class="token-row"><div class="tl">Bar background</div><div class="tv"><span class="tc">bottomNav.barBackground #FFFFFF</span></div></div>
+  <div class="token-row"><div class="tl">Border top</div><div class="tv">1px <span class="tc">bottomNav.barBorderTop #EDE5DC</span></div></div>
+  <div class="token-row"><div class="tl">Voice FAB size</div><div class="tv"><span class="tc">spacing.voiceFabSize 56dp</span> canonical; 48dp visual button size</div></div>
+  <div class="token-row"><div class="tl">Voice FAB bg (default)</div><div class="tv"><span class="tc">bottomNav.voice.background #3B2F2A</span></div></div>
+  <div class="token-row"><div class="tl">Voice FAB ring</div><div class="tv">3dp white ring (overflow: visible required)</div></div>
+  <div class="token-row"><div class="tl">Active tab indicator</div><div class="tv">4dp gold dot below icon, <span class="tc">bottomNav.activeDot.color #C8A96B</span></div></div>
+  <div class="token-row"><div class="tl">Active tab label color</div><div class="tv"><span class="tc">bottomNav.labelColorActive #3B2F2A</span></div></div>
+  <div class="token-row"><div class="tl">Inactive label color</div><div class="tv"><span class="tc">bottomNav.labelColorDefault #9A8A82</span></div></div>
+  <div class="token-row"><div class="tl">Label font</div><div class="tv"><span class="tc">typeScale.overline</span> 9sp/700 (smaller than standard overline)</div></div>
+  <div class="token-row"><div class="tl">Screens using it</div><div class="tv">S04 Home, S05 Finance, S06 Transactions, S11 Reports — all 5-tab bottom nav</div></div>
+</div>
+
+<h2>6. Insight Cards (S12) — StatCard-like with valence</h2>
+<div class="grid-2">
+  <div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+      <div class="insight-card" style="background:#EEF2EB;">
+        <div class="insight-title" style="color:#5A6B4F;">↑ Profit Up</div>
+        <div class="insight-body">Your profit is up 28% vs last month</div>
+      </div>
+      <div class="insight-card" style="background:#F2E8D6;">
+        <div class="insight-title" style="color:#C8A96B;">⊛ Top Category</div>
+        <div class="insight-body">Grocery sales are driving growth</div>
+      </div>
+      <div class="insight-card" style="background:#FAF0EC;">
+        <div class="insight-title" style="color:#B45B4A;">⚠ Expense Alert</div>
+        <div class="insight-body">Transport expenses increased by 18%</div>
+      </div>
+      <div class="insight-card" style="background:#F0EDF8;">
+        <div class="insight-title" style="color:#4A3D6B;">✦ Opportunity</div>
+        <div class="insight-body">Increase inventory of fast moving items</div>
+      </div>
+    </div>
+  </div>
+  <div class="ann-card">
+    <div class="ann-title">Insight Card Token Mapping</div>
+    <div class="token-row"><div class="tl">Favorable / profit up</div><div class="tv">bg <span class="tc">colors.successSurface</span>, title <span class="tc">colors.success</span></div></div>
+    <div class="token-row"><div class="tl">Neutral / category</div><div class="tv">bg <span class="tc">colors.surfaceSubtle</span>, title <span class="tc">colors.secondary</span></div></div>
+    <div class="token-row"><div class="tl">Warning / expense alert</div><div class="tv">bg <span class="tc">colors.warningSurface</span>, title <span class="tc">colors.warning</span></div></div>
+    <div class="token-row"><div class="tl">AI opportunity</div><div class="tv">bg <span class="tc">colors.aiSurface</span>, title <span class="tc">colors.ai</span></div></div>
+    <div class="token-row"><div class="tl">Card radius</div><div class="tv"><span class="tc">radius.md 12dp</span></div></div>
+    <div class="token-row"><div class="tl">Card padding</div><div class="tv"><span class="tc">spacing.cardPadding 16dp</span></div></div>
+    <div class="token-row"><div class="tl">Title font</div><div class="tv"><span class="tc">typeScale.labelLg</span> 12sp/600</div></div>
+    <div class="token-row"><div class="tl">Body font</div><div class="tv"><span class="tc">typeScale.bodySm</span> 13sp/400</div></div>
+    <div class="token-row"><div class="tl">Grid layout</div><div class="tv">2×2 fixed grid, gap <span class="tc">space[2] 8dp</span></div></div>
+  </div>
+</div>
+
+<h2>7. Chat Bubble Anatomy (S14 — Talk to Vepari AI)</h2>
+<div class="ann-card">
+  <div class="ann-title">Conversation Bubbles</div>
+  <div class="token-row"><div class="tl">User bubble bg</div><div class="tv"><span class="tc">colors.primary #3B2F2A</span></div></div>
+  <div class="token-row"><div class="tl">User bubble text</div><div class="tv"><span class="tc">colors.primaryOn #FAF7F2</span></div></div>
+  <div class="token-row"><div class="tl">User bubble alignment</div><div class="tv">Right-aligned, max-width 75% of screen</div></div>
+  <div class="token-row"><div class="tl">User bubble radius</div><div class="tv">12dp top-left, 12dp top-right, 12dp bottom-left, 3dp bottom-right (tail side)</div></div>
+  <div class="token-row"><div class="tl">AI bubble bg</div><div class="tv"><span class="tc">colors.surfaceSubtle #F2E8D6</span> (warm beige)</div></div>
+  <div class="token-row"><div class="tl">AI bubble text</div><div class="tv"><span class="tc">colors.textPrimary #3B2F2A</span></div></div>
+  <div class="token-row"><div class="tl">AI bubble alignment</div><div class="tv">Left-aligned, max-width 85% of screen</div></div>
+  <div class="token-row"><div class="tl">AI bubble radius</div><div class="tv">3dp top-left (tail side), 12dp top-right, 12dp bottom-right, 12dp bottom-left</div></div>
+  <div class="token-row"><div class="tl">AI response format</div><div class="tv">Rich text with emoji, bullet points (•), inline currency (₹), percentage (%), arrows (↑↓)</div></div>
+  <div class="token-row"><div class="tl">Bubble font</div><div class="tv"><span class="tc">typeScale.body</span> 14sp/400, lineHeight 1.5</div></div>
+  <div class="token-row"><div class="tl">Bubble padding</div><div class="tv">12dp V, 16dp H</div></div>
+  <div class="token-row"><div class="tl">Voice input bar</div><div class="tv">bg <span class="tc">colors.background</span>, border top 1px, mic FAB = gold circle 48dp</div></div>
+</div>
+
+<h2>8. Screen Inventory Table</h2>
+<table>
+  <thead><tr><th>Screen</th><th>Header</th><th>Bottom Nav</th><th>Primary CTA</th><th>Key Pattern</th><th>Depends On</th></tr></thead>
+  <tbody>
+    <tr><td>S01 Splash</td><td>None</td><td>None</td><td>None (auto-advance)</td><td>Full-screen logo</td><td>P33 onboarding</td></tr>
+    <tr><td>S02 AI OS Home</td><td>Status pill</td><td>Voice bar</td><td>VIEW BRIEFING (dark)</td><td>AI Core ring + engine cards</td><td>P58 AI OS.png</td></tr>
+    <tr><td>S03 AI OS Briefing</td><td>← AI OS BRIEFING</td><td>None</td><td>Continue (gold)</td><td>Activity list with icons</td><td>P58</td></tr>
+    <tr><td>S04 Dashboard Home</td><td>← VEPARI AI ✎</td><td>5-tab bottom nav</td><td>Talk to Vepari (dark card)</td><td>KPI rows + quick actions</td><td>—</td></tr>
+    <tr><td>S05 Finance</td><td>← FINANCE</td><td>5-tab bottom nav</td><td>View Detailed Report (dark)</td><td>KPI cards + charts</td><td>—</td></tr>
+    <tr><td>S06 Transactions</td><td>← TRANSACTIONS 🔍 ⊞</td><td>5-tab bottom nav</td><td>+ Add Transaction (gold)</td><td>Grouped list + filter tabs</td><td>—</td></tr>
+    <tr><td>S07 Add Sale</td><td>← ADD SALE</td><td>None</td><td>Save Sale (gold)</td><td>Form + item picker + payment tabs</td><td>—</td></tr>
+    <tr><td>S08 Customers</td><td>← CUSTOMERS 🔍 +</td><td>None</td><td>+ Add Customer (gold)</td><td>List + filter tabs + credit status</td><td>—</td></tr>
+    <tr><td>S09 Suppliers</td><td>← SUPPLIERS 🔍 +</td><td>None</td><td>+ Add Supplier (gold)</td><td>List + due status badges</td><td>—</td></tr>
+    <tr><td>S10 Inventory</td><td>← INVENTORY 🔍 ⊞</td><td>None</td><td>+ Add Item (gold)</td><td>Summary stats + list + stock badges</td><td>—</td></tr>
+    <tr><td>S11 Reports</td><td>← REPORTS</td><td>5-tab bottom nav</td><td>→ navigate to report</td><td>Simple nav list + period filter</td><td>—</td></tr>
+    <tr><td>S12 Insights</td><td>← INSIGHTS</td><td>None</td><td>View All Insights (ghost)</td><td>2×2 AI insight grid</td><td>—</td></tr>
+    <tr><td>S13 Alerts</td><td>← ALERTS</td><td>None</td><td>Mark all as read (ghost)</td><td>Alert list + severity colors</td><td>—</td></tr>
+    <tr><td>S14 Talk to Vepari AI</td><td>← TALK TO VEPARI AI</td><td>Voice input bar</td><td>Mic FAB (gold)</td><td>Chat bubbles + voice</td><td>P58 AI Core</td></tr>
+    <tr><td>S15 Settings</td><td>← SETTINGS</td><td>None</td><td>Log Out (red ghost)</td><td>Settings list rows</td><td>—</td></tr>
+    <tr><td>S16 Business Profile</td><td>← BUSINESS PROFILE</td><td>None</td><td>Save Changes (gold)</td><td>Avatar + form fields</td><td>—</td></tr>
+  </tbody>
+</table>
+
+</body>
+</html>

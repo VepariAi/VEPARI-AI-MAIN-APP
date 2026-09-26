@@ -1,0 +1,12 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",          "x": 0,   "y": 0,    "w": 390, "h": 844, "title": "Inventory Overview — Total / Low / Out counters" },
+    { "file": "ProductDetail.dc.html", "x": 470, "y": 0,    "w": 390, "h": 844, "title": "Product Detail — stock level, reorder, movement history" },
+    { "file": "StockAdjust.dc.html",   "x": 0,   "y": 924,  "w": 390, "h": 844, "title": "Stock Adjustment — add / remove / set exact with reason" },
+    { "file": "StockTransfer.dc.html", "x": 470, "y": 924,  "w": 390, "h": 844, "title": "Stock Transfer — branch-to-branch with preview" }
+  ],
+  "annotations": [
+    { "id": "p40-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 40 — Inventory: overview with Low/Out counters, product detail with movement history, stock adjustment (add/remove/set), stock transfer between branches." }
+  ],
+  "launch": { "view": "canvas" }
+}

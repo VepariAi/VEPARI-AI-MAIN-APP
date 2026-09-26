@@ -1,0 +1,325 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 860px; font-family: system-ui, -apple-system, sans-serif; background: #faf7f2; color: #3b2f2a; }
+body { padding: 28px 32px 56px; }
+h1 { font-size: 22px; font-weight: 700; color: #3b2f2a; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #8a7060; margin-bottom: 24px; }
+h2 { font-size: 14px; font-weight: 700; color: #3b2f2a; margin: 32px 0 10px; text-transform: uppercase; letter-spacing: 0.6px; border-top: 1px solid #e8ddd0; padding-top: 16px; }
+h2:first-of-type { border-top: none; padding-top: 0; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e8ddd0; margin-bottom: 20px; }
+thead { background: #f2e8d6; }
+th { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 12px; text-align: left; border-bottom: 1px solid #e8ddd0; }
+td { padding: 9px 12px; border-bottom: 1px solid #f2e8d6; font-size: 12px; vertical-align: top; }
+tr:last-child td { border-bottom: none; }
+.token { font-family: monospace; font-size: 11px; color: #5a6b4f; background: #f0f4ee; padding: 1px 4px; border-radius: 3px; }
+.rm { font-family: monospace; font-size: 11px; color: #b45b4a; background: #faf0ec; padding: 1px 4px; border-radius: 3px; }
+.usage { color: #8a7060; }
+.bold { font-weight: 600; color: #3b2f2a; }
+.note { background: #fff8e8; border: 1px solid #c8a96b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #6b4f1a; margin-bottom: 20px; line-height: 1.6; }
+.spring-card { background: #fff; border: 1px solid #e8ddd0; border-radius: 10px; padding: 14px 18px; margin-bottom: 16px; }
+.sc-title { font-size: 13px; font-weight: 700; color: #3b2f2a; margin-bottom: 8px; }
+.sc-row { display: flex; gap: 12px; margin-bottom: 5px; align-items: baseline; }
+.sc-label { font-size: 11px; font-weight: 600; color: #8a7060; width: 110px; flex-shrink: 0; }
+.sc-val { font-family: monospace; font-size: 12px; color: #3b2f2a; }
+.sc-rm { font-size: 11px; color: #b45b4a; }
+.haptic-row { display: flex; gap: 0; }
+.haptic-ios { flex: 1; padding: 8px 12px; background: #f8f6fe; border: 1px solid #ddd6ee; border-radius: 6px; margin-right: 8px; }
+.haptic-android { flex: 1; padding: 8px 12px; background: #f0f4ee; border: 1px solid #c8d8c0; border-radius: 6px; }
+.haptic-label { font-size: 10px; font-weight: 700; color: #8a7060; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.haptic-val { font-size: 12px; color: #3b2f2a; font-family: monospace; }
+</style>
+<h1>P51 — Motion Physics and Haptics</h1>
+<div class="meta">Prompt 51 · Phase 5 · Depends on Prompt 16 — AI OS physics language, haptics map, reduced-motion fallbacks per AI OS.txt §18, UI-UX §21, §124, §125, §196</div>
+
+<div class="note">
+  <strong>Core principle:</strong> Motion in Vepari AI is <em>purposeful, not decorative</em>. Every animation conveys state change, spatial relationship, or AI activity. The AI OS physics language uses spring curves — not linear or cubic-bezier tweens — because springs feel alive and match the "breath" metaphor of the AI Core. Reduced-motion equivalents MUST preserve semantic meaning (state changed, something succeeded, AI is active) through opacity transitions or instant-cut, never by simply removing feedback entirely.
+</div>
+
+<!-- ═══════════════ SPRING PRESETS ═══════════════ -->
+<h2>Spring Presets — AI OS Physics Language</h2>
+
+<div class="note">
+  React Native Reanimated spring parameters: <code>withSpring(value, {stiffness, damping, mass})</code>. For CSS contexts (web preview): <code>spring(stiffness: S, damping: D)</code> in @keyframes or <code>transition: property Xs cubic-bezier(approx)</code>. Reduced-motion always replaces spring with <code>withTiming(duration, {easing: Easing.out(Easing.quad)})</code> or CSS <code>transition: property 0ms</code> (instant) / <code>150ms ease-out</code> (minimal fade).
+</div>
+
+<div class="spring-card">
+  <div class="sc-title">Spring 1 — Snappy (UI controls)</div>
+  <div class="sc-row"><div class="sc-label">Stiffness</div><div class="sc-val">400</div></div>
+  <div class="sc-row"><div class="sc-label">Damping</div><div class="sc-val">40</div></div>
+  <div class="sc-row"><div class="sc-label">Mass</div><div class="sc-val">1</div></div>
+  <div class="sc-row"><div class="sc-label">Approx duration</div><div class="sc-val">180ms to settle</div></div>
+  <div class="sc-row"><div class="sc-label">Overshoot</div><div class="sc-val">~2% (minimal bounce)</div></div>
+  <div class="sc-row"><div class="sc-label">Used for</div><div class="sc-val">Button press scale, chip select, tab indicator slide, checkbox check</div></div>
+  <div class="sc-row"><div class="sc-label">Reduced-motion</div><div class="sc-rm">opacity 0→1 over 100ms, no scale. Or instant cut for micro-interactions.</div></div>
+</div>
+
+<div class="spring-card">
+  <div class="sc-title">Spring 2 — Gentle (cards and sheets)</div>
+  <div class="sc-row"><div class="sc-label">Stiffness</div><div class="sc-val">200</div></div>
+  <div class="sc-row"><div class="sc-label">Damping</div><div class="sc-val">28</div></div>
+  <div class="sc-row"><div class="sc-label">Mass</div><div class="sc-val">1</div></div>
+  <div class="sc-row"><div class="sc-label">Approx duration</div><div class="sc-val">320ms to settle</div></div>
+  <div class="sc-row"><div class="sc-label">Overshoot</div><div class="sc-val">~4% (perceptible but soft)</div></div>
+  <div class="sc-row"><div class="sc-label">Used for</div><div class="sc-val">Bottom sheet open/close (translateY), card expand/collapse, modal entry, screen transition (push/pop)</div></div>
+  <div class="sc-row"><div class="sc-label">Reduced-motion</div><div class="sc-rm">opacity 0→1 over 200ms ease-out, no translate. Sheet appears in place.</div></div>
+</div>
+
+<div class="spring-card">
+  <div class="sc-title">Spring 3 — AI Breath (AI Core ring pulse)</div>
+  <div class="sc-row"><div class="sc-label">Stiffness</div><div class="sc-val">80</div></div>
+  <div class="sc-row"><div class="sc-label">Damping</div><div class="sc-val">12</div></div>
+  <div class="sc-row"><div class="sc-label">Mass</div><div class="sc-val">1</div></div>
+  <div class="sc-row"><div class="sc-label">Approx duration</div><div class="sc-val">1200ms to settle (slow, oscillating)</div></div>
+  <div class="sc-row"><div class="sc-label">Overshoot</div><div class="sc-val">~8–10% (intentional breathing feel)</div></div>
+  <div class="sc-row"><div class="sc-label">Used for</div><div class="sc-val">AI Core scale pulse (Listening state: 1.0→1.06→1.0), glow shadow blur oscillation</div></div>
+  <div class="sc-row"><div class="sc-label">Reduced-motion</div><div class="sc-rm">Static AI Core. Status pill text changes to "Listening…" with a slow opacity blink (0.6→1.0 at 1.5s ease-in-out) — preserves "active" meaning without motion.</div></div>
+</div>
+
+<div class="spring-card">
+  <div class="sc-title">Spring 4 — Voice Amplitude (waveform bars)</div>
+  <div class="sc-row"><div class="sc-label">Stiffness</div><div class="sc-val">200</div></div>
+  <div class="sc-row"><div class="sc-label">Damping</div><div class="sc-val">20</div></div>
+  <div class="sc-row"><div class="sc-label">Mass</div><div class="sc-val">0.8</div></div>
+  <div class="sc-row"><div class="sc-label">Approx duration</div><div class="sc-val">~220ms to new target</div></div>
+  <div class="sc-row"><div class="sc-label">Used for</div><div class="sc-val">Audio waveform bar height driven by RMS amplitude, 30fps update cycle</div></div>
+  <div class="sc-row"><div class="sc-label">Reduced-motion</div><div class="sc-rm">Waveform replaced by solid horizontal line that changes opacity (0.4→1.0) on voice activity. No bar movement.</div></div>
+</div>
+
+<div class="spring-card">
+  <div class="sc-title">Spring 5 — Inertial Scroll (list momentum)</div>
+  <div class="sc-row"><div class="sc-label">Decay rate</div><div class="sc-val">0.998 (React Native ScrollView default — do not override)</div></div>
+  <div class="sc-row"><div class="sc-label">Rubber-band</div><div class="sc-val">iOS native rubber-band. Android: EdgeEffect (do not override). No custom implementation.</div></div>
+  <div class="sc-row"><div class="sc-label">Used for</div><div class="sc-val">All FlatList / ScrollView — inventory list, transaction list, customer list, chat messages</div></div>
+  <div class="sc-row"><div class="sc-label">Reduced-motion</div><div class="sc-rm">No change needed — scroll inertia is a system behavior and is not classified as animation for prefers-reduced-motion purposes.</div></div>
+</div>
+
+<!-- ═══════════════ DEPTH / PARALLAX / BLUR ═══════════════ -->
+<h2>Depth, Parallax and Blur</h2>
+
+<table>
+  <thead>
+    <tr><th>Effect</th><th>Where used</th><th>Spec</th><th>Reduced-motion fallback</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="bold">Modal scrim blur</td>
+      <td class="usage">Behind bottom sheet, behind dialog</td>
+      <td><code>blurRadius: 8</code> on underlying content (React Native BlurView or modal scrim). Scrim: rgba(59,47,42,.50).</td>
+      <td><span class="rm">No blur. Scrim only (rgba solid, same opacity). Meaning preserved — content is covered.</span></td>
+    </tr>
+    <tr>
+      <td class="bold">AI Core depth glow</td>
+      <td class="usage">AI Core Listening/Speaking states</td>
+      <td>Shadow blur oscillates 12→28dp (Spring 3). Outer ring opacity 0.15→0.27. Creates depth impression.</td>
+      <td><span class="rm">Shadow stays at 16dp fixed. Opacity fixed at 0.22. "Active" state shown via AI Status Pill text change only.</span></td>
+    </tr>
+    <tr>
+      <td class="bold">Parallax on Home scroll</td>
+      <td class="usage">Home screen hero section scrolling behind KPI chips</td>
+      <td>Greeting text translateY: scrollY × 0.4 (40% parallax rate). Visible range: 0–80dp scroll.</td>
+      <td><span class="rm">No parallax. Greeting scrolls at 1:1 with content. No implementation difference beyond disabling the multiplier.</span></td>
+    </tr>
+    <tr>
+      <td class="bold">Card elevation on press</td>
+      <td class="usage">Tappable cards (MetricCard, AI Insight card)</td>
+      <td>On press: elevation-1 → elevation-0 (shadow shrinks), scale 1.0→0.98 (Spring 1). Releases back.</td>
+      <td><span class="rm">No scale. Background color tint only (--color-surface → --color-surface-subtle, instant).</span></td>
+    </tr>
+    <tr>
+      <td class="bold">Screen push transition</td>
+      <td class="usage">All drill-down navigations (list → detail)</td>
+      <td>Entering screen: translateX 390→0dp (Spring 2, duration ~300ms). Exiting screen: scale 1.0→0.95 + opacity 1.0→0.7 (Spring 2).</td>
+      <td><span class="rm">Opacity crossfade only: exiting screen opacity 1→0 over 150ms; entering screen opacity 0→1 over 150ms. No translate, no scale.</span></td>
+    </tr>
+    <tr>
+      <td class="bold">Toast entry</td>
+      <td class="usage">Toast / Snackbar appearing</td>
+      <td>translateY: +24→0dp (Spring 1) + opacity 0→1. Exit: reverse Spring 1.</td>
+      <td><span class="rm">opacity 0→1 over 120ms, no translate. Exit: opacity 1→0 over 120ms.</span></td>
+    </tr>
+    <tr>
+      <td class="bold">Bottom sheet open</td>
+      <td class="usage">Bottom sheet presentation</td>
+      <td>translateY: screenHeight→0 (Spring 2). Scrim: opacity 0→0.50 in sync.</td>
+      <td><span class="rm">Sheet appears instantly. Scrim opacity 0→0.50 over 150ms ease-out (minimal, preserves spatial meaning).</span></td>
+    </tr>
+    <tr>
+      <td class="bold">List item stagger</td>
+      <td class="usage">First load of Inventory, Transaction, Customer lists</td>
+      <td>Items enter with opacity 0→1, translateY +16→0 (Spring 2), staggered by index × 40ms (max 8 items staggered, rest instant).</td>
+      <td><span class="rm">All items appear instantly with opacity 1. No stagger, no translate.</span></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════ HAPTICS ═══════════════ -->
+<h2>Haptics Map (UI-UX §124)</h2>
+
+<div class="note">
+  Haptics are triggered via <strong>react-native-haptic-feedback</strong> (or Expo Haptics on managed workflow). All haptics are optional — they are skipped when the device has haptics disabled in system settings. Never use haptics for passive state (scrolling, animation). Only on explicit user action or important AI state change.
+</div>
+
+<table>
+  <thead>
+    <tr><th>Event</th><th>iOS haptic type</th><th>Android haptic</th><th>Trigger condition</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="bold">Success / Confirmation</td>
+      <td><code>notificationSuccess</code></td>
+      <td><code>VibrationEffect.EFFECT_CLICK</code> (10ms)</td>
+      <td class="usage">Sale confirmed, stock adjusted, payment recorded, AI action completed, biometric unlock success</td>
+    </tr>
+    <tr>
+      <td class="bold">Error</td>
+      <td><code>notificationError</code></td>
+      <td><code>VibrationEffect.createWaveform([0,80,80,80])</code> (double pulse)</td>
+      <td class="usage">Transaction failed, stock save error, network error on submit, wrong PIN entry, biometric failure</td>
+    </tr>
+    <tr>
+      <td class="bold">Warning / Important notice</td>
+      <td><code>notificationWarning</code></td>
+      <td><code>VibrationEffect.EFFECT_DOUBLE_CLICK</code> (2×10ms)</td>
+      <td class="usage">Low stock alert triggered, overdue payment alert opened, conflict detected</td>
+    </tr>
+    <tr>
+      <td class="bold">Selection / Tap (light)</td>
+      <td><code>selection</code></td>
+      <td><code>VibrationEffect.EFFECT_TICK</code> (5ms)</td>
+      <td class="usage">Tab switch, chip select, filter change, checkbox toggle, switch toggle, QR scan detected</td>
+    </tr>
+    <tr>
+      <td class="bold">Impact (medium) — button press</td>
+      <td><code>impactMedium</code></td>
+      <td><code>VibrationEffect.EFFECT_CLICK</code> (10ms)</td>
+      <td class="usage">Primary button press (Add Sale, Save, Confirm payment), destructive button confirm</td>
+    </tr>
+    <tr>
+      <td class="bold">AI Core — Listening start</td>
+      <td><code>impactLight</code></td>
+      <td><code>VibrationEffect.EFFECT_TICK</code> (5ms)</td>
+      <td class="usage">Mic button pressed, Voice tab tapped — signals AI is now listening</td>
+    </tr>
+    <tr>
+      <td class="bold">AI Core — Speaking start</td>
+      <td><code>impactLight</code></td>
+      <td><code>VibrationEffect.EFFECT_TICK</code> (5ms)</td>
+      <td class="usage">AI begins audio output — subtle confirmation that response is arriving</td>
+    </tr>
+    <tr>
+      <td class="bold">AI Approval required</td>
+      <td><code>notificationWarning</code></td>
+      <td><code>VibrationEffect.createWaveform([0,40,60,40])</code></td>
+      <td class="usage">AI proposes an irreversible action and needs explicit user approval — attention-getting but not alarming</td>
+    </tr>
+    <tr>
+      <td class="bold">Long-press drag (list reorder)</td>
+      <td><code>impactHeavy</code> on pickup</td>
+      <td><code>VibrationEffect.EFFECT_HEAVY_CLICK</code> on pickup</td>
+      <td class="usage">Quick Actions reorder drag initiated (P36 QuickConfig sheet)</td>
+    </tr>
+    <tr>
+      <td class="bold">Swipe-to-delete confirm</td>
+      <td><code>impactMedium</code></td>
+      <td><code>VibrationEffect.EFFECT_CLICK</code> (10ms)</td>
+      <td class="usage">When swipe crosses the threshold — signals the action will fire on release</td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- ═══════════════ REDUCED-MOTION SYSTEM ═══════════════ -->
+<h2>Reduced-Motion System (UI-UX §125, §196)</h2>
+
+<div class="note">
+  React Native: check <code>AccessibilityInfo.isReduceMotionEnabled()</code> on mount and subscribe to changes. Store as app-level context. Web: <code>@media (prefers-reduced-motion: reduce)</code>. The setting applies to ALL animations app-wide — no per-screen override.
+</div>
+
+<table>
+  <thead>
+    <tr><th>Animated state</th><th>Normal behavior</th><th>Reduced-motion equivalent</th><th>Meaning preserved?</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="bold">AI Core — Idle</td>
+      <td class="usage">Ring border gently pulses opacity 0.15→0.27 at 4s cycle</td>
+      <td><span class="rm">Static core at opacity 0.22. No pulse.</span></td>
+      <td>Yes — core is visible as an active element</td>
+    </tr>
+    <tr>
+      <td class="bold">AI Core — Listening</td>
+      <td class="usage">Inner core scale 1.0→1.06, outer glow blur 12→28dp, 1.2s spring cycle</td>
+      <td><span class="rm">AI Status Pill text: "Listening…" with slow opacity blink (0.6→1.0 at 1.5s). Core static.</span></td>
+      <td>Yes — text label communicates active state</td>
+    </tr>
+    <tr>
+      <td class="bold">AI Core — Processing</td>
+      <td class="usage">Mid ring rotates 360° at 20s; outer ring counter-rotates; gradient shifts</td>
+      <td><span class="rm">Core solid static. Status Pill: "Thinking…" with ellipsis text cycling (. → .. → ...). No rotation.</span></td>
+      <td>Yes — text + ellipsis conveys ongoing process</td>
+    </tr>
+    <tr>
+      <td class="bold">AI Core — Speaking</td>
+      <td class="usage">Scale oscillates with audio amplitude; glow follows RMS</td>
+      <td><span class="rm">Static core. Heritage Gold border at full opacity. Status Pill: "Speaking…". Waveform: solid horizontal line (no bars).</span></td>
+      <td>Yes — label + color change conveys active output</td>
+    </tr>
+    <tr>
+      <td class="bold">AI Core — Error</td>
+      <td class="usage">Gradient shifts to error-red; shake animation 400ms</td>
+      <td><span class="rm">Core color changes to --color-error (instant). No shake. Toast appears with error text.</span></td>
+      <td>Yes — color + toast message preserve error meaning</td>
+    </tr>
+    <tr>
+      <td class="bold">Voice waveform</td>
+      <td class="usage">5 bars animate with audio RMS, spring physics</td>
+      <td><span class="rm">Single horizontal line, opacity 0.4→1.0 on activity detection (binary, not amplitude-driven).</span></td>
+      <td>Yes — line brightening signals active speech</td>
+    </tr>
+    <tr>
+      <td class="bold">Screen transition (push)</td>
+      <td class="usage">Slide + scale crossfade over 300ms</td>
+      <td><span class="rm">Opacity crossfade only: 150ms ease-out. No translate or scale.</span></td>
+      <td>Yes — screen change is apparent via content swap</td>
+    </tr>
+    <tr>
+      <td class="bold">Bottom sheet entry</td>
+      <td class="usage">Slide up from bottom (Spring 2, ~300ms)</td>
+      <td><span class="rm">Instant appearance. Scrim fades in over 150ms.</span></td>
+      <td>Yes — scrim signals modal layer; sheet content is immediate</td>
+    </tr>
+    <tr>
+      <td class="bold">Skeleton shimmer</td>
+      <td class="usage">Left-to-right gradient animation, 1.5s infinite</td>
+      <td><span class="rm">Static gray fill (--color-border-subtle). No shimmer animation.</span></td>
+      <td>Yes — gray placeholder still signals "loading"</td>
+    </tr>
+    <tr>
+      <td class="bold">List item stagger entry</td>
+      <td class="usage">Staggered translate + opacity, 8 items × 40ms offset</td>
+      <td><span class="rm">All items appear at opacity 1, instantly. No stagger.</span></td>
+      <td>Yes — list is visible immediately</td>
+    </tr>
+    <tr>
+      <td class="bold">Toast entry/exit</td>
+      <td class="usage">Slide up + opacity (Spring 1)</td>
+      <td><span class="rm">opacity 0→1 over 120ms, no slide. Exit: opacity 1→0 over 120ms.</span></td>
+      <td>Yes — toast appears and disappears clearly</td>
+    </tr>
+    <tr>
+      <td class="bold">Success flash (AI result)</td>
+      <td class="usage">BG cross-fades to --color-success-surface over 300ms</td>
+      <td><span class="rm">BG changes instantly to --color-success-surface. No transition.</span></td>
+      <td>Yes — green background signals success</td>
+    </tr>
+    <tr>
+      <td class="bold">AI Approval — AI Core glow</td>
+      <td class="usage">AI Core pulses with notificationWarning pattern</td>
+      <td><span class="rm">AI Core static. Banner appears with explicit text "Action requires approval". Haptic still fires (haptics are independent of reduced-motion).</span></td>
+      <td>Yes — banner text + haptic preserve urgency signal</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Haptics and reduced-motion are independent settings.</strong> <code>isReduceMotionEnabled</code> disables animations only — it does NOT disable haptics. Haptics remain active in reduced-motion mode unless the system's "reduce haptics" setting is separately enabled. Never gate a haptic call on the reduced-motion flag.
+</div>

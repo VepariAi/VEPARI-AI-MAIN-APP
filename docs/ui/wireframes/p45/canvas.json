@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "TypeScale.dc.html", "x": 0, "y": 0, "w": 860, "h": 1200, "title": "Type Scale — all 13 tokens, Indic weight map, line-height rules" }
+  ],
+  "annotations": [
+    { "id": "p45-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 45 — Typography tokens: 13-step type scale covering every text style in P33-P44 wireframes. Indic (Noto Sans Devanagari) weight fallback map. Line-height rationale for Latin vs Devanagari." }
+  ],
+  "launch": { "view": "canvas" }
+}

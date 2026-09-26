@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "ColorTokens.dc.html", "x": 0, "y": 0, "w": 860, "h": 1200, "title": "Brand Color Tokens — 6 confirmed colors, 21 semantic tokens, teal resolution" }
+  ],
+  "annotations": [
+    { "id": "p46-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 46 — Brand color tokens: 6 confirmed brand colors as 21 semantic tokens covering primary/secondary/accent/success/warning/error/info/ai/background/surface/text/border roles. Teal accent resolved: DROPPED." }
+  ],
+  "launch": { "view": "canvas" }
+}

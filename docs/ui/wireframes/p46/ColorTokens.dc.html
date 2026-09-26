@@ -1,0 +1,229 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 860px; font-family: system-ui, -apple-system, sans-serif; background: #faf7f2; color: #3b2f2a; }
+body { padding: 28px 32px 40px; }
+h1 { font-size: 22px; font-weight: 700; color: #3b2f2a; margin-bottom: 4px; }
+.meta { font-size: 12px; color: #8a7060; margin-bottom: 24px; }
+h2 { font-size: 14px; font-weight: 700; color: #3b2f2a; margin: 24px 0 10px; text-transform: uppercase; letter-spacing: 0.6px; }
+.note { background: #fff8e8; border: 1px solid #c8a96b; border-radius: 8px; padding: 10px 14px; font-size: 12px; color: #6b4f1a; margin-bottom: 20px; line-height: 1.5; }
+.palette-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+.swatch { border-radius: 10px; overflow: hidden; border: 1px solid rgba(0,0,0,0.08); }
+.swatch-color { height: 64px; }
+.swatch-info { background: #fff; padding: 8px 10px; }
+.sw-name { font-size: 11px; font-weight: 700; color: #3b2f2a; margin-bottom: 2px; }
+.sw-hex { font-size: 11px; font-family: monospace; color: #8a7060; }
+.sw-role { font-size: 10px; color: #a38070; margin-top: 2px; }
+table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 10px; overflow: hidden; border: 1px solid #e8ddd0; margin-bottom: 20px; }
+thead { background: #f2e8d6; }
+th { font-size: 11px; font-weight: 700; color: #3b2f2a; text-transform: uppercase; letter-spacing: 0.5px; padding: 9px 12px; text-align: left; border-bottom: 1px solid #e8ddd0; }
+td { padding: 9px 12px; border-bottom: 1px solid #f2e8d6; font-size: 13px; vertical-align: middle; }
+tr:last-child td { border-bottom: none; }
+.token { font-family: monospace; font-size: 12px; color: #5a6b4f; background: #f0f4ee; padding: 2px 5px; border-radius: 3px; }
+.dot { display: inline-block; width: 14px; height: 14px; border-radius: 3px; vertical-align: middle; margin-right: 6px; }
+.hex { font-family: monospace; font-size: 12px; color: #8a7060; }
+.usage { font-size: 12px; color: #8a7060; }
+.resolve-card { background: #fff; border: 1px solid #e8ddd0; border-radius: 10px; padding: 14px 18px; margin-bottom: 20px; }
+.rc-hdr { font-size: 13px; font-weight: 700; color: #b45b4a; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.rc-verdict { font-size: 12px; color: #3b2f2a; line-height: 1.5; }
+.verdict-drop { color: #b45b4a; font-weight: 600; }
+.verdict-keep { color: #5a6b4f; font-weight: 600; }
+</style>
+<h1>P46 — Brand Color Tokens</h1>
+<div class="meta">Prompt 46 · Phase 5 · Depends on Prompt 0 §0.8 — 6 confirmed brand colors, semantic mapping, teal resolution</div>
+
+<h2>Brand Palette — 6 Confirmed Colors</h2>
+<div class="palette-grid">
+  <div class="swatch">
+    <div class="swatch-color" style="background:#3B2F2A"></div>
+    <div class="swatch-info"><div class="sw-name">Deep Brown</div><div class="sw-hex">#3B2F2A</div><div class="sw-role">Primary brand</div></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#C8A96B"></div>
+    <div class="swatch-info"><div class="sw-name">Heritage Gold</div><div class="sw-hex">#C8A96B</div><div class="sw-role">Secondary accent</div></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#5A6B4F"></div>
+    <div class="swatch-info"><div class="sw-name">Olive Green</div><div class="sw-hex">#5A6B4F</div><div class="sw-role">Success / positive</div></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#B45B4A"></div>
+    <div class="swatch-info"><div class="sw-name">Terracotta</div><div class="sw-hex">#B45B4A</div><div class="sw-role">Warning / alert</div></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#F2E8D6"></div>
+    <div class="swatch-info"><div class="sw-name">Warm Beige</div><div class="sw-hex">#F2E8D6</div><div class="sw-role">Background</div></div>
+  </div>
+  <div class="swatch">
+    <div class="swatch-color" style="background:#FAF7F2; border:1px solid #e8ddd0"></div>
+    <div class="swatch-info"><div class="sw-name">Ivory White</div><div class="sw-hex">#FAF7F2</div><div class="sw-role">Surface / canvas</div></div>
+  </div>
+</div>
+
+<div class="resolve-card">
+  <div class="rc-hdr">⚠ Teal accent seen in Screens.png — resolution</div>
+  <div class="rc-verdict">
+    A cool blue-green (~#2A8C8C) appears once in Screens.png on a secondary AI action chip. Investigation: the teal is <strong>not present in any other screen, brand guide, or app-flow document</strong>. It conflicts with the warm earthy palette and adds a 7th hue with no semantic role that cannot be handled by Heritage Gold or Olive Green.
+    <br><br>
+    <span class="verdict-drop">Decision: DROP the teal. Do not add it to the palette.</span> The chip in question can be styled with <span style="font-family:monospace;font-size:12px;background:#f0f4ee;padding:2px 4px;border-radius:3px">--color-ai</span> (see semantic tokens below) instead.
+  </div>
+</div>
+
+<h2>Semantic Token Map</h2>
+<table>
+  <thead>
+    <tr><th>Token</th><th>Role</th><th>Light value</th><th>Hex</th><th>Usage examples</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span class="token">--color-primary</span></td>
+      <td>Brand primary action</td>
+      <td><span class="dot" style="background:#3B2F2A"></span>Deep Brown</td>
+      <td class="hex">#3B2F2A</td>
+      <td class="usage">Primary buttons, top-bar background (themed), active nav underline</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-primary-on</span></td>
+      <td>Text on primary</td>
+      <td><span class="dot" style="background:#FAF7F2;border:1px solid #e8ddd0"></span>Ivory White</td>
+      <td class="hex">#FAF7F2</td>
+      <td class="usage">Button label, nav icon on dark bar</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-secondary</span></td>
+      <td>Secondary action / highlight</td>
+      <td><span class="dot" style="background:#C8A96B"></span>Heritage Gold</td>
+      <td class="hex">#C8A96B</td>
+      <td class="usage">AI Core ring glow, premium badge, selected chip border, icon accent</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-accent</span></td>
+      <td>Warm accent / destructive-light</td>
+      <td><span class="dot" style="background:#B45B4A"></span>Terracotta</td>
+      <td class="hex">#B45B4A</td>
+      <td class="usage">Overdue badge, warning banner, reorder button, alert icon</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-success</span></td>
+      <td>Positive outcome</td>
+      <td><span class="dot" style="background:#5A6B4F"></span>Olive Green</td>
+      <td class="hex">#5A6B4F</td>
+      <td class="usage">Stock OK badge, paid pill, positive trend arrow, Clear badge</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-success-surface</span></td>
+      <td>Success tinted surface</td>
+      <td><span class="dot" style="background:#EEF2EB;border:1px solid #dde8d5"></span>Olive Green 10%</td>
+      <td class="hex">#EEF2EB</td>
+      <td class="usage">OK badge background, success toast background, paid chip bg</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-warning</span></td>
+      <td>Caution / low stock</td>
+      <td><span class="dot" style="background:#B45B4A"></span>Terracotta</td>
+      <td class="hex">#B45B4A</td>
+      <td class="usage">Low stock label, due-soon badge, offline banner text</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-warning-surface</span></td>
+      <td>Warning tinted surface</td>
+      <td><span class="dot" style="background:#FAF0EC;border:1px solid #f0d4cc"></span>Terracotta 10%</td>
+      <td class="hex">#FAF0EC</td>
+      <td class="usage">Low stock icon bg, due-soon row tint, offline banner bg</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-error</span></td>
+      <td>Error / out of stock / overdue</td>
+      <td><span class="dot" style="background:#A0312A"></span>Terracotta dark</td>
+      <td class="hex">#A0312A</td>
+      <td class="usage">Out of stock label, overdue amount, error state icon, field error text</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-error-surface</span></td>
+      <td>Error tinted surface</td>
+      <td><span class="dot" style="background:#FAECEA;border:1px solid #f0c8c4"></span>Error 8%</td>
+      <td class="hex">#FAECEA</td>
+      <td class="usage">Out-of-stock icon bg, error banner bg, conflict banner bg</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-info</span></td>
+      <td>Neutral informational</td>
+      <td><span class="dot" style="background:#C8A96B"></span>Heritage Gold</td>
+      <td class="hex">#C8A96B</td>
+      <td class="usage">Info alert row, "due in 3 days" badge, informational banner</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-ai</span></td>
+      <td>AI-specific brand surface</td>
+      <td><span class="dot" style="background:#4A3D6B"></span>AI Indigo (derived)</td>
+      <td class="hex">#4A3D6B</td>
+      <td class="usage">AI Core ring, AI conversation avatar, AI insight icon, AI status pill — derived by blending Deep Brown + Heritage Gold midpoint shifted 30° cool; NOT a new brand color (internal use only, never in marketing)</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-ai-surface</span></td>
+      <td>AI tinted surface</td>
+      <td><span class="dot" style="background:#F0EDF8;border:1px solid #ddd6ee"></span>AI Indigo 8%</td>
+      <td class="hex">#F0EDF8</td>
+      <td class="usage">AI insight card background, AI chat bubble background, AI briefing card</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-background</span></td>
+      <td>App canvas background</td>
+      <td><span class="dot" style="background:#FAF7F2;border:1px solid #e8ddd0"></span>Ivory White</td>
+      <td class="hex">#FAF7F2</td>
+      <td class="usage">Screen background, canvas behind cards</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-surface</span></td>
+      <td>Card / panel surface</td>
+      <td><span class="dot" style="background:#FFFFFF;border:1px solid #e8ddd0"></span>White</td>
+      <td class="hex">#FFFFFF</td>
+      <td class="usage">Cards, list backgrounds, form inputs, modal sheets</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-surface-subtle</span></td>
+      <td>Subtle alternate surface</td>
+      <td><span class="dot" style="background:#F2E8D6"></span>Warm Beige</td>
+      <td class="hex">#F2E8D6</td>
+      <td class="usage">Counter card bg, section header bg, chip bg, filter tab bg</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-text-primary</span></td>
+      <td>Primary text</td>
+      <td><span class="dot" style="background:#3B2F2A"></span>Deep Brown</td>
+      <td class="hex">#3B2F2A</td>
+      <td class="usage">All headings, primary list labels, form values</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-text-secondary</span></td>
+      <td>Secondary / muted text</td>
+      <td><span class="dot" style="background:#8A7060"></span>Brown 55%</td>
+      <td class="hex">#8A7060</td>
+      <td class="usage">Subtitles, metadata, timestamps, placeholder text</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-text-disabled</span></td>
+      <td>Disabled / inactive text</td>
+      <td><span class="dot" style="background:#C0AFA5"></span>Brown 30%</td>
+      <td class="hex">#C0AFA5</td>
+      <td class="usage">Disabled form labels, inactive tab labels, locked rows</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-border</span></td>
+      <td>Default border</td>
+      <td><span class="dot" style="background:#E8DDD0"></span>Beige border</td>
+      <td class="hex">#E8DDD0</td>
+      <td class="usage">Card borders, input borders, dividers, table row separators</td>
+    </tr>
+    <tr>
+      <td><span class="token">--color-border-subtle</span></td>
+      <td>Subtle divider</td>
+      <td><span class="dot" style="background:#F2E8D6"></span>Warm Beige</td>
+      <td class="hex">#F2E8D6</td>
+      <td class="usage">List row bottom border (internal), subtle section divider</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note">
+  <strong>Rule:</strong> Every color rendered in the app must map to one of the 21 semantic tokens above. No raw hex value may appear in component code — use tokens only. The 6 brand hex values (#3B2F2A, #C8A96B, #5A6B4F, #B45B4A, #F2E8D6, #FAF7F2) are the only primitives; derived values (tints at 8–10%, darkened shades, the one AI-Indigo blended value) are pre-computed into tokens and not re-derived at runtime.
+</div>

@@ -1,0 +1,87 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; border-bottom: 1px solid #e5e5e5; }
+.top-title { font-size: 18px; font-weight: 700; }
+.top-sub { font-size: 13px; color: #737373; margin-top: 2px; }
+.content { flex: 1; overflow: hidden; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.sec-lbl { font-size: 11px; font-weight: 700; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.5px; }
+.state-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.state-card { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 8px; }
+.state-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+.si-empty { background: #f5f5f5; border: 1px solid #e5e5e5; }
+.si-error { background: #fef2f2; border: 1px solid #fca5a5; }
+.si-loading { background: #eff6ff; border: 1px solid #bfdbfe; }
+.si-offline { background: #fef9ec; border: 1px solid #fde68a; }
+.si-conflict { background: #fdf4ff; border: 1px solid #e9d5ff; }
+.si-permission { background: #fff7ed; border: 1px solid #fed7aa; }
+.state-name { font-size: 13px; font-weight: 700; }
+.state-desc { font-size: 11px; color: #737373; line-height: 1.4; }
+.state-screens { font-size: 10px; color: #a3a3a3; margin-top: 2px; font-style: italic; }
+.ref-card { background: #fff; border-radius: 10px; border: 1px solid #e5e5e5; padding: 10px 14px; }
+.ref-title { font-size: 12px; font-weight: 700; color: #404040; margin-bottom: 6px; }
+.ref-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.ref-chip { font-size: 11px; padding: 3px 8px; border-radius: 12px; background: #f5f5f5; color: #737373; border: 1px solid #e5e5e5; }
+</style>
+<div class="top-bar">
+  <div class="top-title">Component States</div>
+  <div class="top-sub">Reusable — referenced by all screens (P33–P43)</div>
+</div>
+<div class="content">
+  <div class="sec-lbl">6 state components</div>
+  <div class="state-grid">
+    <div class="state-card">
+      <div class="state-icon si-empty">📭</div>
+      <div class="state-name">Empty</div>
+      <div class="state-desc">No data yet. Encourage first action with icon + headline + CTA button.</div>
+      <div class="state-screens">Used in: Transactions, Customers, Inventory, Alerts</div>
+    </div>
+    <div class="state-card">
+      <div class="state-icon si-error">⚠</div>
+      <div class="state-name">Error</div>
+      <div class="state-desc">Something went wrong. Show message + retry button. Never blank screen.</div>
+      <div class="state-screens">Used in: Reports, Sync, API calls</div>
+    </div>
+    <div class="state-card">
+      <div class="state-icon si-loading">⏳</div>
+      <div class="state-name">Loading</div>
+      <div class="state-desc">Skeleton shimmer rows matching the expected content layout below.</div>
+      <div class="state-screens">Used in: All lists, charts, detail screens</div>
+    </div>
+    <div class="state-card">
+      <div class="state-icon si-offline">📶</div>
+      <div class="state-name">Offline</div>
+      <div class="state-desc">No internet. Show cached data with staleness label. Queue writes.</div>
+      <div class="state-screens">Used in: Home, Transactions, Sync status</div>
+    </div>
+    <div class="state-card">
+      <div class="state-icon si-conflict">⚡</div>
+      <div class="state-name">Conflict</div>
+      <div class="state-desc">Two edits conflict. Show both versions, let user choose or merge.</div>
+      <div class="state-screens">Used in: Inventory, Customer edit, multi-device sync</div>
+    </div>
+    <div class="state-card">
+      <div class="state-icon si-permission">🔒</div>
+      <div class="state-name">Permission Denied</div>
+      <div class="state-desc">Feature not available for this role or plan. Show upgrade path.</div>
+      <div class="state-screens">Used in: Reports, Settings, Staff management</div>
+    </div>
+  </div>
+  <div class="ref-card">
+    <div class="ref-title">Applies to all screens in Prompts 33–43</div>
+    <div class="ref-row">
+      <div class="ref-chip">P33 Home</div>
+      <div class="ref-chip">P34 Voice</div>
+      <div class="ref-chip">P35 Products</div>
+      <div class="ref-chip">P36 Finance</div>
+      <div class="ref-chip">P37 Drill-down</div>
+      <div class="ref-chip">P38 Sales</div>
+      <div class="ref-chip">P39 CRM</div>
+      <div class="ref-chip">P40 Inventory</div>
+      <div class="ref-chip">P41 Reports</div>
+      <div class="ref-chip">P42 Alerts</div>
+      <div class="ref-chip">P43 Settings</div>
+    </div>
+  </div>
+</div>

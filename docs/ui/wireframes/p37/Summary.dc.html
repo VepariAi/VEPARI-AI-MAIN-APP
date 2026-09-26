@@ -1,0 +1,89 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: #f5f5f5; color: #171717; overflow: hidden;
+}
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e5e5; }
+.top-title { font-size: 18px; font-weight: 700; }
+.top-actions { display: flex; gap: 8px; }
+.icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e5e5e5; background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.period-tabs { background: #fff; padding: 10px 14px; display: flex; gap: 6px; border-bottom: 1px solid #e5e5e5; overflow-x: hidden; }
+.tab { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 500; white-space: nowrap; }
+.tab.act { background: #2563eb; color: #fff; }
+.tab.def { background: #f5f5f5; color: #737373; border: 1px solid #e5e5e5; }
+.content { flex: 1; overflow: hidden; padding: 12px 14px; display: flex; flex-direction: column; gap: 10px; }
+.kpi-cards { display: flex; gap: 8px; }
+.kpi { flex: 1; background: #fff; border-radius: 12px; padding: 14px 10px; border: 1px solid #e5e5e5; text-align: center; }
+.kpi-lbl { font-size: 11px; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 5px; }
+.kpi-val { font-size: 17px; font-weight: 700; }
+.kpi-delta { font-size: 11px; margin-top: 3px; }
+.kpi.rev .kpi-val { color: #16a34a; } .kpi.rev .kpi-delta { color: #16a34a; }
+.kpi.exp .kpi-val { color: #dc2626; } .kpi.exp .kpi-delta { color: #dc2626; }
+.kpi.prf .kpi-val { color: #2563eb; } .kpi.prf .kpi-delta { color: #16a34a; }
+.chart-area { background: #fff; border-radius: 12px; padding: 14px 12px; border: 1px solid #e5e5e5; }
+.chart-title { font-size: 12px; font-weight: 600; color: #737373; margin-bottom: 10px; }
+.chart-bars { display: flex; align-items: flex-end; gap: 3px; height: 72px; }
+.bar { flex: 1; border-radius: 3px 3px 0 0; }
+.bar.rev { background: #86efac; }
+.bar.exp { background: #fca5a5; }
+.chart-legend { display: flex; gap: 12px; margin-top: 8px; }
+.leg { display: flex; align-items: center; gap: 4px; font-size: 11px; color: #737373; }
+.leg-dot { width: 8px; height: 8px; border-radius: 50%; }
+.sec-hdr { font-size: 11px; font-weight: 700; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.6px; padding: 0 2px; }
+.cat-list { background: #fff; border-radius: 12px; border: 1px solid #e5e5e5; overflow: hidden; }
+.cat-row { display: flex; align-items: center; padding: 13px 14px; border-bottom: 1px solid #f5f5f5; }
+.cat-row:last-child { border-bottom: none; }
+.cat-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 10px; flex-shrink: 0; }
+.cat-name { flex: 1; font-size: 14px; }
+.cat-val { font-size: 14px; font-weight: 600; margin-right: 8px; }
+.cat-arrow { color: #a3a3a3; font-size: 16px; }
+.drill-note { text-align: center; font-size: 11px; color: #a3a3a3; padding: 4px 0; }
+</style>
+<div class="top-bar">
+  <div class="top-title">Finance</div>
+  <div class="top-actions">
+    <div class="icon-btn">📅</div>
+    <div class="icon-btn">⬇</div>
+  </div>
+</div>
+<div class="period-tabs">
+  <div class="tab def">Today</div>
+  <div class="tab def">Week</div>
+  <div class="tab act">Month</div>
+  <div class="tab def">Quarter</div>
+  <div class="tab def">Year</div>
+</div>
+<div class="content">
+  <div class="kpi-cards">
+    <div class="kpi rev"><div class="kpi-lbl">Revenue</div><div class="kpi-val">₹42.3k</div><div class="kpi-delta">↑18%</div></div>
+    <div class="kpi exp"><div class="kpi-lbl">Expenses</div><div class="kpi-val">₹18.1k</div><div class="kpi-delta">↑5%</div></div>
+    <div class="kpi prf"><div class="kpi-lbl">Profit</div><div class="kpi-val">₹24.2k</div><div class="kpi-delta">↑28%</div></div>
+  </div>
+  <div class="chart-area">
+    <div class="chart-title">Revenue vs. Expenses — Aug 2026</div>
+    <div class="chart-bars">
+      <div class="bar rev" style="height:42%"></div><div class="bar exp" style="height:22%"></div>
+      <div class="bar rev" style="height:55%"></div><div class="bar exp" style="height:30%"></div>
+      <div class="bar rev" style="height:48%"></div><div class="bar exp" style="height:25%"></div>
+      <div class="bar rev" style="height:70%"></div><div class="bar exp" style="height:35%"></div>
+      <div class="bar rev" style="height:60%"></div><div class="bar exp" style="height:28%"></div>
+      <div class="bar rev" style="height:80%"></div><div class="bar exp" style="height:40%"></div>
+      <div class="bar rev" style="height:75%"></div><div class="bar exp" style="height:38%"></div>
+    </div>
+    <div class="chart-legend">
+      <div class="leg"><div class="leg-dot" style="background:#86efac"></div> Revenue</div>
+      <div class="leg"><div class="leg-dot" style="background:#fca5a5"></div> Expenses</div>
+    </div>
+  </div>
+  <div class="sec-hdr">Categories — tap to drill down</div>
+  <div class="cat-list">
+    <div class="cat-row"><div class="cat-dot" style="background:#22c55e"></div><div class="cat-name">Sales</div><div class="cat-val" style="color:#16a34a">₹38,200</div><div class="cat-arrow">›</div></div>
+    <div class="cat-row"><div class="cat-dot" style="background:#86efac"></div><div class="cat-name">Service income</div><div class="cat-val" style="color:#16a34a">₹4,100</div><div class="cat-arrow">›</div></div>
+    <div class="cat-row"><div class="cat-dot" style="background:#fca5a5"></div><div class="cat-name">Purchases</div><div class="cat-val" style="color:#dc2626">₹12,300</div><div class="cat-arrow">›</div></div>
+    <div class="cat-row"><div class="cat-dot" style="background:#fcd34d"></div><div class="cat-name">Overheads</div><div class="cat-val" style="color:#dc2626">₹5,800</div><div class="cat-arrow">›</div></div>
+  </div>
+  <div class="drill-note">Level 1 of 5: Summary → Category → Account → Transaction → Source</div>
+</div>

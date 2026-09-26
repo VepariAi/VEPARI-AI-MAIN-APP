@@ -1,0 +1,107 @@
+// Transliteration service — PROMPT 146.
+// Server-side Roman-to-Indic and Indic-to-Roman script conversion via Sarvam AI.
+// API keys stay server-side — never exposed to the client.
+
+import { Injectable, Logger, BadRequestException, InternalServerErrorException } from '@nestjs/common';
+import type { LanguageCode } from '@vepari/types';
+import { LANGUAGE_CONFIG } from '@vepari/types';
+
+const SARVAM_API_BASE = 'https://api.sarvam.ai';
+
+export interface TransliterationRequest {
+  text: string;
+  sourceLanguageCode: LanguageCode;
+  targetLanguageCode: LanguageCode;
+  /** If true, numerals are preserved as-is */
+  preserveNumerals?: boolean;
+}
+
+export interface TransliterationResult {
+  original: string;
+  transliterated: string;
+  sourceLanguage: LanguageCode;
+  targetLanguage: LanguageCode;
+}
+
+@Injectable()
+export class TransliterationService {
+  private readonly logger = new Logger(TransliterationService.name);
+
+  private get apiKey(): string {
+    const key = process.env['SARVAM_API_KEY'];
+    if (!key) throw new InternalServerErrorException('Sarvam API key not configured');
+    return key;
+  }
+
+  /**
+   * Transliterate text between scripts via Sarvam AI.
+   * Common use: Romanized Hindi (Hinglish) -> Devanagari, or vice versa.
+   */
+  async transliterate(req: TransliterationRequest): Promise<TransliterationResult> {
+    if (!req.text.trim()) throw new BadRequestException('text is required');
+
+    const sourceLang = LANGUAGE_CONFIG[req.sourceLanguageCode];
+    const targetLang = LANGUAGE_CONFIG[req.targetLanguageCode];
+
+    if (!sourceLang || !targetLang) {
+      throw new BadRequestException('Unsupported language code');
+    }
+
+    // Sarvam transliteration endpoint
+    const response = await fetch(`${SARVAM_API_BASE}/transliterate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'API-Subscription-Key': this.apiKey,
+      },
+      body: JSON.stringify({
+        input: req.text,
+        source_language_code: sourceLang.sarvamCode,
+        target_language_code: targetLang.sarvamCode,
+        ...(req.preserveNumerals ? { numerals_format: 'international' } : {}),
+      }),
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      this.logger.error(`Sarvam transliteration ${response.status}: ${body}`);
+      throw new InternalServerErrorException('Transliteration service error');
+    }
+
+    const data = await response.json() as { transliterated_text?: string; output?: string };
+    const transliterated = data.transliterated_text ?? data.output ?? req.text;
+
+    return {
+      original: req.text,
+      transliterated,
+      sourceLanguage: req.sourceLanguageCode,
+      targetLanguage: req.targetLanguageCode,
+    };
+  }
+
+  /**
+   * Batch transliterate multiple strings in one request where possible.
+   * Falls back to sequential individual calls if batch is not supported.
+   */
+  async transliterateBatch(
+    texts: string[],
+    sourceLanguageCode: LanguageCode,
+    targetLanguageCode: LanguageCode,
+  ): Promise<string[]> {
+    const results = await Promise.all(
+      texts.map(text =>
+        this.transliterate({ text, sourceLanguageCode, targetLanguageCode }).then(r => r.transliterated),
+      ),
+    );
+    return results;
+  }
+
+  /**
+   * Quick check: does this text appear to be in a non-Latin script already?
+   * Used to avoid unnecessary transliteration calls.
+   */
+  isNonLatin(text: string): boolean {
+    // Match any character outside basic Latin + Latin extended (code points > 0x024F)
+    return /[\u0250-\uFFFF]/.test(text);
+  }
+}

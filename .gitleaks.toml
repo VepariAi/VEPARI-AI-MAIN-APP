@@ -1,0 +1,6 @@
+[allowlist]
+  description = "Known false positives — test fixtures and intentional patterns"
+  # Commit that added prompt-injection guard spec with intentional sk- test string
+  commits = ["9d48d0785d8d6173c85a9e659a4a3dc698a56536"]
+  # Test files may contain intentional API-key-shaped strings for detection tests
+  paths = ['''.*__tests__.*\.spec\.ts$''']

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Customer Detail</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.back-btn { font-size: 20px; color: #C8A96B; width: 32px; }
+.header-title { font-size: 15px; font-weight: 700; }
+.header-action { font-size: 16px; color: #C8A96B; width: 32px; text-align: right; }
+
+/* Hero */
+.hero { padding: 16px 20px 14px; display: flex; align-items: center; gap: 14px; background: #FFFFFF; border-bottom: 1px solid #EDE5D8; }
+.hero-avatar { width: 52px; height: 52px; border-radius: 50%; background: #5A6B4F; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; color: #FFFFFF; flex-shrink: 0; }
+.hero-name { font-size: 18px; font-weight: 700; color: #3B2F2A; }
+.hero-meta { font-size: 12px; color: #8A7060; margin-top: 3px; }
+.hero-actions { display: flex; gap: 8px; margin-left: auto; }
+.hero-btn { width: 36px; height: 36px; border-radius: 10px; background: #F0EAE0; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+
+/* Stat tiles */
+.stat-row { display: flex; gap: 8px; padding: 12px 20px; }
+.stat-tile { flex: 1; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 12px; padding: 12px 10px; text-align: center; }
+.stat-val { font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums; color: #3B2F2A; }
+.stat-label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: #C0AFA5; margin-top: 3px; }
+
+/* AI insight card */
+.ai-card { margin: 0 20px 12px; border-radius: 12px; padding: 12px 14px; background: linear-gradient(135deg, #3B2F2A, #4A3D6B); }
+.ai-header { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.ai-dot { width: 6px; height: 6px; border-radius: 50%; background: #C8A96B; }
+.ai-label { font-size: 9px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #C8A96B; }
+.ai-text { font-size: 12px; color: rgba(250,247,242,0.88); line-height: 1.5; }
+.ai-text strong { color: #C8A96B; }
+
+/* Section */
+.sec-header { display: flex; justify-content: space-between; align-items: center; padding: 0 20px 8px; }
+.sec-title { font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #8A7060; }
+.sec-see { font-size: 11px; color: #C8A96B; font-weight: 500; }
+
+/* Txn rows */
+.txn-row { display: flex; align-items: center; gap: 12px; padding: 10px 20px; border-bottom: 1px solid #F5EFE6; }
+.txn-icon { width: 34px; height: 34px; border-radius: 10px; background: rgba(90,107,79,0.12); display: flex; align-items: center; justify-content: center; font-size: 15px; }
+.txn-name { flex: 1; font-size: 13px; font-weight: 500; color: #3B2F2A; }
+.txn-meta { font-size: 11px; color: #8A7060; }
+.txn-amt { font-size: 13px; font-weight: 700; color: #5A6B4F; font-variant-numeric: tabular-nums; }
+
+/* Actions */
+.actions { display: flex; gap: 10px; padding: 12px 20px; }
+.action-btn { flex: 1; height: 44px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.action-btn.outline { background: #FFFFFF; border: 1.5px solid #E8DDD0; color: #3B2F2A; }
+.action-btn.primary { background: #3B2F2A; color: #FAF7F2; border: none; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="back-btn">‹</div>
+  <div class="header-title">Ravi Kumar Ji</div>
+  <div class="header-action">⋯</div>
+</div>
+
+<div class="hero">
+  <div class="hero-avatar">RK</div>
+  <div>
+    <div class="hero-name">Ravi Kumar Ji</div>
+    <div class="hero-meta">Regular · Since Mar 2023 · +91 98765 43210</div>
+  </div>
+  <div class="hero-actions">
+    <div class="hero-btn">📞</div>
+    <div class="hero-btn">💬</div>
+  </div>
+</div>
+
+<div class="stat-row">
+  <div class="stat-tile">
+    <div class="stat-val">₹1.2L</div>
+    <div class="stat-label">Total Bought</div>
+  </div>
+  <div class="stat-tile">
+    <div class="stat-val">28</div>
+    <div class="stat-label">Orders</div>
+  </div>
+  <div class="stat-tile">
+    <div class="stat-val" style="color:#5A6B4F;">₹0</div>
+    <div class="stat-label">Balance</div>
+  </div>
+</div>
+
+<div class="ai-card">
+  <div class="ai-header"><div class="ai-dot"></div><div class="ai-label">Vepari AI Insight</div></div>
+  <div class="ai-text">Ravi Ji visits <strong>every Tuesday and Friday</strong>. His basket has grown <strong>+18% this month</strong> — he added oils. Consider offering a <strong>bulk rice deal</strong> next visit.</div>
+</div>
+
+<div class="sec-header">
+  <div class="sec-title">Recent Transactions</div>
+  <div class="sec-see">See all ›</div>
+</div>
+
+<div style="flex:1;overflow:hidden;">
+  <div class="txn-row">
+    <div class="txn-icon">💳</div>
+    <div style="flex:1;">
+      <div class="txn-name">INV-2024-0842</div>
+      <div class="txn-meta">2 Sep · UPI · GPay</div>
+    </div>
+    <div class="txn-amt">₹3,840</div>
+  </div>
+  <div class="txn-row">
+    <div class="txn-icon">💳</div>
+    <div style="flex:1;">
+      <div class="txn-name">INV-2024-0831</div>
+      <div class="txn-meta">29 Aug · UPI · GPay</div>
+    </div>
+    <div class="txn-amt">₹4,120</div>
+  </div>
+  <div class="txn-row">
+    <div class="txn-icon">💳</div>
+    <div style="flex:1;">
+      <div class="txn-name">INV-2024-0819</div>
+      <div class="txn-meta">26 Aug · Cash</div>
+    </div>
+    <div class="txn-amt">₹2,640</div>
+  </div>
+</div>
+
+<div class="actions">
+  <div class="action-btn outline">📄 Statement</div>
+  <div class="action-btn outline">💳 Collect</div>
+  <div class="action-btn primary">+ New Sale</div>
+</div>
+
+</body>
+</html>

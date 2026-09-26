@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "ComponentSpec.dc.html", "x": 0, "y": 0, "w": 860, "h": 2600, "title": "Component Spec — 26 components x 8 states per UI-UX 197-198" }
+  ],
+  "annotations": [
+    { "id": "p48-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 48 — Full component spec. 26 components: Button, IconButton, TextField, SearchField, Select, Checkbox, Switch, Card, MetricCard, ListItem, Avatar, Badge, Chip, Tabs, BottomSheet, Modal/Dialog, Toast, Banner, Progress, Skeleton, EmptyState, ErrorState, Chart, Table, DocumentPreview. All states: Default/Pressed/Focused/Disabled/Loading/Error/Selected/Success." }
+  ],
+  "launch": { "view": "canvas" }
+}

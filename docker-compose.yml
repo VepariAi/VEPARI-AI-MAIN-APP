@@ -1,0 +1,49 @@
+# Local development stack — PROMPT 220 (environment separation).
+#
+# Brings up MySQL and the backend together for local/integration use.
+#   docker compose up --build
+# The backend waits for MySQL to be healthy, runs migrations on start, then
+# serves on http://localhost:3000. Values here are LOCAL-ONLY defaults; real
+# deployments inject secrets from the platform's secret store, never this file.
+
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: vepari_dev
+      MYSQL_USER: vepari
+      MYSQL_PASSWORD: localdev
+      MYSQL_ROOT_PASSWORD: localdev-root
+    ports:
+      - '3306:3306'
+    volumes:
+      - vepari_mysqldata:/var/lib/mysql
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost', '-u', 'vepari', '-plocaldev']
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: '3000'
+      DATABASE_URL: mysql://vepari:localdev@mysql:3306/vepari_dev
+      # LOCAL-ONLY placeholder secrets; override for anything shared.
+      JWT_SECRET: local-dev-secret-not-for-production-use-only-abcdefghijklmnop
+      # 32-byte hex key for AES-256-GCM at-rest encryption (local dev only).
+      DATA_ENCRYPTION_KEY: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      ALLOWED_ORIGINS: http://localhost:3000,http://localhost:19006
+    ports:
+      - '3000:3000'
+    # Apply migrations before serving so a fresh DB is schema-correct.
+    command: sh -c "npx prisma migrate deploy --schema prisma/schema.prisma && node dist/main"
+
+volumes:
+  vepari_mysqldata:

@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",  "x": 0,   "y": 0, "w": 390, "h": 1100, "title": "Briefing — 4 Tiers, 7 Items" },
+    { "file": "Empty.dc.html", "x": 470, "y": 0, "w": 390, "h": 844,  "title": "All Caught Up (empty state)" }
+  ],
+  "annotations": [
+    { "id": "p35-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 35 — While You Were Away briefing. Left: 7 items across 4 priority tiers. Right: empty state when nothing needs attention." }
+  ],
+  "launch": { "view": "canvas" }
+}

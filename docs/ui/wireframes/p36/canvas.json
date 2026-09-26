@@ -1,0 +1,11 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",       "x": 0,   "y": 0,    "w": 390, "h": 844, "title": "Home Screen" },
+    { "file": "QuickConfig.dc.html","x": 470, "y": 0,    "w": 390, "h": 780, "title": "Quick Actions Config (PRD §46)" },
+    { "file": "NavSpec.dc.html",    "x": 0,   "y": 924,  "w": 580, "h": 340, "title": "5-Tab Nav Specification" }
+  ],
+  "annotations": [
+    { "id": "p36-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 36 — Home screen components: KPI overview, voice card, Quick Actions (configurable per PRD §46), 5-tab nav with elevated Voice tab." }
+  ],
+  "launch": { "view": "canvas" }
+}

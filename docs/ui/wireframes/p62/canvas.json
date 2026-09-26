@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",  "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Briefing — Main" },
+    { "file": "Empty.dc.html", "x": 470, "y": 0, "w": 390, "h": 844, "title": "Briefing — Empty" }
+  ],
+  "annotations": [
+    { "id": "p62-note", "x": 0, "y": -120, "w": 650, "text": "P62 — Daily Briefing Screen canvas. Depends on P35, P59. Phase 5 tokens. Main: AI summary card (Deep Brown→AI Indigo gradient), voice waveform progress, 3 section cards (Finance/Ops/Customers) with Heritage Gold bullet icons. Empty: lotus clock icon, countdown timer, notification toggle." }
+  ],
+  "launch": { "view": "canvas" }
+}

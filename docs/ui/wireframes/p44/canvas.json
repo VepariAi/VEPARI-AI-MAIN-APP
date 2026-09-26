@@ -1,0 +1,15 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",          "x": 0,    "y": 0,    "w": 390, "h": 844, "title": "Component States — Overview (6 states)" },
+    { "file": "EmptyState.dc.html",    "x": 470,  "y": 0,    "w": 390, "h": 844, "title": "Empty State — icon, headline, CTA, variations" },
+    { "file": "ErrorState.dc.html",    "x": 0,    "y": 924,  "w": 390, "h": 844, "title": "Error State — full-screen, inline, field-level" },
+    { "file": "LoadingState.dc.html",  "x": 470,  "y": 924,  "w": 390, "h": 844, "title": "Loading State — list skeleton, chart skeleton" },
+    { "file": "OfflineState.dc.html",  "x": 0,    "y": 1848, "w": 390, "h": 844, "title": "Offline State — banner, cached data, write queue" },
+    { "file": "ConflictState.dc.html", "x": 470,  "y": 1848, "w": 390, "h": 844, "title": "Conflict State — side-by-side diff, resolve actions" },
+    { "file": "PermissionState.dc.html","x": 235, "y": 2772, "w": 390, "h": 844, "title": "Permission Denied — role gate, plan gate, inline lock" }
+  ],
+  "annotations": [
+    { "id": "p44-note", "x": 0, "y": -68, "w": 860, "text": "Prompt 44 — Reusable component states: Empty, Error, Loading, Offline, Conflict, Permission-Denied. Referenced by all screens in P33-P43 instead of per-screen redraw." }
+  ],
+  "launch": { "view": "canvas" }
+}

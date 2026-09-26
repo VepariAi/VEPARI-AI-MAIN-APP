@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "MotionHaptics.dc.html", "x": 0, "y": 0, "w": 860, "h": 1800, "title": "Motion Physics and Haptics — 5 spring presets, depth/parallax/blur table, haptics map, reduced-motion fallbacks" }
+  ],
+  "annotations": [
+    { "id": "p51-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 51 — AI OS physics language and haptics. 5 spring presets (Snappy/Gentle/AI Breath/Voice Amplitude/Inertial Scroll). Haptics map (10 events). Every animated state has a documented reduced-motion fallback that preserves meaning without animation." }
+  ],
+  "launch": { "view": "canvas" }
+}

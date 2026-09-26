@@ -1,0 +1,32 @@
+{
+  "name": "vepari-ai",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Vepari AI — Business OS for Indian SMBs",
+  "workspaces": [
+    "packages/*",
+    "mobile",
+    "backend"
+  ],
+  "scripts": {
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "dev:mobile": "npm run dev --workspace=mobile",
+    "dev:backend": "npm run dev --workspace=backend",
+    "clean": "turbo run clean && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^7.0.0",
+    "@typescript-eslint/parser": "^7.0.0",
+    "eslint": "^8.57.0",
+    "turbo": "^2.0.0",
+    "typescript": "~5.7.0"
+  },
+  "packageManager": "npm@10.8.2",
+  "engines": {
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
+  }
+}

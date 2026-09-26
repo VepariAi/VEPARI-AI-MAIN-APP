@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "Accessibility.dc.html", "x": 0, "y": 0, "w": 860, "h": 2400, "title": "Accessibility Spec — WCAG AA contrast audit, touch targets, dynamic type scaling" }
+  ],
+  "annotations": [
+    { "id": "p55-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 55 — WCAG AA contrast audit. Heritage Gold FAILS on all light backgrounds (1.85-2.25:1). Terracotta borderline on Ivory White (4.33:1). Touch target min 44dp. Dynamic type capped per token. Indic line-height grows with scale step." }
+  ],
+  "launch": { "view": "canvas" }
+}

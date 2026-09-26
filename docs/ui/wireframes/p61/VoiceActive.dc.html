@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AI OS Home — Voice Active</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2;
+  color: #3B2F2A;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.greeting { padding: 4px 20px 0; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; }
+.greeting-text { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #8A7060; }
+
+/* AI Core — Voice/Listening state */
+.core-hero { flex-shrink: 0; display: flex; flex-direction: column; align-items: center; padding: 10px 0 0; }
+.core-ring-outer { width: 260px; height: 260px; position: relative; display: flex; align-items: center; justify-content: center; }
+.core-wordmark { margin-top: 8px; text-align: center; }
+.core-wordmark .brand { font-size: 14px; font-weight: 700; color: #3B2F2A; letter-spacing: 0.5px; }
+.core-wordmark .brand span { color: #C8A96B; }
+.core-wordmark .sub { font-size: 9px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: #C8A96B; margin-top: 2px; }
+
+/* Voice overlay - floats over card area */
+.voice-overlay {
+  flex: 1;
+  display: flex; flex-direction: column; align-items: center;
+  padding: 20px 20px 0;
+  background: linear-gradient(180deg, #FAF7F2 0%, rgba(250,247,242,0.95) 100%);
+}
+
+/* Listening status pill */
+.listening-pill {
+  display: flex; align-items: center; gap: 8px;
+  background: #3B2F2A;
+  color: #FAF7F2;
+  border-radius: 20px;
+  padding: 8px 18px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.pulse-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #C8A96B;
+}
+
+/* Waveform bars */
+.waveform {
+  display: flex; align-items: center; gap: 3px;
+  height: 52px;
+  margin-bottom: 20px;
+}
+.wave-bar {
+  width: 4px;
+  border-radius: 2px;
+  background: #C8A96B;
+}
+
+/* Transcript bubble */
+.transcript {
+  width: 100%;
+  background: #FFFFFF;
+  border: 1.5px solid #E8DDD0;
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.transcript-label { font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #8A7060; margin-bottom: 8px; }
+.transcript-text { font-size: 15px; color: #3B2F2A; line-height: 1.5; }
+.transcript-cursor { display: inline-block; width: 2px; height: 16px; background: #C8A96B; margin-left: 2px; vertical-align: middle; }
+
+/* Quick action chips */
+.quick-actions { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+.quick-chip {
+  background: #FFFFFF;
+  border: 1px solid #E8DDD0;
+  border-radius: 16px;
+  padding: 7px 12px;
+  font-size: 12px; color: #8A7060;
+}
+
+/* Voice bar – full-bleed bottom panel */
+.voice-bar {
+  background: #3B2F2A;
+  padding: 16px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.voice-bar-left { font-size: 11px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: #C8A96B; }
+.voice-bar-right { font-size: 12px; color: rgba(250,247,242,0.5); }
+
+/* Bottom nav */
+.bottom-nav {
+  height: 80px; flex-shrink: 0;
+  background: #3B2F2A;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  display: flex; align-items: flex-start;
+  padding-top: 8px;
+  position: relative;
+}
+.nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; padding-top: 4px; }
+.nav-icon { font-size: 20px; opacity: 0.5; }
+.nav-label { font-size: 9px; font-weight: 600; letter-spacing: 0.3px; color: rgba(250,247,242,0.35); }
+.nav-item.active .nav-icon { opacity: 1; }
+.nav-item.active .nav-label { color: #C8A96B; }
+
+.voice-fab-wrap { position: absolute; top: -24px; left: 50%; transform: translateX(-50%); }
+.voice-fab {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: #C8A96B;
+  box-shadow: 0 0 0 3px #3B2F2A, 0 0 0 5px rgba(200,169,107,0.4), 0 4px 20px rgba(200,169,107,0.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px;
+}
+.nav-active-dot { width: 4px; height: 4px; border-radius: 50%; background: #C8A96B; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;font-size:11px;color:#8A7060;">
+    <span>▲▲▲</span><span>WiFi</span><span>🔋</span>
+  </span>
+</div>
+
+<div class="greeting">
+  <div class="greeting-text">Good morning, Sharma ji 🙏</div>
+</div>
+
+<!-- AI Core — Listening state: ring is gold/warm, center shows mic indicator -->
+<div class="core-hero">
+  <div class="core-ring-outer">
+    <svg width="260" height="260" viewBox="0 0 260 260" fill="none">
+      <!-- Ground glow — brighter in listening -->
+      <ellipse cx="130" cy="248" rx="110" ry="12" fill="rgba(200,169,107,0.2)"/>
+
+      <!-- Outer dashed orbit — animated amplitude suggestion -->
+      <circle cx="130" cy="130" r="127" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="3 6" opacity="0.35"/>
+      <circle cx="130" cy="130" r="123" stroke="#C8A96B" stroke-width="0.5" stroke-dasharray="2 8" opacity="0.2"/>
+
+      <!-- Gauge ring — full gold fill in voice state -->
+      <circle cx="130" cy="130" r="110" stroke="#C8A96B" stroke-width="14" fill="none" opacity="0.9"/>
+
+      <!-- Inner halo — stronger in voice -->
+      <circle cx="130" cy="130" r="88" stroke="#C8A96B" stroke-width="2" fill="none" opacity="0.4"/>
+      <circle cx="130" cy="130" r="84" stroke="#C8A96B" stroke-width="1" fill="none" opacity="0.2"/>
+
+      <!-- Core fill — warmer in voice state -->
+      <circle cx="130" cy="130" r="74" fill="url(#voiceCoreGrad)"/>
+
+      <!-- Lotus petals — brighter -->
+      <path d="M130 72 C142 88 142 106 130 112 C118 106 118 88 130 72" fill="#C8A96B" opacity="1"/>
+      <path d="M188 130 C172 142 154 142 148 130 C154 118 172 118 188 130" fill="#C8A96B" opacity="1"/>
+      <path d="M130 188 C118 172 118 154 130 148 C142 154 142 172 130 188" fill="#C8A96B" opacity="1"/>
+      <path d="M72 130 C88 118 106 118 112 130 C106 142 88 142 72 130" fill="#C8A96B" opacity="1"/>
+      <path d="M175 85 C165 100 155 104 145 100 C148 90 158 82 175 85" fill="#C8A96B" opacity="0.6"/>
+      <path d="M175 175 C160 165 156 155 160 145 C170 148 178 158 175 175" fill="#C8A96B" opacity="0.6"/>
+      <path d="M85 175 C95 160 105 156 115 160 C112 170 102 178 85 175" fill="#C8A96B" opacity="0.6"/>
+      <path d="M85 85 C100 95 104 105 100 115 C90 112 82 102 85 85" fill="#C8A96B" opacity="0.6"/>
+
+      <!-- Center — mic icon instead of lotus dot -->
+      <circle cx="130" cy="130" r="20" fill="#C8A96B"/>
+      <circle cx="130" cy="130" r="12" fill="#FAF7F2"/>
+      <!-- Mic symbol -->
+      <rect x="127" y="119" width="6" height="12" rx="3" fill="#3B2F2A"/>
+      <path d="M123 129 Q123 136 130 136 Q137 136 137 129" stroke="#3B2F2A" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <line x1="130" y1="136" x2="130" y2="140" stroke="#3B2F2A" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="127" y1="140" x2="133" y2="140" stroke="#3B2F2A" stroke-width="1.5" stroke-linecap="round"/>
+
+      <!-- Amplitude particles -->
+      <circle cx="130" cy="3" r="3" fill="#C8A96B" opacity="0.6"/>
+      <circle cx="257" cy="130" r="2" fill="#C8A96B" opacity="0.4"/>
+      <circle cx="3" cy="130" r="2" fill="#C8A96B" opacity="0.4"/>
+      <circle cx="55" cy="32" r="2" fill="#C8A96B" opacity="0.35"/>
+      <circle cx="205" cy="32" r="2" fill="#C8A96B" opacity="0.35"/>
+      <circle cx="25" cy="195" r="1.5" fill="#C8A96B" opacity="0.3"/>
+      <circle cx="235" cy="195" r="1.5" fill="#C8A96B" opacity="0.3"/>
+
+      <defs>
+        <radialGradient id="voiceCoreGrad" cx="50%" cy="38%" r="65%">
+          <stop offset="0%" stop-color="#FAF7F2"/>
+          <stop offset="40%" stop-color="#FAF7F2"/>
+          <stop offset="100%" stop-color="#F2E8D6"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="core-wordmark">
+    <div class="brand">VEPARI <span>AI</span></div>
+    <div class="sub">Voice Command Active</div>
+  </div>
+</div>
+
+<!-- Voice overlay area -->
+<div class="voice-overlay">
+  <div class="listening-pill">
+    <div class="pulse-dot"></div>
+    Listening
+  </div>
+
+  <!-- Waveform visualization -->
+  <div class="waveform">
+    <div class="wave-bar" style="height:8px;opacity:0.3;"></div>
+    <div class="wave-bar" style="height:16px;opacity:0.5;"></div>
+    <div class="wave-bar" style="height:10px;opacity:0.4;"></div>
+    <div class="wave-bar" style="height:32px;"></div>
+    <div class="wave-bar" style="height:22px;opacity:0.8;"></div>
+    <div class="wave-bar" style="height:40px;"></div>
+    <div class="wave-bar" style="height:48px;"></div>
+    <div class="wave-bar" style="height:36px;opacity:0.9;"></div>
+    <div class="wave-bar" style="height:44px;"></div>
+    <div class="wave-bar" style="height:28px;opacity:0.7;"></div>
+    <div class="wave-bar" style="height:20px;opacity:0.6;"></div>
+    <div class="wave-bar" style="height:12px;opacity:0.4;"></div>
+    <div class="wave-bar" style="height:6px;opacity:0.25;"></div>
+  </div>
+
+  <!-- Transcript -->
+  <div class="transcript">
+    <div class="transcript-label">Saying</div>
+    <div class="transcript-text">"Aaj kitna sale hua?"<span class="transcript-cursor"></span></div>
+  </div>
+
+  <!-- Quick commands -->
+  <div class="quick-actions">
+    <div class="quick-chip">Kitna bachat hua?</div>
+    <div class="quick-chip">Customer list dikho</div>
+    <div class="quick-chip">Briefing sunao</div>
+    <div class="quick-chip">Stock check karo</div>
+  </div>
+</div>
+
+<!-- Voice bar -->
+<div class="voice-bar">
+  <div class="voice-bar-left">Voice Command Active</div>
+  <div class="voice-bar-right">Tap to cancel</div>
+</div>
+
+<!-- Bottom nav — dark in voice state -->
+<div class="bottom-nav">
+  <div class="voice-fab-wrap">
+    <div class="voice-fab">🎙️</div>
+  </div>
+
+  <div class="nav-item active">
+    <div class="nav-icon">🏠</div>
+    <div class="nav-label">Home</div>
+    <div class="nav-active-dot"></div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">📊</div>
+    <div class="nav-label">Engines</div>
+  </div>
+  <div class="nav-item" style="flex:1.2;"></div>
+  <div class="nav-item">
+    <div class="nav-icon">📋</div>
+    <div class="nav-label">Briefing</div>
+  </div>
+  <div class="nav-item">
+    <div class="nav-icon">⚙️</div>
+    <div class="nav-label">Settings</div>
+  </div>
+</div>
+
+</body>
+</html>

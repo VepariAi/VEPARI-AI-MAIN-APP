@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",     "x": 0,    "y": 0, "w": 1100, "h": 1680, "title": "All 16 Screens" },
+    { "file": "Patterns.dc.html", "x": 1160, "y": 0, "w": 900,  "h": 2200, "title": "Cross-Screen Patterns" }
+  ],
+  "annotations": [
+    { "id": "p59-note", "x": 0, "y": -100, "w": 600, "text": "P59 — Screens.png 16-screen analysis. Per-screen inventory + cross-screen pattern extraction. Source: Screens.png reference image. Feeds P60 (Onboarding), P61 (AI OS Home), P62 (Briefing)." }
+  ],
+  "launch": { "view": "canvas" }
+}

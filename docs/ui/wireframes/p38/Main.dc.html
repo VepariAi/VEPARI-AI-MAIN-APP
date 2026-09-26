@@ -1,0 +1,115 @@
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 390px; height: 844px; font-family: system-ui, -apple-system, sans-serif; background: #f5f5f5; color: #171717; overflow: hidden; }
+body { display: flex; flex-direction: column; }
+.top-bar { background: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5e5e5; }
+.top-title { font-size: 18px; font-weight: 700; }
+.icon-btn { width: 32px; height: 32px; border-radius: 8px; border: 1px solid #e5e5e5; background: #f5f5f5; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.add-btn { width: 32px; height: 32px; border-radius: 8px; background: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 18px; color: #fff; font-weight: 300; }
+.tab-bar { background: #fff; padding: 0 14px; display: flex; gap: 0; border-bottom: 1px solid #e5e5e5; }
+.tab { padding: 10px 14px; font-size: 13px; font-weight: 600; color: #a3a3a3; border-bottom: 2px solid transparent; }
+.tab.act { color: #2563eb; border-bottom: 2px solid #2563eb; }
+.content { flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 0; }
+.day-group { }
+.day-hdr { padding: 8px 14px 4px; font-size: 11px; font-weight: 700; color: #a3a3a3; text-transform: uppercase; letter-spacing: 0.5px; background: #f5f5f5; }
+.txn-list { background: #fff; border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5; }
+.txn-row { display: flex; align-items: center; padding: 11px 14px; border-bottom: 1px solid #f5f5f5; }
+.txn-row:last-child { border-bottom: none; }
+.txn-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 15px; margin-right: 10px; flex-shrink: 0; }
+.sale-icon { background: #f0fdf4; border: 1px solid #86efac; }
+.exp-icon { background: #fef2f2; border: 1px solid #fca5a5; }
+.pay-icon { background: #eff6ff; border: 1px solid #bfdbfe; }
+.txn-info { flex: 1; min-width: 0; }
+.txn-name { font-size: 13px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.txn-sub { font-size: 11px; color: #a3a3a3; margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.txn-right { text-align: right; flex-shrink: 0; margin-left: 8px; }
+.txn-val { font-size: 14px; font-weight: 600; }
+.txn-pay { font-size: 11px; color: #a3a3a3; margin-top: 1px; }
+.green { color: #16a34a; }
+.red { color: #dc2626; }
+.blue { color: #2563eb; }
+.bottom-nav { background: #fff; border-top: 1px solid #e5e5e5; height: 64px; display: flex; align-items: flex-start; padding-top: 8px; position: relative; flex-shrink: 0; }
+.nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.nav-icon { font-size: 18px; }
+.nav-lbl { font-size: 9px; font-weight: 500; color: #a3a3a3; }
+.nav-lbl.act { color: #2563eb; }
+.voice-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; position: relative; }
+.voice-btn { width: 56px; height: 56px; border-radius: 28px; background: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 22px; position: absolute; top: -18px; box-shadow: 0 0 0 3px #fff, 0 2px 8px rgba(0,0,0,0.15); }
+.voice-lbl { font-size: 9px; font-weight: 500; color: #a3a3a3; margin-top: 44px; }
+</style>
+<div class="top-bar">
+  <div class="top-title">Transactions</div>
+  <div style="display:flex;gap:8px">
+    <div class="icon-btn">📅</div>
+    <div class="icon-btn">🔍</div>
+    <div class="add-btn">+</div>
+  </div>
+</div>
+<div class="tab-bar">
+  <div class="tab act">All</div>
+  <div class="tab">Sales</div>
+  <div class="tab">Expenses</div>
+  <div class="tab">Payments</div>
+</div>
+<div class="content">
+  <div class="day-group">
+    <div class="day-hdr">Today — 1 Sep 2026</div>
+    <div class="txn-list">
+      <div class="txn-row">
+        <div class="txn-icon sale-icon">🧾</div>
+        <div class="txn-info"><div class="txn-name">Invoice #1048 · Walk-in</div><div class="txn-sub">Amul Butter ×5, Tata Salt ×10 · 2:34 PM</div></div>
+        <div class="txn-right"><div class="txn-val green">+₹1,500</div><div class="txn-pay">Cash</div></div>
+      </div>
+      <div class="txn-row">
+        <div class="txn-icon exp-icon">🛒</div>
+        <div class="txn-info"><div class="txn-name">Purchase · Ram Traders</div><div class="txn-sub">Stock replenishment · 10:15 AM</div></div>
+        <div class="txn-right"><div class="txn-val red">−₹3,200</div><div class="txn-pay">UPI</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="day-group">
+    <div class="day-hdr">Yesterday — 31 Aug</div>
+    <div class="txn-list">
+      <div class="txn-row">
+        <div class="txn-icon sale-icon">🧾</div>
+        <div class="txn-info"><div class="txn-name">Invoice #1047 · Priya Textiles</div><div class="txn-sub">Credit sale · 4 items · 3:45 PM</div></div>
+        <div class="txn-right"><div class="txn-val green">+₹4,800</div><div class="txn-pay">Credit</div></div>
+      </div>
+      <div class="txn-row">
+        <div class="txn-icon sale-icon">🧾</div>
+        <div class="txn-info"><div class="txn-name">Invoice #1046 · Walk-in</div><div class="txn-sub">2 items · 11:20 AM</div></div>
+        <div class="txn-right"><div class="txn-val green">+₹1,200</div><div class="txn-pay">Cash</div></div>
+      </div>
+      <div class="txn-row">
+        <div class="txn-icon pay-icon">💳</div>
+        <div class="txn-info"><div class="txn-name">Payment received · Meena Enterprises</div><div class="txn-sub">Ref #P-447 · 9:05 AM</div></div>
+        <div class="txn-right"><div class="txn-val blue">₹6,000</div><div class="txn-pay">UPI</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="day-group">
+    <div class="day-hdr">29 Aug</div>
+    <div class="txn-list">
+      <div class="txn-row">
+        <div class="txn-icon exp-icon">⚡</div>
+        <div class="txn-info"><div class="txn-name">Expense · Electricity bill</div><div class="txn-sub">Overhead · Aug 2026</div></div>
+        <div class="txn-right"><div class="txn-val red">−₹2,100</div><div class="txn-pay">Bank transfer</div></div>
+      </div>
+      <div class="txn-row">
+        <div class="txn-icon sale-icon">🧾</div>
+        <div class="txn-info"><div class="txn-name">Invoice #1044 · Walk-in</div><div class="txn-sub">1 item · 2:10 PM</div></div>
+        <div class="txn-right"><div class="txn-val green">+₹780</div><div class="txn-pay">UPI</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="bottom-nav">
+  <div class="nav-tab"><div class="nav-icon">🏠</div><div class="nav-lbl">Home</div></div>
+  <div class="nav-tab"><div class="nav-icon">📋</div><div class="nav-lbl act" style="color:#2563eb">Transactions</div></div>
+  <div class="voice-wrap">
+    <div class="voice-btn">🎙</div>
+    <div class="voice-lbl">Voice</div>
+  </div>
+  <div class="nav-tab"><div class="nav-icon">📊</div><div class="nav-lbl">Reports</div></div>
+  <div class="nav-tab"><div class="nav-icon">⋯</div><div class="nav-lbl">More</div></div>
+</div>

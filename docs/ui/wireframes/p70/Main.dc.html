@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>P&L Report Detail</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  width: 390px; height: 844px;
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #FAF7F2; color: #3B2F2A;
+  overflow: hidden; display: flex; flex-direction: column;
+}
+.status-bar { height: 44px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; font-size: 11px; color: #8A7060; }
+.screen-header { height: 56px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #EDE5D8; }
+.back-btn { font-size: 20px; color: #C8A96B; width: 32px; }
+.header-title { font-size: 16px; font-weight: 700; }
+.header-actions { display: flex; gap: 10px; }
+.h-btn { font-size: 16px; color: #C8A96B; }
+
+/* Period selector */
+.period-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px 8px; }
+.period-label { font-size: 14px; font-weight: 700; color: #3B2F2A; }
+.period-nav { display: flex; gap: 12px; }
+.pnav-btn { font-size: 18px; color: #C8A96B; }
+
+/* Net profit hero */
+.profit-hero { margin: 0 20px 12px; border-radius: 16px; padding: 16px 20px; background: linear-gradient(135deg, #3B2F2A 0%, #4A3D6B 100%); }
+.ph-label { font-size: 10px; font-weight: 700; letter-spacing: 0.6px; text-transform: uppercase; color: rgba(200,169,107,0.8); margin-bottom: 6px; }
+.ph-amount { font-size: 32px; font-weight: 700; color: #FFFFFF; font-variant-numeric: tabular-nums; letter-spacing: -1px; margin-bottom: 4px; }
+.ph-change { font-size: 12px; color: #C8A96B; font-weight: 600; }
+
+/* Mini trend bars */
+.trend-row { display: flex; align-items: flex-end; gap: 4px; margin-top: 12px; height: 28px; }
+.trend-bar { flex: 1; border-radius: 2px 2px 0 0; }
+
+/* Income / Expense sections */
+.section-card { margin: 0 20px 10px; background: #FFFFFF; border: 1.5px solid #EDE5D8; border-radius: 14px; overflow: hidden; }
+.sc-header { display: flex; justify-content: space-between; align-items: center; padding: 12px 14px; border-bottom: 1px solid #F0EAE0; }
+.sc-title { font-size: 12px; font-weight: 700; letter-spacing: 0.4px; text-transform: uppercase; color: #8A7060; }
+.sc-total { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.sc-total.income { color: #5A6B4F; }
+.sc-total.expense { color: #B45B4A; }
+.line-item { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; border-bottom: 1px solid #F5EFE6; }
+.line-item:last-child { border-bottom: none; }
+.li-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-right: 8px; }
+.li-name { flex: 1; font-size: 12px; color: #3B2F2A; }
+.li-bar-wrap { width: 60px; height: 3px; background: #E8DDD0; border-radius: 2px; margin: 0 10px; }
+.li-bar { height: 3px; border-radius: 2px; }
+.li-amount { font-size: 12px; font-weight: 600; color: #3B2F2A; font-variant-numeric: tabular-nums; }
+
+/* Export bar */
+.export-bar { display: flex; gap: 8px; padding: 10px 20px; margin-top: auto; }
+.exp-btn { flex: 1; height: 44px; border-radius: 10px; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.exp-btn.outline { background: #FFFFFF; border: 1.5px solid #E8DDD0; color: #3B2F2A; }
+.exp-btn.primary { background: #3B2F2A; color: #FAF7F2; border: none; }
+</style>
+</head>
+<body>
+
+<div class="status-bar">
+  <span>9:41</span>
+  <span style="display:flex;gap:4px;align-items:center;"><span>▲▲▲</span><span>WiFi</span><span>🔋</span></span>
+</div>
+<div class="screen-header">
+  <div class="back-btn">‹</div>
+  <div class="header-title">Profit & Loss</div>
+  <div class="header-actions">
+    <div class="h-btn">📤</div>
+    <div class="h-btn">⋯</div>
+  </div>
+</div>
+
+<div class="period-row">
+  <div class="period-label">September 2026</div>
+  <div class="period-nav">
+    <div class="pnav-btn">‹</div>
+    <div class="pnav-btn">›</div>
+  </div>
+</div>
+
+<div class="profit-hero">
+  <div class="ph-label">Net Profit · Sep 2026</div>
+  <div class="ph-amount">₹72,000</div>
+  <div class="ph-change">▲ 24% vs August · Margin: 39.1%</div>
+  <div class="trend-row">
+    <div class="trend-bar" style="height:14px;background:rgba(200,169,107,0.4);"></div>
+    <div class="trend-bar" style="height:18px;background:rgba(200,169,107,0.45);"></div>
+    <div class="trend-bar" style="height:12px;background:rgba(200,169,107,0.4);"></div>
+    <div class="trend-bar" style="height:20px;background:rgba(200,169,107,0.5);"></div>
+    <div class="trend-bar" style="height:16px;background:rgba(200,169,107,0.45);"></div>
+    <div class="trend-bar" style="height:28px;background:#C8A96B;"></div>
+  </div>
+</div>
+
+<!-- Income section -->
+<div class="section-card">
+  <div class="sc-header">
+    <div class="sc-title">Income</div>
+    <div class="sc-total income">+ ₹1,84,000</div>
+  </div>
+  <div class="line-item">
+    <div class="li-dot" style="background:#5A6B4F;"></div>
+    <div class="li-name">Product Sales</div>
+    <div class="li-bar-wrap"><div class="li-bar" style="width:72%;background:#5A6B4F;opacity:0.7;"></div></div>
+    <div class="li-amount">₹1,32,000</div>
+  </div>
+  <div class="line-item">
+    <div class="li-dot" style="background:#C8A96B;"></div>
+    <div class="li-name">Services</div>
+    <div class="li-bar-wrap"><div class="li-bar" style="width:28%;background:#C8A96B;"></div></div>
+    <div class="li-amount">₹52,000</div>
+  </div>
+</div>
+
+<!-- Expense section -->
+<div class="section-card">
+  <div class="sc-header">
+    <div class="sc-title">Expenses</div>
+    <div class="sc-total expense">− ₹1,12,000</div>
+  </div>
+  <div class="line-item">
+    <div class="li-dot" style="background:#B45B4A;"></div>
+    <div class="li-name">Purchases / COGS</div>
+    <div class="li-bar-wrap"><div class="li-bar" style="width:72%;background:#B45B4A;opacity:0.7;"></div></div>
+    <div class="li-amount">₹84,000</div>
+  </div>
+  <div class="line-item">
+    <div class="li-dot" style="background:#8A7060;"></div>
+    <div class="li-name">Overheads</div>
+    <div class="li-bar-wrap"><div class="li-bar" style="width:24%;background:#8A7060;opacity:0.6;"></div></div>
+    <div class="li-amount">₹28,000</div>
+  </div>
+</div>
+
+<div class="export-bar">
+  <div class="exp-btn outline">📄 PDF</div>
+  <div class="exp-btn outline">📊 Excel</div>
+  <div class="exp-btn primary">📤 Share</div>
+</div>
+
+</body>
+</html>

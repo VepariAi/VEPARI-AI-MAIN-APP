@@ -1,0 +1,9 @@
+{
+  "artboards": [
+    { "file": "BottomNav.dc.html", "x": 0, "y": 0, "w": 860, "h": 2000, "title": "5-Tab Bottom Nav — FAB 56dp, elevation 10dp, 3dp white ring, active/inactive states, Voice transition" }
+  ],
+  "annotations": [
+    { "id": "p53-note", "x": 0, "y": -52, "w": 860, "text": "Prompt 53 — 5-tab bottom navigation component. Voice FAB: 56dp diameter, elevation 10dp, 3dp white ring. Active state: gold dot indicator, 700-weight label. Voice tap: bottom sheet modal + bar goes deep brown. Hindi/Marathi nav labels validated ≤6 chars each." }
+  ],
+  "launch": { "view": "canvas" }
+}

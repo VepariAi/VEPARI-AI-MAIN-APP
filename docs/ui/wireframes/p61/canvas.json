@@ -1,0 +1,10 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html",        "x": 0,   "y": 0, "w": 390, "h": 844, "title": "Home — Default" },
+    { "file": "VoiceActive.dc.html", "x": 470, "y": 0, "w": 390, "h": 844, "title": "Home — Voice Active" }
+  ],
+  "annotations": [
+    { "id": "p61-note", "x": 0, "y": -120, "w": 650, "text": "P61 — AI OS Home mobile canvas. Adapted from P34 + P58 (AI Core anatomy, 3-column desktop → mobile). Phase 5 tokens. Ring diameter 260dp (66% of 390dp width). Engine cards 2-col grid. Voice state: ring gold-full, dark bottom nav, transcript overlay. Depends on P34, P58." }
+  ],
+  "launch": { "view": "canvas" }
+}
