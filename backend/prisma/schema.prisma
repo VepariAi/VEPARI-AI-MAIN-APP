@@ -576,3 +576,26 @@ model Return {
   @@index([businessId, createdAt])
   @@map("returns")
 }
+
+// ── Operations: work orders & tasks (persisted; DL-011 MySQL) ───────────────────
+
+model Operation {
+  id                    String    @id @default(uuid())
+  businessId            String
+  type                  String    // ORDER|TASK|SERVICE_REQUEST|REPAIR|DELIVERY
+  title                 String
+  description           String?   @db.Text
+  status                String    @default("OPEN") // OPEN|IN_PROGRESS|COMPLETED|CANCELLED
+  priority              String    @default("NORMAL") // LOW|NORMAL|HIGH|URGENT
+  customerId            String?
+  assignedToUserId      String?
+  dueDate               DateTime?
+  estimatedValueInPaise Int?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  completedAt           DateTime?
+
+  @@index([businessId, status])
+  @@index([businessId, createdAt])
+  @@map("operations")
+}

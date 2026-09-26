@@ -1,7 +1,8 @@
 // Operations: work orders and tasks for a business.
-// Stored in-memory for Phase 15; DB model added via migration in Phase 16.
+// Persisted in MySQL via Prisma (DL-011).
 
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from '../../prisma/prisma.service';
 
 export type OperationType = 'ORDER' | 'TASK' | 'SERVICE_REQUEST' | 'REPAIR' | 'DELIVERY';
 export type OperationStatus = 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
@@ -35,66 +36,94 @@ export interface Operation {
   completedAt: Date | null;
 }
 
-const operationStore = new Map<string, Operation[]>();
+interface OperationRow {
+  id: string;
+  businessId: string;
+  type: string;
+  title: string;
+  description: string | null;
+  status: string;
+  priority: string;
+  customerId: string | null;
+  assignedToUserId: string | null;
+  dueDate: Date | null;
+  estimatedValueInPaise: number | null;
+  createdAt: Date;
+  updatedAt: Date;
+  completedAt: Date | null;
+}
 
-function getList(businessId: string): Operation[] {
-  if (!operationStore.has(businessId)) operationStore.set(businessId, []);
-  return operationStore.get(businessId)!;
+function toDomain(row: OperationRow): Operation {
+  return {
+    ...row,
+    type: row.type as OperationType,
+    status: row.status as OperationStatus,
+    priority: row.priority as OperationPriority,
+  };
 }
 
 @Injectable()
 export class OperationsService {
-  findAll(businessId: string, status?: OperationStatus): Operation[] {
-    const list = getList(businessId);
-    return (status ? list.filter(o => o.status === status) : list)
-      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+  constructor(private readonly prisma: PrismaService) {}
+
+  async findAll(businessId: string, status?: OperationStatus): Promise<Operation[]> {
+    const rows = await this.prisma.operation.findMany({
+      where: { businessId, ...(status ? { status } : {}) },
+      orderBy: { createdAt: 'desc' },
+    });
+    return rows.map(r => toDomain(r as OperationRow));
   }
 
-  create(businessId: string, dto: CreateOperationDto): Operation {
-    const op: Operation = {
-      id: `op_${Date.now()}_${Math.random().toString(36).slice(2)}`,
-      businessId,
-      type: dto.type,
-      title: dto.title,
-      description: dto.description ?? null,
-      status: 'OPEN',
-      priority: dto.priority ?? 'NORMAL',
-      customerId: dto.customerId ?? null,
-      assignedToUserId: dto.assignedToUserId ?? null,
-      dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
-      estimatedValueInPaise: dto.estimatedValueInPaise ?? null,
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      completedAt: null,
-    };
-    getList(businessId).push(op);
-    return op;
+  async create(businessId: string, dto: CreateOperationDto): Promise<Operation> {
+    const row = await this.prisma.operation.create({
+      data: {
+        businessId,
+        type: dto.type,
+        title: dto.title,
+        description: dto.description ?? null,
+        status: 'OPEN',
+        priority: dto.priority ?? 'NORMAL',
+        customerId: dto.customerId ?? null,
+        assignedToUserId: dto.assignedToUserId ?? null,
+        dueDate: dto.dueDate ? new Date(dto.dueDate) : null,
+        estimatedValueInPaise: dto.estimatedValueInPaise ?? null,
+      },
+    });
+    return toDomain(row as OperationRow);
   }
 
-  getById(businessId: string, operationId: string): Operation {
-    const op = getList(businessId).find(o => o.id === operationId);
-    if (!op) throw new NotFoundException('Operation not found');
-    return op;
+  async getById(businessId: string, operationId: string): Promise<Operation> {
+    const row = await this.prisma.operation.findFirst({ where: { id: operationId, businessId } });
+    if (!row) throw new NotFoundException('Operation not found');
+    return toDomain(row as OperationRow);
   }
 
-  updateStatus(businessId: string, operationId: string, status: OperationStatus): Operation {
-    const op = this.getById(businessId, operationId);
-    op.status = status;
-    op.updatedAt = new Date();
-    if (status === 'COMPLETED') op.completedAt = new Date();
-    return op;
+  async updateStatus(businessId: string, operationId: string, status: OperationStatus): Promise<Operation> {
+    await this.getById(businessId, operationId); // tenant-scoped existence check
+    const row = await this.prisma.operation.update({
+      where: { id: operationId },
+      data: {
+        status,
+        ...(status === 'COMPLETED' ? { completedAt: new Date() } : {}),
+      },
+    });
+    return toDomain(row as OperationRow);
   }
 
-  update(businessId: string, operationId: string, dto: Partial<CreateOperationDto>): Operation {
-    const op = this.getById(businessId, operationId);
-    if (dto.title !== undefined) op.title = dto.title;
-    if (dto.description !== undefined) op.description = dto.description ?? null;
-    if (dto.priority !== undefined) op.priority = dto.priority;
-    if (dto.customerId !== undefined) op.customerId = dto.customerId ?? null;
-    if (dto.assignedToUserId !== undefined) op.assignedToUserId = dto.assignedToUserId ?? null;
-    if (dto.dueDate !== undefined) op.dueDate = dto.dueDate ? new Date(dto.dueDate) : null;
-    if (dto.estimatedValueInPaise !== undefined) op.estimatedValueInPaise = dto.estimatedValueInPaise ?? null;
-    op.updatedAt = new Date();
-    return op;
+  async update(businessId: string, operationId: string, dto: Partial<CreateOperationDto>): Promise<Operation> {
+    await this.getById(businessId, operationId); // tenant-scoped existence check
+    const row = await this.prisma.operation.update({
+      where: { id: operationId },
+      data: {
+        ...(dto.title !== undefined ? { title: dto.title } : {}),
+        ...(dto.description !== undefined ? { description: dto.description ?? null } : {}),
+        ...(dto.priority !== undefined ? { priority: dto.priority } : {}),
+        ...(dto.customerId !== undefined ? { customerId: dto.customerId ?? null } : {}),
+        ...(dto.assignedToUserId !== undefined ? { assignedToUserId: dto.assignedToUserId ?? null } : {}),
+        ...(dto.dueDate !== undefined ? { dueDate: dto.dueDate ? new Date(dto.dueDate) : null } : {}),
+        ...(dto.estimatedValueInPaise !== undefined ? { estimatedValueInPaise: dto.estimatedValueInPaise ?? null } : {}),
+      },
+    });
+    return toDomain(row as OperationRow);
   }
 }
