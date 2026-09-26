@@ -12,8 +12,11 @@
     "test": "jest --passWithNoTests",
     "clean": "rm -rf node_modules/.cache android/build ios/build"
   },
+  "op-sqlite": {
+    "sqlcipher": true
+  },
   "dependencies": {
-    "@op-engineering/op-sqlite": "^18.1.4",
+    "@op-engineering/op-sqlite": "9.3.0",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",

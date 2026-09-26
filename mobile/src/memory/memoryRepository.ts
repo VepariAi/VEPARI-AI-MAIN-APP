@@ -1,3 +1,8 @@
+// Local persistence for confirmed voice-captured business memories.
+//
+// op-sqlite 9.3.0 (pinned for RN 0.73.6) exposes an async execute() API only,
+// so save/list are async.
+
 import { getDb } from '@/database/db';
 
 export type MemoryType =
@@ -25,9 +30,9 @@ export interface Memory {
   synced: boolean;
 }
 
-export function saveMemory(memory: Memory): void {
+export async function saveMemory(memory: Memory): Promise<void> {
   const db = getDb();
-  db.executeSync(
+  await db.execute(
     `INSERT OR REPLACE INTO memories
       (id, business_id, type, amount_paise, description, party, item_name,
        quantity, raw_transcript, confidence, created_at, synced)
@@ -49,9 +54,9 @@ export function saveMemory(memory: Memory): void {
   );
 }
 
-export function listRecentMemories(businessId: string, limit = 50): Memory[] {
+export async function listRecentMemories(businessId: string, limit = 50): Promise<Memory[]> {
   const db = getDb();
-  const result = db.executeSync(
+  const result = await db.execute(
     `SELECT * FROM memories WHERE business_id = ? ORDER BY created_at DESC LIMIT ?`,
     [businessId, limit],
   );

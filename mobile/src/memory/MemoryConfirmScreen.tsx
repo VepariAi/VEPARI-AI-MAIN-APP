@@ -113,7 +113,7 @@ export default function MemoryConfirmScreen({ businessId, candidates, onDone, on
         if (c.party !== undefined) mem.party = c.party;
         if (c.itemName !== undefined) mem.itemName = c.itemName;
         if (c.quantity !== undefined) mem.quantity = c.quantity;
-        saveMemory(mem);
+        await saveMemory(mem);
       }
       if (!serverSynced) {
         Alert.alert(

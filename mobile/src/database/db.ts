@@ -3,6 +3,12 @@
 // RULE: secrets, JWTs, and session tokens are NEVER stored in SQLite rows.
 // They belong exclusively in SecureStorage (react-native-keychain).
 // The encryption key itself is fetched from SecureStorage, not hardcoded.
+//
+// op-sqlite 9.3.0 is pinned for React Native 0.73.6 compatibility. This version
+// exposes an async execute() API only (there is no synchronous variant), so
+// initialisation and migrations are awaited. Encryption at rest uses SQLCipher,
+// enabled by the "op-sqlite": { "sqlcipher": true } block in package.json;
+// passing an encryptionKey to open() transparently encrypts the database file.
 
 import { open, type DB } from '@op-engineering/op-sqlite';
 import { secureRead, secureWrite, StorageKey } from '@/security/secureStorage';
@@ -26,10 +32,13 @@ async function getEncryptionKey(): Promise<string> {
 export async function initDb(): Promise<void> {
   if (_db) return;
   const encryptionKey = await getEncryptionKey();
-  _db = open({ name: 'vepari.db', encryptionKey });
-  _db.executeSync(`PRAGMA journal_mode=WAL;`);
-  _db.executeSync(`PRAGMA foreign_keys=ON;`);
-  runMigrations(_db);
+  const db = open({ name: 'vepari.db', encryptionKey });
+  await db.execute(`PRAGMA journal_mode=WAL;`);
+  await db.execute(`PRAGMA foreign_keys=ON;`);
+  await runMigrations(db);
+  // Only publish the handle once migrations have succeeded, so a failed
+  // init leaves _db null and can be retried cleanly.
+  _db = db;
 }
 
 export function getDb(): DB {
@@ -46,8 +55,8 @@ export function closeDb(): void {
   }
 }
 
-function runMigrations(db: DB): void {
-  db.executeSync(`
+async function runMigrations(db: DB): Promise<void> {
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS sync_checkpoints (
       id TEXT PRIMARY KEY,
       entity TEXT NOT NULL,
@@ -55,7 +64,7 @@ function runMigrations(db: DB): void {
       server_version INTEGER NOT NULL DEFAULT 0
     );
   `);
-  db.executeSync(`
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS pending_mutations (
       id TEXT PRIMARY KEY,
       entity TEXT NOT NULL,
@@ -64,7 +73,7 @@ function runMigrations(db: DB): void {
       retry_count INTEGER NOT NULL DEFAULT 0
     );
   `);
-  db.executeSync(`
+  await db.execute(`
     CREATE TABLE IF NOT EXISTS memories (
       id TEXT PRIMARY KEY,
       business_id TEXT NOT NULL,
@@ -80,7 +89,7 @@ function runMigrations(db: DB): void {
       synced INTEGER NOT NULL DEFAULT 0
     );
   `);
-  db.executeSync(`
+  await db.execute(`
     CREATE INDEX IF NOT EXISTS idx_memories_business_id
       ON memories (business_id, created_at DESC);
   `);

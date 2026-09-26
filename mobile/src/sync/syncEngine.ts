@@ -1,6 +1,9 @@
 // Offline-first sync engine.
 // Records mutations to SQLite when offline; flushes them to the backend when online.
 // No token/secret ever stored in SQLite — only business event payloads.
+//
+// op-sqlite 9.3.0 (pinned for RN 0.73.6) exposes an async execute() API only,
+// so every persistence helper here is async.
 
 import { getDb } from '@/database/db';
 import { getApiClient } from '@/services/api';
@@ -19,13 +22,13 @@ const MAX_RETRIES = 5;
 
 // ── Queue a mutation for later sync ──────────────────────────────────────────
 
-export function enqueueMutation(
+export async function enqueueMutation(
   type: MutationType,
   payload: Record<string, unknown>,
-): void {
+): Promise<void> {
   const db = getDb();
   const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
-  db.executeSync(
+  await db.execute(
     `INSERT INTO pending_mutations (id, entity, payload, created_at, retry_count)
      VALUES (?, ?, ?, ?, 0)`,
     [id, type, JSON.stringify({ type, payload }), Date.now()],
@@ -34,9 +37,9 @@ export function enqueueMutation(
 
 // ── Read all pending mutations from SQLite ────────────────────────────────────
 
-function loadPending(): PendingMutation[] {
+async function loadPending(): Promise<PendingMutation[]> {
   const db = getDb();
-  const result = db.executeSync(
+  const result = await db.execute(
     `SELECT id, entity, payload, created_at, retry_count
      FROM pending_mutations
      WHERE retry_count < ?
@@ -64,20 +67,20 @@ function loadPending(): PendingMutation[] {
 
 // ── Remove successfully synced mutations ─────────────────────────────────────
 
-function deleteSynced(ids: string[]): void {
+async function deleteSynced(ids: string[]): Promise<void> {
   if (ids.length === 0) return;
   const db = getDb();
   const placeholders = ids.map(() => '?').join(',');
-  db.executeSync(`DELETE FROM pending_mutations WHERE id IN (${placeholders})`, ids);
+  await db.execute(`DELETE FROM pending_mutations WHERE id IN (${placeholders})`, ids);
 }
 
 // ── Increment retry count for rejected mutations ──────────────────────────────
 
-function incrementRetry(ids: string[]): void {
+async function incrementRetry(ids: string[]): Promise<void> {
   if (ids.length === 0) return;
   const db = getDb();
   const placeholders = ids.map(() => '?').join(',');
-  db.executeSync(
+  await db.execute(
     `UPDATE pending_mutations SET retry_count = retry_count + 1 WHERE id IN (${placeholders})`,
     ids,
   );
@@ -89,7 +92,7 @@ export async function flushMutations(businessId: string): Promise<{
   flushed: number;
   failed: number;
 }> {
-  const pending = loadPending();
+  const pending = await loadPending();
   if (pending.length === 0) return { flushed: 0, failed: 0 };
 
   const mutations = pending.map(m => ({
@@ -104,8 +107,8 @@ export async function flushMutations(businessId: string): Promise<{
     { mutations },
   );
 
-  deleteSynced(result.accepted);
-  incrementRetry(result.rejected.map(r => r.id));
+  await deleteSynced(result.accepted);
+  await incrementRetry(result.rejected.map(r => r.id));
 
   return {
     flushed: result.accepted.length,
@@ -115,9 +118,9 @@ export async function flushMutations(businessId: string): Promise<{
 
 // ── Count queued mutations ────────────────────────────────────────────────────
 
-export function getPendingCount(): number {
+export async function getPendingCount(): Promise<number> {
   const db = getDb();
-  const result = db.executeSync(`SELECT COUNT(*) as cnt FROM pending_mutations WHERE retry_count < ?`, [MAX_RETRIES]);
+  const result = await db.execute(`SELECT COUNT(*) as cnt FROM pending_mutations WHERE retry_count < ?`, [MAX_RETRIES]);
   const row = (result.rows ?? [])[0];
   return row ? Number(row['cnt']) : 0;
 }
